@@ -1,0 +1,140 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'auth.login'|trans }} - APU System{% endblock %}
+
+{% block body %}
+<div class="main-content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <h1 class="h3 mb-3 fw-bold" style="color: var(--primary-color);">
+                                <i class="bi bi-calculator"></i> APU System
+                            </h1>
+                            <p class="text-muted">{{ 'common.system_description'|trans }}</p>
+                        </div>
+
+                        {% if error %}
+                            <div class="alert alert-danger">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                {{ error.messageKey|trans(error.messageData, 'security') }}
+                            </div>
+                        {% endif %}
+
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger">
+                                <i class="bi bi-exclamation-triangle-fill"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success">
+                                <i class="bi bi-check-circle-fill"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+
+                        <form method="post" action="{{ path('app_login') }}">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">
+                                    <i class="bi bi-person"></i> {{ 'auth.email_or_username'|trans }}
+                                </label>
+                                <input
+                                    type="text"
+                                    class="form-control form-control-lg"
+                                    id="username"
+                                    name="_username"
+                                    value="{{ last_username }}"
+                                    required
+                                    autofocus
+                                    placeholder="{{ 'auth.enter_email_username'|trans }}"
+                                >
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">
+                                    <i class="bi bi-lock"></i> {{ 'auth.password'|trans }}
+                                </label>
+                                <div class="input-group">
+                                    <input
+                                        type="password"
+                                        class="form-control form-control-lg"
+                                        id="password"
+                                        name="_password"
+                                        required
+                                        placeholder="{{ 'auth.enter_password'|trans }}"
+                                    >
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="bi bi-eye" id="toggleIcon"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="remember_me" name="_remember_me">
+                                <label class="form-check-label" for="remember_me">
+                                    {{ 'auth.remember_session'|trans }}
+                                </label>
+                            </div>
+
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                            <div class="d-grid gap-2 mb-3">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-box-arrow-in-right"></i> {{ 'auth.login'|trans }}
+                                </button>
+                            </div>
+
+                            <div class="text-center">
+                                <a href="{{ path('app_password_forgot') }}" class="text-decoration-none" style="color: var(--primary-color);">
+                                    <i class="bi bi-question-circle"></i> {{ 'auth.forgot_password'|trans }}
+                                </a>
+                            </div>
+                        </form>
+
+                        <hr class="my-4">
+
+                        <div class="text-center text-muted small">
+                            <p class="mb-0">
+                                <i class="bi bi-shield-check"></i> {{ 'auth.secure_connection'|trans }}
+                            </p>
+                            <p class="mb-0 mt-2">
+                                <i class="bi bi-fingerprint"></i> {{ 'auth.protected_2fa'|trans }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4 text-white">
+                    <p class="mb-0">APU System &copy; {{ 'now'|date('Y') }}</p>
+                    <p class="small">Multi-Tenant Analysis System v1.0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggleIcon');
+
+    togglePassword.addEventListener('click', function() {
+        // Toggle el tipo de input
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+
+        // Cambiar el ícono
+        if (type === 'text') {
+            toggleIcon.classList.remove('bi-eye');
+            toggleIcon.classList.add('bi-eye-slash');
+        } else {
+            toggleIcon.classList.remove('bi-eye-slash');
+            toggleIcon.classList.add('bi-eye');
+        }
+    });
+});
+</script>
+{% endblock %}

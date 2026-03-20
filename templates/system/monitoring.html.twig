@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Monitoreo - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'system.monitoring_title'|trans} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <i class="bi bi-database-fill {{ monitoring.database.status == 'ok' ? 'text-success' : 'text-danger' }}"></i>
+                                {{ 'system.database'|trans }}
+                            </h6>
+                            <p class="mb-0">
+                                <span class="badge bg-{{ monitoring.database.status == 'ok' ? 'success' : 'danger' }}">
+                                    {{ monitoring.database.status|upper }}
+                                </span>
+                            </p>
+                            <small class="text-muted">{{ monitoring.database.message }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <i class="bi bi-hdd-fill {{ monitoring.cache.status == 'ok' ? 'text-success' : 'text-danger' }}"></i>
+                                {{ 'system.cache'|trans }}
+                            </h6>
+                            <p class="mb-0">
+                                <span class="badge bg-{{ monitoring.cache.status == 'ok' ? 'success' : 'danger' }}">
+                                    {{ monitoring.cache.status|upper }}
+                                </span>
+                            </p>
+                            <small class="text-muted">{{ 'system.size'|trans }}: {{ monitoring.cache.size }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <i class="bi bi-people-fill {{ monitoring.sessions.status == 'ok' ? 'text-success' : 'text-danger' }}"></i>
+                                {{ 'system.sessions'|trans }}
+                            </h6>
+                            <p class="mb-0">
+                                <span class="badge bg-{{ monitoring.sessions.status == 'ok' ? 'success' : 'danger' }}">
+                                    {{ monitoring.sessions.status|upper }}
+                                </span>
+                            </p>
+                            <small class="text-muted">{{ monitoring.sessions.active }} {{ 'system.active_label'|trans }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <i class="bi bi-hdd {{ monitoring.disk_usage.status == 'ok' ? 'text-success' : 'text-warning' }}"></i>
+                                {{ 'system.disk'|trans }}
+                            </h6>
+                            <p class="mb-0">
+                                <span class="badge bg-{{ monitoring.disk_usage.status == 'ok' ? 'success' : 'warning' }}">
+                                    {{ monitoring.disk_usage.status|upper }}
+                                </span>
+                            </p>
+                            <small class="text-muted">
+                                {{ monitoring.disk_usage.used }} / {{ monitoring.disk_usage.total }}
+                                ({{ monitoring.disk_usage.percent }}%)
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-bug-fill"></i> {{ 'system.recent_errors'|trans }}</h5>
+                </div>
+                <div class="card-body">
+                    {% if errors|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 180px;">{{ 'system.datetime'|trans }}</th>
+                                        <th style="width: 100px;">{{ 'system.level'|trans }}</th>
+                                        <th>{{ 'system.message'|trans }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for error in errors %}
+                                        <tr>
+                                            <td><small>{{ error.date }}</small></td>
+                                            <td>
+                                                <span class="badge bg-{{ error.level == 'CRITICAL' ? 'danger' : (error.level == 'ERROR' ? 'danger' : 'warning') }}">
+                                                    {{ error.level }}
+                                                </span>
+                                            </td>
+                                            <td><small>{{ error.message|slice(0, 150) }}...</small></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center py-3">{{ 'system.no_recent_errors'|trans }}</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="{{ path('app_system_errors') }}" class="text-decoration-none">
+                        {{ 'system.view_all_errors'|trans }} <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-refresh cada 30 segundos
+setTimeout(() => {
+    location.reload();
+}, 30000);
+</script>
+{% endblock %}

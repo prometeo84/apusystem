@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}APU - Análisis de Precios Unitarios{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-calculator"></i> Análisis de Precios Unitarios</h1>
+        <a href="{{ path('app_apu_create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nuevo APU
+        </a>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    {% if apu_items|length > 0 %}
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            <th>Unidad</th>
+                            <th>K(H/U)</th>
+                            <th>Rend. u/h</th>
+                            <th class="text-end">Costo Total</th>
+                            <th>Fecha</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in apu_items %}
+                            <tr>
+                                <td>{{ item.description }}</td>
+                                <td><span class="badge bg-secondary">{{ item.unit }}</span></td>
+                                <td>{{ item.khu|number_format(4) }}</td>
+                                <td>{{ item.rendimientoUh|number_format(4) }}</td>
+                                <td class="text-end">
+                                    <strong>${{ item.totalCost|number_format(2) }}</strong>
+                                </td>
+                                <td>{{ item.createdAt|date('d/m/Y') }}</td>
+                                <td class="text-center">
+                                    <a href="{{ path('app_apu_edit', {id: item.id}) }}" class="btn btn-sm btn-outline-primary" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{{ path('app_apu_export_excel', {id: item.id}) }}" class="btn btn-sm btn-outline-success" title="Exportar Excel">
+                                        <i class="bi bi-file-earmark-excel"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> No hay APUs registrados.
+            <a href="{{ path('app_apu_create') }}" class="alert-link">Crear el primero</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

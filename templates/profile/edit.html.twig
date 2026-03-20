@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'profile.edit_title'|trans }} - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'profile.edit_title'|trans} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <h4 class="card-title mb-4">
+                                <i class="bi bi-pencil-square"></i> {{ 'common.edit_personal_info'|trans }}
+                            </h4>
+
+                            <form method="post" enctype="multipart/form-data">
+                                {# Avatar / Imagen de Perfil #}
+                                <div class="mb-4 text-center">
+                                    <label class="form-label d-block">{{ 'common.image_profile'|trans }}</label>
+                                    <div class="mb-3">
+                                        {% if user.avatar %}
+                                            <img src="{{ user.avatar }}" alt="Avatar" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover; border: 3px solid var(--primary-color);">
+                                        {% else %}
+                                            <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center" style="width: 120px; height: 120px; font-size: 48px;">
+                                                {{ user.firstName|first }}{{ user.lastName|first }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <input type="file" class="form-control" id="avatar" name="avatar" accept="image/jpeg,image/png,image/gif,image/webp">
+                                    <small class="text-muted">{{ 'common.allowed_formats'|trans }}. {{ 'common.max_size'|trans }}.</small>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="first_name" class="form-label">{{ 'profile.first_name'|trans }} *</label>
+                                        <input type="text" class="form-control" id="first_name" name="first_name"
+                                               value="{{ user.firstName }}" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="last_name" class="form-label">{{ 'profile.last_name'|trans }} *</label>
+                                        <input type="text" class="form-control" id="last_name" name="last_name"
+                                               value="{{ user.lastName }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">{{ 'profile.phone'|trans }}</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone"
+                                           value="{{ user.phone }}">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">{{ 'profile.email'|trans }} ({{ 'common.not_editable'|trans }})</label>
+                                    <input type="text" class="form-control" value="{{ user.email }}" disabled>
+                                    <small class="text-muted">{{ 'common.email_not_modifiable'|trans }}</small>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <a href="{{ path('app_profile') }}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-arrow-left"></i> {{ 'buttons.cancel'|trans }}
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-circle"></i> {{ 'profile.save'|trans }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

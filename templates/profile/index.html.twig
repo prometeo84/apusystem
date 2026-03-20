@@ -1,0 +1,160 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mi Perfil - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'profile.title'|trans} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="bi bi-check-circle-fill"></i> {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="bi bi-exclamation-triangle-fill"></i> {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body text-center">
+                            {% if user.avatar %}
+                                <img src="{{ user.avatar }}" alt="Avatar" class="rounded-circle mx-auto mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid var(--primary-color);">
+                            {% else %}
+                                <div class="bg-primary rounded-circle text-white mx-auto mb-3 d-flex align-items-center justify-content-center"
+                                     style="width: 100px; height: 100px; font-size: 2.5rem;">
+                                    {{ user.firstName|first }}{{ user.lastName|first }}
+                                </div>
+                            {% endif %}
+                            <h4>{{ user.fullName }}</h4>
+                            <p class="text-muted">{{ user.email }}</p>
+                            <p class="mb-3">
+                                <span class="badge bg-secondary">{{ user.role|upper }}</span>
+                            </p>
+                            <a href="{{ path('app_profile_edit') }}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-pencil"></i> {{ 'buttons.edit'|trans }} {{ 'profile.title'|trans }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">{{ 'common.account_information'|trans }}</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="bi bi-calendar-check text-primary"></i>
+                                    <strong>{{ 'common.member_since'|trans }}:</strong><br>
+                                    <span class="ms-4">{{ user.createdAt|date('d/m/Y') }}</span>
+                                </li>
+                                {% if not is_granted('ROLE_SUPER_ADMIN') %}
+                                <li class="mb-2">
+                                    <i class="bi bi-building text-primary"></i>
+                                    <strong>{{ 'common.company'|trans }}:</strong><br>
+                                    <span class="ms-4">{{ tenant.name }}</span>
+                                </li>
+                                {% endif %}
+                                <li class="mb-2">
+                                    <i class="bi bi-clock-history text-primary"></i>
+                                    <strong>{{ 'common.last_access'|trans }}:</strong><br>
+                                    <span class="ms-4">{{ user.lastLoginAt ? user.lastLoginAt|date('d/m/Y H:i') : ('common.never'|trans) }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="bi bi-person-circle"></i> {{ 'common.personal_information'|trans }}
+                            </h5>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="text-muted small">{{ 'profile.first_name'|trans }}</label>
+                                    <p class="mb-0">{{ user.firstName }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="text-muted small">{{ 'profile.last_name'|trans }}</label>
+                                    <p class="mb-0">{{ user.lastName }}</p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="text-muted small">{{ 'profile.email'|trans }}</label>
+                                    <p class="mb-0">{{ user.email }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="text-muted small">{{ 'profile.username'|trans }}</label>
+                                    <p class="mb-0">{{ user.username }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="text-muted small">{{ 'profile.phone'|trans }}</label>
+                                    <p class="mb-0">{{ user.phone ? user.phone : ('common.not_specified'|trans) }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="text-muted small">{{ 'common.role'|trans }}</label>
+                                    <p class="mb-0">
+                                        <span class="badge bg-secondary">{{ user.role|upper }}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="bi bi-key-fill"></i> {{ 'password.title'|trans }}
+                                    </h5>
+                                    <p class="text-muted">{{ 'password.last_update'|trans }}:
+                                        {{ user.passwordChangedAt ? user.passwordChangedAt|date('d/m/Y') : ('common.never'|trans) }}
+                                    </p>
+                                    <a href="{{ path('app_profile_change_password') }}" class="btn btn-outline-primary">
+                                        <i class="bi bi-shield-lock"></i> {{ 'password.change'|trans }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="bi bi-shield-check"></i> {{ 'security.title'|trans }}
+                                    </h5>
+                                    <p class="text-muted">
+                                        2FA:
+                                        {% if user.twoFactorEnabled %}
+                                            <span class="badge bg-success">{{ 'security.enabled'|trans }}</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">{{ 'security.disabled'|trans }}</span>
+                                        {% endif %}
+                                    </p>
+                                    <a href="{{ path('app_security') }}" class="btn btn-outline-primary">
+                                        <i class="bi bi-gear"></i> {{ 'security.configure'|trans }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

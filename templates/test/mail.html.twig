@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Test de Email - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'test_mail.title'|trans} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-envelope"></i> {{ 'test.test_email'|trans }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <h6><i class="bi bi-exclamation-triangle"></i> Importante para Pruebas</h6>
+                        <p class="mb-0">
+                            <strong>Debes usar un correo que EXISTA en la base de datos.</strong>
+                            Por seguridad, el sistema no avisa si el correo no existe.
+                        </p>
+                    </div>
+
+                    <h6><i class="bi bi-envelope-check"></i> Correos Válidos para Prueba:</h6>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item">
+                            <code>admin@demo.com</code> - Super Admin
+                        </li>
+                        <li class="list-group-item">
+                            <code>admin@abc.com</code> - Administrador ABC
+                        </li>
+                        <li class="list-group-item">
+                            <code>user@abc.com</code> - Usuario ABC
+                        </li>
+                    </ul>
+
+                    <p>{{ 'test_mail.description'|trans }}:</p>
+
+                    <div class="alert alert-info">
+                        <h6><i class="bi bi-info-circle"></i> {{ 'test.steps_to_test'|trans }}:</h6>
+                        <ol>
+                            <li>{{ 'test_mail.goto_recovery'|trans }} <a href="{{ path('app_password_forgot') }}">{{ 'test_mail.recovery_link'|trans }}</a></li>
+                            <li>{{ 'test_mail.enter_email'|trans }}</li>
+                            <li>{{ 'test.send_reset_link'|trans }}</li>
+                            <li>{{ 'test_mail.check_mailpit'|trans }}: <a href="http://localhost:8025" target="_blank">{{ 'test_mail.mailpit_url'|trans }}</a></li>
+                            <li>{{ 'test.verify_email_and_link'|trans }}</li>
+                        </ol>
+                    </div>
+
+                    <div class="btn-group" role="group">
+                        <a href="{{ path('app_password_forgot') }}" class="btn btn-primary">
+                            <i class="bi bi-envelope"></i> {{ 'test_mail.goto_password_recovery'|trans }}
+                        </a>
+                        <a href="http://localhost:8025" target="_blank" class="btn btn-outline-primary">
+                            <i class="bi bi-mailbox"></i> Abrir Mailpit
+                        </a>
+                        <a href="{{ path('app_test_logs') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-file-text"></i> Probar Logs
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

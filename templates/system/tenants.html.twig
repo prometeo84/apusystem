@@ -1,0 +1,200 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestión de Empresas - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'system_tenants.title_page'|trans} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-building"></i> {{ 'system_tenants.registered_tenants_section'|trans }}</h5>
+                    <a href="{{ path('app_system_tenants_create') }}" class="btn btn-primary">
+                        <i class="bi bi-plus-lg"></i> {{ 'system_tenants.create_new_tenant'|trans }}
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="tenantsTable">
+                            <thead>
+                                <tr>
+                                    <th>{{ 'common.company'|trans }}</th>
+                                    <th>{{ 'system.company_code'|trans }}</th>
+                                    <th>{{ 'system.plan'|trans }}</th>
+                                    <th>{{ 'system.validity'|trans }}</th>
+                                    <th>{{ 'system.status'|trans }}</th>
+                                    <th>{{ 'system.users'|trans }}</th>
+                                    <th>{{ 'system.registration'|trans }}</th>
+                                    <th>{{ 'system.actions'|trans }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tenant in tenants %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ tenant.name }}</strong>
+                                        </td>
+                                        <td>
+                                            <code>{{ tenant.slug }}</code>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ tenant.plan == 'enterprise' ? 'danger' : (tenant.plan == 'professional' ? 'warning' : 'info') }}">
+                                                {{ tenant.plan|upper }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if tenant.planExpiresAt %}
+                                                {% if tenant.isPlanExpired %}
+                                                    <span class="badge bg-danger">EXPIRADO</span><br>
+                                                    <small class="text-muted">{{ tenant.planExpiresAt|date('d/m/Y') }}</small>
+                                                {% else %}
+                                                    {% set days = tenant.daysUntilExpiration %}
+                                                    <span class="badge bg-{{ days <= 7 ? 'danger' : (days <= 30 ? 'warning' : 'success') }}">
+                                                        {{ days }} días
+                                                    </span><br>
+                                                    <small class="text-muted">{{ tenant.planExpiresAt|date('d/m/Y') }}</small>
+                                                {% endif %}
+                                            {% else %}
+                                                    <span class="badge bg-secondary">{{ 'system.no_limit'|trans }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if tenant.isActive %}
+                                                <span class="badge bg-success">{{ 'system.status_active'|trans }}</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">{{ 'system.status_inactive'|trans }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <small>{{ tenant.users|length }} / {{ tenant.maxUsers }}</small>
+                                        </td>
+                                        <td>
+                                            <small>{{ tenant.createdAt|date('d/m/Y') }}</small>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="{{ path('app_system_tenants_edit', {id: tenant.id}) }}" class="btn btn-outline-primary" title="{{ 'common.edit'|trans }}">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-outline-info" title="{{ 'common.view_details'|trans }}"
+                                                        data-bs-toggle="modal" data-bs-target="#tenantModal{{ tenant.id }}">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modales de detalles -->
+{% for tenant in tenants %}
+    <div class="modal fade" id="tenantModal{{ tenant.id }}" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalles de {{ tenant.name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">Nombre:</dt>
+                                <dd class="col-sm-8">{{ tenant.name }}</dd>
+
+                                <dt class="col-sm-4">Subdominio:</dt>
+                                <dd class="col-sm-8"><code>{{ tenant.slug }}</code></dd>
+
+                                <dt class="col-sm-4">Plan:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge bg-{{ tenant.plan == 'enterprise' ? 'danger' : (tenant.plan == 'professional' ? 'warning' : 'info') }}">
+                                        {{ tenant.plan|upper }}
+                                    </span>
+                                </dd>
+
+                                <dt class="col-sm-4">Estado:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge bg-{{ tenant.isActive ? 'success' : 'danger' }}">
+                                        {{ tenant.isActive ? 'Activo' : 'Inactivo' }}
+                                    </span>
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Usuarios:</dt>
+                                <dd class="col-sm-7">{{ tenant.users|length }} / {{ tenant.maxUsers }}</dd>
+
+                                <dt class="col-sm-5">Proyectos:</dt>
+                                <dd class="col-sm-7">0 / {{ tenant.maxProjects }}</dd>
+
+                                <dt class="col-sm-5">Registro:</dt>
+                                <dd class="col-sm-7">{{ tenant.createdAt|date('d/m/Y H:i') }}</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <h6>Usuarios Registrados</h6>
+                    <ul class="list-group">
+                        {% for user in tenant.users %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{{ user.firstName }} {{ user.lastName }}</strong><br>
+                                    <small class="text-muted">{{ user.email }}</small>
+                                </div>
+                                <div>
+                                    <span class="badge bg-{{ user.roles[0] == 'ROLE_SUPER_ADMIN' ? 'danger' : (user.roles[0] == 'ROLE_ADMIN' ? 'warning' : 'secondary') }}">
+                                        {{ user.roles[0]|replace({'ROLE_': ''}) }}
+                                    </span>
+                                    {% if user.totpEnabled %}
+                                        <i class="bi bi-shield-check text-success" title="2FA Habilitado"></i>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof $ !== 'undefined' && $.fn.DataTable) {
+        $('#tenantsTable').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+            },
+            order: [[6, 'desc']]
+        });
+    }
+});
+</script>
+{% endblock %}

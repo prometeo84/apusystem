@@ -1,0 +1,213 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Configuración de Empresa - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'Configuración de Empresa'} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="bi bi-check-circle-fill"></i> {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-building"></i> Información de la Empresa</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="{{ path('app_admin_tenant') }}">
+                                <div class="mb-3">
+                                    <label class="form-label">Nombre Comercial</label>
+                                    <input type="text" name="name" class="form-control"
+                                           value="{{ tenant.name }}" required>
+                                </div>
+
+                                {# Campos adicionales (requieren migración de BD)
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">NIT / RUT</label>
+                                        <input type="text" name="tax_id" class="form-control" value="">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Email Corporativo</label>
+                                        <input type="email" name="email" class="form-control" value="">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Teléfono</label>
+                                        <input type="tel" name="phone" class="form-control" value="">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Sitio Web</label>
+                                        <input type="url" name="website" class="form-control" value="" placeholder="https://">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Dirección</label>
+                                    <textarea name="address" class="form-control" rows="2"></textarea>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Ciudad</label>
+                                        <input type="text" name="city" class="form-control" value="">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Estado/Región</label>
+                                        <input type="text" name="state" class="form-control" value="">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">País</label>
+                                        <input type="text" name="country" class="form-control" value="">
+                                    </div>
+                                </div>
+                                #}
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Guardar Cambios
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-gear"></i> Configuración del Sistema</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="{{ path('app_admin_tenant') }}">
+                                <input type="hidden" name="settings_form" value="1">
+
+                                <div class="mb-3">
+                                    <label class="form-label">Zona Horaria</label>
+                                    <select name="timezone" class="form-select">
+                                        <option value="America/Bogota" {{ tenant.settings.timezone|default('America/Bogota') == 'America/Bogota' ? 'selected' : '' }}>
+                                            América/Bogotá (GMT-5)
+                                        </option>
+                                        <option value="America/Mexico_City" {{ tenant.settings.timezone|default('') == 'America/Mexico_City' ? 'selected' : '' }}>
+                                            América/Ciudad de México (GMT-6)
+                                        </option>
+                                        <option value="America/Lima" {{ tenant.settings.timezone|default('') == 'America/Lima' ? 'selected' : '' }}>
+                                            América/Lima (GMT-5)
+                                        </option>
+                                        <option value="America/Santiago" {{ tenant.settings.timezone|default('') == 'America/Santiago' ? 'selected' : '' }}>
+                                            América/Santiago (GMT-4/GMT-3)
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Moneda</label>
+                                    <select name="currency" class="form-select">
+                                        <option value="COP" {{ tenant.settings.currency|default('COP') == 'COP' ? 'selected' : '' }}>
+                                            Peso Colombiano (COP)
+                                        </option>
+                                        <option value="USD" {{ tenant.settings.currency|default('') == 'USD' ? 'selected' : '' }}>
+                                            Dólar Americano (USD)
+                                        </option>
+                                        <option value="MXN" {{ tenant.settings.currency|default('') == 'MXN' ? 'selected' : '' }}>
+                                            Peso Mexicano (MXN)
+                                        </option>
+                                        <option value="PEN" {{ tenant.settings.currency|default('') == 'PEN' ? 'selected' : '' }}>
+                                            Nuevo Sol (PEN)
+                                        </option>
+                                        <option value="CLP" {{ tenant.settings.currency|default('') == 'CLP' ? 'selected' : '' }}>
+                                            Peso Chileno (CLP)
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input type="checkbox" name="require_2fa" class="form-check-input" id="require2FA"
+                                           {{ tenant.settings.require2fa|default(false) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="require2FA">
+                                        Requerir autenticación de dos factores para todos los usuarios
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input type="checkbox" name="enable_email_notifications" class="form-check-input" id="emailNotifications"
+                                           {{ tenant.settings.emailNotifications|default(true) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="emailNotifications">
+                                        Habilitar notificaciones por email
+                                    </label>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Guardar Configuración
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-credit-card"></i> Plan Actual</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <h2 class="text-primary">{{ tenant.plan|upper }}</h2>
+                            <p class="text-muted">
+                                {% if tenant.plan == 'trial' %}
+                                    Plan de prueba
+                                {% elseif tenant.plan == 'basic' %}
+                                    Plan básico
+                                {% elseif tenant.plan == 'professional' %}
+                                    Plan profesional
+                                {% elseif tenant.plan == 'enterprise' %}
+                                    Plan empresarial
+                                {% endif %}
+                            </p>
+
+                            <div class="alert alert-{{ tenant.isActive ? 'success' : 'danger' }}">
+                                Estado: <strong>{{ tenant.isActive ? 'Activo' : 'Inactivo' }}</strong>
+                            </div>
+
+                            <hr>
+
+                            <dl class="row text-start">
+                                <dt class="col-6">Usuarios:</dt>
+                                <dd class="col-6">{{ tenant.maxUsers }} máximo</dd>
+
+                                <dt class="col-6">Proyectos:</dt>
+                                <dd class="col-6">{{ tenant.maxProjects }}</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-info-circle"></i> Información del Sistema</h5>
+                        </div>
+                        <div class="card-body">
+                            <dl class="mb-0">
+                                <dt>Cuenta creada:</dt>
+                                <dd>{{ tenant.createdAt|date('d/m/Y') }}</dd>
+
+                                <dt>ID del Tenant:</dt>
+                                <dd><code>{{ tenant.id }}</code></dd>
+
+                                <dt>Dominio:</dt>
+                                <dd>{{ tenant.slug }}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

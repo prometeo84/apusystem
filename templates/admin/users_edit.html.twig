@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Usuario - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'admin_users.edit_user_title'|trans} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <i class="bi bi-check-circle-fill"></i> {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="bi bi-pencil"></i> {{ 'admin_users.edit_user_title'|trans }}: {{ editUser.email }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="{{ path('app_admin_users_edit', {id: editUser.id}) }}">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Nombre</label>
+                                        <input type="text" name="first_name" class="form-control"
+                                               value="{{ editUser.firstName }}" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Apellido</label>
+                                        <input type="text" name="last_name" class="form-control"
+                                               value="{{ editUser.lastName }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" value="{{ editUser.email }}" disabled>
+                                    <small class="text-muted">{{ 'common.email_not_modifiable'|trans }}</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Teléfono</label>
+                                    <input type="tel" name="phone" class="form-control"
+                                           value="{{ editUser.phone }}">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Rol</label>
+                                    <select name="role" class="form-select" required>
+                                        <option value="ROLE_USER" {{ editUser.roles[0] == 'ROLE_USER' ? 'selected' : '' }}>
+                                            Usuario
+                                        </option>
+                                        <option value="ROLE_MANAGER" {{ editUser.roles[0] == 'ROLE_MANAGER' ? 'selected' : '' }}>
+                                            Manager
+                                        </option>
+                                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                            <option value="ROLE_ADMIN" {{ editUser.roles[0] == 'ROLE_ADMIN' ? 'selected' : '' }}>
+                                                Administrador
+                                            </option>
+                                            <option value="ROLE_SUPER_ADMIN" {{ editUser.roles[0] == 'ROLE_SUPER_ADMIN' ? 'selected' : '' }}>
+                                                Super Administrador
+                                            </option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input type="checkbox" name="is_active" class="form-check-input" id="isActive"
+                                           {{ editUser.isActive ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="isActive">
+                                        Usuario activo
+                                    </label>
+                                </div>
+
+                                <hr>
+
+                                <h6>{{ 'password.change'|trans }} ({{ 'common.optional'|trans }})</h6>
+                                <div class="mb-3">
+                                    <label class="form-label">{{ 'password.new_password'|trans }}</label>
+                                    <input type="password" name="password" class="form-control" minlength="8">
+                                    <small class="text-muted">{{ 'admin.leave_blank_no_change'|trans }}</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">{{ 'password.confirm_new_password'|trans }}</label>
+                                    <input type="password" name="password_confirm" class="form-control" minlength="8">
+                                </div>
+
+                                <hr>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <small class="text-muted">
+                                            <strong>Creado:</strong> {{ editUser.createdAt|date('d/m/Y H:i') }}
+                                        </small>
+                                    </div>
+                                    <div class="col-md-6 text-end">
+                                        <small class="text-muted">
+                                            <strong>Último acceso:</strong>
+                                            {{ editUser.lastLoginAt ? editUser.lastLoginAt|date('d/m/Y H:i') : 'Nunca' }}
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-save"></i> Guardar Cambios
+                                    </button>
+                                    <a href="{{ path('app_admin_users') }}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-arrow-left"></i> Volver
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

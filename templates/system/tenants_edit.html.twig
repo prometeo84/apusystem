@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Empresa - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'system_tenants.edit_tenant_form'|trans} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-building"></i> {{ 'common.edit'|trans }}: {{ tenant.name }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="{{ path('app_system_tenants_edit', {id: tenant.id}) }}">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="name" class="form-label">Nombre de la Empresa *</label>
+                                        <input type="text" class="form-control" id="name" name="name" value="{{ tenant.name }}" required>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="slug" class="form-label">{{ 'system.company_code'|trans }}</label>
+                                        <input type="text" class="form-control" id="slug" value="{{ tenant.slug }}" disabled>
+                                        <div class="form-text">{{ 'system.company_code_no_change'|trans }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="plan" class="form-label">Plan *</label>
+                                        <select class="form-select" id="plan" name="plan" required>
+                                            <option value="basic" {% if tenant.plan == 'basic' %}selected{% endif %}>Basic</option>
+                                            <option value="professional" {% if tenant.plan == 'professional' %}selected{% endif %}>Professional</option>
+                                            <option value="enterprise" {% if tenant.plan == 'enterprise' %}selected{% endif %}>Enterprise</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label for="max_users" class="form-label">Máximo de Usuarios</label>
+                                        <input type="number" class="form-control" id="max_users" name="max_users" value="{{ tenant.maxUsers }}" min="1" max="1000">
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label for="max_projects" class="form-label">Máximo de Proyectos</label>
+                                        <input type="number" class="form-control" id="max_projects" name="max_projects" value="{{ tenant.maxProjects }}" min="1" max="10000">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="plan_months" class="form-label">{{ 'system.extend_validity'|trans }}</label>
+                                        <select class="form-select" id="plan_months" name="plan_months">
+                                            <option value="0">{{ 'system.no_modify'|trans }}</option>
+                                            <option value="1">+1 mes</option>
+                                            <option value="3">+3 meses</option>
+                                            <option value="6">+6 meses</option>
+                                            <option value="12">+12 meses (1 año)</option>
+                                            <option value="24">+24 meses (2 años)</option>
+                                        </select>
+                                        <div class="form-text">
+                                            {% if tenant.planExpiresAt %}
+                                                Vence: {{ tenant.planExpiresAt|date('d/m/Y') }}
+                                                {% if tenant.isPlanExpired %}
+                                                    <span class="text-danger">(EXPIRADO)</span>
+                                                {% else %}
+                                                    ({{ tenant.daysUntilExpiration }} días)
+                                                {% endif %}
+                                            {% else %}
+                                                Sin límite de tiempo
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Estado</label>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1" {% if tenant.isActive %}checked{% endif %}>
+                                            <label class="form-check-label" for="is_active">
+                                                Empresa Activa
+                                            </label>
+                                        </div>
+                                        <div class="form-text">
+                                            {% if tenant.isActive %}
+                                                <span class="text-success">✓ Activa</span>
+                                            {% else %}
+                                                <span class="text-danger">✗ Inactiva</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Estadísticas</h6>
+                                        <ul>
+                                            <li>Usuarios: {{ tenant.users|length }} / {{ tenant.maxUsers }}</li>
+                                            <li>Proyectos: 0 / {{ tenant.maxProjects }}</li>
+                                            <li>Creado: {{ tenant.createdAt|date('d/m/Y H:i') }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-lg"></i> Guardar Cambios
+                                    </button>
+                                    <a href="{{ path('app_system_tenants') }}" class="btn btn-secondary">
+                                        <i class="bi bi-x-lg"></i> Cancelar
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

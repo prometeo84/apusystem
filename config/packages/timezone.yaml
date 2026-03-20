@@ -1,0 +1,6 @@
+# config/packages/timezone.yaml
+# Configuración global de zona horaria para el sistema
+
+# Se establece la zona horaria predeterminada del sistema
+parameters:
+  app.timezone: "America/Guayaquil"

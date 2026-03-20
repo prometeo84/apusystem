@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Restablecer Contraseña - APU System{% endblock %}
+
+{% block body %}
+<div class="main-content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <h1 class="h3 mb-3 fw-bold" style="color: var(--primary-color);">
+                                <i class="bi bi-shield-lock"></i> {{ 'password.reset_title'|trans }}
+                            </h1>
+                            <p class="text-muted">{{ 'password.reset_description'|trans }}</p>
+                        </div>
+
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger">
+                                <i class="bi bi-exclamation-triangle-fill"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+
+                        <form method="post" action="{{ path('app_password_reset', {token: token}) }}">
+                            <div class="alert alert-info mb-3">
+                                <strong>Requisitos de la contraseña:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li>Mínimo 8 caracteres</li>
+                                    <li>Se recomienda usar letras, números y símbolos</li>
+                                </ul>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">
+                                    <i class="bi bi-lock"></i> {{ 'password.new_password'|trans }}
+                                </label>
+                                <div class="input-group">
+                                    <input
+                                        type="password"
+                                        class="form-control form-control-lg"
+                                        id="password"
+                                        name="password"
+                                        required
+                                        minlength="8"
+                                        placeholder="Ingrese su nueva contraseña"
+                                    >
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="bi bi-eye" id="toggleIcon"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password_confirm" class="form-label">
+                                    <i class="bi bi-lock-fill"></i> {{ 'password.confirm_new_password'|trans }}
+                                </label>
+                                <div class="input-group">
+                                    <input
+                                        type="password"
+                                        class="form-control form-control-lg"
+                                        id="password_confirm"
+                                        name="password_confirm"
+                                        required
+                                        minlength="8"
+                                        placeholder="Confirme su nueva contraseña"
+                                    >
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirm">
+                                        <i class="bi bi-eye" id="toggleIcon2"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 mb-3">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-check-circle"></i> {{ 'password.reset_button'|trans }}
+                                </button>
+                            </div>
+
+                            <div class="text-center">
+                                <a href="{{ path('app_login') }}" class="text-decoration-none" style="color: var(--primary-color);">
+                                    <i class="bi bi-arrow-left"></i> Volver al Login
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4 text-white">
+                    <p class="mb-0">APU System &copy; {{ 'now'|date('Y') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle para password
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggleIcon');
+
+    togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+
+        if (type === 'text') {
+            toggleIcon.classList.remove('bi-eye');
+            toggleIcon.classList.add('bi-eye-slash');
+        } else {
+            toggleIcon.classList.remove('bi-eye-slash');
+            toggleIcon.classList.add('bi-eye');
+        }
+    });
+
+    // Toggle para password confirm
+    const togglePasswordConfirm = document.getElementById('togglePasswordConfirm');
+    const passwordConfirmInput = document.getElementById('password_confirm');
+    const toggleIcon2 = document.getElementById('toggleIcon2');
+
+    togglePasswordConfirm.addEventListener('click', function() {
+        const type = passwordConfirmInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordConfirmInput.setAttribute('type', type);
+
+        if (type === 'text') {
+            toggleIcon2.classList.remove('bi-eye');
+            toggleIcon2.classList.add('bi-eye-slash');
+        } else {
+            toggleIcon2.classList.remove('bi-eye-slash');
+            toggleIcon2.classList.add('bi-eye');
+        }
+    });
+});
+</script>
+{% endblock %}

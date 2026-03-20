@@ -1,0 +1,240 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Detalles - {{ file.originalFilename }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_revit_files') }}">Archivos Revit</a></li>
+            <li class="breadcrumb-item active">{{ file.originalFilename }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-file-earmark-text"></i> {{ file.originalFilename }}</h1>
+        <div class="btn-group" role="group">
+            {% if file.status == 'error' %}
+                <form method="POST" action="{{ path('app_revit_file_reprocess', {id: file.id}) }}" style="display: inline;">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-arrow-clockwise"></i> Reprocesar
+                    </button>
+                </form>
+            {% endif %}
+            <form method="POST"
+                  action="{{ path('app_revit_file_delete', {id: file.id}) }}"
+                  onsubmit="return confirm('¿Está seguro de eliminar este archivo?')"
+                  style="display: inline;">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Eliminar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="bi bi-info-circle"></i> Información General
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>Tipo:</strong>
+                        <span class="badge bg-secondary float-end">{{ file.fileType|upper }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Tamaño:</strong>
+                        <span class="float-end">{{ file.fileSizeFormatted }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Estado:</strong>
+                        <span class="float-end">
+                            {% if file.status == 'completed' %}
+                                <span class="badge bg-success">Completado</span>
+                            {% elseif file.status == 'processing' %}
+                                <span class="badge bg-warning text-dark">Procesando</span>
+                            {% elseif file.status == 'pending' %}
+                                <span class="badge bg-info text-dark">Pendiente</span>
+                            {% elseif file.status == 'error' %}
+                                <span class="badge bg-danger">Error</span>
+                            {% endif %}
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Hash (SHA-256):</strong>
+                        <br>
+                        <code class="small">{{ file.fileHash }}</code>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Subido por:</strong>
+                        <span class="float-end">{{ file.uploadedBy.username }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Fecha de subida:</strong>
+                        <span class="float-end">{{ file.uploadedAt|date('d/m/Y H:i:s') }}</span>
+                    </li>
+                    {% if file.processedAt %}
+                        <li class="list-group-item">
+                            <strong>Procesado:</strong>
+                            <span class="float-end">{{ file.processedAt|date('d/m/Y H:i:s') }}</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            {% if file.metadata %}
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="bi bi-database"></i> Metadatos
+                    </div>
+                    <div class="card-body">
+                        {% if file.metadata.project_name is defined %}
+                            <p><strong>Proyecto:</strong> {{ file.metadata.project_name }}</p>
+                        {% endif %}
+                        {% if file.metadata.version is defined %}
+                            <p><strong>Versión:</strong> {{ file.metadata.version }}</p>
+                        {% endif %}
+                        {% if file.metadata.elements_count is defined %}
+                            <p><strong>Elementos:</strong> {{ file.metadata.elements_count }}</p>
+                        {% endif %}
+                        {% if file.metadata.categories is defined %}
+                            <p><strong>Categorías:</strong></p>
+                            <ul>
+                                {% for category in file.metadata.categories %}
+                                    <li>{{ category }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-8">
+            {% if file.status == 'error' and file.errorMessage %}
+                <div class="alert alert-danger">
+                    <h5><i class="bi bi-exclamation-triangle"></i> Error de Procesamiento</h5>
+                    <p class="mb-0">{{ file.errorMessage }}</p>
+                </div>
+            {% endif %}
+
+            {% if file.processingResult %}
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="bi bi-clipboard-check"></i> Resultado del Procesamiento
+                    </div>
+                    <div class="card-body">
+                        {% if file.processingResult.created is defined %}
+                            <div class="row text-center mb-3">
+                                <div class="col-md-4">
+                                    <div class="card bg-success text-white">
+                                        <div class="card-body">
+                                            <h3>{{ file.processingResult.created }}</h3>
+                                            <p class="mb-0">APUs Creados</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-warning text-dark">
+                                        <div class="card-body">
+                                            <h3>{{ file.processingResult.skipped|default(0) }}</h3>
+                                            <p class="mb-0">Elementos Omitidos</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-info text-white">
+                                        <div class="card-body">
+                                            <h3>{{ file.processingResult.total|default(0) }}</h3>
+                                            <p class="mb-0">Total Procesados</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if file.processingResult.elements is defined %}
+                            <h5>Elementos Procesados</h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Categoría</th>
+                                            <th>Cantidad</th>
+                                            <th>Unidad</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for element in file.processingResult.elements|slice(0, 50) %}
+                                            <tr>
+                                                <td>{{ element.name|default('N/A') }}</td>
+                                                <td>{{ element.category|default('N/A') }}</td>
+                                                <td>{{ element.quantity|default('N/A') }}</td>
+                                                <td>{{ element.unit|default('N/A') }}</td>
+                                                <td>
+                                                    {% if element.created %}
+                                                        <span class="badge bg-success">Creado</span>
+                                                    {% else %}
+                                                        <span class="badge bg-warning text-dark">Omitido</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% if file.processingResult.elements|length > 50 %}
+                                <p class="text-muted small">
+                                    Mostrando 50 de {{ file.processingResult.elements|length }} elementos
+                                </p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if file.status == 'pending' %}
+                <div class="alert alert-info">
+                    <i class="bi bi-hourglass-split"></i> Este archivo está pendiente de procesamiento.
+                    El procesamiento se iniciará automáticamente en breve.
+                </div>
+            {% endif %}
+
+            {% if file.status == 'processing' %}
+                <div class="alert alert-warning">
+                    <i class="bi bi-arrow-repeat"></i> Este archivo se está procesando actualmente.
+                    Actualice la página para ver el progreso.
+                </div>
+            {% endif %}
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="bi bi-code-square"></i> Información Técnica
+                </div>
+                <div class="card-body">
+                    <p><strong>Nombre almacenado:</strong> <code>{{ file.storedFilename }}</code></p>
+                    <p><strong>Ruta:</strong> <code>{{ file.filePath }}</code></p>
+                    <p class="mb-0"><strong>ID del archivo:</strong> <code>{{ file.id }}</code></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

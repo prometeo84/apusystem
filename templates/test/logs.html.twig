@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Test de Logs - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'test.logs_title'|trans} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="bi bi-check-circle-fill"></i> {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-bug"></i> {{ 'test.test_system'|trans }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-info">
+                                <h6><i class="bi bi-clock"></i> {{ 'test.timezone_info'|trans }}</h6>
+                                <ul class="mb-0">
+                                    <li><strong>{{ 'test.current_timezone'|trans }}:</strong> {{ timezone }}</li>
+                                    <li><strong>{{ 'test.current_time'|trans }}:</strong> {{ time }}</li>
+                                    <li><strong>{{ 'test.system_datetime'|trans }}:</strong> {{ 'now'|date('Y-m-d H:i:s T') }}</li>
+                                </ul>
+                            </div>
+
+                            <h6 class="mt-4">{{ 'test.logs_generated'|trans }}</h6>
+                            <ul>
+                                <li><span class="badge bg-secondary">DEBUG</span> {{ 'test.debug_message'|trans }}</li>
+                                <li><span class="badge bg-info">INFO</span> {{ 'test.info_message'|trans }}</li>
+                                <li><span class="badge bg-warning">WARNING</span> {{ 'test.warning_message'|trans }}</li>
+                                <li><span class="badge bg-danger">ERROR</span> {{ 'test.error_message'|trans }}</li>
+                                <li><span class="badge bg-dark">CRITICAL</span> {{ 'test.critical_message'|trans }}</li>
+                            </ul>
+
+                            <div class="alert alert-success mt-4">
+                                <h6><i class="bi bi-check-circle"></i> {{ 'test.log_files'|trans }}</h6>
+                                <p class="mb-2">{{ 'test.logs_saved'|trans }}:</p>
+                                <ul class="mb-0">
+                                    <li><code>/var/www/html/proyecto/var/log/dev.log</code> - {{ 'test.main_log'|trans }}</li>
+                                    <li><code>/var/www/html/proyecto/var/log/error.log</code> - {{ 'test.errors_only'|trans }}</li>
+                                    <li><code>/var/www/html/proyecto/var/log/security.log</code> - {{ 'test.security_events'|trans }}</li>
+                                    <li><code>/var/log/php_errors.log</code> - {{ 'test.php_errors'|trans }}</li>
+                                </ul>
+                            </div>
+
+                            <div class="mt-4">
+                                <h6>{{ 'test.other_tests'|trans }}:</h6>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ path('app_test_error') }}" class="btn btn-danger"
+                                       onclick="return confirm('{{ 'test.generate_error'|trans }}')">
+                                        <i class="bi bi-exclamation-triangle"></i> {{ 'test.generate_error'|trans }}
+                                    </a>
+                                    <a href="{{ path('app_password_forgot') }}" class="btn btn-primary">
+                                        <i class="bi bi-envelope"></i> {{ 'test.test_email'|trans }}
+                                    </a>
+                                    <a href="{{ path('app_system_errors') }}" class="btn btn-secondary">
+                                        <i class="bi bi-file-text"></i> {{ 'test.view_system_logs'|trans }}
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <a href="{{ path('app_system') }}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left"></i> {{ 'test.back_dashboard'|trans }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

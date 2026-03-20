@@ -1,0 +1,17 @@
+imports:
+    - { resource: 'framework.yaml' }
+    - { resource: 'doctrine.yaml' }
+    - { resource: 'security.yaml' }
+    - { resource: 'twig.yaml' }
+
+parameters:
+    app.name: '%env(APP_NAME)%'
+    app.version: '1.0.0'
+
+when@dev:
+    imports:
+        - { resource: 'dev/web_profiler.yaml', ignore_errors: true }
+
+when@test:
+    imports:
+        - { resource: 'test/framework.yaml', ignore_errors: true }

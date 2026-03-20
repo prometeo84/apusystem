@@ -1,0 +1,78 @@
+services:
+    # Default configuration for services in *this* file
+    _defaults:
+        autowire: true # Automatically injects dependencies
+        autoconfigure: true # Automatically registers services as commands, event subscribers, etc.
+
+    # Makes classes in src/ available to be used as services
+    App\:
+        resource: "../src/"
+        exclude:
+            - "../src/DependencyInjection/"
+            - "../src/Entity/"
+            - "../src/Kernel.php"
+
+    # Controllers
+    App\Controller\:
+        resource: "../src/Controller/"
+        tags: ["controller.service_arguments"]
+
+    # Bind JWT secret for Revit API controller constructor
+    App\Controller\API\RevitAPIController:
+        arguments:
+            $jwtSecret: "%env(JWT_SECRET_KEY)%"
+
+    # Revit File Processor Service
+    App\Service\RevitFileProcessor:
+        arguments:
+            $projectDir: "%kernel.project_dir%"
+
+    # Security Services
+    App\Security\UserProvider:
+        arguments:
+            $em: "@doctrine.orm.entity_manager"
+
+    App\Security\AuthenticationSuccessHandler:
+        arguments:
+            $router: "@router"
+
+    App\Service\SessionAnomalyDetector:
+        arguments:
+            $em: "@doctrine.orm.entity_manager"
+
+    # 2FA Services
+    App\Service\TwoFactorAuthService:
+        arguments:
+            $em: "@doctrine.orm.entity_manager"
+            $google2fa: '@PragmaRX\Google2FA\Google2FA'
+
+    PragmaRX\Google2FA\Google2FA: ~
+
+    # Monolog Processors
+    App\Service\TimezoneProcessor:
+        tags:
+            - { name: monolog.processor }
+
+    App\Service\RateLimitingService:
+        arguments:
+            $em: "@doctrine.orm.entity_manager"
+
+    # Security Logger
+    App\Service\SecurityLogger:
+        arguments:
+            $em: "@doctrine.orm.entity_manager"
+
+    # Encryption Service (OWASP A02:2026)
+    App\Service\EncryptionService:
+        arguments:
+            $appSecret: "%env(APP_SECRET)%"
+
+    # Recovery Code Hasher (OWASP A02:2026)
+    App\Service\RecoveryCodeHasher: ~
+
+    # Event Listeners
+    App\EventListener\RateLimitSubscriber:
+        arguments:
+            $anonymousApiLimiter: "@limiter.anonymous_api"
+        tags:
+            - { name: kernel.event_subscriber }

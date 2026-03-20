@@ -1,0 +1,17 @@
+# Deshabilitar listado de directorios
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirigir peticiones con extensión .php a la versión sin extensión (301)
+    RewriteCond %{REQUEST_URI} ^(.*)\.php$
+    RewriteRule ^(.*)\.php$ /$1 [R=301,L]
+
+    # Si el archivo existe físicamente en la raíz (excepto directorios), servirlo directamente
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+
+    # Redirigir todas las demás peticiones al front controller de Symfony en public/
+    RewriteRule ^(.*)$ public/index.php [QSA,L]
+</IfModule>

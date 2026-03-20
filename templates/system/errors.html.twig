@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Errores del Sistema - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'system_errors.title'|trans} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-bug-fill text-danger"></i> {{ 'system.error_log'|trans }}</h5>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-sm btn-outline-secondary active" data-filter="all">
+                            {{ 'system_errors.filter_all'|trans }}
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger" data-filter="CRITICAL">
+                            {{ 'system_errors.filter_critical'|trans }}
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger" data-filter="ERROR">
+                            {{ 'system_errors.filter_errors'|trans }}
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-warning" data-filter="WARNING">
+                            {{ 'system_errors.filter_warnings'|trans }}
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    {% if errors|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 180px;">{{ 'system.datetime'|trans }}</th>
+                                        <th style="width: 100px;">{{ 'system.level'|trans }}</th>
+                                        <th>{{ 'system.error_message'|trans }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for error in errors %}
+                                        <tr data-level="{{ error.level }}">
+                                            <td><small>{{ error.date }}</small></td>
+                                            <td>
+                                                <span class="badge bg-{{ error.level == 'CRITICAL' ? 'danger' : (error.level == 'ERROR' ? 'danger' : 'warning') }}">
+                                                    {{ error.level }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <code class="text-break" style="font-size: 0.85rem;">{{ error.message }}</code>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3">{{ 'system_errors.no_errors_found'|trans }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('[data-filter]');
+    const rows = document.querySelectorAll('tbody tr[data-level]');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            rows.forEach(row => {
+                if (filter === 'all' || row.dataset.level === filter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

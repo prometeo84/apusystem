@@ -1,0 +1,21 @@
+framework:
+  rate_limiter:
+    anonymous_api:
+      policy: "sliding_window"
+      limit: 100
+      interval: "1 hour"
+
+    login_attempts:
+      policy: "fixed_window"
+      limit: 5
+      interval: "15 minutes"
+
+    password_reset:
+      policy: "fixed_window"
+      limit: 3
+      interval: "1 hour"
+
+    two_factor:
+      policy: "fixed_window"
+      limit: 3
+      interval: "5 minutes"

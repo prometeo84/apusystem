@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Alertas del Sistema - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'system_alerts.title_page'|trans} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+
+            <!-- Estadísticas de Alertas -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <h3 class="mb-0">{{ stats.total }}</h3>
+                            <small class="text-muted">{{ 'system.total_alerts'|trans }}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <h3 class="mb-0 text-danger">{{ stats.critical }}</h3>
+                            <small class="text-muted">{{ 'system.critical_alerts'|trans }}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <h3 class="mb-0 text-warning">{{ stats.security }}</h3>
+                            <small class="text-muted">{{ 'system.security_alerts'|trans }}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <h3 class="mb-0 text-info">{{ stats.billing }}</h3>
+                            <small class="text-muted">{{ 'system.billing_alerts'|trans }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-bell-fill text-warning"></i> {{ 'system_alerts.active_alerts_section'|trans }}</h5>
+                </div>
+                <div class="card-body">
+                    {% if alerts|length > 0 %}
+                        <div class="list-group">
+                            {% for alert in alerts %}
+                                <div class="list-group-item list-group-item-{{ alert.type }}">
+                                    <div class="d-flex w-100 justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center mb-2">
+                                                {% if alert.category == 'security' %}
+                                                    <span class="badge bg-danger me-2">SEGURIDAD</span>
+                                                {% elseif alert.category == 'billing' %}
+                                                    <span class="badge bg-warning me-2">FACTURACIÓN</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary me-2">SISTEMA</span>
+                                                {% endif %}
+                                                <h6 class="mb-0">{{ alert.title }}</h6>
+                                            </div>
+                                            <p class="mb-2">{{ alert.message }}</p>
+
+                                            {% if alert.details is defined %}
+                                                <div class="mt-2">
+                                                    <button class="btn btn-sm btn-outline-secondary" type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#details{{ loop.index }}">
+                                                        <i class="bi bi-info-circle"></i> {{ 'common.view_details'|trans }}
+                                                    </button>
+                                                    <div class="collapse mt-2" id="details{{ loop.index }}">
+                                                        <div class="card card-body bg-light">
+                                                            <pre class="mb-0"><small>{{ alert.details|json_encode(constant('JSON_PRETTY_PRINT')) }}</small></pre>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+
+                                            <small class="text-muted d-block mt-2">
+                                                <i class="bi bi-clock"></i> {{ alert.date|date('d/m/Y H:i:s') }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3">{{ 'system_alerts.no_active_alerts_msg'|trans }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-shield-check"></i> {{ 'system.alert_types'|trans }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-danger"><i class="bi bi-exclamation-triangle-fill"></i> {{ 'system.suspicious_connections'|trans }}</h6>
+                            <ul class="small">
+                                <li><strong>{{ 'system.ip_change'|trans }}</strong></li>
+                                <li><strong>{{ 'system.browser_change'|trans }}</strong></li>
+                                <li><strong>{{ 'system.multiple_sessions'|trans }}</strong></li>
+                                <li><strong>{{ 'system.bot_pattern'|trans }}</strong></li>
+                                <li><strong>{{ 'system.suspicious_ip'|trans }}</strong></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-warning"><i class="bi bi-credit-card"></i> {{ 'system.billing'|trans }}</h6>
+                            <ul class="small">
+                                <li><strong>{{ 'system.plan_expiring'|trans }}</strong></li>
+                                <li><strong>{{ 'system.plan_expired'|trans }}</strong></li>
+                                <li><strong>{{ 'system.user_limit'|trans }}</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

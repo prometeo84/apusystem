@@ -1,0 +1,18 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    paths:
+        - src
+    excludePaths:
+        - src/Kernel.php
+    parallel:
+        maximumNumberOfProcesses: 2
+        jobSize: 2
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        - '#Expression on left side of \?\? is not nullable#'
+        - '#is never read, only written#'
+        - '#is unused#'
+        - '#Property .* is never assigned int so it can be removed#'

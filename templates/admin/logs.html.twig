@@ -1,0 +1,216 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Logs de Seguridad - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'Logs de Seguridad'} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5 class="mb-0"><i class="bi bi-file-text"></i> Eventos de Seguridad</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-secondary active" data-filter="all">
+                                    Todos
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-success" data-filter="INFO">
+                                    Info
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-warning" data-filter="WARNING">
+                                    Advertencias
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger" data-filter="CRITICAL">
+                                    Críticos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="logsTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 150px;">Fecha/Hora</th>
+                                    <th>Usuario</th>
+                                    <th>Evento</th>
+                                    <th>IP</th>
+                                    <th>Navegador</th>
+                                    <th style="width: 100px;">Severidad</th>
+                                    <th style="width: 60px;">Detalles</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for event in securityEvents %}
+                                    <tr data-severity="{{ event.severity }}">
+                                        <td>
+                                            <small>{{ event.createdAt|date('d/m/Y') }}</small><br>
+                                            <small class="text-muted">{{ event.createdAt|date('H:i:s') }}</small>
+                                        </td>
+                                        <td>
+                                            {% if event.user %}
+                                                <strong>{{ event.user.firstName }} {{ event.user.lastName }}</strong><br>
+                                                <small class="text-muted">{{ event.user.email }}</small>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">
+                                                {{ event.eventType|replace({'_': ' '})|title }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <code>{{ event.ipAddress }}</code>
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">
+                                                {{ event.userAgent|slice(0, 40) }}...
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ event.severity == 'CRITICAL' ? 'danger' : (event.severity == 'WARNING' ? 'warning' : 'info') }}">
+                                                {{ event.severity }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if event.eventData %}
+                                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#detailsModal{{ event.id }}">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            Mostrando {{ securityEvents|length }} eventos
+                        </small>
+                        <nav>
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item disabled">
+                                    <span class="page-link">Anterior</span>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Siguiente</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modales de detalles -->
+{% for event in securityEvents %}
+    {% if event.eventData %}
+        <div class="modal fade" id="detailsModal{{ event.id }}" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Detalles del Evento</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <dl class="row">
+                            <dt class="col-sm-3">Fecha/Hora:</dt>
+                            <dd class="col-sm-9">{{ event.createdAt|date('d/m/Y H:i:s') }}</dd>
+
+                            <dt class="col-sm-3">Usuario:</dt>
+                            <dd class="col-sm-9">
+                                {% if event.user %}
+                                    {{ event.user.email }}
+                                {% else %}
+                                    No disponible
+                                {% endif %}
+                            </dd>
+
+                            <dt class="col-sm-3">Evento:</dt>
+                            <dd class="col-sm-9">{{ event.eventType|replace({'_': ' '})|title }}</dd>
+
+                            <dt class="col-sm-3">IP:</dt>
+                            <dd class="col-sm-9"><code>{{ event.ipAddress }}</code></dd>
+
+                            <dt class="col-sm-3">Navegador:</dt>
+                            <dd class="col-sm-9"><small>{{ event.userAgent }}</small></dd>
+
+                            <dt class="col-sm-3">Severidad:</dt>
+                            <dd class="col-sm-9">
+                                <span class="badge bg-{{ event.severity == 'CRITICAL' ? 'danger' : (event.severity == 'WARNING' ? 'warning' : 'info') }}">
+                                    {{ event.severity }}
+                                </span>
+                            </dd>
+
+                            <dt class="col-sm-3">Detalles:</dt>
+                            <dd class="col-sm-9">
+                                <pre class="bg-light p-2 rounded"><code>{{ event.eventData|json_encode(constant('JSON_PRETTY_PRINT')) }}</code></pre>
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Filtros de severidad
+    const filterButtons = document.querySelectorAll('[data-filter]');
+    const rows = document.querySelectorAll('#logsTable tbody tr');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+
+            // Actualizar botones activos
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            // Filtrar filas
+            rows.forEach(row => {
+                if (filter === 'all' || row.dataset.severity === filter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // DataTables si está disponible
+    if (typeof $ !== 'undefined' && $.fn.DataTable) {
+        $('#logsTable').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+            },
+            order: [[0, 'desc']],
+            pageLength: 50
+        });
+    }
+});
+</script>
+{% endblock %}

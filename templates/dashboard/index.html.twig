@@ -1,0 +1,363 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'Dashboard'} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="bi bi-check-circle-fill"></i> {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2>{{ 'dashboard.welcome'|trans }}, {{ user.firstName }}! 👋</h2>
+                    <p class="text-muted">{{ tenant.name }} - {{ 'dashboard.recent_activity'|trans }}</p>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title mb-0">{{ 'dashboard.projects'|trans }}</h6>
+                                    <h2 class="mb-0">{{ stats.total_proyectos }}</h2>
+                                </div>
+                                <i class="bi bi-folder-fill" style="font-size: 3rem; opacity: 0.5;"></i>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <small>{{ stats.proyectos_activos }} {{ 'dashboard.in_progress'|trans }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card text-white bg-success">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title mb-0">{{ 'dashboard.apus'|trans }}</h6>
+                                    <h2 class="mb-0">{{ stats.total_apus }}</h2>
+                                </div>
+                                <i class="bi bi-file-earmark-bar-graph-fill" style="font-size: 3rem; opacity: 0.5;"></i>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <small>{{ 'dashboard.analysis'|trans }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title mb-0">{{ 'dashboard.templates'|trans }}</h6>
+                                    <h2 class="mb-0">{{ stats.total_plantillas }}</h2>
+                                </div>
+                                <i class="bi bi-file-earmark-text-fill" style="font-size: 3rem; opacity: 0.5;"></i>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <small>{{ 'dashboard.reusable'|trans }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card text-white bg-info">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title mb-0">{{ 'dashboard.plan'|trans }}</h6>
+                                    <h3 class="mb-0">{{ tenant.plan|upper }}</h3>
+                                </div>
+                                <i class="bi bi-star-fill" style="font-size: 3rem; opacity: 0.5;"></i>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <small>{{ tenant.maxUsers }} {{ 'dashboard.max_users'|trans }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="bi bi-folder"></i> {{ 'dashboard.recent_projects'|trans }}</h5>
+                            <a href="#" class="btn btn-sm btn-primary">
+                                <i class="bi bi-plus-circle"></i> {{ 'dashboard.new_project'|trans }}
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            {% if proyectosRecientes|length > 0 %}
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>{{ 'dashboard.code'|trans }}</th>
+                                                <th>{{ 'dashboard.name'|trans }}</th>
+                                                <th>{{ 'dashboard.client'|trans }}</th>
+                                                <th>{{ 'dashboard.status'|trans }}</th>
+                                                <th>{{ 'dashboard.budget'|trans }}</th>
+                                                <th>{{ 'dashboard.actions'|trans }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for proyecto in proyectosRecientes %}
+                                                <tr>
+                                                    <td><code>{{ proyecto.codigo }}</code></td>
+                                                    <td>{{ proyecto.nombre }}</td>
+                                                    <td>{{ proyecto.cliente }}</td>
+                                                    <td>
+                                                        <span class="badge bg-{{ proyecto.estado == 'en_proceso' ? 'success' : (proyecto.estado == 'finalizado' ? 'secondary' : 'warning') }}">
+                                                            {{ proyecto.estado|replace({'_': ' '})|title }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        {% if proyecto.presupuestoTotal %}
+                                                            ${{ proyecto.presupuestoTotal|number_format(2, ',', '.') }}
+                                                        {% else %}
+                                                            <span class="text-muted">-</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" class="btn btn-sm btn-outline-primary">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <div class="text-center py-5">
+                                    <i class="bi bi-folder-x" style="font-size: 3rem; opacity: 0.3;"></i>
+                                    <p class="text-muted mt-3">{{ 'dashboard.no_projects'|trans }}</p>
+                                    <a href="#" class="btn btn-primary">
+                                        <i class="bi bi-plus-circle"></i> {{ 'dashboard.create_first_project'|trans }}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-lightning-charge"></i> {{ 'dashboard.quick_actions'|trans }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a href="#" class="btn btn-primary">
+                                    <i class="bi bi-folder-plus"></i> {{ 'dashboard.new_project'|trans }}
+                                </a>
+                                <a href="#" class="btn btn-outline-primary">
+                                    <i class="bi bi-file-earmark-bar-graph"></i> {{ 'dashboard.create_apu'|trans }}
+                                </a>
+                                <a href="#" class="btn btn-outline-secondary">
+                                    <i class="bi bi-box"></i> {{ 'dashboard.add_material'|trans }}
+                                </a>
+                                <a href="#" class="btn btn-outline-secondary">
+                                    <i class="bi bi-people"></i> {{ 'dashboard.add_labor'|trans }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-info-circle"></i> Plan {{ tenant.plan|upper }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <small>{{ 'dashboard.users'|trans }}</small>
+                                    <small>{{ tenant.users|length }} / {{ tenant.maxUsers }}</small>
+                                </div>
+                                <div class="progress" style="height: 5px;">
+                                    <div class="progress-bar" style="width: {{ (tenant.users|length / tenant.maxUsers * 100)|round }}%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <small>{{ 'dashboard.projects'|trans }}</small>
+                                    <small>{{ stats.total_proyectos }} / {{ tenant.maxProjects }}</small>
+                                </div>
+                                <div class="progress" style="height: 5px;">
+                                    <div class="progress-bar bg-success" style="width: {{ (stats.total_proyectos / tenant.maxProjects * 100)|round }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+            <!-- Stats Cards -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1">Proyectos Activos</p>
+                                    <h3 class="mb-0">0</h3>
+                                </div>
+                                <div class="fs-1 text-primary">
+                                    <i class="bi bi-folder"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1">APUs Creados</p>
+                                    <h3 class="mb-0">0</h3>
+                                </div>
+                                <div class="fs-1 text-success">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1">Plantillas</p>
+                                    <h3 class="mb-0">0</h3>
+                                </div>
+                                <div class="fs-1 text-warning">
+                                    <i class="bi bi-layout-text-sidebar"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted mb-1">Presupuesto Total</p>
+                                    <h3 class="mb-0">$0</h3>
+                                </div>
+                                <div class="fs-1 text-info">
+                                    <i class="bi bi-currency-dollar"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="bi bi-lightning-fill"></i> Acciones Rápidas
+                            </h5>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-primary">
+                                    <i class="bi bi-plus-circle"></i> Nuevo Proyecto
+                                </button>
+                                <button class="btn btn-outline-primary">
+                                    <i class="bi bi-file-earmark-plus"></i> Nuevo APU
+                                </button>
+                                <button class="btn btn-outline-primary">
+                                    <i class="bi bi-download"></i> Exportar Reporte
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="bi bi-clock-history"></i> Actividad Reciente
+                            </h5>
+                            <div class="text-center text-muted py-5">
+                                <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                                <p class="mt-3">No hay actividad reciente</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="bi bi-info-circle"></i> Información de la Cuenta
+                            </h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="bi bi-building text-primary"></i>
+                                    <strong>Empresa:</strong> {{ tenant.name }}
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-person text-primary"></i>
+                                    <strong>Usuario:</strong> {{ user.email }}
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-shield-check text-success"></i>
+                                    <strong>2FA:</strong>
+                                    {% if user.twoFactorEnabled %}
+                                        <span class="badge bg-success">Habilitado</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Deshabilitado</span>
+                                    {% endif %}
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-star text-warning"></i>
+                                    <strong>Plan:</strong> {{ tenant.plan|upper }}
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-people text-info"></i>
+                                    <strong>Usuarios:</strong> {{ tenant.users|length }} / {{ tenant.maxUsers }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

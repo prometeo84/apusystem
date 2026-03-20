@@ -1,0 +1,187 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Seguridad - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'security.title'|trans} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="bi bi-check-circle-fill"></i> {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="bi bi-exclamation-triangle-fill"></i> {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-shield-lock-fill"></i> {{ 'security.two_factor'|trans }}
+                            </h5>
+                            <p class="text-muted">
+                                {{ 'security.2fa_description'|trans }}
+                            </p>
+
+                            {% if user.totpEnabled %}
+                                <div class="alert alert-success">
+                                    <i class="bi bi-check-circle-fill"></i> {{ 'security.2fa_enabled'|trans }}
+                                </div>
+                                <p class="small text-muted">
+                                    {{ 'security.recovery_codes_available'|trans }}: <strong>{{ recoveryCodes }}</strong>
+                                </p>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#disable2FAModal">
+                                    <i class="bi bi-x-circle"></i> {{ 'security.disable_2fa'|trans }}
+                                </button>
+                            {% else %}
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-exclamation-triangle"></i> {{ 'security.2fa_disabled'|trans }}
+                                </div>
+                                <a href="{{ path('app_security_2fa_enable') }}" class="btn btn-primary">
+                                    <i class="bi bi-shield-check"></i> {{ 'security.enable_2fa'|trans }}
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-key-fill"></i> {{ 'password.title'|trans }}
+                            </h5>
+                            <p class="text-muted">
+                                {{ 'security.last_update'|trans }}:
+                                {{ user.passwordChangedAt ? user.passwordChangedAt|date('d/m/Y H:i') : ('common.never'|trans) }}
+                            </p>
+                            <p class="small text-muted">
+                                {{ 'security.password_recommendation'|trans }}
+                            </p>
+                            <a href="{{ path('app_profile_change_password') }}" class="btn btn-primary">
+                                <i class="bi bi-shield-lock"></i> {{ 'password.change'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-laptop"></i> {{ 'security.sessions'|trans }}
+                    </h5>
+                    <p class="text-muted">{{ 'security.devices_recently'|trans }}</p>
+
+                    {% if activeSessions|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>{{ 'security.device'|trans }}</th>
+                                        <th>IP</th>
+                                        <th>{{ 'security.last_activity'|trans }}</th>
+                                        <th>{{ 'common.action'|trans }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for session in activeSessions %}
+                                        <tr>
+                                            <td>
+                                                <i class="bi bi-laptop"></i>
+                                                {{ session.userAgent|slice(0, 50) }}...
+                                            </td>
+                                            <td>{{ session.ipAddress }}</td>
+                                            <td>{{ session.lastActivityAt|date('d/m/Y H:i') }}</td>
+                                            <td>
+                                                <form method="post" action="{{ path('app_security_session_revoke', {id: session.id}) }}"
+                                                      style="display: inline;">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                            onclick="return confirm('¿Revocar esta sesión?')">
+                                                        <i class="bi bi-x-circle"></i> Revocar
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No hay sesiones activas.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-clock-history"></i> Eventos de Seguridad Recientes
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Evento</th>
+                                    <th>IP</th>
+                                    <th>Severidad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for event in securityEvents %}
+                                    <tr>
+                                        <td>{{ event.createdAt|date('d/m/Y H:i') }}</td>
+                                        <td>{{ event.eventType|replace({'_': ' '})|title }}</td>
+                                        <td>{{ event.ipAddress }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ event.severity == 'CRITICAL' ? 'danger' : (event.severity == 'WARNING' ? 'warning' : 'info') }}">
+                                                {{ event.severity }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para deshabilitar 2FA -->
+<div class="modal fade" id="disable2FAModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Deshabilitar 2FA</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{{ path('app_security_2fa_disable') }}">
+                <div class="modal-body">
+                    <p>Para deshabilitar la autenticación de dos factores, ingresa tu código 2FA actual:</p>
+                    <input type="text" name="verification_code" class="form-control"
+                           placeholder="Código de 6 dígitos" required pattern="[0-9]{6}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Deshabilitar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

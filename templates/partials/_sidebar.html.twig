@@ -1,0 +1,117 @@
+<div class="sidebar" style="width: 250px;">
+    <div class="p-3">
+        <h4 class="mb-4" style="color: var(--primary-color);">
+            <i class="bi bi-calculator"></i> APU System
+        </h4>
+
+        <div class="mb-4">
+            <div class="d-flex align-items-center">
+                <div class="bg-primary rounded-circle text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                    {{ app.user.firstName|first }}{{ app.user.lastName|first }}
+                </div>
+                <div class="ms-2">
+                    <div class="fw-bold small">{{ app.user.fullName }}</div>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <small class="text-muted"><i class="bi bi-shield-fill"></i> {{ 'nav.system_admin'|trans }}</small>
+                    {% else %}
+                        <small class="text-muted">{{ app.user.tenant.name }}</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav flex-column">
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                {# Menú para Super Administrador del Sistema #}
+                <small class="text-muted text-uppercase px-3 mb-2 d-block">{{ 'nav.system_management'|trans }}</small>
+
+                <a class="nav-link {% if app.request.get('_route') == 'app_system' %}active{% endif %}"
+                   href="{{ path('app_system') }}">
+                    <i class="bi bi-speedometer2"></i> {{ 'nav.dashboard'|trans }}
+                </a>
+                <a class="nav-link {% if app.request.get('_route') starts with 'app_system_tenants' %}active{% endif %}"
+                   href="{{ path('app_system_tenants') }}">
+                    <i class="bi bi-building"></i> {{ 'nav.companies'|trans }}
+                </a>
+                <a class="nav-link {% if app.request.get('_route') == 'app_system_monitoring' %}active{% endif %}"
+                   href="{{ path('app_system_monitoring') }}">
+                    <i class="bi bi-activity"></i> {{ 'nav.monitoring'|trans }}
+                </a>
+                <a class="nav-link {% if app.request.get('_route') starts with 'app_admin' %}active{% endif %}"
+                   href="{{ path('app_admin') }}">
+                    <i class="bi bi-shield-lock"></i> {{ 'nav.security_logs'|trans }}
+                </a>
+
+                <hr class="my-2">
+
+                <small class="text-muted text-uppercase px-3 mb-2 d-block">{{ 'nav.tools'|trans }}</small>
+                <a class="nav-link {% if app.request.get('_route') == 'app_system_errors' %}active{% endif %}"
+                   href="{{ path('app_system_errors') }}">
+                    <i class="bi bi-bug"></i> {{ 'nav.system_errors'|trans }}
+                </a>
+                <a class="nav-link {% if app.request.get('_route') == 'app_system_alerts' %}active{% endif %}"
+                   href="{{ path('app_system_alerts') }}">
+                    <i class="bi bi-bell"></i> {{ 'nav.alerts'|trans }}
+                </a>
+                <a class="nav-link {% if app.request.get('_route') starts with 'app_test' %}active{% endif %}"
+                   href="{{ path('app_test_logs') }}">
+                    <i class="bi bi-terminal"></i> {{ 'nav.tests'|trans }}
+                </a>
+            {% else %}
+                {# Menú para usuarios de empresa #}
+                <a class="nav-link {% if app.request.get('_route') starts with 'app_dashboard' %}active{% endif %}"
+                   href="{{ path('app_dashboard') }}">
+                    <i class="bi bi-speedometer2"></i> {{ 'nav.dashboard'|trans }}
+                </a>
+                <a class="nav-link" href="#">
+                    <i class="bi bi-folder"></i> {{ 'dashboard.projects'|trans }}
+                </a>
+                <a class="nav-link" href="#">
+                    <i class="bi bi-file-earmark-bar-graph"></i> {{ 'dashboard.apus'|trans }}
+                </a>
+                <a class="nav-link" href="#">
+                    <i class="bi bi-file-earmark-text"></i> {{ 'dashboard.templates'|trans }}
+                </a>
+                <a class="nav-link" href="#">
+                    <i class="bi bi-tags"></i> Rubros
+                </a>
+                <a class="nav-link" href="#">
+                    <i class="bi bi-box"></i> Materiales
+                </a>
+                <a class="nav-link" href="#">
+                    <i class="bi bi-people"></i> Mano de Obra
+                </a>
+                <a class="nav-link" href="#">
+                    <i class="bi bi-tools"></i> Equipos
+                </a>
+
+                <hr class="my-2">
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a class="nav-link {% if app.request.get('_route') starts with 'app_admin' %}active{% endif %}"
+                       href="{{ path('app_admin') }}">
+                        <i class="bi bi-gear"></i> {{ 'nav.admin'|trans }}
+                    </a>
+                {% endif %}
+            {% endif %}
+
+            <a class="nav-link {% if app.request.get('_route') starts with 'app_profile' and app.request.get('_route') != 'app_profile_preferences' %}active{% endif %}"
+               href="{{ path('app_profile') }}">
+                <i class="bi bi-person-circle"></i> {{ 'nav.profile'|trans }}
+            </a>
+
+            <a class="nav-link {% if app.request.get('_route') == 'app_profile_preferences' %}active{% endif %}"
+               href="{{ path('app_profile_preferences') }}">
+                <i class="bi bi-palette"></i> {{ 'preferences.title'|trans }}
+            </a>
+
+            <a class="nav-link {% if app.request.get('_route') starts with 'app_security' %}active{% endif %}"
+               href="{{ path('app_security') }}">
+                <i class="bi bi-shield-check"></i> {{ 'nav.security'|trans }}
+            </a>
+            <a class="nav-link" href="{{ path('app_logout') }}">
+                <i class="bi bi-box-arrow-right"></i> {{ 'nav.logout'|trans }}
+            </a>
+        </nav>
+    </div>
+</div>

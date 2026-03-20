@@ -1,0 +1,139 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Crear Empresa - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'system_tenants.create_tenant_form'|trans} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-building"></i> {{ 'system.new_tenant_title'|trans }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="{{ path('app_system_tenants_create') }}">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="name" class="form-label">{{ 'system.company_name'|trans }} *</label>
+                                        <input type="text" class="form-control" id="name" name="name" required>
+                                        <div class="form-text">{{ 'system.commercial_name'|trans }}</div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="slug" class="form-label">{{ 'system.company_code'|trans }} *</label>
+                                        <input type="text" class="form-control" id="slug" name="slug" required pattern="[a-z0-9-]+">
+                                        <div class="form-text">{{ 'system.company_code_hint'|trans }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="plan" class="form-label">Plan *</label>
+                                        <select class="form-select" id="plan" name="plan" required onchange="updateLimits()">
+                                            <option value="basic">Basic</option>
+                                            <option value="professional">Professional</option>
+                                            <option value="enterprise">Enterprise</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label for="max_users" class="form-label">{{ 'system.max_users'|trans }}</label>
+                                        <input type="number" class="form-control" id="max_users" name="max_users" value="5" min="1" max="1000">
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label for="max_projects" class="form-label">{{ 'system.max_projects'|trans }}</label>
+                                        <input type="number" class="form-control" id="max_projects" name="max_projects" value="10" min="1" max="10000">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="plan_months" class="form-label">{{ 'system.plan_validity'|trans }}</label>
+                                        <select class="form-select" id="plan_months" name="plan_months">
+                                            <option value="0">{{ 'system.no_limit'|trans }}</option>
+                                            <option value="1">1 mes (Prueba)</option>
+                                            <option value="3">3 meses</option>
+                                            <option value="6">6 meses</option>
+                                            <option value="12" selected>12 meses (1 año)</option>
+                                            <option value="24">24 meses (2 años)</option>
+                                            <option value="36">36 meses (3 años)</option>
+                                        </select>
+                                        <div class="form-text">Duración del plan antes de expirar</div>
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                <div class="alert alert-info">
+                                    <h6><i class="bi bi-info-circle"></i> Información de Planes</h6>
+                                    <ul class="mb-0">
+                                        <li><strong>Basic:</strong> 5 usuarios, 10 proyectos</li>
+                                        <li><strong>Professional:</strong> 25 usuarios, 100 proyectos</li>
+                                        <li><strong>Enterprise:</strong> Usuarios y proyectos ilimitados</li>
+                                    </ul>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-lg"></i> Crear Empresa
+                                    </button>
+                                    <a href="{{ path('app_system_tenants') }}" class="btn btn-secondary">
+                                        <i class="bi bi-x-lg"></i> Cancelar
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateLimits() {
+    const plan = document.getElementById('plan').value;
+    const maxUsers = document.getElementById('max_users');
+    const maxProjects = document.getElementById('max_projects');
+
+    if (plan === 'basic') {
+        maxUsers.value = 5;
+        maxProjects.value = 10;
+    } else if (plan === 'professional') {
+        maxUsers.value = 25;
+        maxProjects.value = 100;
+    } else if (plan === 'enterprise') {
+        maxUsers.value = 999;
+        maxProjects.value = 9999;
+    }
+}
+
+// Auto-generate company code from name
+document.getElementById('name').addEventListener('input', function(e) {
+    const slug = e.target.value
+        .toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
+        .replace(/[^a-z0-9\s-]/g, '') // Remove special chars
+        .replace(/\s+/g, '-') // Spaces to hyphens
+        .replace(/-+/g, '-'); // Multiple hyphens to single
+    document.getElementById('slug').value = slug;
+});
+</script>
+{% endblock %}

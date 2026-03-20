@@ -1,0 +1,248 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'preferences.title'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            {% include 'partials/_sidebar.html.twig' %}
+        </div>
+
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3">{{ 'preferences.title'|trans }}</h1>
+                <a href="{{ path('app_profile') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> {{ 'buttons.cancel'|trans }}
+                </a>
+            </div>
+
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            <div class="row">
+                <!-- Idioma y Zona Horaria -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-globe"></i> {{ 'preferences.language'|trans }} & {{ 'preferences.timezone'|trans }}
+                            </h5>
+
+                            <form method="post" action="{{ path('app_profile_preferences') }}">
+                                <div class="mb-3">
+                                    <label for="locale" class="form-label">{{ 'preferences.language'|trans }}</label>
+                                    <select name="locale" id="locale" class="form-select" required>
+                                        <option value="es" {% if user.locale == 'es' %}selected{% endif %}>🇪🇸 Español</option>
+                                        <option value="en" {% if user.locale == 'en' %}selected{% endif %}>🇺🇸 English</option>
+                                    </select>
+                                    <div class="form-text">
+                                        {{ 'common.interface_language'|trans }}
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="timezone" class="form-label">{{ 'preferences.timezone'|trans }}</label>
+                                    <select name="timezone" id="timezone" class="form-select" required>
+                                        <optgroup label="América">
+                                            <option value="America/Guayaquil" {% if user.timezone == 'America/Guayaquil' %}selected{% endif %}>Ecuador (UTC-5)</option>
+                                            <option value="America/New_York" {% if user.timezone == 'America/New_York' %}selected{% endif %}>Nueva York (UTC-5/-4)</option>
+                                            <option value="America/Chicago" {% if user.timezone == 'America/Chicago' %}selected{% endif %}>Chicago (UTC-6/-5)</option>
+                                            <option value="America/Los_Angeles" {% if user.timezone == 'America/Los_Angeles' %}selected{% endif %}>Los Ángeles (UTC-8/-7)</option>
+                                            <option value="America/Mexico_City" {% if user.timezone == 'America/Mexico_City' %}selected{% endif %}>Ciudad de México (UTC-6)</option>
+                                            <option value="America/Bogota" {% if user.timezone == 'America/Bogota' %}selected{% endif %}>Bogotá (UTC-5)</option>
+                                            <option value="America/Lima" {% if user.timezone == 'America/Lima' %}selected{% endif %}>Lima (UTC-5)</option>
+                                            <option value="America/Santiago" {% if user.timezone == 'America/Santiago' %}selected{% endif %}>Santiago (UTC-4/-3)</option>
+                                            <option value="America/Buenos_Aires" {% if user.timezone == 'America/Buenos_Aires' %}selected{% endif %}>Buenos Aires (UTC-3)</option>
+                                        </optgroup>
+                                        <optgroup label="Europa">
+                                            <option value="Europe/London" {% if user.timezone == 'Europe/London' %}selected{% endif %}>Londres (UTC+0/+1)</option>
+                                            <option value="Europe/Paris" {% if user.timezone == 'Europe/Paris' %}selected{% endif %}>París (UTC+1/+2)</option>
+                                            <option value="Europe/Madrid" {% if user.timezone == 'Europe/Madrid' %}selected{% endif %}>Madrid (UTC+1/+2)</option>
+                                            <option value="Europe/Berlin" {% if user.timezone == 'Europe/Berlin' %}selected{% endif %}>Berlín (UTC+1/+2)</option>
+                                        </optgroup>
+                                        <optgroup label="Asia">
+                                            <option value="Asia/Dubai" {% if user.timezone == 'Asia/Dubai' %}selected{% endif %}>Dubái (UTC+4)</option>
+                                            <option value="Asia/Shanghai" {% if user.timezone == 'Asia/Shanghai' %}selected{% endif %}>Shanghai (UTC+8)</option>
+                                            <option value="Asia/Tokyo" {% if user.timezone == 'Asia/Tokyo' %}selected{% endif %}>Tokio (UTC+9)</option>
+                                        </optgroup>
+                                    </select>
+                                    <div class="form-text">
+                                        {{ 'common.timezone_description'|trans }}
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="theme_primary_color" value="{{ user.themePrimaryColor }}">
+                                <input type="hidden" name="theme_secondary_color" value="{{ user.themeSecondaryColor }}">
+                                <input type="hidden" name="theme_mode" value="{{ user.themeMode }}">
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> {{ 'buttons.save'|trans }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personalización de Tema -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-palette"></i> {{ 'preferences.theme'|trans }}
+                            </h5>
+
+                            <form method="post" action="{{ path('app_profile_preferences') }}" id="themeForm">
+                                <div class="mb-3">
+                                    <label for="theme_primary_color" class="form-label">{{ 'preferences.primary_color'|trans }}</label>
+                                    <div class="input-group">
+                                        <input type="color" name="theme_primary_color" id="theme_primary_color"
+                                               class="form-control form-control-color"
+                                               value="{{ user.themePrimaryColor }}"
+                                               title="Seleccionar color primario">
+                                        <input type="text" class="form-control" id="primaryColorHex"
+                                               value="{{ user.themePrimaryColor }}" readonly>
+                                    </div>
+                                    <div class="form-text">
+                                        {{ 'common.primary_color_description'|trans }}
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="theme_secondary_color" class="form-label">{{ 'preferences.secondary_color'|trans }}</label>
+                                    <div class="input-group">
+                                        <input type="color" name="theme_secondary_color" id="theme_secondary_color"
+                                               class="form-control form-control-color"
+                                               value="{{ user.themeSecondaryColor }}"
+                                               title="{{ 'common.select_secondary'|trans }}">
+                                        <input type="text" class="form-control" id="secondaryColorHex"
+                                               value="{{ user.themeSecondaryColor }}" readonly>
+                                    </div>
+                                    <div class="form-text">
+                                        {{ 'common.secondary_color_description'|trans }}
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="theme_mode" class="form-label">{{ 'preferences.theme_mode'|trans }}</label>
+                                    <select name="theme_mode" id="theme_mode" class="form-select">
+                                        <option value="light" {% if user.themeMode == 'light' %}selected{% endif %}>
+                                            <i class="fas fa-sun"></i> {{ 'preferences.light'|trans }}
+                                        </option>
+                                        <option value="dark" {% if user.themeMode == 'dark' %}selected{% endif %}>
+                                            <i class="fas fa-moon"></i> {{ 'preferences.dark'|trans }}
+                                        </option>
+                                        <option value="auto" {% if user.themeMode == 'auto' %}selected{% endif %}>
+                                            <i class="fas fa-adjust"></i> {{ 'preferences.auto'|trans }}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> {{ 'buttons.save'|trans }}
+                                    </button>
+
+                                    <button type="button" class="btn btn-secondary" onclick="resetTheme()">
+                                        <i class="fas fa-undo"></i> {{ 'preferences.reset_colors'|trans }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Vista Previa -->
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ 'common.preview'|trans }}</h6>
+                            <div id="preview" class="p-3 rounded">
+                                <button class="btn btn-sm mb-2" id="previewBtn" style="background: linear-gradient(135deg, {{ user.themePrimaryColor }} 0%, {{ user.themeSecondaryColor }} 100%); color: white;">
+                                    {{ 'common.example_button'|trans }}
+                                </button>
+                                <div class="alert mb-0" style="background-color: {{ user.themePrimaryColor }}22; border-color: {{ user.themePrimaryColor }}; color: {{ user.themePrimaryColor }};">
+                                    <strong>{{ 'common.example_text'|trans }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información Actual -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-info-circle"></i> {{ 'common.current_config'|trans }}</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <strong>{{ 'preferences.language'|trans }}:</strong><br>
+                            {% if user.locale == 'es' %}🇪🇸 Español{% else %}🇺🇸 English{% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <strong>{{ 'preferences.timezone'|trans }}:</strong><br>
+                            {{ user.timezone }}
+                        </div>
+                        <div class="col-md-4">
+                            <strong>{{ 'common.current_time'|trans }}:</strong><br>
+                            <span id="currentTime"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Actualizar preview de colores en tiempo real
+document.getElementById('theme_primary_color').addEventListener('input', function(e) {
+    const primary = e.target.value;
+    document.getElementById('primaryColorHex').value = primary;
+    updatePreview(primary, document.getElementById('theme_secondary_color').value);
+});
+
+document.getElementById('theme_secondary_color').addEventListener('input', function(e) {
+    const secondary = e.target.value;
+    document.getElementById('secondaryColorHex').value = secondary;
+    updatePreview(document.getElementById('theme_primary_color').value, secondary);
+});
+
+function updatePreview(primary, secondary) {
+    const btn = document.getElementById('previewBtn');
+    btn.style.background = `linear-gradient(135deg, ${primary} 0%, ${secondary} 100%)`;
+
+    const alert = document.querySelector('#preview .alert');
+    alert.style.backgroundColor = primary + '22';
+    alert.style.borderColor = primary;
+    alert.style.color = primary;
+}
+
+function resetTheme() {
+    if (confirm('{{ 'common.reset_theme_confirm'|trans }}')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ path('app_profile_reset_theme') }}';
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// Actualizar hora actual cada segundo
+function updateCurrentTime() {
+    const now = new Date();
+    document.getElementById('currentTime').textContent = now.toLocaleString('{{ user.locale }}', {
+        timeZone: '{{ user.timezone }}',
+        dateStyle: 'short',
+        timeStyle: 'medium'
+    });
+}
+
+updateCurrentTime();
+setInterval(updateCurrentTime, 1000);
+</script>
+{% endblock %}

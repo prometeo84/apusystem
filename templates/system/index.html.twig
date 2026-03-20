@@ -1,0 +1,200 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sistema - APU System{% endblock %}
+
+{% block body %}
+<div class="d-flex">
+    {% include 'partials/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+        {% include 'partials/_navbar.html.twig' with {'title': 'system.supervision'|trans} %}
+
+        <div class="container-fluid p-4 content-wrapper">
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title mb-0">{{ 'system.total_tenants'|trans }}</h6>
+                                    <h2 class="mb-0">{{ stats.total_tenants }}</h2>
+                                </div>
+                                <i class="bi bi-building" style="font-size: 3rem; opacity: 0.5;"></i>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <small>{{ stats.active_tenants }} {{ 'system.active_label'|trans }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card text-white bg-success">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title mb-0">{{ 'system.total_users'|trans }}</h6>
+                                    <h2 class="mb-0">{{ stats.total_users }}</h2>
+                                </div>
+                                <i class="bi bi-people-fill" style="font-size: 3rem; opacity: 0.5;"></i>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <small>{{ stats.active_users }} {{ 'system.active_label'|trans }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title mb-0">{{ 'system.users_2fa'|trans }}</h6>
+                                    <h2 class="mb-0">{{ stats.users_2fa }}</h2>
+                                </div>
+                                <i class="bi bi-shield-check" style="font-size: 3rem; opacity: 0.5;"></i>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <small>{{ ((stats.users_2fa / stats.total_users) * 100)|round }}% {{ 'system.of_total'|trans }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card text-white bg-info">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title mb-0">{{ 'system.active_sessions'|trans }}</h6>
+                                    <h2 class="mb-0">{{ stats.active_sessions }}</h2>
+                                </div>
+                                <i class="bi bi-activity" style="font-size: 3rem; opacity: 0.5;"></i>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <small>{{ 'system.right_now'|trans }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8 mb-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill text-danger"></i> {{ 'system.critical_events'|trans }}</h5>
+                            <a href="{{ path('app_system_errors') }}" class="btn btn-sm btn-outline-secondary">{{ 'system.view_all'|trans }}</a>
+                        </div>
+                        <div class="card-body">
+                            {% if criticalEvents|length > 0 %}
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>{{ 'common.date'|trans }}</th>
+                                                <th>{{ 'common.company'|trans }}</th>
+                                                <th>{{ 'common.user'|trans }}</th>
+                                                <th>{{ 'system.event'|trans }}</th>
+                                                <th>IP</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for event in criticalEvents %}
+                                                <tr>
+                                                    <td><small>{{ event.createdAt|date('d/m/Y H:i') }}</small></td>
+                                                    <td>{{ event.tenant.name }}</td>
+                                                    <td>{{ event.user ? event.user.email : '-' }}</td>
+                                                    <td>
+                                                        <span class="badge bg-danger">
+                                                            {{ event.eventType|replace({'_': ' '})|title }}
+                                                        </span>
+                                                    </td>
+                                                    <td><code class="small">{{ event.ipAddress }}</code></td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <p class="text-muted text-center py-3">{{ 'system.no_critical_events'|trans }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-clock-history"></i> {{ 'system.recent_activity'|trans }}</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if recentEvents|length > 0 %}
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>{{ 'system.hour'|trans }}</th>
+                                                <th>{{ 'common.company'|trans }}</th>
+                                                <th>{{ 'common.user'|trans }}</th>
+                                                <th>{{ 'system.event'|trans }}</th>
+                                                <th>{{ 'system.severity'|trans }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for event in recentEvents %}
+                                                <tr>
+                                                    <td><small>{{ event.createdAt|date('H:i:s') }}</small></td>
+                                                    <td>{{ event.tenant.name }}</td>
+                                                    <td>{{ event.user ? event.user.email : '-' }}</td>
+                                                    <td>{{ event.eventType|replace({'_': ' '})|title }}</td>
+                                                    <td>
+                                                        <span class="badge bg-{{ event.severity == 'CRITICAL' ? 'danger' : (event.severity == 'WARNING' ? 'warning' : 'info') }}">
+                                                            {{ event.severity }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <p class="text-muted text-center py-3">{{ 'system.no_recent_activity'|trans }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-building"></i> {{ 'system.active_tenants_list'|trans }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0">
+                                {% for tenant in activeTenants %}
+                                    <li class="mb-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong>{{ tenant.name }}</strong><br>
+                                                <small class="text-muted">{{ 'common.code'|trans }}: {{ tenant.slug }}</small>
+                                            </div>
+                                            <span class="badge bg-{{ tenant.plan == 'enterprise' ? 'danger' : (tenant.plan == 'professional' ? 'warning' : 'secondary') }}">
+                                                {{ tenant.plan|upper }}
+                                            </span>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="card-footer bg-white">
+                            <a href="{{ path('app_system_tenants') }}" class="text-decoration-none">
+                                {{ 'system.view_all_tenants'|trans }} <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
