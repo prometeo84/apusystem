@@ -6,15 +6,24 @@
 
         <div class="mb-4">
             <div class="d-flex align-items-center">
-                <div class="bg-primary rounded-circle text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                    {{ app.user.firstName|first }}{{ app.user.lastName|first }}
-                </div>
-                <div class="ms-2">
+                {% if app.user.avatar %}
+                    <img src="{{ app.user.avatar }}" alt="{{ app.user.fullName }}" class="rounded-circle" style="width:40px;height:40px;object-fit:cover;">
+                {% else %}
+                    <div class="bg-primary rounded-circle text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        {{ app.user.firstName|first }}{{ app.user.lastName|first }}
+                    </div>
+                {% endif %}
+                    <div class="ms-2">
                     <div class="fw-bold small">{{ app.user.fullName }}</div>
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
                         <small class="text-muted"><i class="bi bi-shield-fill"></i> {{ 'nav.system_admin'|trans }}</small>
                     {% else %}
-                        <small class="text-muted">{{ app.user.tenant.name }}</small>
+                        <small class="text-muted d-flex align-items-center">
+                            {% if app.user.tenant and app.user.tenant.logoUrl %}
+                                <img src="{{ app.user.tenant.logoUrl }}" alt="{{ app.user.tenant.name }}" style="width:20px;height:20px;object-fit:cover;margin-right:6px;border-radius:3px;">
+                            {% endif %}
+                            {{ app.user.tenant.name }}
+                        </small>
                     {% endif %}
                 </div>
             </div>

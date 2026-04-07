@@ -360,6 +360,7 @@ system:
   quick_actions: "Acciones Rápidas"
   recent_activity: "Actividad Reciente (24h)"
   recent_errors: "Errores Recientes del Log"
+  no_recent_errors: "No hay errores recientes"
   registered_tenants: "Empresas Registradas"
   registered_users: "Usuarios Registrados"
   registration: "Registro"
@@ -455,4 +456,3 @@ test_mail:
   mailpit_url: "http://localhost:8025"
   recovery_link: "recuperación de contraseña"
   title: "Test de Envío de Email"
-

@@ -53,106 +53,121 @@ class __TwigTemplate_ae2cd9a870eb744671283ebcf0b1c3e1 extends Template
 
         <div class=\"mb-4\">
             <div class=\"d-flex align-items-center\">
-                <div class=\"bg-primary rounded-circle text-white d-flex align-items-center justify-content-center\" style=\"width: 40px; height: 40px;\">
-                    ";
-        // line 10
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 10, $this->source); })()), "user", [], "any", false, false, false, 10), "firstName", [], "any", false, false, false, 10)), "html", null, true);
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 10, $this->source); })()), "user", [], "any", false, false, false, 10), "lastName", [], "any", false, false, false, 10)), "html", null, true);
-        yield "
-                </div>
-                <div class=\"ms-2\">
+                ";
+        // line 9
+        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 9, $this->source); })()), "user", [], "any", false, false, false, 9), "avatar", [], "any", false, false, false, 9)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 10
+            yield "                    <img src=\"";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 10, $this->source); })()), "user", [], "any", false, false, false, 10), "avatar", [], "any", false, false, false, 10), "html", null, true);
+            yield "\" alt=\"";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 10, $this->source); })()), "user", [], "any", false, false, false, 10), "fullName", [], "any", false, false, false, 10), "html", null, true);
+            yield "\" class=\"rounded-circle\" style=\"width:40px;height:40px;object-fit:cover;\">
+                ";
+        } else {
+            // line 12
+            yield "                    <div class=\"bg-primary rounded-circle text-white d-flex align-items-center justify-content-center\" style=\"width: 40px; height: 40px;\">
+                        ";
+            // line 13
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 13, $this->source); })()), "user", [], "any", false, false, false, 13), "firstName", [], "any", false, false, false, 13)), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 13, $this->source); })()), "user", [], "any", false, false, false, 13), "lastName", [], "any", false, false, false, 13)), "html", null, true);
+            yield "
+                    </div>
+                ";
+        }
+        // line 16
+        yield "                <div class=\"ms-2\">
                     <div class=\"fw-bold small\">";
-        // line 13
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 13, $this->source); })()), "user", [], "any", false, false, false, 13), "fullName", [], "any", false, false, false, 13), "html", null, true);
+        // line 17
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 17, $this->source); })()), "user", [], "any", false, false, false, 17), "fullName", [], "any", false, false, false, 17), "html", null, true);
         yield "</div>
                     ";
-        // line 14
+        // line 18
         if ((($tmp = $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_SUPER_ADMIN")) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 15
+            // line 19
             yield "                        <small class=\"text-muted\"><i class=\"bi bi-shield-fill\"></i> ";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.system_admin"), "html", null, true);
             yield "</small>
                     ";
         } else {
-            // line 17
+            // line 21
             yield "                        <small class=\"text-muted\">";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 17, $this->source); })()), "user", [], "any", false, false, false, 17), "tenant", [], "any", false, false, false, 17), "name", [], "any", false, false, false, 17), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 21, $this->source); })()), "user", [], "any", false, false, false, 21), "tenant", [], "any", false, false, false, 21), "name", [], "any", false, false, false, 21), "html", null, true);
             yield "</small>
                     ";
         }
-        // line 19
+        // line 23
         yield "                </div>
             </div>
         </div>
 
         <nav class=\"nav flex-column\">
             ";
-        // line 24
+        // line 28
         if ((($tmp = $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_SUPER_ADMIN")) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 25
+            // line 29
             yield "                ";
-            // line 26
+            // line 30
             yield "                <small class=\"text-muted text-uppercase px-3 mb-2 d-block\">";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.system_management"), "html", null, true);
             yield "</small>
 
                 <a class=\"nav-link ";
-            // line 28
-            if ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 28, $this->source); })()), "request", [], "any", false, false, false, 28), "get", ["_route"], "method", false, false, false, 28) == "app_system")) {
-                yield "active";
-            }
-            yield "\"
-                   href=\"";
-            // line 29
-            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_system");
-            yield "\">
-                    <i class=\"bi bi-speedometer2\"></i> ";
-            // line 30
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.dashboard"), "html", null, true);
-            yield "
-                </a>
-                <a class=\"nav-link ";
             // line 32
-            if ((is_string($_v0 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 32, $this->source); })()), "request", [], "any", false, false, false, 32), "get", ["_route"], "method", false, false, false, 32)) && is_string($_v1 = "app_system_tenants") && str_starts_with($_v0, $_v1))) {
+            if ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 32, $this->source); })()), "request", [], "any", false, false, false, 32), "get", ["_route"], "method", false, false, false, 32) == "app_system")) {
                 yield "active";
             }
             yield "\"
                    href=\"";
             // line 33
-            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_system_tenants");
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_system");
             yield "\">
-                    <i class=\"bi bi-building\"></i> ";
+                    <i class=\"bi bi-speedometer2\"></i> ";
             // line 34
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.companies"), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.dashboard"), "html", null, true);
             yield "
                 </a>
                 <a class=\"nav-link ";
             // line 36
-            if ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 36, $this->source); })()), "request", [], "any", false, false, false, 36), "get", ["_route"], "method", false, false, false, 36) == "app_system_monitoring")) {
+            if ((is_string($_v0 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 36, $this->source); })()), "request", [], "any", false, false, false, 36), "get", ["_route"], "method", false, false, false, 36)) && is_string($_v1 = "app_system_tenants") && str_starts_with($_v0, $_v1))) {
                 yield "active";
             }
             yield "\"
                    href=\"";
             // line 37
-            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_system_monitoring");
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_system_tenants");
             yield "\">
-                    <i class=\"bi bi-activity\"></i> ";
+                    <i class=\"bi bi-building\"></i> ";
             // line 38
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.monitoring"), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.companies"), "html", null, true);
             yield "
                 </a>
                 <a class=\"nav-link ";
             // line 40
-            if ((is_string($_v2 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 40, $this->source); })()), "request", [], "any", false, false, false, 40), "get", ["_route"], "method", false, false, false, 40)) && is_string($_v3 = "app_admin") && str_starts_with($_v2, $_v3))) {
+            if ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 40, $this->source); })()), "request", [], "any", false, false, false, 40), "get", ["_route"], "method", false, false, false, 40) == "app_system_monitoring")) {
                 yield "active";
             }
             yield "\"
                    href=\"";
             // line 41
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_system_monitoring");
+            yield "\">
+                    <i class=\"bi bi-activity\"></i> ";
+            // line 42
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.monitoring"), "html", null, true);
+            yield "
+                </a>
+                <a class=\"nav-link ";
+            // line 44
+            if ((is_string($_v2 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 44, $this->source); })()), "request", [], "any", false, false, false, 44), "get", ["_route"], "method", false, false, false, 44)) && is_string($_v3 = "app_admin") && str_starts_with($_v2, $_v3))) {
+                yield "active";
+            }
+            yield "\"
+                   href=\"";
+            // line 45
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin");
             yield "\">
                     <i class=\"bi bi-shield-lock\"></i> ";
-            // line 42
+            // line 46
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.security_logs"), "html", null, true);
             yield "
                 </a>
@@ -160,88 +175,88 @@ class __TwigTemplate_ae2cd9a870eb744671283ebcf0b1c3e1 extends Template
                 <hr class=\"my-2\">
 
                 <small class=\"text-muted text-uppercase px-3 mb-2 d-block\">";
-            // line 47
+            // line 51
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.tools"), "html", null, true);
             yield "</small>
                 <a class=\"nav-link ";
-            // line 48
-            if ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 48, $this->source); })()), "request", [], "any", false, false, false, 48), "get", ["_route"], "method", false, false, false, 48) == "app_system_errors")) {
-                yield "active";
-            }
-            yield "\"
-                   href=\"";
-            // line 49
-            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_system_errors");
-            yield "\">
-                    <i class=\"bi bi-bug\"></i> ";
-            // line 50
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.system_errors"), "html", null, true);
-            yield "
-                </a>
-                <a class=\"nav-link ";
             // line 52
-            if ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 52, $this->source); })()), "request", [], "any", false, false, false, 52), "get", ["_route"], "method", false, false, false, 52) == "app_system_alerts")) {
+            if ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 52, $this->source); })()), "request", [], "any", false, false, false, 52), "get", ["_route"], "method", false, false, false, 52) == "app_system_errors")) {
                 yield "active";
             }
             yield "\"
                    href=\"";
             // line 53
-            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_system_alerts");
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_system_errors");
             yield "\">
-                    <i class=\"bi bi-bell\"></i> ";
+                    <i class=\"bi bi-bug\"></i> ";
             // line 54
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.alerts"), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.system_errors"), "html", null, true);
             yield "
                 </a>
                 <a class=\"nav-link ";
             // line 56
-            if ((is_string($_v4 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 56, $this->source); })()), "request", [], "any", false, false, false, 56), "get", ["_route"], "method", false, false, false, 56)) && is_string($_v5 = "app_test") && str_starts_with($_v4, $_v5))) {
+            if ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 56, $this->source); })()), "request", [], "any", false, false, false, 56), "get", ["_route"], "method", false, false, false, 56) == "app_system_alerts")) {
                 yield "active";
             }
             yield "\"
                    href=\"";
             // line 57
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_system_alerts");
+            yield "\">
+                    <i class=\"bi bi-bell\"></i> ";
+            // line 58
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.alerts"), "html", null, true);
+            yield "
+                </a>
+                <a class=\"nav-link ";
+            // line 60
+            if ((is_string($_v4 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 60, $this->source); })()), "request", [], "any", false, false, false, 60), "get", ["_route"], "method", false, false, false, 60)) && is_string($_v5 = "app_test") && str_starts_with($_v4, $_v5))) {
+                yield "active";
+            }
+            yield "\"
+                   href=\"";
+            // line 61
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_test_logs");
             yield "\">
                     <i class=\"bi bi-terminal\"></i> ";
-            // line 58
+            // line 62
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.tests"), "html", null, true);
             yield "
                 </a>
             ";
         } else {
-            // line 61
+            // line 65
             yield "                ";
-            // line 62
+            // line 66
             yield "                <a class=\"nav-link ";
-            if ((is_string($_v6 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 62, $this->source); })()), "request", [], "any", false, false, false, 62), "get", ["_route"], "method", false, false, false, 62)) && is_string($_v7 = "app_dashboard") && str_starts_with($_v6, $_v7))) {
+            if ((is_string($_v6 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 66, $this->source); })()), "request", [], "any", false, false, false, 66), "get", ["_route"], "method", false, false, false, 66)) && is_string($_v7 = "app_dashboard") && str_starts_with($_v6, $_v7))) {
                 yield "active";
             }
             yield "\"
                    href=\"";
-            // line 63
+            // line 67
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_dashboard");
             yield "\">
                     <i class=\"bi bi-speedometer2\"></i> ";
-            // line 64
+            // line 68
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.dashboard"), "html", null, true);
             yield "
                 </a>
                 <a class=\"nav-link\" href=\"#\">
                     <i class=\"bi bi-folder\"></i> ";
-            // line 67
+            // line 71
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("dashboard.projects"), "html", null, true);
             yield "
                 </a>
                 <a class=\"nav-link\" href=\"#\">
                     <i class=\"bi bi-file-earmark-bar-graph\"></i> ";
-            // line 70
+            // line 74
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("dashboard.apus"), "html", null, true);
             yield "
                 </a>
                 <a class=\"nav-link\" href=\"#\">
                     <i class=\"bi bi-file-earmark-text\"></i> ";
-            // line 73
+            // line 77
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("dashboard.templates"), "html", null, true);
             yield "
                 </a>
@@ -261,83 +276,83 @@ class __TwigTemplate_ae2cd9a870eb744671283ebcf0b1c3e1 extends Template
                 <hr class=\"my-2\">
 
                 ";
-            // line 90
+            // line 94
             if ((($tmp = $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN")) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 91
+                // line 95
                 yield "                    <a class=\"nav-link ";
-                if ((is_string($_v8 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 91, $this->source); })()), "request", [], "any", false, false, false, 91), "get", ["_route"], "method", false, false, false, 91)) && is_string($_v9 = "app_admin") && str_starts_with($_v8, $_v9))) {
+                if ((is_string($_v8 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 95, $this->source); })()), "request", [], "any", false, false, false, 95), "get", ["_route"], "method", false, false, false, 95)) && is_string($_v9 = "app_admin") && str_starts_with($_v8, $_v9))) {
                     yield "active";
                 }
                 yield "\"
                        href=\"";
-                // line 92
+                // line 96
                 yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin");
                 yield "\">
                         <i class=\"bi bi-gear\"></i> ";
-                // line 93
+                // line 97
                 yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.admin"), "html", null, true);
                 yield "
                     </a>
                 ";
             }
-            // line 96
+            // line 100
             yield "            ";
         }
-        // line 97
+        // line 101
         yield "
             <a class=\"nav-link ";
-        // line 98
-        if (((is_string($_v10 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 98, $this->source); })()), "request", [], "any", false, false, false, 98), "get", ["_route"], "method", false, false, false, 98)) && is_string($_v11 = "app_profile") && str_starts_with($_v10, $_v11)) && (CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 98, $this->source); })()), "request", [], "any", false, false, false, 98), "get", ["_route"], "method", false, false, false, 98) != "app_profile_preferences"))) {
+        // line 102
+        if (((is_string($_v10 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 102, $this->source); })()), "request", [], "any", false, false, false, 102), "get", ["_route"], "method", false, false, false, 102)) && is_string($_v11 = "app_profile") && str_starts_with($_v10, $_v11)) && (CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 102, $this->source); })()), "request", [], "any", false, false, false, 102), "get", ["_route"], "method", false, false, false, 102) != "app_profile_preferences"))) {
             yield "active";
         }
         yield "\"
                href=\"";
-        // line 99
+        // line 103
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_profile");
         yield "\">
                 <i class=\"bi bi-person-circle\"></i> ";
-        // line 100
+        // line 104
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.profile"), "html", null, true);
         yield "
             </a>
 
             <a class=\"nav-link ";
-        // line 103
-        if ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 103, $this->source); })()), "request", [], "any", false, false, false, 103), "get", ["_route"], "method", false, false, false, 103) == "app_profile_preferences")) {
+        // line 107
+        if ((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 107, $this->source); })()), "request", [], "any", false, false, false, 107), "get", ["_route"], "method", false, false, false, 107) == "app_profile_preferences")) {
             yield "active";
         }
         yield "\"
                href=\"";
-        // line 104
+        // line 108
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_profile_preferences");
         yield "\">
                 <i class=\"bi bi-palette\"></i> ";
-        // line 105
+        // line 109
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("preferences.title"), "html", null, true);
         yield "
             </a>
 
             <a class=\"nav-link ";
-        // line 108
-        if ((is_string($_v12 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 108, $this->source); })()), "request", [], "any", false, false, false, 108), "get", ["_route"], "method", false, false, false, 108)) && is_string($_v13 = "app_security") && str_starts_with($_v12, $_v13))) {
+        // line 112
+        if ((is_string($_v12 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 112, $this->source); })()), "request", [], "any", false, false, false, 112), "get", ["_route"], "method", false, false, false, 112)) && is_string($_v13 = "app_security") && str_starts_with($_v12, $_v13))) {
             yield "active";
         }
         yield "\"
                href=\"";
-        // line 109
+        // line 113
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_security");
         yield "\">
                 <i class=\"bi bi-shield-check\"></i> ";
-        // line 110
+        // line 114
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.security"), "html", null, true);
         yield "
             </a>
             <a class=\"nav-link\" href=\"";
-        // line 112
+        // line 116
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_logout");
         yield "\">
                 <i class=\"bi bi-box-arrow-right\"></i> ";
-        // line 113
+        // line 117
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.logout"), "html", null, true);
         yield "
             </a>
@@ -375,7 +390,7 @@ class __TwigTemplate_ae2cd9a870eb744671283ebcf0b1c3e1 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  341 => 113,  337 => 112,  332 => 110,  328 => 109,  322 => 108,  316 => 105,  312 => 104,  306 => 103,  300 => 100,  296 => 99,  290 => 98,  287 => 97,  284 => 96,  278 => 93,  274 => 92,  267 => 91,  265 => 90,  245 => 73,  239 => 70,  233 => 67,  227 => 64,  223 => 63,  216 => 62,  214 => 61,  208 => 58,  204 => 57,  198 => 56,  193 => 54,  189 => 53,  183 => 52,  178 => 50,  174 => 49,  168 => 48,  164 => 47,  156 => 42,  152 => 41,  146 => 40,  141 => 38,  137 => 37,  131 => 36,  126 => 34,  122 => 33,  116 => 32,  111 => 30,  107 => 29,  101 => 28,  95 => 26,  93 => 25,  91 => 24,  84 => 19,  78 => 17,  72 => 15,  70 => 14,  66 => 13,  59 => 10,  48 => 1,);
+        return array (  356 => 117,  352 => 116,  347 => 114,  343 => 113,  337 => 112,  331 => 109,  327 => 108,  321 => 107,  315 => 104,  311 => 103,  305 => 102,  302 => 101,  299 => 100,  293 => 97,  289 => 96,  282 => 95,  280 => 94,  260 => 77,  254 => 74,  248 => 71,  242 => 68,  238 => 67,  231 => 66,  229 => 65,  223 => 62,  219 => 61,  213 => 60,  208 => 58,  204 => 57,  198 => 56,  193 => 54,  189 => 53,  183 => 52,  179 => 51,  171 => 46,  167 => 45,  161 => 44,  156 => 42,  152 => 41,  146 => 40,  141 => 38,  137 => 37,  131 => 36,  126 => 34,  122 => 33,  116 => 32,  110 => 30,  108 => 29,  106 => 28,  99 => 23,  93 => 21,  87 => 19,  85 => 18,  81 => 17,  78 => 16,  71 => 13,  68 => 12,  60 => 10,  58 => 9,  48 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -388,9 +403,13 @@ class __TwigTemplate_ae2cd9a870eb744671283ebcf0b1c3e1 extends Template
 
         <div class=\"mb-4\">
             <div class=\"d-flex align-items-center\">
-                <div class=\"bg-primary rounded-circle text-white d-flex align-items-center justify-content-center\" style=\"width: 40px; height: 40px;\">
-                    {{ app.user.firstName|first }}{{ app.user.lastName|first }}
-                </div>
+                {% if app.user.avatar %}
+                    <img src=\"{{ app.user.avatar }}\" alt=\"{{ app.user.fullName }}\" class=\"rounded-circle\" style=\"width:40px;height:40px;object-fit:cover;\">
+                {% else %}
+                    <div class=\"bg-primary rounded-circle text-white d-flex align-items-center justify-content-center\" style=\"width: 40px; height: 40px;\">
+                        {{ app.user.firstName|first }}{{ app.user.lastName|first }}
+                    </div>
+                {% endif %}
                 <div class=\"ms-2\">
                     <div class=\"fw-bold small\">{{ app.user.fullName }}</div>
                     {% if is_granted('ROLE_SUPER_ADMIN') %}

@@ -43,10 +43,14 @@
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <div class="avatar bg-primary text-white rounded-circle me-2"
-                                                     style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
-                                                    {{ user.firstName|first }}{{ user.lastName|first }}
-                                                </div>
+                                                {% if user.avatar %}
+                                                    <img src="{{ user.avatar }}" alt="{{ user.fullName }}" class="rounded-circle me-2" style="width:32px;height:32px;object-fit:cover;">
+                                                {% else %}
+                                                    <div class="avatar bg-primary text-white rounded-circle me-2"
+                                                         style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                                        {{ user.firstName|first }}{{ user.lastName|first }}
+                                                    </div>
+                                                {% endif %}
                                                 <div>
                                                     <strong>{{ user.firstName }} {{ user.lastName }}</strong>
                                                 </div>

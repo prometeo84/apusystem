@@ -368,7 +368,9 @@
         <parameter>@WebProfiler/Collector/config.html.twig</parameter>
       </parameter>
     </parameter>
-    <parameter key="console.command.ids" type="collection"/>
+    <parameter key="console.command.ids" type="collection">
+      <parameter>console.command.public_alias.App\Command\PurgeExpiredSessionsCommand</parameter>
+    </parameter>
   </parameters>
   <services>
     <service id="service_container" class="Symfony\Component\DependencyInjection\ContainerInterface" public="true" synthetic="true"/>
@@ -402,6 +404,11 @@
       <call method="setDescription">
         <argument>Migra los recovery codes existentes a formato hasheado con Argon2ID</argument>
       </call>
+    </service>
+    <service id="App\Command\PurgeExpiredSessionsCommand" class="App\Command\PurgeExpiredSessionsCommand" autowire="true" autoconfigure="true">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="doctrine"/>
     </service>
     <service id="App\Command\TestEmailCommand" class="App\Command\TestEmailCommand" autowire="true" autoconfigure="true">
       <tag name="console.command"/>
@@ -440,6 +447,21 @@
       <argument type="service" id="security.user_password_hasher"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\AdminController"/>
+      </call>
+    </service>
+    <service id="App\Controller\AvatarController" class="App\Controller\AvatarController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\AvatarController"/>
+      </call>
+    </service>
+    <service id="App\Controller\CronController" class="App\Controller\CronController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\CronController"/>
       </call>
     </service>
     <service id="App\Controller\DashboardController" class="App\Controller\DashboardController" public="true" autowire="true" autoconfigure="true">
@@ -534,6 +556,13 @@
     <service id="App\EventListener\SecurityHeadersSubscriber" class="App\EventListener\SecurityHeadersSubscriber" autowire="true" autoconfigure="true">
       <tag name="kernel.event_subscriber"/>
       <tag name="container.hot_path"/>
+    </service>
+    <service id="App\EventListener\SessionActivityListener" class="App\EventListener\SessionActivityListener" autowire="true" autoconfigure="true">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="App\Service\SecurityLogger"/>
     </service>
     <service id="App\EventListener\ThemeSubscriber" class="App\EventListener\ThemeSubscriber" autowire="true" autoconfigure="true">
       <tag name="kernel.event_subscriber"/>
@@ -2542,6 +2571,14 @@
           <argument>onKernelResponse</argument>
         </argument>
         <argument>-10</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="App\EventListener\SessionActivityListener"/>
+          <argument>onKernelRequest</argument>
+        </argument>
+        <argument>0</argument>
       </call>
       <call method="addListener">
         <argument>kernel.request</argument>
@@ -5754,6 +5791,13 @@
         <argument>null</argument>
       </call>
       <call method="add">
+        <argument type="service" id=".security.request_matcher.AV9c44o"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
         <argument type="service" id=".security.request_matcher.SVK5D2B"/>
         <argument type="collection">
           <argument>ROLE_ADMIN</argument>
@@ -6442,6 +6486,14 @@
         <argument type="service" id=".security.request_matcher.wTfQwmN"/>
       </argument>
     </service>
+    <service id=".security.request_matcher.Ji0KUGQ" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/uploads/avatars</argument>
+    </service>
+    <service id=".security.request_matcher.AV9c44o" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.Ji0KUGQ"/>
+      </argument>
+    </service>
     <service id=".security.request_matcher.pqyCXG8" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
       <argument>^/admin</argument>
     </service>
@@ -6875,6 +6927,8 @@
     <service id=".abstract.instanceof.App\Command\EncryptTotpSecretsCommand" class="App\Command\EncryptTotpSecretsCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\HashRecoveryCodesCommand" class="App\Command\HashRecoveryCodesCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\HashRecoveryCodesCommand" class="App\Command\HashRecoveryCodesCommand" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\PurgeExpiredSessionsCommand" class="App\Command\PurgeExpiredSessionsCommand" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Command\PurgeExpiredSessionsCommand" class="App\Command\PurgeExpiredSessionsCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\TestEmailCommand" class="App\Command\TestEmailCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\TestEmailCommand" class="App\Command\TestEmailCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\API\RevitAPIController" class="App\Controller\API\RevitAPIController" autowire="true" abstract="true"/>
@@ -6886,6 +6940,12 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AdminController" class="App\Controller\AdminController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AdminController" class="App\Controller\AdminController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\AdminController" class="App\Controller\AdminController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AvatarController" class="App\Controller\AvatarController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AvatarController" class="App\Controller\AvatarController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\AvatarController" class="App\Controller\AvatarController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\CronController" class="App\Controller\CronController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\CronController" class="App\Controller\CronController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\CronController" class="App\Controller\CronController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\DashboardController" class="App\Controller\DashboardController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\DashboardController" class="App\Controller\DashboardController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\DashboardController" class="App\Controller\DashboardController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -6916,6 +6976,8 @@
     <service id=".abstract.instanceof.App\EventListener\RateLimitSubscriber" class="App\EventListener\RateLimitSubscriber" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\SecurityHeadersSubscriber" class="App\EventListener\SecurityHeadersSubscriber" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\EventListener\SecurityHeadersSubscriber" class="App\EventListener\SecurityHeadersSubscriber" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\SessionActivityListener" class="App\EventListener\SessionActivityListener" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\EventListener\SessionActivityListener" class="App\EventListener\SessionActivityListener" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\ThemeSubscriber" class="App\EventListener\ThemeSubscriber" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\EventListener\ThemeSubscriber" class="App\EventListener\ThemeSubscriber" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Monolog\Processor\ProcessorInterface.0.App\Service\TimezoneProcessor" class="App\Service\TimezoneProcessor" autowire="true" abstract="true"/>
@@ -8082,6 +8144,18 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\AvatarController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\AvatarController"/>
+      <argument>App\Controller\AvatarController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\CronController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\CronController"/>
+      <argument>App\Controller\CronController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\DashboardController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\DashboardController"/>
       <argument>App\Controller\DashboardController</argument>
@@ -8286,6 +8360,8 @@
           <argument>App\Controller\API\RevitAPIController</argument>
           <argument>App\Controller\APUController</argument>
           <argument>App\Controller\AdminController</argument>
+          <argument>App\Controller\AvatarController</argument>
+          <argument>App\Controller\CronController</argument>
           <argument>App\Controller\DashboardController</argument>
           <argument>App\Controller\FaviconController</argument>
           <argument>App\Controller\PasswordResetController</argument>
@@ -9616,5 +9692,6 @@
     <service id=".service_locator.c0wzfI4" alias=".service_locator.1vYpZ1B"/>
     <service id=".service_locator.uBwBrvQ" alias=".service_locator.0MQaTBY"/>
     <service id=".service_locator.Q2FF2no" alias=".service_locator.TJNRSaV"/>
+    <service id="console.command.public_alias.App\Command\PurgeExpiredSessionsCommand" alias="App\Command\PurgeExpiredSessionsCommand" public="true"/>
   </services>
 </container>

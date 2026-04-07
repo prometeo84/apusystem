@@ -37,15 +37,17 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         // Crear sesión de login
         $sessionId = $request->getSession()->getId();
         $userAgent = $request->headers->get('User-Agent') ?? 'Unknown';
-        
+
+        $lifetime = (int) (getenv('SESSION_LIFETIME') ?: 3600);
+
         $loginSession = new LoginSession(
             $user,
             $sessionId,
             $ipAddress,
             $userAgent,
-            3600 // 1 hora
+            $lifetime
         );
-        
+
         $this->em->persist($loginSession);
         $this->em->persist($user);
         $this->em->flush();

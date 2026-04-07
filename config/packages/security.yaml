@@ -38,6 +38,8 @@ security:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/2fa-setup, roles: IS_AUTHENTICATED_REMEMBERED }
+        # Allow public access to uploaded avatars so they can be served by Symfony
+        - { path: ^/uploads/avatars, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
         # Permitir remember_me para evitar loop de redirección
         - { path: ^/, roles: IS_AUTHENTICATED_REMEMBERED }

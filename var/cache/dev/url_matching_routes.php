@@ -24,6 +24,7 @@ return [
         '/admin/users/create' => [[['_route' => 'app_admin_users_create', '_controller' => 'App\\Controller\\AdminController::createUser'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/admin/logs' => [[['_route' => 'app_admin_logs', '_controller' => 'App\\Controller\\AdminController::logs'], null, null, null, false, false, null]],
         '/admin/tenant' => [[['_route' => 'app_admin_tenant', '_controller' => 'App\\Controller\\AdminController::tenantSettings'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/cron/run' => [[['_route' => 'cron_run', '_controller' => 'App\\Controller\\CronController::run'], null, ['POST' => 0], null, false, false, null]],
         '/' => [[['_route' => 'app_dashboard', '_controller' => 'App\\Controller\\DashboardController::index'], null, null, null, false, false, null]],
         '/dashboard' => [[['_route' => 'app_dashboard_alt', '_controller' => 'App\\Controller\\DashboardController::index'], null, null, null, false, false, null]],
         '/favicon.ico' => [[['_route' => 'app_favicon', '_controller' => 'App\\Controller\\FaviconController::favicon'], null, null, null, false, false, null]],
@@ -89,17 +90,18 @@ return [
                         .'|toggle(*:362)'
                     .')'
                 .')'
-                .'|/password/reset/([^/]++)(*:396)'
+                .'|/uploads/avatars/([^/]++)(*:397)'
+                .'|/password/reset/([^/]++)(*:429)'
                 .'|/revit/file/([^/]++)(?'
-                    .'|(*:427)'
+                    .'|(*:460)'
                     .'|/(?'
-                        .'|delete(*:445)'
-                        .'|reprocess(*:462)'
+                        .'|delete(*:478)'
+                        .'|reprocess(*:495)'
                     .')'
                 .')'
                 .'|/s(?'
-                    .'|ecurity/sessions/([^/]++)/revoke(*:509)'
-                    .'|ystem/tenants/([^/]++)/edit(*:544)'
+                    .'|ecurity/sessions/([^/]++)/revoke(*:542)'
+                    .'|ystem/tenants/([^/]++)/edit(*:577)'
                 .')'
             .')/?$}sDu',
     ],
@@ -118,12 +120,13 @@ return [
         311 => [[['_route' => 'app_apu_export_excel', '_controller' => 'App\\Controller\\APUController::exportExcel'], ['id'], null, null, false, false, null]],
         348 => [[['_route' => 'app_admin_users_edit', '_controller' => 'App\\Controller\\AdminController::editUser'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
         362 => [[['_route' => 'app_admin_users_toggle', '_controller' => 'App\\Controller\\AdminController::toggleUser'], ['id'], ['POST' => 0], null, false, false, null]],
-        396 => [[['_route' => 'app_password_reset', '_controller' => 'App\\Controller\\PasswordResetController::resetPassword'], ['token'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
-        427 => [[['_route' => 'app_revit_file_detail', '_controller' => 'App\\Controller\\RevitUploadController::fileDetail'], ['id'], ['GET' => 0], null, false, true, null]],
-        445 => [[['_route' => 'app_revit_file_delete', '_controller' => 'App\\Controller\\RevitUploadController::deleteFile'], ['id'], ['POST' => 0], null, false, false, null]],
-        462 => [[['_route' => 'app_revit_file_reprocess', '_controller' => 'App\\Controller\\RevitUploadController::reprocessFile'], ['id'], ['POST' => 0], null, false, false, null]],
-        509 => [[['_route' => 'app_security_session_revoke', '_controller' => 'App\\Controller\\SecuritySettingsController::revokeSession'], ['id'], ['POST' => 0], null, false, false, null]],
-        544 => [
+        397 => [[['_route' => 'avatar_serve', '_controller' => 'App\\Controller\\AvatarController::serve'], ['filename'], ['GET' => 0], null, false, true, null]],
+        429 => [[['_route' => 'app_password_reset', '_controller' => 'App\\Controller\\PasswordResetController::resetPassword'], ['token'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        460 => [[['_route' => 'app_revit_file_detail', '_controller' => 'App\\Controller\\RevitUploadController::fileDetail'], ['id'], ['GET' => 0], null, false, true, null]],
+        478 => [[['_route' => 'app_revit_file_delete', '_controller' => 'App\\Controller\\RevitUploadController::deleteFile'], ['id'], ['POST' => 0], null, false, false, null]],
+        495 => [[['_route' => 'app_revit_file_reprocess', '_controller' => 'App\\Controller\\RevitUploadController::reprocessFile'], ['id'], ['POST' => 0], null, false, false, null]],
+        542 => [[['_route' => 'app_security_session_revoke', '_controller' => 'App\\Controller\\SecuritySettingsController::revokeSession'], ['id'], ['POST' => 0], null, false, false, null]],
+        577 => [
             [['_route' => 'app_system_tenants_edit', '_controller' => 'App\\Controller\\SystemController::editTenant'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null],
             [null, null, null, null, false, false, 0],
         ],

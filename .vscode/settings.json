@@ -96,5 +96,6 @@
     "yaml.schemas": {
         "https://json.schemastore.org/yamllint.json": "file:///.yamllint"
     },
-    "yaml.validate": false
+    "yaml.validate": false,
+    "python.terminal.useEnvFile": true
 }

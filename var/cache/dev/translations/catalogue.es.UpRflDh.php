@@ -513,6 +513,7 @@ $catalogue = new MessageCatalogue('es', array (
     'system.quick_actions' => 'Acciones Rápidas',
     'system.recent_activity' => 'Actividad Reciente (24h)',
     'system.recent_errors' => 'Errores Recientes del Log',
+    'system.no_recent_errors' => 'No hay errores recientes',
     'system.registered_tenants' => 'Empresas Registradas',
     'system.registered_users' => 'Usuarios Registrados',
     'system.registration' => 'Registro',

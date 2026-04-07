@@ -346,6 +346,7 @@ system:
   quick_actions: "Quick Actions"
   recent_activity: "Recent Activity (24h)"
   recent_errors: "Recent Log Errors"
+  no_recent_errors: "No recent errors"
   registered_tenants: "Registered Companies"
   registered_users: "Registered Users"
   registration: "Registration"
@@ -441,4 +442,3 @@ test_mail:
   mailpit_url: "http://localhost:8025"
   recovery_link: "password recovery"
   title: "Email Sending Test"
-
