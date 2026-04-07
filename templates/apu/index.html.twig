@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}APU - Análisis de Precios Unitarios{% endblock %}
+{% block title %}{{ 'apu.title'|trans }}{% endblock %}
 
 {% block body %}
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1><i class="bi bi-calculator"></i> Análisis de Precios Unitarios</h1>
+        <h1><i class="bi bi-calculator"></i> {{ 'apu.header'|trans }}</h1>
         <a href="{{ path('app_apu_create') }}" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Nuevo APU
+            <i class="bi bi-plus-circle"></i> {{ 'apu.new_apu'|trans }}
         </a>
     </div>
 
@@ -23,15 +23,15 @@
             <div class="card-body">
                 <table class="table table-hover">
                     <thead>
-                        <tr>
-                            <th>Descripción</th>
-                            <th>Unidad</th>
-                            <th>K(H/U)</th>
-                            <th>Rend. u/h</th>
-                            <th class="text-end">Costo Total</th>
-                            <th>Fecha</th>
-                            <th class="text-center">Acciones</th>
-                        </tr>
+                            <tr>
+                                <th>{{ 'apu.column_description'|trans }}</th>
+                                <th>{{ 'apu.column_unit'|trans }}</th>
+                                <th>{{ 'apu.column_khu'|trans }}</th>
+                                <th>{{ 'apu.column_rend'|trans }}</th>
+                                <th class="text-end">{{ 'apu.column_total_cost'|trans }}</th>
+                                <th>{{ 'apu.column_date'|trans }}</th>
+                                <th class="text-center">{{ 'apu.actions'|trans }}</th>
+                            </tr>
                     </thead>
                     <tbody>
                         {% for item in apu_items %}
@@ -45,10 +45,10 @@
                                 </td>
                                 <td>{{ item.createdAt|date('d/m/Y') }}</td>
                                 <td class="text-center">
-                                    <a href="{{ path('app_apu_edit', {id: item.id}) }}" class="btn btn-sm btn-outline-primary" title="Editar">
+                                    <a href="{{ path('app_apu_edit', {id: item.id}) }}" class="btn btn-sm btn-outline-primary" title="{{ 'apu.edit'|trans }}">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <a href="{{ path('app_apu_export_excel', {id: item.id}) }}" class="btn btn-sm btn-outline-success" title="Exportar Excel">
+                                    <a href="{{ path('app_apu_export_excel', {id: item.id}) }}" class="btn btn-sm btn-outline-success" title="{{ 'apu.export_excel'|trans }}">
                                         <i class="bi bi-file-earmark-excel"></i>
                                     </a>
                                 </td>
@@ -60,8 +60,8 @@
         </div>
     {% else %}
         <div class="alert alert-info">
-            <i class="bi bi-info-circle"></i> No hay APUs registrados.
-            <a href="{{ path('app_apu_create') }}" class="alert-link">Crear el primero</a>
+            <i class="bi bi-info-circle"></i> {{ 'apu.no_apus'|trans }}
+            <a href="{{ path('app_apu_create') }}" class="alert-link">{{ 'apu.create_first'|trans }}</a>
         </div>
     {% endif %}
 </div>

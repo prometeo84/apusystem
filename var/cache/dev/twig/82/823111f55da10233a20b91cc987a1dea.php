@@ -79,6 +79,14 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         // line 16
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["user_theme"] ?? null), "secondary_color", [], "any", true, true, false, 16)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user_theme"]) || array_key_exists("user_theme", $context) ? $context["user_theme"] : (function () { throw new RuntimeError('Variable "user_theme" does not exist.', 16, $this->source); })()), "secondary_color", [], "any", false, false, false, 16), "#764ba2")) : ("#764ba2")), "html", null, true);
         yield ";
+            --primary-rgb: ";
+        // line 17
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["user_theme"] ?? null), "primary_rgb", [], "any", true, true, false, 17)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user_theme"]) || array_key_exists("user_theme", $context) ? $context["user_theme"] : (function () { throw new RuntimeError('Variable "user_theme" does not exist.', 17, $this->source); })()), "primary_rgb", [], "any", false, false, false, 17), "102, 126, 234")) : ("102, 126, 234")), "html", null, true);
+        yield ";
+            --secondary-rgb: ";
+        // line 18
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["user_theme"] ?? null), "secondary_rgb", [], "any", true, true, false, 18)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user_theme"]) || array_key_exists("user_theme", $context) ? $context["user_theme"] : (function () { throw new RuntimeError('Variable "user_theme" does not exist.', 18, $this->source); })()), "secondary_rgb", [], "any", false, false, false, 18), "118, 75, 162")) : ("118, 75, 162")), "html", null, true);
+        yield ";
             --danger-color: #dc3545;
             --success-color: #28a745;
             --warning-color: #ffc107;
@@ -95,7 +103,8 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
 
         /* Modo Oscuro */
         html[data-theme=\"dark\"] body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            /* Use user's colors with a dark overlay for consistent branding in dark mode */
+            background-image: linear-gradient(135deg, rgba(var(--primary-rgb), 0.12), rgba(var(--secondary-rgb), 0.12)), linear-gradient(135deg, #0b0b0b 0%, #111 100%);
             color: #e0e0e0;
         }
 
@@ -132,6 +141,42 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
 
         html[data-theme=\"dark\"] .table-hover tbody tr:hover {
             background-color: #3d3d3d;
+        }
+
+        /* Forzar tablas oscuras: filas, celdas y encabezados */
+        html[data-theme=\"dark\"] .table,
+        html[data-theme=\"dark\"] .table th,
+        html[data-theme=\"dark\"] .table td,
+        html[data-theme=\"dark\"] .table thead th,
+        html[data-theme=\"dark\"] .table tbody tr {
+            background-color: transparent;
+            color: #e0e0e0;
+            border-color: #3a3a3a;
+        }
+
+        /* Encabezados de tabla */
+        html[data-theme=\"dark\"] .table thead th {
+            background-color: #2d2d2d !important;
+            color: #e0e0e0 !important;
+            border-bottom: 1px solid #404040 !important;
+        }
+
+        /* Filas y celdas */
+        html[data-theme=\"dark\"] .table tbody td {
+            background-color: #2b2b2b !important;
+            color: #e0e0e0 !important;
+            border-top: 1px solid #373737 !important;
+        }
+
+        /* Table striped */
+        html[data-theme=\"dark\"] .table-striped > tbody > tr:nth-of-type(odd) > * {
+            background-color: #242424 !important;
+        }
+
+        /* Table light (bootstrap) override */
+        html[data-theme=\"dark\"] .table-light {
+            background-color: #2d2d2d !important;
+            color: #e0e0e0 !important;
         }
 
         html[data-theme=\"dark\"] .modal-content {
@@ -271,22 +316,22 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         }
     </style>
     ";
-        // line 208
+        // line 247
         yield from $this->unwrap()->yieldBlock('stylesheets', $context, $blocks);
-        // line 209
+        // line 248
         yield "</head>
 <body>
     ";
-        // line 211
+        // line 250
         yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
-        // line 212
+        // line 251
         yield "
     <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js\"
             integrity=\"sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz\"
             crossorigin=\"anonymous\"></script>
 
     ";
-        // line 218
+        // line 257
         yield "    <script>
         (function() {
             const html = document.documentElement;
@@ -308,9 +353,9 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
     </script>
 
     ";
-        // line 238
+        // line 277
         yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
-        // line 239
+        // line 278
         yield "</body>
 </html>
 ";
@@ -346,7 +391,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         yield from [];
     }
 
-    // line 208
+    // line 247
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -368,7 +413,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         yield from [];
     }
 
-    // line 211
+    // line 250
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -390,7 +435,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         yield from [];
     }
 
-    // line 238
+    // line 277
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -433,7 +478,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  394 => 238,  372 => 211,  350 => 208,  327 => 6,  314 => 239,  312 => 238,  290 => 218,  283 => 212,  281 => 211,  277 => 209,  275 => 208,  80 => 16,  76 => 15,  64 => 6,  55 => 2,  52 => 1,);
+        return array (  439 => 277,  417 => 250,  395 => 247,  372 => 6,  359 => 278,  357 => 277,  335 => 257,  328 => 251,  326 => 250,  322 => 248,  320 => 247,  88 => 18,  84 => 17,  80 => 16,  76 => 15,  64 => 6,  55 => 2,  52 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -454,6 +499,8 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         :root {
             --primary-color: {{ user_theme.primary_color|default('#667eea') }};
             --secondary-color: {{ user_theme.secondary_color|default('#764ba2') }};
+            --primary-rgb: {{ user_theme.primary_rgb|default('102, 126, 234') }};
+            --secondary-rgb: {{ user_theme.secondary_rgb|default('118, 75, 162') }};
             --danger-color: #dc3545;
             --success-color: #28a745;
             --warning-color: #ffc107;
@@ -470,7 +517,8 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
 
         /* Modo Oscuro */
         html[data-theme=\"dark\"] body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            /* Use user's colors with a dark overlay for consistent branding in dark mode */
+            background-image: linear-gradient(135deg, rgba(var(--primary-rgb), 0.12), rgba(var(--secondary-rgb), 0.12)), linear-gradient(135deg, #0b0b0b 0%, #111 100%);
             color: #e0e0e0;
         }
 
@@ -507,6 +555,42 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
 
         html[data-theme=\"dark\"] .table-hover tbody tr:hover {
             background-color: #3d3d3d;
+        }
+
+        /* Forzar tablas oscuras: filas, celdas y encabezados */
+        html[data-theme=\"dark\"] .table,
+        html[data-theme=\"dark\"] .table th,
+        html[data-theme=\"dark\"] .table td,
+        html[data-theme=\"dark\"] .table thead th,
+        html[data-theme=\"dark\"] .table tbody tr {
+            background-color: transparent;
+            color: #e0e0e0;
+            border-color: #3a3a3a;
+        }
+
+        /* Encabezados de tabla */
+        html[data-theme=\"dark\"] .table thead th {
+            background-color: #2d2d2d !important;
+            color: #e0e0e0 !important;
+            border-bottom: 1px solid #404040 !important;
+        }
+
+        /* Filas y celdas */
+        html[data-theme=\"dark\"] .table tbody td {
+            background-color: #2b2b2b !important;
+            color: #e0e0e0 !important;
+            border-top: 1px solid #373737 !important;
+        }
+
+        /* Table striped */
+        html[data-theme=\"dark\"] .table-striped > tbody > tr:nth-of-type(odd) > * {
+            background-color: #242424 !important;
+        }
+
+        /* Table light (bootstrap) override */
+        html[data-theme=\"dark\"] .table-light {
+            background-color: #2d2d2d !important;
+            color: #e0e0e0 !important;
         }
 
         html[data-theme=\"dark\"] .modal-content {

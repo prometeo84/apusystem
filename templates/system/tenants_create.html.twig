@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Crear Empresa - APU System{% endblock %}
+{% block title %}{{ 'system.new_tenant_title'|trans }} - APU System{% endblock %}
 
 {% block body %}
 <div class="d-flex">
@@ -44,7 +44,7 @@
 
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
-                                        <label for="plan" class="form-label">Plan *</label>
+                                        <label for="plan" class="form-label">{{ 'system.plan'|trans }} *</label>
                                         <select class="form-select" id="plan" name="plan" required onchange="updateLimits()">
                                             <option value="basic">Basic</option>
                                             <option value="professional">Professional</option>
@@ -68,34 +68,34 @@
                                         <label for="plan_months" class="form-label">{{ 'system.plan_validity'|trans }}</label>
                                         <select class="form-select" id="plan_months" name="plan_months">
                                             <option value="0">{{ 'system.no_limit'|trans }}</option>
-                                            <option value="1">1 mes (Prueba)</option>
-                                            <option value="3">3 meses</option>
-                                            <option value="6">6 meses</option>
-                                            <option value="12" selected>12 meses (1 año)</option>
-                                            <option value="24">24 meses (2 años)</option>
-                                            <option value="36">36 meses (3 años)</option>
+                                            <option value="1">1 {{ 'system.month'|trans }}</option>
+                                            <option value="3">3 {{ 'system.months'|trans }}</option>
+                                            <option value="6">6 {{ 'system.months'|trans }}</option>
+                                            <option value="12" selected>12 {{ 'system.months'|trans }} (1 {{ 'system.year'|trans }})</option>
+                                            <option value="24">24 {{ 'system.months'|trans }} (2 {{ 'system.years'|trans }})</option>
+                                            <option value="36">36 {{ 'system.months'|trans }} (3 {{ 'system.years'|trans }})</option>
                                         </select>
-                                        <div class="form-text">Duración del plan antes de expirar</div>
+                                        <div class="form-text">{{ 'system.plan_duration'|trans }}</div>
                                     </div>
                                 </div>
 
                                 <hr>
 
                                 <div class="alert alert-info">
-                                    <h6><i class="bi bi-info-circle"></i> Información de Planes</h6>
+                                    <h6><i class="bi bi-info-circle"></i> {{ 'system.plan_info'|trans }}</h6>
                                     <ul class="mb-0">
-                                        <li><strong>Basic:</strong> 5 usuarios, 10 proyectos</li>
-                                        <li><strong>Professional:</strong> 25 usuarios, 100 proyectos</li>
-                                        <li><strong>Enterprise:</strong> Usuarios y proyectos ilimitados</li>
+                                        <li><strong>{{ 'system.basic_plan'|trans }}</strong></li>
+                                        <li><strong>{{ 'system.professional_plan'|trans }}</strong></li>
+                                        <li><strong>{{ 'system.enterprise_plan'|trans }}</strong></li>
                                     </ul>
                                 </div>
 
                                 <div class="d-flex gap-2">
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="bi bi-check-lg"></i> Crear Empresa
+                                        <i class="bi bi-check-lg"></i> {{ 'system.create_tenant'|trans }}
                                     </button>
                                     <a href="{{ path('app_system_tenants') }}" class="btn btn-secondary">
-                                        <i class="bi bi-x-lg"></i> Cancelar
+                                        <i class="bi bi-x-lg"></i> {{ 'common.cancel'|trans }}
                                     </a>
                                 </div>
                             </form>

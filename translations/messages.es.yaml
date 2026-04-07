@@ -33,6 +33,15 @@ admin:
   view_security_logs: "Ver Logs de Seguridad"
   with_2fa: "Con 2FA"
 
+  logs:
+    details_title: "Detalles del Evento"
+    details_label: "Detalles"
+  edit_tenant: "Editar Empresa"
+  edit_tenant_form: "Editar Empresa"
+  no_tenants_msg: "No hay empresas registradas"
+  registered_tenants_section: "Empresas Registradas"
+  title_page: "Gestión de la Empresa"
+
 admin_users:
   all_users: "Todos los Usuarios"
   create_user_title: "Crear Nuevo Usuario"
@@ -98,6 +107,7 @@ common:
   optional: "Opcional"
   personal_information: "Información Personal"
   preview: "Vista Previa"
+  browser: "Navegador"
   primary_color_description: "Color principal de botones y enlaces"
   projects: "Proyectos"
   reset_theme_confirm: "¿Restablecer tema a los colores predeterminados?"
@@ -262,6 +272,7 @@ security:
   title: "Configuración de Seguridad"
   two_factor: "Autenticación de Dos Factores (2FA)"
   use_auth_app: "Usa una aplicación de autenticación como Google Authenticator o Authy"
+  no_active_sessions: "No hay sesiones activas."
 
 security_2fa:
   code_from_app: "Código de 6 dígitos desde tu aplicación de autenticación"
@@ -364,6 +375,7 @@ system:
   registered_tenants: "Empresas Registradas"
   registered_users: "Usuarios Registrados"
   registration: "Registro"
+  statistics: "Estadísticas"
   right_now: "Ahora mismo"
   security_alerts: "Seguridad"
   sessions: "Sesiones"
@@ -398,8 +410,6 @@ system_alerts:
   alert_types_heading: "Tipos de Alertas"
   billing_section: "Facturación"
   no_active_alerts_msg: "No hay alertas activas"
-  security_section: "Seguridad"
-  title_page: "Alertas del Sistema"
 
 system_errors:
   filter_all: "Todos"
@@ -417,6 +427,14 @@ system_tenants:
   no_tenants_msg: "No hay empresas registradas"
   registered_tenants_section: "Empresas Registradas"
   title_page: "Gestión de empresas"
+  details_of: "Detalles de %name%"
+  name_label: "Nombre"
+  subdomain_label: "Subdominio"
+  plan_label: "Plan"
+  status_label: "Estado"
+  users_label: "Usuarios"
+  projects_label: "Proyectos"
+  registration_label: "Registro"
 
 test:
   back_dashboard: "Volver al Dashboard"
@@ -456,3 +474,34 @@ test_mail:
   mailpit_url: "http://localhost:8025"
   recovery_link: "recuperación de contraseña"
   title: "Test de Envío de Email"
+
+auth.logout: "Cerrar Sesión"
+
+revit.confirm_delete: "¿Está seguro de eliminar este archivo?"
+revit.info_general: "Información General"
+revit.label.size: "Tamaño"
+revit.label.version: "Versión"
+revit.label.categories: "Categorías"
+revit.table.category: "Categoría"
+revit.status.pending: "Este archivo está pendiente de procesamiento."
+revit.processing_will_start: "El procesamiento se iniciará automáticamente en breve."
+revit.status.processing: "Este archivo se está procesando actualmente."
+revit.update_to_see_progress: "Actualice la página para ver el progreso."
+revit.info_technical: "Información Técnica"
+
+admin.tenant.title: "Configuración de Empresa"
+admin.tenant.info_company: "Información de la Empresa"
+admin.index.title: "Administración"
+
+apu.edit.title: "Editar Análisis de Precios Unitarios"
+apu.label.item_description: "Descripción del Rubro"
+
+security.2fa.important: "Importante"
+security.2fa.once_enabled: "Una vez habilitado el 2FA, necesitarás tu contraseña y un código de verificación para iniciar sesión."
+security.2fa.disable_instructions: "Para deshabilitar la autenticación de dos factores, ingresa tu código 2FA actual:"
+security.2fa.code_placeholder: "Código de 6 dígitos"
+
+password.reset.title: "Restablecer Contraseña"
+password.reset.requirements: "Requisitos de la contraseña:"
+password.reset.min_8: "Mínimo 8 caracteres"
+password.reset.recommend_chars: "Se recomienda usar letras, números y símbolos"

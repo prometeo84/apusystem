@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Recuperar Contraseña - APU System{% endblock %}
+{% block title %}{{ 'password.forgot_title'|trans }} - APU System{% endblock %}
 
 {% block body %}
 <div class="main-content">
@@ -31,7 +31,7 @@
                         <form method="post" action="{{ path('app_password_forgot') }}">
                             <div class="mb-3">
                                 <label for="email" class="form-label">
-                                    <i class="bi bi-envelope"></i> Correo Electrónico
+                                    <i class="bi bi-envelope"></i> {{ 'login.email'|trans }}
                                 </label>
                                 <input
                                     type="email"
@@ -50,8 +50,8 @@
                             <div class="alert alert-info">
                                 <i class="bi bi-info-circle"></i>
                                 <small>
-                                    Recibirás un correo con un enlace para restablecer tu contraseña.
-                                    El enlace expirará en 1 hora.
+                                    {{ 'password.forgot_description'|trans }}
+                                    {{ 'password.reset_expires_in'|trans|default('El enlace expirará en 1 hora.') }}
                                 </small>
                             </div>
 

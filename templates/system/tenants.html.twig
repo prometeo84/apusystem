@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestión de Empresas - APU System{% endblock %}
+{% block title %}{{ 'system.tenants_management'|trans }} - APU System{% endblock %}
 
 {% block body %}
 <div class="d-flex">
@@ -113,30 +113,30 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Detalles de {{ tenant.name }}</h5>
+                    <h5 class="modal-title">{{ 'system_tenants.details_of'|trans({'%name%': tenant.name}) }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
                             <dl class="row">
-                                <dt class="col-sm-4">Nombre:</dt>
+                                <dt class="col-sm-4">{{ 'system_tenants.name_label'|trans }}</dt>
                                 <dd class="col-sm-8">{{ tenant.name }}</dd>
 
-                                <dt class="col-sm-4">Subdominio:</dt>
+                                <dt class="col-sm-4">{{ 'system_tenants.subdomain_label'|trans }}</dt>
                                 <dd class="col-sm-8"><code>{{ tenant.slug }}</code></dd>
 
-                                <dt class="col-sm-4">Plan:</dt>
+                                <dt class="col-sm-4">{{ 'system_tenants.plan_label'|trans }}</dt>
                                 <dd class="col-sm-8">
                                     <span class="badge bg-{{ tenant.plan == 'enterprise' ? 'danger' : (tenant.plan == 'professional' ? 'warning' : 'info') }}">
                                         {{ tenant.plan|upper }}
                                     </span>
                                 </dd>
 
-                                <dt class="col-sm-4">Estado:</dt>
+                                <dt class="col-sm-4">{{ 'system_tenants.status_label'|trans }}</dt>
                                 <dd class="col-sm-8">
                                     <span class="badge bg-{{ tenant.isActive ? 'success' : 'danger' }}">
-                                        {{ tenant.isActive ? 'Activo' : 'Inactivo' }}
+                                        {{ tenant.isActive ? ('system.status_active'|trans) : ('system.status_inactive'|trans) }}
                                     </span>
                                 </dd>
                             </dl>
@@ -157,7 +157,7 @@
 
                     <hr>
 
-                    <h6>Usuarios Registrados</h6>
+                    <h6>{{ 'system.registered_users'|trans }}</h6>
                     <ul class="list-group">
                         {% for user in tenant.users %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -170,7 +170,7 @@
                                         {{ user.roles[0]|replace({'ROLE_': ''}) }}
                                     </span>
                                     {% if user.totpEnabled %}
-                                        <i class="bi bi-shield-check text-success" title="2FA Habilitado"></i>
+                                        <i class="bi bi-shield-check text-success" title="{{ 'security.2fa_enabled'|trans }}"></i>
                                     {% endif %}
                                 </div>
                             </li>
@@ -178,7 +178,7 @@
                     </ul>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'buttons.close'|trans }}</button>
                 </div>
             </div>
         </div>

@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Configuración de Empresa - APU System{% endblock %}
+{% block title %}{{ 'admin.tenant.title'|trans }} - APU System{% endblock %}
 
 {% block body %}
 <div class="d-flex">
     {% include 'partials/_sidebar.html.twig' %}
 
     <div class="flex-grow-1">
-        {% include 'partials/_navbar.html.twig' with {'title': 'Configuración de Empresa'} %}
+        {% include 'partials/_navbar.html.twig' with {'title': ('admin.tenant.title'|trans)} %}
 
         <div class="container-fluid p-4 content-wrapper">
             {% if is_granted('ROLE_SUPER_ADMIN') and allTenants is defined %}
@@ -35,7 +35,7 @@
                 <div class="col-md-8">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="mb-0"><i class="bi bi-building"></i> Información de la Empresa</h5>
+                            <h5 class="mb-0"><i class="bi bi-building"></i> {{ 'admin.tenant.info_company'|trans }}</h5>
                         </div>
                         <div class="card-body">
                             <form method="post" action="{{ path('app_admin_tenant') }}">

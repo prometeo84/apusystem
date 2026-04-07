@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Códigos de Recuperación - APU System{% endblock %}
+{% block title %}{{ 'security_2fa.recovery_codes_title'|trans }} - APU System{% endblock %}
 
 {% block body %}
 <div class="d-flex">
@@ -86,13 +86,13 @@ function printCodes() {
 
 function downloadCodes() {
     const codes = document.querySelectorAll('#recoveryCodes code');
-    let text = 'APU System - Códigos de Recuperación\n\n';
+    let text = '{{ "security_2fa.recovery_codes_title"|trans }}\n\n';
     text += 'Generado: ' + new Date().toLocaleString() + '\n\n';
     codes.forEach((code, index) => {
         text += (index + 1) + '. ' + code.textContent.trim() + '\n';
     });
-    text += '\n⚠️ Guarda estos códigos en un lugar seguro.\n';
-    text += 'Cada código solo se puede usar una vez.\n';
+    text += '\n{{ "security_2fa.save_important"|trans }}\n';
+    text += '{{ "security_2fa.one_time_use"|trans }}\n';
 
     const blob = new Blob([text], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
@@ -113,7 +113,7 @@ function copyCodes() {
     });
 
     navigator.clipboard.writeText(text).then(() => {
-        alert('Códigos copiados al portapapeles');
+        alert('{{ "security_2fa.codes_copied"|trans }}');
     }).catch(err => {
         console.error('Error al copiar:', err);
     });

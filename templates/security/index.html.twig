@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Seguridad - APU System{% endblock %}
+{% block title %}{{ 'security.title'|trans }} - APU System{% endblock %}
 
 {% block body %}
 <div class="d-flex">
@@ -109,8 +109,8 @@
                                                 <form method="post" action="{{ path('app_security_session_revoke', {id: session.id}) }}"
                                                       style="display: inline;">
                                                     <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                            onclick="return confirm('¿Revocar esta sesión?')">
-                                                        <i class="bi bi-x-circle"></i> Revocar
+                                                            onclick="return confirm('{{ 'security.revoke'|trans }}')">
+                                                        <i class="bi bi-x-circle"></i> {{ 'security.revoke'|trans }}
                                                     </button>
                                                 </form>
                                             </td>
@@ -120,7 +120,7 @@
                             </table>
                         </div>
                     {% else %}
-                        <p class="text-muted">No hay sesiones activas.</p>
+                        <p class="text-muted">{{ 'security.no_active_sessions'|trans }}</p>
                     {% endif %}
                 </div>
             </div>
@@ -128,16 +128,16 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">
-                        <i class="bi bi-clock-history"></i> Eventos de Seguridad Recientes
+                        <i class="bi bi-clock-history"></i> {{ 'security.recent_events'|trans }}
                     </h5>
                     <div class="table-responsive">
                         <table class="table table-sm">
                             <thead>
                                 <tr>
-                                    <th>Fecha</th>
-                                    <th>Evento</th>
+                                    <th>{{ 'security.date'|trans }}</th>
+                                    <th>{{ 'security.event'|trans }}</th>
                                     <th>IP</th>
-                                    <th>Severidad</th>
+                                    <th>{{ 'security.severity'|trans }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -167,18 +167,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Deshabilitar 2FA</h5>
+                <h5 class="modal-title">{{ 'security.disable_2fa'|trans }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="post" action="{{ path('app_security_2fa_disable') }}">
                 <div class="modal-body">
-                    <p>Para deshabilitar la autenticación de dos factores, ingresa tu código 2FA actual:</p>
+                    <p>{{ 'security.2fa.disable_instructions'|trans }}</p>
                     <input type="text" name="verification_code" class="form-control"
-                           placeholder="Código de 6 dígitos" required pattern="[0-9]{6}">
+                           placeholder="{{ 'security.2fa.code_placeholder'|trans }}" required pattern="[0-9]{6}">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-danger">Deshabilitar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'buttons.cancel'|trans }}</button>
+                    <button type="submit" class="btn btn-danger">{{ 'security.disable_2fa'|trans }}</button>
                 </div>
             </form>
         </div>

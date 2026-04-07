@@ -63,6 +63,15 @@ class Tenant
     #[ORM\OneToMany(mappedBy: 'tenant', targetEntity: User::class)]
     private Collection $users;
 
+    #[ORM\Column(type: 'string', length: 7, nullable: true)]
+    private ?string $themePrimaryColor = null;
+
+    #[ORM\Column(type: 'string', length: 7, nullable: true)]
+    private ?string $themeSecondaryColor = null;
+
+    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    private ?string $themeMode = null;
+
     public function __construct()
     {
         $this->uuid = $this->generateUuid();
@@ -236,5 +245,41 @@ class Tenant
     public function getUsers(): Collection
     {
         return $this->users;
+    }
+
+    public function getThemePrimaryColor(): ?string
+    {
+        return $this->themePrimaryColor;
+    }
+
+    public function setThemePrimaryColor(?string $color): self
+    {
+        $this->themePrimaryColor = $color;
+        $this->updatedAt = new \DateTime();
+        return $this;
+    }
+
+    public function getThemeSecondaryColor(): ?string
+    {
+        return $this->themeSecondaryColor;
+    }
+
+    public function setThemeSecondaryColor(?string $color): self
+    {
+        $this->themeSecondaryColor = $color;
+        $this->updatedAt = new \DateTime();
+        return $this;
+    }
+
+    public function getThemeMode(): ?string
+    {
+        return $this->themeMode;
+    }
+
+    public function setThemeMode(?string $mode): self
+    {
+        $this->themeMode = $mode;
+        $this->updatedAt = new \DateTime();
+        return $this;
     }
 }

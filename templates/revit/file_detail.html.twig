@@ -23,7 +23,7 @@
             {% endif %}
             <form method="POST"
                   action="{{ path('app_revit_file_delete', {id: file.id}) }}"
-                  onsubmit="return confirm('¿Está seguro de eliminar este archivo?')"
+                  onsubmit="return confirm('{{ 'revit.confirm_delete'|trans }}')"
                   style="display: inline;">
                 <button type="submit" class="btn btn-danger">
                     <i class="bi bi-trash"></i> Eliminar
@@ -50,7 +50,7 @@
         <div class="col-md-4">
             <div class="card mb-3">
                 <div class="card-header">
-                    <i class="bi bi-info-circle"></i> Información General
+                    <i class="bi bi-info-circle"></i> {{ 'revit.info_general'|trans }}
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
@@ -58,7 +58,7 @@
                         <span class="badge bg-secondary float-end">{{ file.fileType|upper }}</span>
                     </li>
                     <li class="list-group-item">
-                        <strong>Tamaño:</strong>
+                        <strong>{{ 'revit.label.size'|trans }}:</strong>
                         <span class="float-end">{{ file.fileSizeFormatted }}</span>
                     </li>
                     <li class="list-group-item">
@@ -107,13 +107,13 @@
                             <p><strong>Proyecto:</strong> {{ file.metadata.project_name }}</p>
                         {% endif %}
                         {% if file.metadata.version is defined %}
-                            <p><strong>Versión:</strong> {{ file.metadata.version }}</p>
+                            <p><strong>{{ 'revit.label.version'|trans }}:</strong> {{ file.metadata.version }}</p>
                         {% endif %}
                         {% if file.metadata.elements_count is defined %}
                             <p><strong>Elementos:</strong> {{ file.metadata.elements_count }}</p>
                         {% endif %}
                         {% if file.metadata.categories is defined %}
-                            <p><strong>Categorías:</strong></p>
+                            <p><strong>{{ 'revit.label.categories'|trans }}:</strong></p>
                             <ul>
                                 {% for category in file.metadata.categories %}
                                     <li>{{ category }}</li>
@@ -175,7 +175,7 @@
                                     <thead>
                                         <tr>
                                             <th>Nombre</th>
-                                            <th>Categoría</th>
+                                            <th>{{ 'revit.table.category'|trans }}</th>
                                             <th>Cantidad</th>
                                             <th>Unidad</th>
                                             <th>Estado</th>
@@ -212,21 +212,21 @@
 
             {% if file.status == 'pending' %}
                 <div class="alert alert-info">
-                    <i class="bi bi-hourglass-split"></i> Este archivo está pendiente de procesamiento.
-                    El procesamiento se iniciará automáticamente en breve.
+                    <i class="bi bi-hourglass-split"></i> {{ 'revit.status.pending'|trans }}
+                    {{ 'revit.processing_will_start'|trans }}
                 </div>
             {% endif %}
 
             {% if file.status == 'processing' %}
                 <div class="alert alert-warning">
-                    <i class="bi bi-arrow-repeat"></i> Este archivo se está procesando actualmente.
-                    Actualice la página para ver el progreso.
+                    <i class="bi bi-arrow-repeat"></i> {{ 'revit.status.processing'|trans }}
+                    {{ 'revit.update_to_see_progress'|trans }}
                 </div>
             {% endif %}
 
             <div class="card">
                 <div class="card-header">
-                    <i class="bi bi-code-square"></i> Información Técnica
+                    <i class="bi bi-code-square"></i> {{ 'revit.info_technical'|trans }}
                 </div>
                 <div class="card-body">
                     <p><strong>Nombre almacenado:</strong> <code>{{ file.storedFilename }}</code></p>

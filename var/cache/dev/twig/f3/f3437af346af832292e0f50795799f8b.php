@@ -86,7 +86,10 @@ class __TwigTemplate_195e7d70615122033d26f8115c4c6efd extends Template
         // line 23
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_logout");
         yield "\">
-                        <i class=\"bi bi-box-arrow-right\"></i> Cerrar Sesión
+                        <i class=\"bi bi-box-arrow-right\"></i> ";
+        // line 24
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("auth.logout"), "html", null, true);
+        yield "
                     </a></li>
                 </ul>
             </div>
@@ -124,7 +127,7 @@ class __TwigTemplate_195e7d70615122033d26f8115c4c6efd extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  87 => 23,  80 => 19,  74 => 16,  63 => 8,  58 => 6,  52 => 3,  48 => 1,);
+        return array (  91 => 24,  87 => 23,  80 => 19,  74 => 16,  63 => 8,  58 => 6,  52 => 3,  48 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -152,7 +155,7 @@ class __TwigTemplate_195e7d70615122033d26f8115c4c6efd extends Template
                     </a></li>
                     <li><hr class=\"dropdown-divider\"></li>
                     <li><a class=\"dropdown-item\" href=\"{{ path('app_logout') }}\">
-                        <i class=\"bi bi-box-arrow-right\"></i> Cerrar Sesión
+                        <i class=\"bi bi-box-arrow-right\"></i> {{ 'auth.logout'|trans }}
                     </a></li>
                 </ul>
             </div>

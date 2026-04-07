@@ -32,23 +32,48 @@ class ThemeSubscriber implements EventSubscriberInterface
         }
 
         $token = $this->tokenStorage->getToken();
+        $primaryHex = '#667eea';
+        $secondaryHex = '#764ba2';
+        $mode = 'light';
+
         if ($token && $token->getUser() instanceof User) {
             $user = $token->getUser();
 
-            // Inyectar variables globales en Twig
-            $this->twig->addGlobal('user_theme', [
-                'primary_color' => $user->getThemePrimaryColor() ?? '#667eea',
-                'secondary_color' => $user->getThemeSecondaryColor() ?? '#764ba2',
-                'mode' => $user->getThemeMode() ?? 'light',
-            ]);
-        } else {
-            // Valores por defecto para usuarios no autenticados
-            $this->twig->addGlobal('user_theme', [
-                'primary_color' => '#667eea',
-                'secondary_color' => '#764ba2',
-                'mode' => 'light',
-            ]);
+            // Prefer user settings; fallback to tenant; then system defaults
+            $tenant = $user->getTenant();
+
+            $primaryHex = $user->getThemePrimaryColor() ?? ($tenant?->getThemePrimaryColor() ?? $primaryHex);
+            $secondaryHex = $user->getThemeSecondaryColor() ?? ($tenant?->getThemeSecondaryColor() ?? $secondaryHex);
+            $mode = $user->getThemeMode() ?? ($tenant?->getThemeMode() ?? $mode);
         }
+
+        // Compute RGB values for darker overlays
+        $primaryRgb = $this->hexToRgb($primaryHex);
+        $secondaryRgb = $this->hexToRgb($secondaryHex);
+
+        // Inyectar variables globales en Twig
+        $this->twig->addGlobal('user_theme', [
+            'primary_color' => $primaryHex,
+            'secondary_color' => $secondaryHex,
+            'primary_rgb' => $primaryRgb,
+            'secondary_rgb' => $secondaryRgb,
+            'mode' => $mode,
+        ]);
+    }
+
+    private function hexToRgb(string $hex): string
+    {
+        $hex = ltrim($hex, '#');
+        if (strlen($hex) === 3) {
+            $r = hexdec(str_repeat($hex[0], 2));
+            $g = hexdec(str_repeat($hex[1], 2));
+            $b = hexdec(str_repeat($hex[2], 2));
+        } else {
+            $r = hexdec(substr($hex, 0, 2));
+            $g = hexdec(substr($hex, 2, 2));
+            $b = hexdec(substr($hex, 4, 2));
+        }
+        return sprintf('%d, %d, %d', $r, $g, $b);
     }
 
     public static function getSubscribedEvents(): array

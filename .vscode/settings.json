@@ -10,7 +10,11 @@
         "printf": true,
         "./console": true,
         "./test_preferences.sh": true,
-        ".githooks/pre-commit": true
+        ".githooks/pre-commit": true,
+        "/^echo 'Iniciando: pre-commit, commit y push \\(si hay cambios\\)';\nBRANCH=\\$\\(git rev-parse --abbrev-ref HEAD 2>/dev/null \\|\\| echo 'unknown'\\);\necho \"Branch: \\$BRANCH\";\nCHANGED=\\$\\(git status --porcelain\\);\nif \\[ -z \"\\$CHANGED\" \\]; then\n  echo 'No hay cambios para commitear\\.';\n  echo 'Último commit:';\n  git log -1 --oneline \\|\\| true;\nelse\n  echo 'Archivos modificados:';\n  git status --porcelain;\n  git add -A;\n  echo 'Ejecutando hook \\.githooks/pre-commit\\.\\.\\.';\n  \\.githooks/pre-commit \\|\\| \\{ echo 'ERROR: pre-commit falló\\.'; exit 1; \\};\n  git commit -m \"chore\\(i18n/theme\\): convert hardcoded strings to translations; add tenant theming and migration\" \\|\\| \\{ echo 'No se creó commit \\(posible error\\)'; exit 1; \\};\n  echo 'Haciendo push al remoto origin\\.\\.\\.';\n  git push origin \"\\$BRANCH\" \\|\\| \\{ echo 'ERROR: git push falló\\.'; exit 1; \\};\nfi;\n\necho 'Estado git después:';\ngit status --porcelain;\necho 'Último commit:';\ngit log -1 --oneline;\n$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
     },
     "intelephense.environment.includePaths": ["vendor", "."],
     "intelephense.stubs": [

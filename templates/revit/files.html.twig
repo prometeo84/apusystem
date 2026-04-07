@@ -27,8 +27,8 @@
 
     {% if files is empty %}
         <div class="alert alert-info">
-            <i class="bi bi-info-circle"></i> No hay archivos subidos aún.
-            <a href="{{ path('app_revit_upload') }}" class="alert-link">Suba su primer archivo aquí</a>.
+            <i class="bi bi-info-circle"></i> {{ 'revit.no_files'|trans }}
+            <a href="{{ path('app_revit_upload') }}" class="alert-link">{{ 'revit.upload_first'|trans }}</a>.
         </div>
     {% else %}
         <div class="card">
@@ -40,7 +40,7 @@
                                 <th width="5%"><i class="bi bi-file-earmark"></i></th>
                                 <th width="30%">Archivo</th>
                                 <th width="10%">Tipo</th>
-                                <th width="10%">Tamaño</th>
+                                <th width="10%">{{ 'common.size'|trans }}</th>
                                 <th width="15%">Estado</th>
                                 <th width="15%">Fecha</th>
                                 <th width="15%" class="text-end">Acciones</th>
@@ -111,7 +111,7 @@
                                             {% endif %}
                                             <form method="POST"
                                                   action="{{ path('app_revit_file_delete', {id: file.id}) }}"
-                                                  onsubmit="return confirm('¿Está seguro de eliminar este archivo?')"
+                                                  onsubmit="return confirm('{{ 'revit.confirm_delete'|trans }}')"
                                                   style="display: inline;">
                                                 <button type="submit"
                                                         class="btn btn-outline-danger"

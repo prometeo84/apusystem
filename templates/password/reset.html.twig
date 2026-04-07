@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Restablecer Contraseña - APU System{% endblock %}
+{% block title %}{{ 'password.reset.title'|trans }} - APU System{% endblock %}
 
 {% block body %}
 <div class="main-content">
@@ -24,10 +24,10 @@
 
                         <form method="post" action="{{ path('app_password_reset', {token: token}) }}">
                             <div class="alert alert-info mb-3">
-                                <strong>Requisitos de la contraseña:</strong>
+                                <strong>{{ 'password.reset.requirements'|trans }}</strong>
                                 <ul class="mb-0 mt-2">
-                                    <li>Mínimo 8 caracteres</li>
-                                    <li>Se recomienda usar letras, números y símbolos</li>
+                                    <li>{{ 'password.reset.min_8'|trans }}</li>
+                                    <li>{{ 'password.reset.recommend_chars'|trans }}</li>
                                 </ul>
                             </div>
 

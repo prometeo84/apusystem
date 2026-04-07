@@ -76,3 +76,8 @@ services:
             $anonymousApiLimiter: "@limiter.anonymous_api"
         tags:
             - { name: kernel.event_subscriber }
+    App\EventListener\LocaleSubscriber:
+        arguments:
+            $defaultLocale: "%kernel.default_locale%"
+        tags:
+            - { name: kernel.event_subscriber }

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Logs de Seguridad - APU System{% endblock %}
+{% block title %}{{ 'system_errors.title'|trans }} - APU System{% endblock %}
 
 {% block body %}
 <div class="d-flex">
@@ -14,7 +14,7 @@
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h5 class="mb-0"><i class="bi bi-file-text"></i> Eventos de Seguridad</h5>
+                            <h5 class="mb-0"><i class="bi bi-file-text"></i> {{ 'security.events'|trans }}</h5>
                         </div>
                         <div class="col-auto">
                             <div class="btn-group">
@@ -28,8 +28,8 @@
                                     Advertencias
                                 </button>
                                 <button type="button" class="btn btn-sm btn-outline-danger" data-filter="CRITICAL">
-                                    Críticos
-                                </button>
+                                                    {{ 'system.critical'|trans }}
+                                                </button>
                             </div>
                         </div>
                     </div>
@@ -39,13 +39,13 @@
                         <table class="table table-hover mb-0" id="logsTable">
                             <thead class="table-light">
                                 <tr>
-                                    <th style="width: 150px;">Fecha/Hora</th>
-                                    <th>Usuario</th>
-                                    <th>Evento</th>
+                                    <th style="width: 150px;">{{ 'system.datetime'|trans }}</th>
+                                    <th>{{ 'common.user'|trans }}</th>
+                                    <th>{{ 'security.event'|trans }}</th>
                                     <th>IP</th>
-                                    <th>Navegador</th>
-                                    <th style="width: 100px;">Severidad</th>
-                                    <th style="width: 60px;">Detalles</th>
+                                    <th>{{ 'common.browser'|trans }}</th>
+                                    <th style="width: 100px;">{{ 'security.severity'|trans }}</th>
+                                    <th style="width: 60px;">{{ 'admin.logs.details_label'|trans }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -128,15 +128,15 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Detalles del Evento</h5>
+                        <h5 class="modal-title">{{ 'admin.logs.details_title'|trans }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <dl class="row">
-                            <dt class="col-sm-3">Fecha/Hora:</dt>
+                            <dt class="col-sm-3">{{ 'system.datetime'|trans }}:</dt>
                             <dd class="col-sm-9">{{ event.createdAt|date('d/m/Y H:i:s') }}</dd>
 
-                            <dt class="col-sm-3">Usuario:</dt>
+                            <dt class="col-sm-3">{{ 'common.user'|trans }}:</dt>
                             <dd class="col-sm-9">
                                 {% if event.user %}
                                     {{ event.user.email }}
@@ -145,30 +145,30 @@
                                 {% endif %}
                             </dd>
 
-                            <dt class="col-sm-3">Evento:</dt>
+                            <dt class="col-sm-3">{{ 'security.event'|trans }}:</dt>
                             <dd class="col-sm-9">{{ event.eventType|replace({'_': ' '})|title }}</dd>
 
                             <dt class="col-sm-3">IP:</dt>
                             <dd class="col-sm-9"><code>{{ event.ipAddress }}</code></dd>
 
-                            <dt class="col-sm-3">Navegador:</dt>
+                            <dt class="col-sm-3">{{ 'common.browser'|trans }}:</dt>
                             <dd class="col-sm-9"><small>{{ event.userAgent }}</small></dd>
 
-                            <dt class="col-sm-3">Severidad:</dt>
+                            <dt class="col-sm-3">{{ 'security.severity'|trans }}:</dt>
                             <dd class="col-sm-9">
                                 <span class="badge bg-{{ event.severity == 'CRITICAL' ? 'danger' : (event.severity == 'WARNING' ? 'warning' : 'info') }}">
                                     {{ event.severity }}
                                 </span>
                             </dd>
 
-                            <dt class="col-sm-3">Detalles:</dt>
+                            <dt class="col-sm-3">{{ 'admin.logs.details_label'|trans }}:</dt>
                             <dd class="col-sm-9">
                                 <pre class="bg-light p-2 rounded"><code>{{ event.eventData|json_encode(constant('JSON_PRETTY_PRINT')) }}</code></pre>
                             </dd>
                         </dl>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'buttons.close'|trans }}</button>
                     </div>
                 </div>
             </div>
