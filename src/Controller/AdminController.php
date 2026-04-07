@@ -242,7 +242,17 @@ class AdminController extends AbstractController
             throw $this->createAccessDeniedException('Solo super administradores pueden editar la configuración del tenant.');
         }
 
+        // Por defecto trabajamos sobre el tenant del usuario
         $tenant = $user->getTenant();
+
+        // Si el superadmin indica un tenant_id (GET o POST), cargar ese tenant
+        $requestedTenantId = $request->query->get('tenant_id') ?? $request->request->get('tenant_id');
+        if ($requestedTenantId) {
+            $candidate = $this->em->getRepository(Tenant::class)->find((int) $requestedTenantId);
+            if ($candidate) {
+                $tenant = $candidate;
+            }
+        }
 
         if ($request->isMethod('POST')) {
             $name = $request->request->get('name');
@@ -256,12 +266,16 @@ class AdminController extends AbstractController
             $this->em->flush();
 
             $this->addFlash('success', 'Configuración del tenant actualizada.');
-            return $this->redirectToRoute('app_admin_tenant');
+            return $this->redirectToRoute('app_admin_tenant', ['tenant_id' => $tenant->getId()]);
         }
+
+        // Para superadmins mostramos lista de tenants para poder elegir
+        $allTenants = $this->em->getRepository(Tenant::class)->findBy([], ['name' => 'ASC']);
 
         return $this->render('admin/tenant.html.twig', [
             'user' => $user,
             'tenant' => $tenant,
+            'allTenants' => $allTenants,
         ]);
     }
 }

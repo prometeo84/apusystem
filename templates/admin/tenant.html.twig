@@ -10,6 +10,20 @@
         {% include 'partials/_navbar.html.twig' with {'title': 'Configuración de Empresa'} %}
 
         <div class="container-fluid p-4 content-wrapper">
+            {% if is_granted('ROLE_SUPER_ADMIN') and allTenants is defined %}
+                <form method="get" class="mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="form-label mb-0">Seleccionar Empresa:</label>
+                        <select name="tenant_id" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+                            {% for t in allTenants %}
+                                <option value="{{ t.id }}" {{ t.id == tenant.id ? 'selected' : '' }}>
+                                    {{ t.name }} - {{ t.isActive ? 'Activo' : 'Inactivo' }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+            {% endif %}
             {% for message in app.flashes('success') %}
                 <div class="alert alert-success alert-dismissible fade show">
                     <i class="bi bi-check-circle-fill"></i> {{ message }}
@@ -25,6 +39,7 @@
                         </div>
                         <div class="card-body">
                             <form method="post" action="{{ path('app_admin_tenant') }}">
+                                <input type="hidden" name="tenant_id" value="{{ tenant.id }}">
                                 <div class="mb-3">
                                     <label class="form-label">Nombre Comercial</label>
                                     <input type="text" name="name" class="form-control"
@@ -88,6 +103,7 @@
                         </div>
                         <div class="card-body">
                             <form method="post" action="{{ path('app_admin_tenant') }}">
+                                <input type="hidden" name="tenant_id" value="{{ tenant.id }}">
                                 <input type="hidden" name="settings_form" value="1">
 
                                 <div class="mb-3">

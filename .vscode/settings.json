@@ -9,7 +9,8 @@
         "\\\"": true,
         "printf": true,
         "./console": true,
-        "./test_preferences.sh": true
+        "./test_preferences.sh": true,
+        ".githooks/pre-commit": true
     },
     "intelephense.environment.includePaths": ["vendor", "."],
     "intelephense.stubs": [
