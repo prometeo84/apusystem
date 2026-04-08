@@ -30,11 +30,11 @@ class RateLimitingService
     {
         $identifier = 'admin_' . $admin->getId() . '_' . $action;
         $exceeded = !$this->checkRateLimit('admin_action', $identifier, 10, 3600); // 10 en 1 hora
-        
+
         if ($exceeded) {
             $this->securityLogger->logAdminRateLimitExceeded($admin, $action);
         }
-        
+
         return !$exceeded;
     }
 
@@ -56,6 +56,15 @@ class RateLimitingService
     }
 
     /**
+     * Límite específico para uso de recovery codes por usuario
+     */
+    public function checkRecoveryCodeRateLimit(int $userId): bool
+    {
+        $identifier = 'recovery_user_' . $userId;
+        return $this->checkRateLimit('recovery_code', $identifier, 5, 3600); // 5 usos en 1 hora
+    }
+
+    /**
      * Método general de rate limiting
      * Retorna true si está dentro del límite, false si se excedió
      */
@@ -74,9 +83,9 @@ class RateLimitingService
 
         // Verificar intentos existentes en la ventana
         $stmt = $conn->executeQuery(
-            'SELECT attempts, exceeded_at FROM rate_limit_logs 
-             WHERE identifier = ? 
-             AND endpoint = ? 
+            'SELECT attempts, exceeded_at FROM rate_limit_logs
+             WHERE identifier = ?
+             AND endpoint = ?
              AND window_end > ?
              ORDER BY id DESC
              LIMIT 1',
@@ -87,7 +96,7 @@ class RateLimitingService
 
         if ($existing) {
             $attempts = (int) $existing['attempts'];
-            
+
             // Si ya se excedió y aún está en la ventana
             if ($existing['exceeded_at'] !== null) {
                 return false;
@@ -95,9 +104,9 @@ class RateLimitingService
 
             // Incrementar intentos
             $attempts++;
-            
+
             $conn->executeStatement(
-                'UPDATE rate_limit_logs 
+                'UPDATE rate_limit_logs
                  SET attempts = ?, exceeded_at = ?
                  WHERE identifier = ? AND endpoint = ? AND window_end > ?',
                 [
@@ -147,7 +156,7 @@ class RateLimitingService
     {
         $cutoff = new \DateTime('-24 hours');
         $conn = $this->em->getConnection();
-        
+
         return $conn->executeStatement(
             'DELETE FROM rate_limit_logs WHERE window_end < ?',
             [$cutoff->format('Y-m-d H:i:s')]

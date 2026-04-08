@@ -1,0 +1,4 @@
+localhost:8443 {
+    tls /var/www/html/proyecto/config/certs/localhost.crt /var/www/html/proyecto/config/certs/localhost.key
+    reverse_proxy 127.0.0.1:8080
+}

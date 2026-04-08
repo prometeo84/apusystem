@@ -24,10 +24,10 @@ class APUEquipment
     private int $numero;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private float $tarifa; // Tarifa
+    private string $tarifa; // Tarifa
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 4)]
-    private float $cHora; // C/HORA (Costo por hora)
+    private string $cHora; // C/HORA (Costo por hora)
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
@@ -75,23 +75,23 @@ class APUEquipment
         return $this;
     }
 
-    public function getTarifa(): float
+    public function getTarifa(): string
     {
         return $this->tarifa;
     }
 
-    public function setTarifa(float $tarifa): self
+    public function setTarifa(string $tarifa): self
     {
         $this->tarifa = $tarifa;
         return $this;
     }
 
-    public function getCHora(): float
+    public function getCHora(): string
     {
         return $this->cHora;
     }
 
-    public function setCHora(float $cHora): self
+    public function setCHora(string $cHora): self
     {
         $this->cHora = $cHora;
         return $this;
@@ -104,6 +104,6 @@ class APUEquipment
 
     public function getTotalCost(): float
     {
-        return $this->tarifa * $this->cHora;
+        return (float) $this->tarifa * (float) $this->cHora;
     }
 }

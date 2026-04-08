@@ -25,7 +25,8 @@ class PasswordResetController extends AbstractController
         private MailerInterface $mailer,
         private SecurityLogger $securityLogger,
         private UserPasswordHasherInterface $passwordHasher,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
+        private \App\Service\PasswordPolicyService $passwordPolicy
     ) {}
 
     #[Route('/forgot', name: 'app_password_forgot', methods: ['GET', 'POST'])]
@@ -119,8 +120,8 @@ class PasswordResetController extends AbstractController
                     return $this->redirectToRoute('app_password_reset', ['token' => $token]);
                 }
 
-                if (strlen($password) < 8) {
-                    $this->addFlash('error', 'La contraseña debe tener al menos 8 caracteres.');
+                if (!$this->passwordPolicy->isStrongPassword($password)) {
+                    $this->addFlash('error', 'La contraseña no cumple la política de seguridad. Debe tener al menos 12 caracteres, incluir mayúsculas, minúsculas, números y símbolos.');
                     return $this->redirectToRoute('app_password_reset', ['token' => $token]);
                 }
 

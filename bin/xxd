@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+python3 - <<'PY'
+import sys, binascii
+b = sys.stdin.buffer.read()
+s = b"".join(b.split())
+if not s:
+    sys.exit(0)
+try:
+    sys.stdout.buffer.write(binascii.unhexlify(s))
+except Exception as e:
+    sys.stderr.write(str(e))
+    sys.exit(1)
+PY

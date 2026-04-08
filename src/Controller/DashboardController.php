@@ -32,9 +32,9 @@ class DashboardController extends AbstractController
 
         // Estadísticas para usuarios de empresa
         $stats = [
-            'total_proyectos' => $this->em->getRepository(\App\Entity\Proyecto::class)
+            'total_proyectos' => $this->em->getRepository(\App\Entity\Projects::class)
                 ->count(['tenant' => $tenant]),
-            'proyectos_activos' => $this->em->getRepository(\App\Entity\Proyecto::class)
+            'proyectos_activos' => $this->em->getRepository(\App\Entity\Projects::class)
                 ->count(['tenant' => $tenant, 'estado' => 'en_proceso']),
             'total_apus' => $this->em->getRepository(\App\Entity\Apu::class)
                 ->count(['tenant' => $tenant]),
@@ -42,7 +42,7 @@ class DashboardController extends AbstractController
         ];
 
         // Proyectos recientes
-        $proyectosRecientes = $this->em->getRepository(\App\Entity\Proyecto::class)
+        $proyectosRecientes = $this->em->getRepository(\App\Entity\Projects::class)
             ->findBy(['tenant' => $tenant], ['createdAt' => 'DESC'], 5);
 
         return $this->render('dashboard/index.html.twig', [

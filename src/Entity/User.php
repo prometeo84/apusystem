@@ -7,7 +7,14 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'users')]
+#[ORM\Table(
+    name: 'users',
+    uniqueConstraints: [
+        new \Doctrine\ORM\Mapping\UniqueConstraint(name: 'uuid', columns: ['uuid']),
+        new \Doctrine\ORM\Mapping\UniqueConstraint(name: 'unique_username_per_tenant', columns: ['tenant_id', 'username'])
+    ]
+)]
+#[ORM\Index(name: 'unique_username_per_tenant', columns: ['tenant_id', 'username'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -67,11 +74,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private bool $requirePasswordChange = false;
 
-    #[ORM\Column(type: 'datetime')]
-    private \DateTimeInterface $createdAt;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\Column(type: 'datetime')]
-    private \DateTimeInterface $updatedAt;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
 
     // 2FA fields - will be moved to separate entity but kept here for quick access
     #[ORM\Column(type: 'string', length: 255, nullable: true)]

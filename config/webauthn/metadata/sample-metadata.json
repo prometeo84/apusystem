@@ -1,0 +1,10 @@
+{
+    "aaguid": "00000000-0000-0000-0000-000000000000",
+    "description": "Sample placeholder metadata statement for local testing.",
+    "timeOfLastStatusChange": "2026-04-08T00:00:00Z",
+    "attestationRootCertificates": [],
+    "metadataStatementVersion": {
+        "major": 1,
+        "minor": 0
+    }
+}

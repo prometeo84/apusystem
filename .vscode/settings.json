@@ -1,5 +1,5 @@
 {
-    "snyk.advanced.organization": "6945459e-5e53-4dc9-84fe-5d4c09297eec",
+    "snyk.advanced.organization": "3c055f63-8789-4e17-9d6a-513375f892c2",
     "snyk.advanced.autoSelectOrganization": true,
     "chat.tools.terminal.autoApprove": {
         "vendor/bin/phpstan": true,

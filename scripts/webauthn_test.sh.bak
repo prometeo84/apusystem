@@ -1,0 +1,159 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd /var/www/html/proyecto
+mkdir -p /tmp/webauthn_test
+
+# Fetch login page and extract CSRF token
+curl -s -c /tmp/webauthn_test/cookies https://localhost/login -o /tmp/webauthn_test/login.html
+TOKEN=$(grep -oP 'name="_csrf_token" value="\K[^"]+' /tmp/webauthn_test/login.html || true)
+echo "TOKEN:$TOKEN" > /tmp/webauthn_test/token.txt
+
+# Perform login (use regular user to avoid admin hardware attestation requirement)
+curl -b /tmp/webauthn_test/cookies -c /tmp/webauthn_test/cookies -L -s -D /tmp/webauthn_test/headers -o /tmp/webauthn_test/after_login.html \
+    -H "Origin: https://localhost" \
+    -H "Referer: https://localhost/login" \
+    -H "Content-Type: application/x-www-form-urlencoded" \
+    --data "_username=user@abc.com&_password=Admin123!&_csrf_token=${TOKEN}" \
+    https://localhost/login || true
+
+echo "--- AFTER LOGIN HTML (truncated) ---"
+sed -n '1,120p' /tmp/webauthn_test/after_login.html || true
+echo "--- HEADERS ---"
+sed -n '1,200p' /tmp/webauthn_test/headers || true
+
+echo "--- CALL REGISTER START ---"
+curl -b /tmp/webauthn_test/cookies -s -X POST -H "Origin: https://localhost" -H "Referer: https://localhost/" https://localhost/webauthn/register/start -o /tmp/webauthn_test/register_start.json || true
+cat /tmp/webauthn_test/register_start.json || true
+
+# Build a basic clientDataJSON using the challenge from start
+CHALLENGE=$(grep -oP '"challenge"\s*:\s*"\K[^\"]+' /tmp/webauthn_test/register_start.json || true)
+if [ -z "$CHALLENGE" ] || [ "$CHALLENGE" = "null" ]; then
+    echo "No challenge from start; aborting finish attempt"
+else
+    # Build clientDataJSON without jq
+    CLIENT_JSON=$(printf '{"type":"webauthn.create","challenge":"%s","origin":"https://localhost"}' "$CHALLENGE")
+    CLIENT_B64=$(printf '%s' "$CLIENT_JSON" | openssl base64 -A | tr '+/' '-_' | tr -d '=')
+
+    # Prepare temporary files
+    TMPDIR=/tmp/webauthn_test
+    TMPAUTH="$TMPDIR/authdata.bin"
+    ATTOBJ="$TMPDIR/attobj.bin"
+    RAWID_BIN="$TMPDIR/rawid.bin"
+    rm -f "$TMPAUTH" "$ATTOBJ" "$RAWID_BIN"
+
+    # rpIdHash = sha256("localhost") -> binary (use openssl to avoid xxd)
+    printf '%s' "localhost" | openssl dgst -sha256 -binary > "$TMPAUTH"
+
+    # flags: UP (0x01) + AT (0x40) => 0x41
+    printf '%b' '\x41' >> "$TMPAUTH"
+    # signCount (4 bytes)
+    printf '%b' '\x00\x00\x00\x01' >> "$TMPAUTH"
+
+    # aaguid (16 random bytes)
+    openssl rand -out "$TMPDIR/aaguid.bin" 16
+    cat "$TMPDIR/aaguid.bin" >> "$TMPAUTH"
+
+    # credentialId (16 bytes) preceded by 2-byte big-endian length (0x0010)
+    openssl rand -out "$TMPDIR/credid.bin" 16
+    printf '%b' '\x00\x10' >> "$TMPAUTH"
+    cat "$TMPDIR/credid.bin" >> "$TMPAUTH"
+
+    # minimal credentialPublicKey: an empty CBOR map {} -> 0xA0
+    printf '%b' '\xA0' >> "$TMPAUTH"
+
+    # Build attestationObject as CBOR map: {"fmt":"none","authData":h'...bytes...','attStmt':{}}
+    authLen=$(stat -c%s "$TMPAUTH")
+    rm -f "$ATTOBJ"
+    # map of 3 pairs
+    printf '%b' '\xA3' > "$ATTOBJ"
+    # key "fmt" (text len 3 -> 0x63) + value "none" (text len 4 -> 0x64)
+    printf '%b' '\x63' >> "$ATTOBJ"; printf 'fmt' >> "$ATTOBJ"
+    printf '%b' '\x64' >> "$ATTOBJ"; printf 'none' >> "$ATTOBJ"
+    # key "authData" (text len 8 -> 0x68) and byte string header 0x58 <len>
+    printf '%b' '\x68' >> "$ATTOBJ"; printf 'authData' >> "$ATTOBJ"
+    printf '%b' '\x58' >> "$ATTOBJ"
+    printf '%b' "\\x$(printf '%02x' "$authLen")" >> "$ATTOBJ"
+    cat "$TMPAUTH" >> "$ATTOBJ"
+    # key "attStmt" (text len 7 -> 0x67) + empty map 0xA0
+    printf '%b' '\x67' >> "$ATTOBJ"; printf 'attStmt' >> "$ATTOBJ"
+    printf '%b' '\xA0' >> "$ATTOBJ"
+
+    ATTB64=$(openssl base64 -A < "$ATTOBJ" | tr '+/' '-_' | tr -d '=')
+
+    # rawId
+    openssl rand -out "$RAWID_BIN" 16
+    RAWID_B64=$(openssl base64 -A < "$RAWID_BIN" | tr '+/' '-_' | tr -d '=')
+
+    JSON_PAY=$(printf '{"attestationObject":"%s","clientDataJSON":"%s","rawId":"%s"}' "$ATTB64" "$CLIENT_B64" "$RAWID_B64")
+
+    echo "--- CALL REGISTER FINISH (emulated) ---"
+    curl -b /tmp/webauthn_test/cookies -s -X POST -H "Content-Type: application/json" -H "Origin: https://localhost" -d "$JSON_PAY" https://localhost/webauthn/register/finish -o /tmp/webauthn_test/register_finish.json || true
+    cat /tmp/webauthn_test/register_finish.json || true
+fi
+
+echo "--- TAIL security.log ---"
+tail -n 200 /var/www/html/proyecto/var/log/security.log || true
+echo "--- TAIL dev.log ---"
+tail -n 200 /var/www/html/proyecto/var/log/dev.log || true
+
+echo Done
+#!/usr/bin/env bash
+set -euo pipefail
+cd /var/www/html/proyecto
+mkdir -p /tmp/webauthn_test
+
+# Fetch login page and extract CSRF token
+curl -s -c /tmp/webauthn_test/cookies https://localhost/login -o /tmp/webauthn_test/login.html
+TOKEN=$(grep -oP 'name="_csrf_token" value="\K[^"]+' /tmp/webauthn_test/login.html || true)
+echo "TOKEN:$TOKEN" > /tmp/webauthn_test/token.txt
+
+# Perform login (use regular user to avoid admin hardware attestation requirement)
+curl -b /tmp/webauthn_test/cookies -c /tmp/webauthn_test/cookies -L -s -D /tmp/webauthn_test/headers -o /tmp/webauthn_test/after_login.html \
+	-H "Origin: https://localhost" \
+	-H "Referer: https://localhost/login" \
+	-H "Content-Type: application/x-www-form-urlencoded" \
+	--data "_username=user@abc.com&_password=Admin123!&_csrf_token=${TOKEN}" \
+	https://localhost/login || true
+
+echo "--- AFTER LOGIN HTML (truncated) ---"
+sed -n '1,120p' /tmp/webauthn_test/after_login.html || true
+echo "--- HEADERS ---"
+sed -n '1,200p' /tmp/webauthn_test/headers || true
+
+echo "--- CALL REGISTER START ---"
+curl -b /tmp/webauthn_test/cookies -s -X POST -H "Origin: https://localhost" -H "Referer: https://localhost/" https://localhost/webauthn/register/start -o /tmp/webauthn_test/register_start.json || true
+cat /tmp/webauthn_test/register_start.json || true
+
+# Build a basic clientDataJSON using the challenge from start
+CHALLENGE=$(grep -oP '"challenge"\s*:\s*"\K[^"]+' /tmp/webauthn_test/register_start.json || true)
+if [ -z "$CHALLENGE" ] || [ "$CHALLENGE" = "null" ]; then
+	echo "No challenge from start; aborting finish attempt"
+else
+	CLIENT_JSON=$(jq -n --arg c "$CHALLENGE" '{type: "webauthn.create", challenge: $c, origin: "https://localhost"}')
+	CLIENT_B64=$(echo -n "$CLIENT_JSON" | openssl enc -base64 | tr '+/' '-_' | tr -d '=')
+
+	# Craft a minimal attestationObject-like binary that includes the substring 'authData' followed by
+	# a CBOR byte-string header 0x58 <len> and payload with rpIdHash(32)+flags(1)+signCount(4)+aaguid(16)
+	RPIDHASH=$(head -c 32 /dev/urandom | xxd -p -c 32)
+	AAGUID=$(head -c 16 /dev/urandom | xxd -p -c 16)
+	PAYLOAD_BIN=$(printf "%s" "$(xxd -r -p <<< ${RPIDHASH})")$(printf "\x01\x00\x00\x00\x00")$(xxd -r -p <<< ${AAGUID})
+	# Ensure payload length is 53 (32+1+4+16)
+	# Prepend CBOR header 0x58 0x35
+	ATTEST_BIN="authData"$(printf "\x58\x35")"$(printf "%s" "$PAYLOAD_BIN")"
+	ATTEST_B64=$(echo -n "$ATTEST_BIN" | openssl enc -base64 | tr '+/' '-_' | tr -d '=')
+
+	RAWID_B64=$(echo -n "dummy-raw-id" | openssl enc -base64 | tr '+/' '-_' | tr -d '=')
+
+	JSON_PAY=$(jq -n --arg a "$ATTEST_B64" --arg c "$CLIENT_B64" --arg r "$RAWID_B64" --arg f "none" '{attestationObject:$a, clientDataJSON:$c, rawId:$r, fmt:$f}')
+
+	echo "--- CALL REGISTER FINISH (emulated) ---"
+	curl -b /tmp/webauthn_test/cookies -s -X POST -H "Content-Type: application/json" -H "Origin: https://localhost" -d "$JSON_PAY" https://localhost/webauthn/register/finish -o /tmp/webauthn_test/register_finish.json || true
+	cat /tmp/webauthn_test/register_finish.json || true
+fi
+
+echo "--- TAIL security.log ---"
+tail -n 200 /var/www/html/proyecto/var/log/security.log || true
+echo "--- TAIL dev.log ---"
+tail -n 200 /var/www/html/proyecto/var/log/dev.log || true
+
+echo Done

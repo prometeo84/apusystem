@@ -24,10 +24,10 @@ class APULabor
     private int $numero;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 4)]
-    private float $jorHora; // JOR./HORA (Jornada por hora)
+    private string $jorHora; // JOR./HORA (Jornada por hora)
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private float $cHora; // C/HORA (Costo por hora)
+    private string $cHora; // C/HORA (Costo por hora)
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
@@ -75,23 +75,23 @@ class APULabor
         return $this;
     }
 
-    public function getJorHora(): float
+    public function getJorHora(): string
     {
         return $this->jorHora;
     }
 
-    public function setJorHora(float $jorHora): self
+    public function setJorHora(string $jorHora): self
     {
         $this->jorHora = $jorHora;
         return $this;
     }
 
-    public function getCHora(): float
+    public function getCHora(): string
     {
         return $this->cHora;
     }
 
-    public function setCHora(float $cHora): self
+    public function setCHora(string $cHora): self
     {
         $this->cHora = $cHora;
         return $this;
@@ -104,6 +104,6 @@ class APULabor
 
     public function getTotalCost(): float
     {
-        return $this->jorHora * $this->cHora;
+        return (float) $this->jorHora * (float) $this->cHora;
     }
 }

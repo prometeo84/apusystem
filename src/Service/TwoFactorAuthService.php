@@ -19,7 +19,9 @@ class TwoFactorAuthService
     public function __construct(
         private EntityManagerInterface $em,
         private Google2FA $google2fa,
-        private SecurityLogger $securityLogger
+        private SecurityLogger $securityLogger,
+        private \App\Service\RateLimitingService $rateLimiting,
+        private \Symfony\Component\Mailer\MailerInterface $mailer
     ) {}
 
     /**
@@ -95,7 +97,7 @@ class TwoFactorAuthService
     /**
      * Genera códigos de recuperación
      */
-    public function generateRecoveryCodes(User $user): array
+    public function generateRecoveryCodes(User $user, ?User $performedBy = null): array
     {
         $codes = [];
 
@@ -130,6 +132,25 @@ class TwoFactorAuthService
             [$user->getId(), self::RECOVERY_CODES_COUNT]
         );
 
+        // Auditoría: registrar quién generó los códigos
+        if ($performedBy !== null) {
+            // Administrador los regeneró
+            try {
+                $this->securityLogger->logRecoveryCodesRegenerated($user, $performedBy);
+            } catch (\Throwable $e) {
+                // no interrumpir el flujo por logging
+            }
+        } else {
+            $this->securityLogger->log('recovery_codes_regenerated', 'INFO', $user);
+        }
+
+        // Revocar todas las sesiones activas del usuario tras regenerar códigos
+        try {
+            $conn->executeStatement('UPDATE login_sessions SET is_active = 0 WHERE user_id = ?', [$user->getId()]);
+        } catch (\Throwable $e) {
+            // ignorar errores de revocación para no bloquear la generación
+        }
+
         return $codes;
     }
 
@@ -139,6 +160,16 @@ class TwoFactorAuthService
     public function verifyRecoveryCode(User $user, string $code): bool
     {
         $conn = $this->em->getConnection();
+
+        // Rate limit para uso de recovery codes
+        try {
+            if (!$this->rateLimiting->checkRecoveryCodeRateLimit($user->getId())) {
+                $this->securityLogger->log('recovery_code_rate_limited', 'WARNING', $user);
+                return false;
+            }
+        } catch (\Throwable $e) {
+            // En caso de fallo en rate limiter, continuar con verificación (no bloquear por error del servicio)
+        }
 
         // Obtener códigos no usados
         $stmt = $conn->executeQuery(
@@ -163,6 +194,32 @@ class TwoFactorAuthService
                 );
 
                 $this->securityLogger->log2FASuccess($user, 'recovery_code');
+
+                // Cuando se usa un recovery code, revocar otras sesiones y alertar
+                try {
+                    $conn->executeStatement('UPDATE login_sessions SET is_active = 0 WHERE user_id = ?', [$user->getId()]);
+                    $this->securityLogger->log('recovery_code_used_revoke_sessions', 'CRITICAL', $user);
+
+                    // Enviar correo de alerta al usuario
+                    try {
+                        $email = (new \Symfony\Bridge\Twig\Mime\TemplatedEmail())
+                            ->from(new \Symfony\Component\Mime\Address('noreply@apusystem.com', 'APU System'))
+                            ->to(new \Symfony\Component\Mime\Address($user->getEmail(), $user->getFullName()))
+                            ->subject('Alerta: uso de código de recuperación')
+                            ->htmlTemplate('emails/recovery_code_used.html.twig')
+                            ->context(['user' => $user]);
+
+                        $this->mailer->send($email);
+                    } catch (\Throwable $e) {
+                        // logging only
+                        try {
+                            $this->securityLogger->log('recovery_code_email_failed', 'WARNING', $user, ['error' => $e->getMessage()]);
+                        } catch (\Throwable $_) {
+                        }
+                    }
+                } catch (\Throwable $e) {
+                    // ignore revocation errors
+                }
 
                 return true;
             }

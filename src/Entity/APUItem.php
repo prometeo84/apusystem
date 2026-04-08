@@ -29,25 +29,25 @@ class APUItem
     private string $unit;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 4)]
-    private float $khu; // K(H/U) - Coeficiente hora/unidad
+    private string $khu; // K(H/U) - Coeficiente hora/unidad
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 4)]
-    private float $rendimientoUh; // Rend. u/h - Rendimiento unidad/hora
+    private string $rendimientoUh; // Rend. u/h - Rendimiento unidad/hora
 
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    private ?float $totalCost = null;
+    private ?string $totalCost = null;
 
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    private ?float $equipmentCost = null;
+    private ?string $equipmentCost = null;
 
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    private ?float $laborCost = null;
+    private ?string $laborCost = null;
 
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    private ?float $materialCost = null;
+    private ?string $materialCost = null;
 
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    private ?float $transportCost = null;
+    private ?string $transportCost = null;
 
     #[ORM\OneToMany(targetEntity: APUEquipment::class, mappedBy: 'apuItem', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $equipment;
@@ -140,80 +140,80 @@ class APUItem
         return $this;
     }
 
-    public function getKhu(): float
+    public function getKhu(): string
     {
         return $this->khu;
     }
 
-    public function setKhu(float $khu): self
+    public function setKhu(string $khu): self
     {
         $this->khu = $khu;
         $this->updatedAt = new \DateTime();
         return $this;
     }
 
-    public function getRendimientoUh(): float
+    public function getRendimientoUh(): string
     {
         return $this->rendimientoUh;
     }
 
-    public function setRendimientoUh(float $rendimientoUh): self
+    public function setRendimientoUh(string $rendimientoUh): self
     {
         $this->rendimientoUh = $rendimientoUh;
         $this->updatedAt = new \DateTime();
         return $this;
     }
 
-    public function getTotalCost(): ?float
+    public function getTotalCost(): ?string
     {
         return $this->totalCost;
     }
 
-    public function setTotalCost(?float $totalCost): self
+    public function setTotalCost(?string $totalCost): self
     {
         $this->totalCost = $totalCost;
         return $this;
     }
 
-    public function getEquipmentCost(): ?float
+    public function getEquipmentCost(): ?string
     {
         return $this->equipmentCost;
     }
 
-    public function setEquipmentCost(?float $equipmentCost): self
+    public function setEquipmentCost(?string $equipmentCost): self
     {
         $this->equipmentCost = $equipmentCost;
         return $this;
     }
 
-    public function getLaborCost(): ?float
+    public function getLaborCost(): ?string
     {
         return $this->laborCost;
     }
 
-    public function setLaborCost(?float $laborCost): self
+    public function setLaborCost(?string $laborCost): self
     {
         $this->laborCost = $laborCost;
         return $this;
     }
 
-    public function getMaterialCost(): ?float
+    public function getMaterialCost(): ?string
     {
         return $this->materialCost;
     }
 
-    public function setMaterialCost(?float $materialCost): self
+    public function setMaterialCost(?string $materialCost): self
     {
         $this->materialCost = $materialCost;
         return $this;
     }
 
-    public function getTransportCost(): ?float
+    public function getTransportCost(): ?string
     {
         return $this->transportCost;
     }
 
-    public function setTransportCost(?float $transportCost): self
+    public function setTransportCost(?string $transportCost): self
     {
         $this->transportCost = $transportCost;
         return $this;
@@ -330,29 +330,37 @@ class APUItem
      */
     public function calculateCosts(): self
     {
-        $this->equipmentCost = 0;
-        $this->laborCost = 0;
-        $this->materialCost = 0;
-        $this->transportCost = 0;
+        $this->equipmentCost = null;
+        $this->laborCost = null;
+        $this->materialCost = null;
+        $this->transportCost = null;
 
+        $equipmentSum = 0.0;
         foreach ($this->equipment as $equipment) {
-            $this->equipmentCost += $equipment->getTarifa() * $equipment->getCHora();
+            $equipmentSum += (float) $equipment->getTarifa() * (float) $equipment->getCHora();
         }
 
+        $laborSum = 0.0;
         foreach ($this->labor as $labor) {
-            $this->laborCost += $labor->getJorHora() * $labor->getCHora();
+            $laborSum += (float) $labor->getJorHora() * (float) $labor->getCHora();
         }
 
+        $materialSum = 0.0;
         foreach ($this->materials as $material) {
-            $this->materialCost += $material->getCantidad() * $material->getPrecioUnitario();
+            $materialSum += (float) $material->getCantidad() * (float) $material->getPrecioUnitario();
         }
 
+        $transportSum = 0.0;
         foreach ($this->transport as $transport) {
-            $this->transportCost += $transport->getCantidad() * $transport->getDmt() * $transport->getTarifaKm();
+            $transportSum += (float) $transport->getCantidad() * (float) $transport->getDmt() * (float) $transport->getTarifaKm();
         }
 
-        $this->totalCost = $this->equipmentCost + $this->laborCost +
-            $this->materialCost + $this->transportCost;
+        $this->equipmentCost = (string) $equipmentSum;
+        $this->laborCost = (string) $laborSum;
+        $this->materialCost = (string) $materialSum;
+        $this->transportCost = (string) $transportSum;
+
+        $this->totalCost = (string) ($equipmentSum + $laborSum + $materialSum + $transportSum);
 
         return $this;
     }

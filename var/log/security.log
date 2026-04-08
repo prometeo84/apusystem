@@ -1,0 +1,1 @@
+[2026-04-08T14:02:46.724569-05:00] security.INFO: Authenticator successful! {"token":{"Symfony\\Component\\Security\\Core\\Authentication\\Token\\UsernamePasswordToken":"UsernamePasswordToken(user=\"user@abc.com\", roles=\"ROLE_USER\")"},"authenticator":"Symfony\\Component\\Security\\Http\\Authenticator\\FormLoginAuthenticator"} []

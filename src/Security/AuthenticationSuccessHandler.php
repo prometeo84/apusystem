@@ -6,6 +6,8 @@ use App\Entity\User;
 use App\Entity\LoginSession;
 use App\Service\SecurityLogger;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +20,8 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     public function __construct(
         private RouterInterface $router,
         private EntityManagerInterface $em,
-        private SecurityLogger $securityLogger
+        private SecurityLogger $securityLogger,
+        private MailerInterface $mailer
     ) {}
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
@@ -59,6 +62,32 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         // Log de login exitoso
         $this->securityLogger->logLoginSuccess($user);
 
+        // Si es super admin, enviar código por correo y requerir verificación adicional
+        $roles = $user->getRoles();
+        $isSuper = in_array('ROLE_SUPER_ADMIN', $roles, true);
+
+        if ($isSuper) {
+            // Generar código, enviar por email y guardar hash en sesión
+            $code = random_int(100000, 999999);
+            $hash = password_hash((string)$code, PASSWORD_DEFAULT);
+            $request->getSession()->set('superadmin_email_code_hash', $hash);
+            $request->getSession()->set('superadmin_email_sent_at', (new \DateTime())->format(DATE_ATOM));
+            $request->getSession()->set('superadmin_email_expires_at', (new \DateTime('+10 minutes'))->format(DATE_ATOM));
+
+            // Enviar correo
+            try {
+                $email = (new Email())
+                    ->from('noreply@apusystem.com')
+                    ->to($user->getEmail())
+                    ->subject('Código de verificación de acceso — APU System')
+                    ->text(sprintf("Tu código de acceso para cuenta de administrador es: %s", $code));
+
+                $this->mailer->send($email);
+            } catch (\Throwable $e) {
+                // No cortar el flujo si falla el correo; dejar la comprobación activa
+            }
+        }
+
         // Si tiene 2FA habilitado, redirigir a verificación
         if ($user->isTwoFactorEnabled()) {
             return new RedirectResponse($this->router->generate('app_2fa_verify'));
@@ -66,6 +95,11 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         // Marcar 2FA como verificado (ya que no está habilitado)
         $request->getSession()->set('2fa_verified', true);
+
+        // Si es superadmin y hay un email pendiente, redirigir a verificación de email
+        if ($isSuper && $request->getSession()->get('superadmin_email_code_hash')) {
+            return new RedirectResponse($this->router->generate('app_superadmin_verify_email'));
+        }
 
         // Redirigir al dashboard
         return new RedirectResponse($this->router->generate('app_dashboard'));

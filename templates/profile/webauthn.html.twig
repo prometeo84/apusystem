@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}WebAuthn - Credenciales{% endblock %}
+
+{% block body %}
+  <div class="container py-4">
+    <h1>Autenticadores WebAuthn</h1>
+
+    <div id="creds">
+      <ul>
+        {% for c in credentials %}
+          <li>
+            {{ c.createdAt|date('Y-m-d H:i') }} — fmt: {{ c.fmt ?: 'unknown' }} — aaguid: {{ c.aaguid ?: 'n/a' }}
+            <form method="post" action="{{ path('webauthn_revoke', {'id': c.id}) }}" style="display:inline;">
+              <button class="btn btn-sm btn-danger">Revocar</button>
+            </form>
+          </li>
+        {% else %}
+          <li>No hay autenticadores registrados.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="mt-4">
+      <button id="registerBtn" class="btn btn-primary">Registrar nuevo autenticador</button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('registerBtn').addEventListener('click', async function(){
+      // Start
+      const start = await fetch('{{ path('webauthn_register_start') }}', {method:'POST'});
+      const opts = await start.json();
+      // Decode challenge
+      opts.challenge = Uint8Array.from(window.atob(opts.challenge.replace(/-/g,'+').replace(/_/g,'/')), c=>c.charCodeAt(0));
+      opts.user.id = Uint8Array.from(window.atob(opts.user.id.replace(/-/g,'+').replace(/_/g,'/')), c=>c.charCodeAt(0));
+
+      const cred = await navigator.credentials.create({publicKey: opts});
+      const response = cred.response;
+
+      const clientDataJSON = btoa(String.fromCharCode(...new Uint8Array(response.clientDataJSON)));
+      const attestationObject = btoa(String.fromCharCode(...new Uint8Array(response.attestationObject)));
+      const rawId = btoa(String.fromCharCode(...new Uint8Array(cred.rawId)));
+
+      // Try to extract fmt quickly if present in object (best-effort)
+      let fmt = null;
+      try { fmt = cred.response.getClientExtensionResults && cred.response.getClientExtensionResults().fmt; } catch(e){}
+
+      await fetch('{{ path('webauthn_register_finish') }}', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          attestationObject: attestationObject,
+          clientDataJSON: clientDataJSON,
+          rawId: rawId,
+          publicKey: '',
+          fmt: fmt
+        })
+      });
+
+      location.reload();
+    });
+  </script>
+
+{% endblock %}

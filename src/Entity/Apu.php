@@ -17,9 +17,9 @@ class Apu
     #[ORM\JoinColumn(nullable: false)]
     private ?Tenant $tenant = null;
 
-    #[ORM\ManyToOne(targetEntity: Proyecto::class)]
+    #[ORM\ManyToOne(targetEntity: Projects::class)]
     #[ORM\JoinColumn(nullable: true)]
-    private ?Proyecto $proyecto = null;
+    private ?Projects $proyecto = null;
 
     #[ORM\Column(type: 'string', length: 100)]
     private ?string $codigo = null;
@@ -70,12 +70,12 @@ class Apu
         return $this;
     }
 
-    public function getProyecto(): ?Proyecto
+    public function getProyecto(): ?Projects
     {
         return $this->proyecto;
     }
 
-    public function setProyecto(?Proyecto $proyecto): self
+    public function setProyecto(?Projects $proyecto): self
     {
         $this->proyecto = $proyecto;
         return $this;

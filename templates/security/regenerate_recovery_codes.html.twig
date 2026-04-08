@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Regenerar Códigos de Recuperación{% endblock %}
+
+{% block body %}
+  <div class="container py-4">
+    <h1>Regenerar códigos de recuperación</h1>
+    <p>Para regenerar tus códigos de recuperación debes confirmar tu contraseña actual.</p>
+
+    <form method="post">
+      <div class="mb-3">
+        <label class="form-label">Contraseña actual</label>
+        <input name="current_password" type="password" class="form-control" required />
+      </div>
+      <button class="btn btn-primary">Regenerar códigos</button>
+    </form>
+  </div>
+{% endblock %}

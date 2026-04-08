@@ -39,11 +39,13 @@ return [
         '/login' => [[['_route' => 'app_login', '_controller' => 'App\\Controller\\SecurityController::login'], null, null, null, false, false, null]],
         '/logout' => [[['_route' => 'app_logout', '_controller' => 'App\\Controller\\SecurityController::logout'], null, null, null, false, false, null]],
         '/2fa/verify' => [[['_route' => 'app_2fa_verify', '_controller' => 'App\\Controller\\SecurityController::verify2FA'], null, null, null, false, false, null]],
+        '/superadmin/verify-email' => [[['_route' => 'app_superadmin_verify_email', '_controller' => 'App\\Controller\\SecurityController::verifySuperAdminEmail'], null, null, null, false, false, null]],
         '/2fa/setup' => [[['_route' => 'app_2fa_setup', '_controller' => 'App\\Controller\\SecurityController::setup2FA'], null, null, null, false, false, null]],
         '/security' => [[['_route' => 'app_security', '_controller' => 'App\\Controller\\SecuritySettingsController::index'], null, null, null, false, false, null]],
         '/security/2fa/enable' => [[['_route' => 'app_security_2fa_enable', '_controller' => 'App\\Controller\\SecuritySettingsController::enable2FA'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/security/2fa/disable' => [[['_route' => 'app_security_2fa_disable', '_controller' => 'App\\Controller\\SecuritySettingsController::disable2FA'], null, ['POST' => 0], null, false, false, null]],
         '/security/2fa/recovery-codes' => [[['_route' => 'app_security_2fa_recovery_codes', '_controller' => 'App\\Controller\\SecuritySettingsController::showRecoveryCodes'], null, null, null, false, false, null]],
+        '/security/2fa/recovery-codes/regenerate' => [[['_route' => 'app_security_2fa_recovery_codes_regenerate', '_controller' => 'App\\Controller\\SecuritySettingsController::regenerateRecoveryCodes'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/system' => [[['_route' => 'app_system', '_controller' => 'App\\Controller\\SystemController::index'], null, null, null, false, false, null]],
         '/system/monitoring' => [[['_route' => 'app_system_monitoring', '_controller' => 'App\\Controller\\SystemController::monitoring'], null, null, null, false, false, null]],
         '/system/errors' => [[['_route' => 'app_system_errors', '_controller' => 'App\\Controller\\SystemController::errors'], null, null, null, false, false, null]],
@@ -53,6 +55,9 @@ return [
         '/test/logs' => [[['_route' => 'app_test_logs', '_controller' => 'App\\Controller\\TestController::testLogs'], null, null, null, false, false, null]],
         '/test/error' => [[['_route' => 'app_test_error', '_controller' => 'App\\Controller\\TestController::testError'], null, null, null, false, false, null]],
         '/test/mail' => [[['_route' => 'app_test_mail', '_controller' => 'App\\Controller\\TestController::testMail'], null, null, null, false, false, null]],
+        '/webauthn/credentials' => [[['_route' => 'webauthn_list', '_controller' => 'App\\Controller\\WebAuthnController::listCredentials'], null, null, null, false, false, null]],
+        '/webauthn/register/start' => [[['_route' => 'webauthn_register_start', '_controller' => 'App\\Controller\\WebAuthnController::startRegistration'], null, ['POST' => 0], null, false, false, null]],
+        '/webauthn/register/finish' => [[['_route' => 'webauthn_register_finish', '_controller' => 'App\\Controller\\WebAuthnController::finishRegistration'], null, ['POST' => 0], null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'
@@ -103,6 +108,7 @@ return [
                     .'|ecurity/sessions/([^/]++)/revoke(*:542)'
                     .'|ystem/tenants/([^/]++)/edit(*:577)'
                 .')'
+                .'|/webauthn/revoke/([^/]++)(*:611)'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
@@ -126,8 +132,9 @@ return [
         478 => [[['_route' => 'app_revit_file_delete', '_controller' => 'App\\Controller\\RevitUploadController::deleteFile'], ['id'], ['POST' => 0], null, false, false, null]],
         495 => [[['_route' => 'app_revit_file_reprocess', '_controller' => 'App\\Controller\\RevitUploadController::reprocessFile'], ['id'], ['POST' => 0], null, false, false, null]],
         542 => [[['_route' => 'app_security_session_revoke', '_controller' => 'App\\Controller\\SecuritySettingsController::revokeSession'], ['id'], ['POST' => 0], null, false, false, null]],
-        577 => [
-            [['_route' => 'app_system_tenants_edit', '_controller' => 'App\\Controller\\SystemController::editTenant'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null],
+        577 => [[['_route' => 'app_system_tenants_edit', '_controller' => 'App\\Controller\\SystemController::editTenant'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        611 => [
+            [['_route' => 'webauthn_revoke', '_controller' => 'App\\Controller\\WebAuthnController::revoke'], ['id'], ['POST' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

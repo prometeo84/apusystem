@@ -19,7 +19,8 @@ class ProfileController extends AbstractController
     public function __construct(
         private EntityManagerInterface $em,
         private SecurityLogger $securityLogger,
-        private UserPasswordHasherInterface $passwordHasher
+        private UserPasswordHasherInterface $passwordHasher,
+        private \App\Service\PasswordPolicyService $passwordPolicy
     ) {}
 
     #[Route('', name: 'app_profile')]
@@ -126,9 +127,9 @@ class ProfileController extends AbstractController
                 return $this->redirectToRoute('app_profile_change_password');
             }
 
-            // Verificar longitud mínima
-            if (strlen($newPassword) < 8) {
-                $this->addFlash('error', 'La contraseña debe tener al menos 8 caracteres.');
+            // Verificar política de contraseña
+            if (!$this->passwordPolicy->isStrongPassword($newPassword)) {
+                $this->addFlash('error', 'La contraseña no cumple la política de seguridad. Debe tener al menos 12 caracteres, incluir mayúsculas, minúsculas, números y símbolos.');
                 return $this->redirectToRoute('app_profile_change_password');
             }
 

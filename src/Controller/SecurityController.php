@@ -34,7 +34,7 @@ class SecurityController extends AbstractController
 
         // Obtener error de login si existe
         $error = $authenticationUtils->getLastAuthenticationError();
-        
+
         // Último username ingresado
         $lastUsername = $authenticationUtils->getLastUsername();
 
@@ -62,7 +62,7 @@ class SecurityController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        
+
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
@@ -79,18 +79,70 @@ class SecurityController extends AbstractController
 
         if ($request->isMethod('POST')) {
             $code = $request->request->get('code');
-            
-            // Aquí se verificaría el código 2FA
-            // Por ahora, simplificado
-            
-            $request->getSession()->set('2fa_verified', true);
-            $this->securityLogger->log2FASuccess($user, 'totp');
-            
-            return $this->redirectToRoute('app_dashboard');
+
+            // Verificar el código TOTP usando el servicio existente
+            $twofaService = $this->container->get('App\\Service\\TwoFactorAuthService');
+            if ($twofaService->verifyTotpCode($user->getTotpSecret() ?? '', $code)) {
+                $request->getSession()->set('2fa_verified', true);
+                $this->securityLogger->log2FASuccess($user, 'totp');
+
+                // Si es superadmin y aún no verificó el correo, redirigir a verificación por email
+                if ($request->getSession()->get('superadmin_email_code_hash')) {
+                    return $this->redirectToRoute('app_superadmin_verify_email');
+                }
+
+                return $this->redirectToRoute('app_dashboard');
+            }
+
+            $this->securityLogger->log2FAFailed($user, 'totp', 'Invalid code');
+            $this->addFlash('error', 'Código 2FA inválido');
         }
 
         return $this->render('security/2fa_verify.html.twig', [
             'user' => $user
+        ]);
+    }
+
+    #[Route('/superadmin/verify-email', name: 'app_superadmin_verify_email')]
+    public function verifySuperAdminEmail(Request $request): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $session = $request->getSession();
+        $hash = $session->get('superadmin_email_code_hash');
+        $expires = $session->get('superadmin_email_expires_at');
+
+        if (!$hash) {
+            return $this->redirectToRoute('app_dashboard');
+        }
+
+        if ($request->isMethod('POST')) {
+            $code = $request->request->get('code');
+            if ($code && password_verify((string)$code, $hash)) {
+                $session->set('superadmin_email_verified', true);
+                // limpiar datos sensibles
+                $session->remove('superadmin_email_code_hash');
+                $session->remove('superadmin_email_expires_at');
+
+                $this->securityLogger->log('superadmin_email_verified', 'INFO', $user);
+
+                // Si la 2FA ya está verificada, ir al dashboard
+                if ($session->get('2fa_verified')) {
+                    return $this->redirectToRoute('app_dashboard');
+                }
+
+                // Si no, redirigir a verificación 2FA
+                return $this->redirectToRoute('app_2fa_verify');
+            }
+
+            $this->addFlash('error', 'Código inválido o expirado');
+        }
+
+        return $this->render('security/superadmin_verify_email.html.twig', [
+            'expires' => $expires
         ]);
     }
 
@@ -99,7 +151,7 @@ class SecurityController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        
+
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }

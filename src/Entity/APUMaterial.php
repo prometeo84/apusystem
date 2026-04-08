@@ -24,10 +24,10 @@ class APUMaterial
     private string $unidad;
 
     #[ORM\Column(type: 'decimal', precision: 15, scale: 4)]
-    private float $cantidad;
+    private string $cantidad;
 
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2)]
-    private float $precioUnitario;
+    private string $precioUnitario;
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
@@ -75,23 +75,23 @@ class APUMaterial
         return $this;
     }
 
-    public function getCantidad(): float
+    public function getCantidad(): string
     {
         return $this->cantidad;
     }
 
-    public function setCantidad(float $cantidad): self
+    public function setCantidad(string $cantidad): self
     {
         $this->cantidad = $cantidad;
         return $this;
     }
 
-    public function getPrecioUnitario(): float
+    public function getPrecioUnitario(): string
     {
         return $this->precioUnitario;
     }
 
-    public function setPrecioUnitario(float $precioUnitario): self
+    public function setPrecioUnitario(string $precioUnitario): self
     {
         $this->precioUnitario = $precioUnitario;
         return $this;
@@ -104,6 +104,6 @@ class APUMaterial
 
     public function getTotalCost(): float
     {
-        return $this->cantidad * $this->precioUnitario;
+        return (float) $this->cantidad * (float) $this->precioUnitario;
     }
 }

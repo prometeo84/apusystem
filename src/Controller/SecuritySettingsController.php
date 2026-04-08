@@ -19,7 +19,8 @@ class SecuritySettingsController extends AbstractController
     public function __construct(
         private EntityManagerInterface $em,
         private TwoFactorAuthService $twoFactorService,
-        private SecurityLogger $securityLogger
+        private SecurityLogger $securityLogger,
+        private \Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface $passwordHasher
     ) {}
 
     #[Route('', name: 'app_security')]
@@ -75,7 +76,7 @@ class SecuritySettingsController extends AbstractController
 
             if ($this->twoFactorService->enableTotp($user, $secret, $code)) {
                 // Generar códigos de recuperación
-                $recoveryCodes = $this->twoFactorService->generateRecoveryCodes($user);
+                $recoveryCodes = $this->twoFactorService->generateRecoveryCodes($user, null);
 
                 $request->getSession()->remove('totp_secret');
                 $request->getSession()->set('recovery_codes', $recoveryCodes);
@@ -158,6 +159,29 @@ class SecuritySettingsController extends AbstractController
             'user' => $user,
             'recoveryCodes' => $recoveryCodes,
         ]);
+    }
+
+    #[Route('/2fa/recovery-codes/regenerate', name: 'app_security_2fa_recovery_codes_regenerate', methods: ['GET', 'POST'])]
+    public function regenerateRecoveryCodes(Request $request): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($request->isMethod('POST')) {
+            $password = $request->request->get('current_password');
+            if (!$this->passwordHasher->isPasswordValid($user, $password)) {
+                $this->addFlash('error', 'Contraseña incorrecta.');
+                return $this->redirectToRoute('app_security');
+            }
+
+            $recoveryCodes = $this->twoFactorService->generateRecoveryCodes($user, $user);
+            $request->getSession()->set('recovery_codes', $recoveryCodes);
+            $this->addFlash('success', 'Se han generado nuevos códigos de recuperación. Revisa tu panel.');
+
+            return $this->redirectToRoute('app_security_2fa_recovery_codes');
+        }
+
+        return $this->render('security/regenerate_recovery_codes.html.twig');
     }
 
     #[Route('/sessions/{id}/revoke', name: 'app_security_session_revoke', methods: ['POST'])]

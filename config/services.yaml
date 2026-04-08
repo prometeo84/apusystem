@@ -53,6 +53,11 @@ services:
         tags:
             - { name: monolog.processor }
 
+    # WebAuthnService is autowired; HttpClient is optional and will be used when available.
+    App\Service\WebAuthnService:
+        arguments:
+            $httpClient: "@http_client"
+
     App\Service\RateLimitingService:
         arguments:
             $em: "@doctrine.orm.entity_manager"
