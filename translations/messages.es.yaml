@@ -211,6 +211,7 @@ password:
   security_requirements: "Requisitos de seguridad"
   send_link: "Enviar enlace"
   title: "Contraseña"
+  reset_expires_in: "El enlace de restablecimiento expira en %minutes% minutos"
 
 preferences:
   auto: "Automático"
