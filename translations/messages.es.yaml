@@ -217,6 +217,19 @@ emails:
   greeting: "Hola %name%,"
   password_reset_intro: "Has solicitado restablecer tu contraseña. Usa el siguiente botón para continuar:"
   password_reset_action: "Restablecer contraseña"
+  copy_link: "Si no ves el botón, copia y pega este enlace en tu navegador:"
+  link_expires: "El enlace expira en %minutes% minutos."
+  ignore_if_not_requested: "Si no solicitaste este cambio, ignora este correo." 
+  if_not_requested: "Si no solicitaste esta acción, contacta al soporte."
+  security_tips_title: "Consejos de seguridad"
+  never_share_password: "Nunca compartas tu contraseña con nadie."
+  use_unique_password: "Usa una contraseña única y segura para esta cuenta."
+  enable_2fa: "Habilita la autenticación de dos factores (2FA) para mayor seguridad."
+  automated_notice: "Este es un correo automatizado, por favor no respondas."
+  rights_reserved: "Todos los derechos reservados."
+
+mails:
+  important: "IMPORTANTE"
 
 preferences:
   auto: "Automático"
