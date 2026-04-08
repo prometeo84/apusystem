@@ -44,6 +44,9 @@ else
 fi
 
 OWASP_TOTAL=0
+# contador de errores bloqueantes (inicializar para evitar comparación con vacío)
+BLOCKING_ERRORS=0
+RED='\033[0;31m'
 YELLOW='\033[1;33m'
 GREEN='\033[0;32m'
 CYAN='\033[0;36m'
