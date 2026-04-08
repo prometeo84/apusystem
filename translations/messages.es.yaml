@@ -213,6 +213,11 @@ password:
   title: "Contraseña"
   reset_expires_in: "El enlace de restablecimiento expira en %minutes% minutos"
 
+emails:
+  greeting: "Hola %name%,"
+  password_reset_intro: "Has solicitado restablecer tu contraseña. Usa el siguiente botón para continuar:"
+  password_reset_action: "Restablecer contraseña"
+
 preferences:
   auto: "Automático"
   dark: "Oscuro"

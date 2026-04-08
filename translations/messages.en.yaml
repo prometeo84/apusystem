@@ -212,6 +212,11 @@ password:
   title: "Password"
   reset_expires_in: "Reset link expires in %minutes% minutes"
 
+emails:
+  greeting: "Hello %name%,"
+  password_reset_intro: "You requested a password reset. Use the button below to continue:"
+  password_reset_action: "Reset Password"
+
 preferences:
   auto: "Auto"
   dark: "Dark"
