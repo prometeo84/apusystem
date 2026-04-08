@@ -79,7 +79,9 @@ class ThemeSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::REQUEST => [['onKernelRequest', 15]],
+            // Bajar prioridad para que el firewall y el token de seguridad
+            // estén disponibles antes de leer el usuario autenticado.
+            KernelEvents::REQUEST => [['onKernelRequest', 0]],
         ];
     }
 }

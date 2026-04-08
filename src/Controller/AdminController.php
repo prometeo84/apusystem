@@ -50,13 +50,18 @@ class AdminController extends AbstractController
             ->getQuery()
             ->getSingleScalarResult();
 
-        // Eventos recientes
+        // Eventos recientes (últimas 24 horas)
+        $last24h = new \DateTime('-24 hours');
         $recentEvents = $this->em->getRepository(\App\Entity\SecurityEvent::class)
-            ->findBy(
-                ['tenant' => $tenant],
-                ['createdAt' => 'DESC'],
-                10
-            );
+            ->createQueryBuilder('se')
+            ->where('se.tenant = :tenant')
+            ->andWhere('se.createdAt >= :date')
+            ->setParameter('tenant', $tenant)
+            ->setParameter('date', $last24h)
+            ->orderBy('se.createdAt', 'DESC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
 
         return $this->render('admin/index.html.twig', [
             'user' => $user,

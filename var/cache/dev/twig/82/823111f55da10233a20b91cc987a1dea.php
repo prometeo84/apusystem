@@ -184,6 +184,22 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
             color: #e0e0e0;
         }
 
+        /* Asegurar que elementos con clase bg-light sean legibles en modo oscuro */
+        html[data-theme=\"dark\"] .bg-light,
+        html[data-theme=\"dark\"] pre.bg-light,
+        html[data-theme=\"dark\"] code.bg-light {
+            background-color: #2b2b2b !important;
+            color: #e0e0e0 !important;
+            border-color: #3a3a3a !important;
+        }
+
+        /* Pre y code dentro de modales deben tener texto legible */
+        html[data-theme=\"dark\"] .modal-content pre,
+        html[data-theme=\"dark\"] .modal-content code {
+            background-color: transparent !important;
+            color: #e0e0e0 !important;
+        }
+
         html[data-theme=\"dark\"] .text-muted {
             color: #aaa !important;
         }
@@ -316,22 +332,22 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         }
     </style>
     ";
-        // line 247
+        // line 263
         yield from $this->unwrap()->yieldBlock('stylesheets', $context, $blocks);
-        // line 248
+        // line 264
         yield "</head>
 <body>
     ";
-        // line 250
+        // line 266
         yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
-        // line 251
+        // line 267
         yield "
     <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js\"
             integrity=\"sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz\"
             crossorigin=\"anonymous\"></script>
 
     ";
-        // line 257
+        // line 273
         yield "    <script>
         (function() {
             const html = document.documentElement;
@@ -353,9 +369,9 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
     </script>
 
     ";
-        // line 277
+        // line 293
         yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
-        // line 278
+        // line 294
         yield "</body>
 </html>
 ";
@@ -391,7 +407,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         yield from [];
     }
 
-    // line 247
+    // line 263
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -413,7 +429,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         yield from [];
     }
 
-    // line 250
+    // line 266
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -435,7 +451,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         yield from [];
     }
 
-    // line 277
+    // line 293
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -478,7 +494,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  439 => 277,  417 => 250,  395 => 247,  372 => 6,  359 => 278,  357 => 277,  335 => 257,  328 => 251,  326 => 250,  322 => 248,  320 => 247,  88 => 18,  84 => 17,  80 => 16,  76 => 15,  64 => 6,  55 => 2,  52 => 1,);
+        return array (  455 => 293,  433 => 266,  411 => 263,  388 => 6,  375 => 294,  373 => 293,  351 => 273,  344 => 267,  342 => 266,  338 => 264,  336 => 263,  88 => 18,  84 => 17,  80 => 16,  76 => 15,  64 => 6,  55 => 2,  52 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -596,6 +612,22 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         html[data-theme=\"dark\"] .modal-content {
             background-color: #2d2d2d;
             color: #e0e0e0;
+        }
+
+        /* Asegurar que elementos con clase bg-light sean legibles en modo oscuro */
+        html[data-theme=\"dark\"] .bg-light,
+        html[data-theme=\"dark\"] pre.bg-light,
+        html[data-theme=\"dark\"] code.bg-light {
+            background-color: #2b2b2b !important;
+            color: #e0e0e0 !important;
+            border-color: #3a3a3a !important;
+        }
+
+        /* Pre y code dentro de modales deben tener texto legible */
+        html[data-theme=\"dark\"] .modal-content pre,
+        html[data-theme=\"dark\"] .modal-content code {
+            background-color: transparent !important;
+            color: #e0e0e0 !important;
         }
 
         html[data-theme=\"dark\"] .text-muted {

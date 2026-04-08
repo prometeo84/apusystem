@@ -2588,7 +2588,7 @@
           <argument type="service_closure" id="App\EventListener\ThemeSubscriber"/>
           <argument>onKernelRequest</argument>
         </argument>
-        <argument>15</argument>
+        <argument>0</argument>
       </call>
       <call method="addListener">
         <argument>kernel.controller_arguments</argument>
