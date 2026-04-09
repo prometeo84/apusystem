@@ -45,9 +45,7 @@
                                         minlength="8"
                                         placeholder="{{ 'password.reset_description'|trans }}"
                                     >
-                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                        <i class="bi bi-eye" id="toggleIcon"></i>
-                                    </button>
+                                    {{ btn.button('', 'outline-secondary', 'bi-eye', {'type':'button','id':'togglePassword'}) }}
                                 </div>
                             </div>
 
@@ -65,16 +63,12 @@
                                         minlength="8"
                                         placeholder="{{ 'password.confirm_new'|trans }}"
                                     >
-                                    <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirm">
-                                        <i class="bi bi-eye" id="toggleIcon2"></i>
-                                    </button>
+                                    {{ btn.button('', 'outline-secondary', 'bi-eye', {'type':'button','id':'togglePasswordConfirm'}) }}
                                 </div>
                             </div>
 
                             <div class="d-grid gap-2 mb-3">
-                                <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="bi bi-check-circle"></i> {{ 'password.reset_button'|trans }}
-                                </button>
+                                {{ btn.button('password.reset_button'|trans, 'primary', 'bi-check-circle', {'type':'submit','class':'btn-lg'}) }}
                             </div>
 
                             <div class="text-center">

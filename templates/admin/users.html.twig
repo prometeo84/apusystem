@@ -84,14 +84,9 @@
                                         </td>
                                         <td>
                                             <div class="btn-group btn-group-sm">
-                                                {{ btn.button('common.edit'|trans, 'outline-primary', 'bi-bi-pencil', {'href': path('path('app_admin_users_edit', {id: user.id})')}) }}
-                                                <form method="post" action="{{ path('app_admin_users_toggle', {id: user.id}) }}"
-                                                      style="display: inline;">
-                                                    <button type="submit"
-                                                            class="btn btn-outline-{{ user.isActive ? 'warning' : 'success' }}"
-                                                            title="{{ user.isActive ? 'Desactivar' : 'Activar' }}">
-                                                        <i class="bi bi-{{ user.isActive ? 'pause' : 'play' }}-fill"></i>
-                                                    </button>
+                                                {{ btn.button('common.edit'|trans, 'outline-primary', 'bi-pencil', {'href': path('app_admin_users_edit', {id: user.id})}) }}
+                                                <form method="post" action="{{ path('app_admin_users_toggle', {id: user.id}) }}" style="display: inline;">
+                                                    {{ btn.button('', user.isActive ? 'outline-warning' : 'outline-success', 'bi-' ~ (user.isActive ? 'pause-fill' : 'play-fill'), {'type':'submit','title': user.isActive ? 'Desactivar' : 'Activar'}) }}
                                                 </form>
                                             </div>
                                         </td>

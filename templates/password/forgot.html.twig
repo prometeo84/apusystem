@@ -54,9 +54,7 @@
                             </div>
 
                             <div class="d-grid gap-2 mb-3">
-                                <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="bi bi-send"></i> {{ 'password.send_link'|trans }}
-                                </button>
+                                {{ btn.button('password.send_link'|trans, 'primary', 'bi-send', {'type':'submit','class':'btn-lg'}) }}
                             </div>
 
                             <div class="text-center">

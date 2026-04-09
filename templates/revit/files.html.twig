@@ -92,27 +92,14 @@
                                     </td>
                                     <td class="text-end">
                                         <div class="btn-group btn-group-sm" role="group">
-                                            {{ btn.button('revit.view_details'|trans, 'outline-primary', 'bi-bi-eye', {'href': path('path('app_revit_file_detail', {id: file.id})')}) }}
+                                            {{ btn.button('revit.view_details'|trans, 'outline-primary', 'bi-eye', {'href': path('app_revit_file_detail', {id: file.id})}) }}
                                             {% if file.status == 'error' %}
-                                                <form method="POST"
-                                                      action="{{ path('app_revit_file_reprocess', {id: file.id}) }}"
-                                                      style="display: inline;">
-                                                    <button type="submit"
-                                                            class="btn btn-outline-warning"
-                                                            title="{{ 'revit.reprocess'|trans }}">
-                                                        <i class="bi bi-arrow-clockwise"></i>
-                                                    </button>
+                                                <form method="POST" action="{{ path('app_revit_file_reprocess', {id: file.id}) }}" style="display: inline;">
+                                                    {{ btn.button('revit.reprocess'|trans, 'outline-warning', 'bi-arrow-clockwise', {'type':'submit'}) }}
                                                 </form>
                                             {% endif %}
-                                            <form method="POST"
-                                                  action="{{ path('app_revit_file_delete', {id: file.id}) }}"
-                                                  onsubmit="return confirm('{{ 'revit.confirm_delete'|trans }}')"
-                                                  style="display: inline;">
-                                                <button type="submit"
-                                                        class="btn btn-outline-danger"
-                                                        title="{{ 'revit.delete'|trans }}">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
+                                            <form method="POST" action="{{ path('app_revit_file_delete', {id: file.id}) }}" onsubmit="return confirm('{{ 'revit.confirm_delete'|trans }}')" style="display: inline;">
+                                                {{ btn.button('revit.delete'|trans, 'outline-danger', 'bi-trash', {'type':'submit'}) }}
                                             </form>
                                         </div>
                                     </td>

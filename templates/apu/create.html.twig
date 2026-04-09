@@ -55,11 +55,9 @@
 
         <!-- Sección EQUIPO -->
         <div class="card mb-3">
-            <div class="card-header bg-warning">
+                <div class="card-header bg-warning">
                 <i class="bi bi-tools"></i> {{ 'apu.equipment'|trans }}
-                <button type="button" class="btn btn-sm btn-light float-end" onclick="addEquipmentRow()">
-                    <i class="bi bi-plus"></i> {{ 'buttons.add'|trans }}
-                </button>
+                {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addEquipmentRow()','class':'btn-sm float-end'}) }}
             </div>
             <div class="card-body">
                 <table class="table table-sm" id="equipmentTable">
@@ -81,11 +79,9 @@
 
         <!-- Sección MANO DE OBRA -->
         <div class="card mb-3">
-            <div class="card-header bg-info text-white">
+                <div class="card-header bg-info text-white">
                 <i class="bi bi-people"></i> {{ 'apu.labor'|trans }}
-                <button type="button" class="btn btn-sm btn-light float-end" onclick="addLaborRow()">
-                    <i class="bi bi-plus"></i> {{ 'buttons.add'|trans }}
-                </button>
+                {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addLaborRow()','class':'btn-sm float-end'}) }}
             </div>
             <div class="card-body">
                 <table class="table table-sm" id="laborTable">
@@ -107,11 +103,9 @@
 
         <!-- Sección MATERIALES -->
         <div class="card mb-3">
-            <div class="card-header bg-success text-white">
+                <div class="card-header bg-success text-white">
                 <i class="bi bi-box-seam"></i> {{ 'apu.materials'|trans }}
-                <button type="button" class="btn btn-sm btn-light float-end" onclick="addMaterialRow()">
-                    <i class="bi bi-plus"></i> {{ 'buttons.add'|trans }}
-                </button>
+                {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addMaterialRow()','class':'btn-sm float-end'}) }}
             </div>
             <div class="card-body">
                 <table class="table table-sm" id="materialTable">
@@ -133,11 +127,9 @@
 
         <!-- Sección TRANSPORTE -->
         <div class="card mb-3">
-            <div class="card-header bg-secondary text-white">
+                <div class="card-header bg-secondary text-white">
                 <i class="bi bi-truck"></i> {{ 'apu.transport'|trans }}
-                <button type="button" class="btn btn-sm btn-light float-end" onclick="addTransportRow()">
-                    <i class="bi bi-plus"></i> {{ 'buttons.add'|trans }}
-                </button>
+                {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addTransportRow()','class':'btn-sm float-end'}) }}
             </div>
             <div class="card-body">
                 <table class="table table-sm" id="transportTable">
@@ -180,7 +172,7 @@ function addEquipmentRow() {
         <td><input type="number" class="form-control form-control-sm" name="equipment[${equipmentIndex}][numero]" required></td>
         <td><input type="number" step="0.01" class="form-control form-control-sm" name="equipment[${equipmentIndex}][tarifa]" required></td>
         <td><input type="number" step="0.0001" class="form-control form-control-sm" name="equipment[${equipmentIndex}][c_hora]" required></td>
-        <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()"><i class="bi bi-trash"></i></button></td>
+        <td>{{ btn.button('', 'danger', 'bi-trash', {'type':'button','onclick':'this.closest(\'tr\').remove()','class':'btn-sm'}) }}</td>
     `;
     tbody.appendChild(row);
     equipmentIndex++;
@@ -194,7 +186,7 @@ function addLaborRow() {
         <td><input type="number" class="form-control form-control-sm" name="labor[${laborIndex}][numero]" required></td>
         <td><input type="number" step="0.0001" class="form-control form-control-sm" name="labor[${laborIndex}][jor_hora]" required></td>
         <td><input type="number" step="0.01" class="form-control form-control-sm" name="labor[${laborIndex}][c_hora]" required></td>
-        <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()"><i class="bi bi-trash"></i></button></td>
+        <td>{{ btn.button('', 'danger', 'bi-trash', {'type':'button','onclick':'this.closest(\'tr\').remove()','class':'btn-sm'}) }}</td>
     `;
     tbody.appendChild(row);
     laborIndex++;
@@ -208,7 +200,7 @@ function addMaterialRow() {
         <td><input type="text" class="form-control form-control-sm" name="materials[${materialIndex}][unidad]" required></td>
         <td><input type="number" step="0.0001" class="form-control form-control-sm" name="materials[${materialIndex}][cantidad]" required></td>
         <td><input type="number" step="0.01" class="form-control form-control-sm" name="materials[${materialIndex}][precio_unitario]" required></td>
-        <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()"><i class="bi bi-trash"></i></button></td>
+        <td>{{ btn.button('', 'danger', 'bi-trash', {'type':'button','onclick':'this.closest(\'tr\').remove()','class':'btn-sm'}) }}</td>
     `;
     tbody.appendChild(row);
     materialIndex++;
@@ -223,7 +215,7 @@ function addTransportRow() {
         <td><input type="number" step="0.0001" class="form-control form-control-sm" name="transport[${transportIndex}][cantidad]" required></td>
         <td><input type="number" step="0.01" class="form-control form-control-sm" name="transport[${transportIndex}][dmt]" required></td>
         <td><input type="number" step="0.01" class="form-control form-control-sm" name="transport[${transportIndex}][tarifa_km]" required></td>
-        <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()"><i class="bi bi-trash"></i></button></td>
+        <td>{{ btn.button('', 'danger', 'bi-trash', {'type':'button','onclick':'this.closest(\'tr\').remove()','class':'btn-sm'}) }}</td>
     `;
     tbody.appendChild(row);
     transportIndex++;

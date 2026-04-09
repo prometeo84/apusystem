@@ -14,18 +14,10 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0"><i class="bi bi-bug-fill text-danger"></i> {{ 'system.error_log'|trans }}</h5>
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-sm btn-outline-secondary active" data-filter="all">
-                            {{ 'system_errors.filter_all'|trans }}
-                        </button>
-                        <button type="button" class="btn btn-sm btn-outline-danger" data-filter="CRITICAL">
-                            {{ 'system_errors.filter_critical'|trans }}
-                        </button>
-                        <button type="button" class="btn btn-sm btn-outline-danger" data-filter="ERROR">
-                            {{ 'system_errors.filter_errors'|trans }}
-                        </button>
-                        <button type="button" class="btn btn-sm btn-outline-warning" data-filter="WARNING">
-                            {{ 'system_errors.filter_warnings'|trans }}
-                        </button>
+                        {{ btn.button('system_errors.filter_all'|trans, 'outline-secondary', null, {'class':'btn-sm active','data-filter':'all','type':'button'}) }}
+                        {{ btn.button('system_errors.filter_critical'|trans, 'outline-danger', null, {'class':'btn-sm','data-filter':'CRITICAL','type':'button'}) }}
+                        {{ btn.button('system_errors.filter_errors'|trans, 'outline-danger', null, {'class':'btn-sm','data-filter':'ERROR','type':'button'}) }}
+                        {{ btn.button('system_errors.filter_warnings'|trans, 'outline-warning', null, {'class':'btn-sm','data-filter':'WARNING','type':'button'}) }}
                     </div>
                 </div>
                 <div class="card-body p-0">

@@ -19,18 +19,10 @@
                         </div>
                         <div class="col-auto">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-secondary active" data-filter="all">
-                                    {{ 'system.all'|trans }}
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-success" data-filter="INFO">
-                                    {{ 'system.info'|trans }}
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-warning" data-filter="WARNING">
-                                    {{ 'system.warnings'|trans }}
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-danger" data-filter="CRITICAL">
-                                    {{ 'system.critical'|trans }}
-                                </button>
+                                {{ btn.button('system.all'|trans, 'outline-secondary', null, {'class':'btn-sm active','data-filter':'all','type':'button'}) }}
+                                {{ btn.button('system.info'|trans, 'outline-success', null, {'class':'btn-sm','data-filter':'INFO','type':'button'}) }}
+                                {{ btn.button('system.warnings'|trans, 'outline-warning', null, {'class':'btn-sm','data-filter':'WARNING','type':'button'}) }}
+                                {{ btn.button('system.critical'|trans, 'outline-danger', null, {'class':'btn-sm','data-filter':'CRITICAL','type':'button'}) }}
                             </div>
                         </div>
                     </div>
@@ -84,11 +76,7 @@
                                         </td>
                                         <td>
                                             {% if event.eventData %}
-                                                <button type="button" class="btn btn-sm btn-outline-secondary"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#detailsModal{{ event.id }}">
-                                                    <i class="bi bi-eye"></i>
-                                                </button>
+                                                {{ btn.button('', 'outline-secondary', 'bi-eye', {'class':'btn-sm','type':'button','data-bs-toggle':'modal','data-bs-target':'#detailsModal' ~ event.id}) }}
                                             {% endif %}
                                         </td>
                                     </tr>

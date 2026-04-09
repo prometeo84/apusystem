@@ -101,13 +101,10 @@
                                             <td>{{ session.ipAddress }}</td>
                                             <td>{{ session.lastActivityAt|date('d/m/Y H:i') }}</td>
                                             <td>
-                                                <form method="post" action="{{ path('app_security_session_revoke', {id: session.id}) }}"
-                                                      style="display: inline;">
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                            onclick="return confirm('{{ 'security.revoke'|trans }}')">
-                                                        <i class="bi bi-x-circle"></i> {{ 'security.revoke'|trans }}
-                                                    </button>
-                                                </form>
+                                                                                                <form method="post" action="{{ path('app_security_session_revoke', {id: session.id}) }}"
+                                                                                                            style="display: inline;" onsubmit="return confirm('{{ 'security.revoke'|trans }}')">
+                                                                                                        {{ btn.button('security.revoke'|trans, 'outline-danger', 'bi-x-circle', {'type':'submit','class':'btn-sm'}) }}
+                                                                                                </form>
                                             </td>
                                         </tr>
                                     {% endfor %}

@@ -8,10 +8,7 @@
                 <i class="bi bi-calendar"></i> {{ 'now'|date('d/m/Y') }}
             </span>
             <div class="dropdown">
-                <button class="btn btn-link text-decoration-none dropdown-toggle" type="button"
-                        id="userDropdown" data-bs-toggle="dropdown">
-                    <i class="bi bi-person-circle fs-4"></i>
-                </button>
+                {{ btn.button('', 'link', null, {'type':'button','class':'btn-link text-decoration-none dropdown-toggle','id':'userDropdown','data-bs-toggle':'dropdown'}) }}
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="{{ path('app_profile') }}">
                         <i class="bi bi-person"></i> {{ 'nav.profile'|trans }}

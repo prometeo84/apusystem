@@ -155,9 +155,7 @@
                         <div class="card-body">
                             <h6 class="card-title">{{ 'common.preview'|trans }}</h6>
                             <div id="preview" class="p-3 rounded">
-                                <button class="btn btn-sm mb-2" id="previewBtn" style="background: linear-gradient(135deg, {{ user.themePrimaryColor }} 0%, {{ user.themeSecondaryColor }} 100%); color: white;">
-                                    {{ 'common.example_button'|trans }}
-                                </button>
+                                {{ btn.button('common.example_button'|trans, 'primary', null, {'type':'button','id':'previewBtn','class':'btn-sm mb-2','style':'background: linear-gradient(135deg, ' ~ user.themePrimaryColor ~ ' 0%, ' ~ user.themeSecondaryColor ~ ' 100%); color: white;'}) }}
                                 <div class="alert mb-0" style="background-color: {{ user.themePrimaryColor }}22; border-color: {{ user.themePrimaryColor }}; color: {{ user.themePrimaryColor }};">
                                     <strong>{{ 'common.example_text'|trans }}</strong>
                                 </div>

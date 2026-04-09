@@ -13,7 +13,7 @@
           <li>
             {{ c.createdAt|date('Y-m-d H:i') }} — fmt: {{ c.fmt ?: 'unknown' }} — aaguid: {{ c.aaguid ?: 'n/a' }}
             <form method="post" action="{{ path('webauthn_revoke', {'id': c.id}) }}" style="display:inline;">
-              <button class="btn btn-sm btn-danger">{{ 'webauthn.revoke'|trans }}</button>
+              {{ btn.button('webauthn.revoke'|trans, 'danger', null, {'type':'submit','class':'btn-sm'}) }}
             </form>
           </li>
         {% else %}

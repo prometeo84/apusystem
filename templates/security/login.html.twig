@@ -11,8 +11,8 @@
                 <div class="card">
                     <div class="card-body p-5">
                             <div class="d-flex justify-content-end mb-2">
-                                {{ btn.button('EN', 'outline-secondary', null, {'href': '{{ path('app_set_locale', {'locale':'en'}) }}', 'class':'btn-sm me-1'}) }}
-                                {{ btn.button('ES', 'outline-secondary', null, {'href': '{{ path('app_set_locale', {'locale':'es'}) }}', 'class':'btn-sm'}) }}
+                                {{ btn.button('EN', 'outline-secondary', null, {'href': path('app_set_locale', {'locale':'en'}), 'class':'btn-sm me-1'}) }}
+                                {{ btn.button('ES', 'outline-secondary', null, {'href': path('app_set_locale', {'locale':'es'}), 'class':'btn-sm'}) }}
                             </div>
                         <div class="text-center mb-4">
                             <h1 class="h3 mb-3 fw-bold" style="color: var(--primary-color);">
