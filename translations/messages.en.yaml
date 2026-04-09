@@ -355,6 +355,21 @@ security:
   use_auth_app: "Use an authentication app like Google Authenticator or Authy"
   back_to_security: "Back to Security"
 
+  superadmin_verify:
+    title: "Email verification — Superadmin"
+    header: "Additional verification for superadmin"
+    instruction: "A temporary code has been sent to your email. Enter the code to complete sign-in."
+    code_label: "Code"
+    verify: "Verify"
+    expires_in: "The code expires in %minutes% minute(s) (%time%)."
+    expired: "The code has expired."
+  regenerate_title: "Regenerate Recovery Codes"
+  regenerate_header: "Regenerate recovery codes"
+  regenerate_instructions: "To regenerate your recovery codes you must confirm your current password."
+  current_password: "Current password"
+
+  recommended_apps: "Recommended Apps"
+
 security_2fa:
   code_from_app: "6-digit code from your authentication app"
   code_invalidated: "The code will be invalidated after use"
@@ -386,22 +401,6 @@ security_2fa:
   verify_description: "Enter the 6-digit code from your authentication app"
   verify_enable: "Verify and Enable"
   verify_title: "Two-Factor Verification"
-
-security:
-  superadmin_verify:
-    title: "Email verification — Superadmin"
-    header: "Additional verification for superadmin"
-    instruction: "A temporary code has been sent to your email. Enter the code to complete sign-in."
-    code_label: "Code"
-    verify: "Verify"
-    expires_in: "The code expires in %minutes% minute(s) (%time%)."
-    expired: "The code has expired."
-  regenerate_title: "Regenerate Recovery Codes"
-  regenerate_header: "Regenerate recovery codes"
-  regenerate_instructions: "To regenerate your recovery codes you must confirm your current password."
-  current_password: "Current password"
-
-  recommended_apps: "Recommended Apps"
 
 system:
   title: "System"
