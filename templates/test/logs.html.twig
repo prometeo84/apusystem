@@ -5,12 +5,7 @@
 {% block body %}
 <div class="d-flex">
     {% include 'partials/_sidebar.html.twig' %}
-                                <div class="btn-group" role="group">
-                                    {% import 'partials/_button.html.twig' as btn %}
-                                    {{ btn.button('test.generate_error'|trans, 'primary', 'bi-exclamation-circle', {'href': path('app_test_error'), 'onclick': 'return confirm(\'' ~ 'test.generate_error'|trans ~ '\')'}) }}
-                                    {{ btn.button('password.forgot'|trans, 'primary', 'bi-key', {'href': path('app_password_forgot')}) }}
-                                    {{ btn.button('system_errors.title'|trans, 'secondary', 'bi-journal-text', {'href': path('app_system_errors')}) }}
-                                </div>
+                                {% import 'partials/_button.html.twig' as btn %}
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
@@ -49,15 +44,17 @@
 
                             <div class="mt-4">
                                 <h6>{{ 'test.other_tests'|trans }}:</h6>
-                                <div class="btn-group" role="group">
-                                    {{ btn.button('test.generate_error'|trans, 'danger', 'bi-bi-exclamation-triangle', {'href': path('app_test_error')}) }}
-                                    {{ btn.button('test.test_email'|trans, 'primary', 'bi-bi-envelope', {'href': path('app_password_forgot')}) }}
-                                    {{ btn.button('test.view_system_logs'|trans, 'secondary', 'bi-bi-file-text', {'href': path('app_system_errors')}) }}
+                                <p class="text-muted">{{ 'test.other_tests_description'|trans }}</p>
+                                <div class="btn-group mt-2" role="group">
+                                    {{ btn.button('test.generate_error'|trans, 'primary', 'bi-exclamation-circle', {'href': path('app_test_error'), 'onclick': 'return confirm(\'' ~ 'test.generate_error'|trans ~ '\')'}) }}
+                                    {{ btn.button('test.test_email'|trans, 'primary', 'bi-envelope', {'href': path('app_test_mail')}) }}
+                                    {{ btn.button('password.forgot'|trans, 'primary', 'bi-key', {'href': path('app_password_forgot')}) }}
+                                    {{ btn.button('system_errors.title'|trans, 'secondary', 'bi-journal-text', {'href': path('app_system_errors')}) }}
                                 </div>
                             </div>
 
                             <div class="mt-4">
-                                {{ btn.button('test.back_dashboard'|trans, 'outline-secondary', 'bi-bi-arrow-left', {'href': path('app_system')}) }}
+                                {{ btn.button('test.back_dashboard'|trans, 'outline-secondary', 'bi-arrow-left', {'href': path('app_system')}) }}
                             </div>
                         </div>
                     </div>

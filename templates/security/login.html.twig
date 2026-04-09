@@ -70,9 +70,7 @@
                                         required
                                         placeholder="{{ 'auth.enter_password'|trans }}"
                                     >
-                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                        <i class="bi bi-eye" id="toggleIcon"></i>
-                                    </button>
+                                    {{ btn.button('<i class="bi bi-eye" id="toggleIcon"></i>', 'outline-secondary', null, {'type':'button','id':'togglePassword'}) }}
                                 </div>
                             </div>
 
@@ -86,9 +84,7 @@
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
                             <div class="d-grid gap-2 mb-3">
-                                <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="bi bi-box-arrow-in-right"></i> {{ 'auth.login'|trans }}
-                                </button>
+                                {{ btn.button('auth.login'|trans, 'primary', 'bi-box-arrow-in-right', {'type':'submit','class':'btn-lg'}) }}
                             </div>
 
                             <div class="text-center">

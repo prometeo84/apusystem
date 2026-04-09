@@ -86,7 +86,7 @@
                                         </td>
                                         <td>
                                             <div class="btn-group btn-group-sm">
-                                                {{ btn.button('common.edit'|trans, 'outline-primary', 'bi-bi-pencil', {'href': path('path('app_system_tenants_edit', {id: tenant.id})')}) }}
+                                                {{ btn.button('common.edit'|trans, 'outline-primary', 'bi-pencil', {'href': path('app_system_tenants_edit', {'id': tenant.id})}) }}
                                                 {{ btn.button('', 'outline-info', 'bi-eye', {'type':'button','title': ('common.view_details'|trans), 'data-bs-toggle':'modal', 'data-bs-target':'#tenantModal' ~ tenant.id}) }}
                                             </div>
                                         </td>

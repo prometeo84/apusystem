@@ -580,14 +580,14 @@ system_tenants:
 test:
   valid_emails: "Valid emails for testing:"
   back_dashboard: "Back to Dashboard"
-  critical_message: "CRITICAL Critical message with exception"
+  critical_message: "Critical message with exception"
   current_time: "Current Time"
   current_timezone: "Current Timezone"
-  debug_message: "DEBUG Debug message"
-  error_message: "ERROR Error message"
+  debug_message: "Debug message"
+  error_message: "Error message"
   errors_only: "Errors only"
   generate_error: "Generate Uncaught Error"
-  info_message: "INFO Informational message"
+  info_message: "Informational message"
   log_files: "Log Files"
   logs_generated: "Generated Logs:"
   logs_saved: "The logs have been saved in"
@@ -655,7 +655,7 @@ test:
   timezone_info: "Timezone Information"
   verify_email_and_link: "Verify that the email was received and test the link"
   view_system_logs: "View System Logs"
-  warning_message: "WARNING Warning message"
+  warning_message: "Warning message"
 
 test_mail:
   check_mailpit: "Check Mailpit at"
