@@ -421,7 +421,6 @@ security:
 system:
   title: "Sistema"
   actions: "Acciones"
-  monitoring_title: "Monitoreo"
   plan_basic: "Básico"
   plan_professional: "Profesional"
   plan_enterprise: "Enterprise"

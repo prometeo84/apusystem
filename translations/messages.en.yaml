@@ -405,7 +405,6 @@ security_2fa:
 system:
   title: "System"
   actions: "Actions"
-  monitoring_title: "Monitoring"
   expires_label: 'Expires:'
   expired: 'EXPIRED'
   days: 'days'
