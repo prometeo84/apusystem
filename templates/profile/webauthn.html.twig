@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}WebAuthn - Credenciales{% endblock %}
+{% block title %}{{ 'webauthn.title'|trans }}{% endblock %}
 
 {% block body %}
   <div class="container py-4">
-    <h1>Autenticadores WebAuthn</h1>
+    <h1>{{ 'webauthn.header'|trans }}</h1>
 
     <div id="creds">
       <ul>
@@ -12,17 +12,17 @@
           <li>
             {{ c.createdAt|date('Y-m-d H:i') }} — fmt: {{ c.fmt ?: 'unknown' }} — aaguid: {{ c.aaguid ?: 'n/a' }}
             <form method="post" action="{{ path('webauthn_revoke', {'id': c.id}) }}" style="display:inline;">
-              <button class="btn btn-sm btn-danger">Revocar</button>
+              <button class="btn btn-sm btn-danger">{{ 'webauthn.revoke'|trans }}</button>
             </form>
           </li>
         {% else %}
-          <li>No hay autenticadores registrados.</li>
+          <li>{{ 'webauthn.no_credentials'|trans }}</li>
         {% endfor %}
       </ul>
     </div>
 
     <div class="mt-4">
-      <button id="registerBtn" class="btn btn-primary">Registrar nuevo autenticador</button>
+      <button id="registerBtn" class="btn btn-primary">{{ 'webauthn.register'|trans }}</button>
     </div>
   </div>
 

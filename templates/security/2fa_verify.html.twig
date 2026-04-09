@@ -20,7 +20,7 @@
 
                         {% for message in app.flashes('error') %}
                             <div class="alert alert-danger">
-                                <i class="bi bi-exclamation-triangle-fill"></i> {{ message }}
+                                <i class="bi bi-exclamation-triangle-fill"></i> {{ message|trans }}
                             </div>
                         {% endfor %}
 

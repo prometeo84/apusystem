@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Editar Usuario - APU System{% endblock %}
+{% block title %}{{ 'admin_users.edit_user_title'|trans }} - APU System{% endblock %}
 
 {% block body %}
 <div class="d-flex">
@@ -14,7 +14,7 @@
                 <div class="col-md-8">
                     {% for message in app.flashes('success') %}
                         <div class="alert alert-success alert-dismissible fade show">
-                            <i class="bi bi-check-circle-fill"></i> {{ message }}
+                            <i class="bi bi-check-circle-fill"></i> {{ message|trans }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     {% endfor %}
@@ -29,14 +29,14 @@
                             <form method="post" action="{{ path('app_admin_users_edit', {id: editUser.id}) }}">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Nombre</label>
-                                        <input type="text" name="first_name" class="form-control"
-                                               value="{{ editUser.firstName }}" required>
+                                             <label class="form-label">{{ 'admin.first_name'|trans }}</label>
+                                             <input type="text" name="first_name" class="form-control"
+                                                 value="{{ editUser.firstName }}" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Apellido</label>
-                                        <input type="text" name="last_name" class="form-control"
-                                               value="{{ editUser.lastName }}" required>
+                                        <label class="form-label">{{ 'admin.last_name'|trans }}</label>
+                                            <input type="text" name="last_name" class="form-control"
+                                                   value="{{ editUser.lastName }}" required>
                                     </div>
                                 </div>
 
@@ -47,26 +47,26 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">Teléfono</label>
-                                    <input type="tel" name="phone" class="form-control"
-                                           value="{{ editUser.phone }}">
+                                     <label class="form-label">{{ 'admin.phone'|trans }}</label>
+                                     <input type="tel" name="phone" class="form-control"
+                                         value="{{ editUser.phone }}">
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">Rol</label>
+                                    <label class="form-label">{{ 'admin.role'|trans }}</label>
                                     <select name="role" class="form-select" required>
                                         <option value="ROLE_USER" {{ editUser.roles[0] == 'ROLE_USER' ? 'selected' : '' }}>
-                                            Usuario
+                                            {{ 'roles.user'|trans }}
                                         </option>
                                         <option value="ROLE_MANAGER" {{ editUser.roles[0] == 'ROLE_MANAGER' ? 'selected' : '' }}>
-                                            Manager
+                                            {{ 'roles.manager'|trans }}
                                         </option>
                                         {% if is_granted('ROLE_SUPER_ADMIN') %}
                                             <option value="ROLE_ADMIN" {{ editUser.roles[0] == 'ROLE_ADMIN' ? 'selected' : '' }}>
-                                                Administrador
+                                                {{ 'roles.admin'|trans }}
                                             </option>
                                             <option value="ROLE_SUPER_ADMIN" {{ editUser.roles[0] == 'ROLE_SUPER_ADMIN' ? 'selected' : '' }}>
-                                                Super Administrador
+                                                {{ 'roles.super_admin'|trans }}
                                             </option>
                                         {% endif %}
                                     </select>
@@ -76,7 +76,7 @@
                                     <input type="checkbox" name="is_active" class="form-check-input" id="isActive"
                                            {{ editUser.isActive ? 'checked' : '' }}>
                                     <label class="form-check-label" for="isActive">
-                                        Usuario activo
+                                        {{ 'admin.user_active'|trans }}
                                     </label>
                                 </div>
 
@@ -99,23 +99,23 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <small class="text-muted">
-                                            <strong>Creado:</strong> {{ editUser.createdAt|date('d/m/Y H:i') }}
+                                            <strong>{{ 'common.created'|trans }}:</strong> {{ editUser.createdAt|date('d/m/Y H:i') }}
                                         </small>
                                     </div>
                                     <div class="col-md-6 text-end">
-                                        <small class="text-muted">
-                                            <strong>Último acceso:</strong>
-                                            {{ editUser.lastLoginAt ? editUser.lastLoginAt|date('d/m/Y H:i') : 'Nunca' }}
+                                            <small class="text-muted">
+                                            <strong>{{ 'common.last_access'|trans }}:</strong>
+                                            {{ editUser.lastLoginAt ? editUser.lastLoginAt|date('d/m/Y H:i') : ('common.never'|trans) }}
                                         </small>
                                     </div>
                                 </div>
 
                                 <div class="d-flex gap-2">
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="bi bi-save"></i> Guardar Cambios
+                                        <i class="bi bi-save"></i> {{ 'profile.save'|trans }}
                                     </button>
                                     <a href="{{ path('app_admin_users') }}" class="btn btn-outline-secondary">
-                                        <i class="bi bi-arrow-left"></i> Volver
+                                        <i class="bi bi-arrow-left"></i> {{ 'buttons.back'|trans }}
                                     </a>
                                 </div>
                             </form>

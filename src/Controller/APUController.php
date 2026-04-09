@@ -146,7 +146,7 @@ class APUController extends AbstractController
         $this->em->persist($apuItem);
         $this->em->flush();
 
-        $this->addFlash('success', 'APU creado exitosamente');
+        $this->addFlash('success', 'flash.apu_created');
 
         return $this->redirectToRoute('app_apu_index');
     }
@@ -181,7 +181,7 @@ class APUController extends AbstractController
 
         $this->em->flush();
 
-        $this->addFlash('success', 'APU actualizado exitosamente');
+        $this->addFlash('success', 'flash.apu_updated');
 
         return $this->redirectToRoute('app_apu_index');
     }

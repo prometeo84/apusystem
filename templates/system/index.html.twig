@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sistema - APU System{% endblock %}
+{% block title %}{{ 'system.title'|trans }} - APU System{% endblock %}
 
 {% block body %}
 <div class="d-flex">
@@ -104,7 +104,7 @@
                                             {% for event in criticalEvents %}
                                                 <tr>
                                                     <td><small>{{ event.createdAt|date('d/m/Y H:i') }}</small></td>
-                                                    <td>{{ event.tenant.name }}</td>
+                                                    <td>{{ event.tenant ? event.tenant.name : '-' }}</td>
                                                     <td>{{ event.user ? event.user.email : '-' }}</td>
                                                     <td>
                                                         <span class="badge bg-danger">
@@ -144,7 +144,7 @@
                                             {% for event in recentEvents %}
                                                 <tr>
                                                     <td><small>{{ event.createdAt|date('H:i:s') }}</small></td>
-                                                    <td>{{ event.tenant.name }}</td>
+                                                    <td>{{ event.tenant ? event.tenant.name : '-' }}</td>
                                                     <td>{{ event.user ? event.user.email : '-' }}</td>
                                                     <td>{{ event.eventType|replace({'_': ' '})|title }}</td>
                                                     <td>

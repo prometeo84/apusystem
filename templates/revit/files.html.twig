@@ -1,26 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Archivos de Revit{% endblock %}
+{% block title %}{{ 'revit.files'|trans }}{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1><i class="bi bi-folder"></i> Archivos de Revit</h1>
+        <h1><i class="bi bi-folder"></i> {{ 'revit.files'|trans }}</h1>
         <a href="{{ path('app_revit_upload') }}" class="btn btn-primary">
-            <i class="bi bi-cloud-upload"></i> Subir Nuevo Archivo
+            <i class="bi bi-cloud-upload"></i> {{ 'revit.upload_new'|trans }}
         </a>
     </div>
 
     {% for message in app.flashes('error') %}
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle"></i> {{ message }}
+            <i class="bi bi-exclamation-triangle"></i> {{ message|trans }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     {% endfor %}
 
     {% for message in app.flashes('success') %}
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle"></i> {{ message }}
+            <i class="bi bi-check-circle"></i> {{ message|trans }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     {% endfor %}
@@ -36,14 +36,14 @@
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
-                            <tr>
+                                <tr>
                                 <th width="5%"><i class="bi bi-file-earmark"></i></th>
-                                <th width="30%">Archivo</th>
-                                <th width="10%">Tipo</th>
+                                <th width="30%">{{ 'revit.table.file'|trans }}</th>
+                                <th width="10%">{{ 'revit.table.type'|trans }}</th>
                                 <th width="10%">{{ 'common.size'|trans }}</th>
-                                <th width="15%">Estado</th>
-                                <th width="15%">Fecha</th>
-                                <th width="15%" class="text-end">Acciones</th>
+                                <th width="15%">{{ 'revit.label.status'|trans }}</th>
+                                <th width="15%">{{ 'revit.label.date'|trans }}</th>
+                                <th width="15%" class="text-end">{{ 'revit.table.actions'|trans }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -72,19 +72,19 @@
                                     <td>
                                         {% if file.status == 'completed' %}
                                             <span class="badge bg-success">
-                                                <i class="bi bi-check-circle"></i> Completado
+                                                <i class="bi bi-check-circle"></i> {{ 'revit.status.completed'|trans }}
                                             </span>
                                         {% elseif file.status == 'processing' %}
                                             <span class="badge bg-warning text-dark">
-                                                <i class="bi bi-arrow-repeat"></i> Procesando
+                                                <i class="bi bi-arrow-repeat"></i> {{ 'revit.status.processing'|trans }}
                                             </span>
                                         {% elseif file.status == 'pending' %}
                                             <span class="badge bg-info text-dark">
-                                                <i class="bi bi-hourglass-split"></i> Pendiente
+                                                <i class="bi bi-hourglass-split"></i> {{ 'revit.status.pending'|trans }}
                                             </span>
                                         {% elseif file.status == 'error' %}
                                             <span class="badge bg-danger">
-                                                <i class="bi bi-exclamation-triangle"></i> Error
+                                                <i class="bi bi-exclamation-triangle"></i> {{ 'revit.status.error'|trans }}
                                             </span>
                                         {% endif %}
                                     </td>
@@ -95,7 +95,7 @@
                                         <div class="btn-group btn-group-sm" role="group">
                                             <a href="{{ path('app_revit_file_detail', {id: file.id}) }}"
                                                class="btn btn-outline-primary"
-                                               title="Ver detalles">
+                                               title="{{ 'revit.view_details'|trans }}">
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                             {% if file.status == 'error' %}
@@ -104,7 +104,7 @@
                                                       style="display: inline;">
                                                     <button type="submit"
                                                             class="btn btn-outline-warning"
-                                                            title="Reprocesar">
+                                                            title="{{ 'revit.reprocess'|trans }}">
                                                         <i class="bi bi-arrow-clockwise"></i>
                                                     </button>
                                                 </form>
@@ -115,7 +115,7 @@
                                                   style="display: inline;">
                                                 <button type="submit"
                                                         class="btn btn-outline-danger"
-                                                        title="Eliminar">
+                                                        title="{{ 'revit.delete'|trans }}">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </form>
@@ -135,7 +135,7 @@
                     <div class="card text-center">
                         <div class="card-body">
                             <h5 class="card-title">{{ files|length }}</h5>
-                            <p class="card-text text-muted">Total Archivos</p>
+                            <p class="card-text text-muted">{{ 'revit.total_files'|trans }}</p>
                         </div>
                     </div>
                 </div>
@@ -145,7 +145,7 @@
                             <h5 class="card-title text-success">
                                 {{ files|filter(f => f.status == 'completed')|length }}
                             </h5>
-                            <p class="card-text text-muted">Completados</p>
+                            <p class="card-text text-muted">{{ 'revit.completed_files'|trans }}</p>
                         </div>
                     </div>
                 </div>
@@ -155,7 +155,7 @@
                             <h5 class="card-title text-warning">
                                 {{ files|filter(f => f.status == 'processing' or f.status == 'pending')|length }}
                             </h5>
-                            <p class="card-text text-muted">En Proceso</p>
+                            <p class="card-text text-muted">{{ 'revit.in_progress_files'|trans }}</p>
                         </div>
                     </div>
                 </div>
@@ -165,7 +165,7 @@
                             <h5 class="card-title text-danger">
                                 {{ files|filter(f => f.status == 'error')|length }}
                             </h5>
-                            <p class="card-text text-muted">Con Errores</p>
+                            <p class="card-text text-muted">{{ 'revit.error_files'|trans }}</p>
                         </div>
                     </div>
                 </div>

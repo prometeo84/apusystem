@@ -36,7 +36,7 @@ class PasswordResetController extends AbstractController
             $email = $request->request->get('email');
 
             if (!$email) {
-                $this->addFlash('error', 'Por favor ingrese su correo electrónico.');
+                $this->addFlash('error', 'flash.enter_email');
                 return $this->redirectToRoute('app_password_forgot');
             }
 
@@ -70,7 +70,7 @@ class PasswordResetController extends AbstractController
                 }
 
                 // Siempre mostrar el mismo mensaje por seguridad
-                $this->addFlash('success', 'Si el correo existe, recibirás instrucciones para restablecer tu contraseña.');
+                $this->addFlash('success', 'flash.password_reset_instructions_sent');
                 return $this->redirectToRoute('app_login');
             } catch (\Exception $e) {
                 $this->logger->error('Error al solicitar restablecimiento de contraseña', [
@@ -79,7 +79,7 @@ class PasswordResetController extends AbstractController
                     'timezone' => date_default_timezone_get()
                 ]);
 
-                $this->addFlash('error', 'Ocurrió un error. Por favor intenta nuevamente.');
+                $this->addFlash('error', 'flash.generic_error_try_again');
                 return $this->redirectToRoute('app_password_forgot');
             }
         }
@@ -100,7 +100,7 @@ class PasswordResetController extends AbstractController
                     'timezone' => date_default_timezone_get()
                 ]);
 
-                $this->addFlash('error', 'El enlace de restablecimiento es inválido o ha expirado.');
+                $this->addFlash('error', 'flash.reset_link_invalid_or_expired');
                 return $this->redirectToRoute('app_password_forgot');
             }
 
@@ -111,17 +111,17 @@ class PasswordResetController extends AbstractController
                 $passwordConfirm = $request->request->get('password_confirm');
 
                 if (!$password || !$passwordConfirm) {
-                    $this->addFlash('error', 'Por favor complete todos los campos.');
+                    $this->addFlash('error', 'flash.fill_required_fields');
                     return $this->redirectToRoute('app_password_reset', ['token' => $token]);
                 }
 
                 if ($password !== $passwordConfirm) {
-                    $this->addFlash('error', 'Las contraseñas no coinciden.');
+                    $this->addFlash('error', 'flash.passwords_do_not_match');
                     return $this->redirectToRoute('app_password_reset', ['token' => $token]);
                 }
 
                 if (!$this->passwordPolicy->isStrongPassword($password)) {
-                    $this->addFlash('error', 'La contraseña no cumple la política de seguridad. Debe tener al menos 12 caracteres, incluir mayúsculas, minúsculas, números y símbolos.');
+                    $this->addFlash('error', 'flash.password_policy_not_met');
                     return $this->redirectToRoute('app_password_reset', ['token' => $token]);
                 }
 
@@ -145,7 +145,7 @@ class PasswordResetController extends AbstractController
                     'timezone' => date_default_timezone_get()
                 ]);
 
-                $this->addFlash('success', 'Tu contraseña ha sido restablecida exitosamente. Ya puedes iniciar sesión.');
+                $this->addFlash('success', 'flash.password_reset_success');
                 return $this->redirectToRoute('app_login');
             }
 
@@ -160,7 +160,7 @@ class PasswordResetController extends AbstractController
                 'timezone' => date_default_timezone_get()
             ]);
 
-            $this->addFlash('error', 'Ocurrió un error. Por favor intenta nuevamente.');
+            $this->addFlash('error', 'flash.generic_error_try_again');
             return $this->redirectToRoute('app_password_forgot');
         }
     }
@@ -185,7 +185,7 @@ class PasswordResetController extends AbstractController
             ], UrlGeneratorInterface::ABSOLUTE_URL);
 
             $email = (new TemplatedEmail())
-                ->from(new Address('noreply@apusystem.com', 'APU System'))
+                ->from(new Address(getenv('MAILER_FROM_ADDRESS') ?: 'noreply@apusystem.com', getenv('MAILER_FROM_NAME') ?: 'APU System'))
                 ->to(new Address($user->getEmail(), $user->getFullName()))
                 ->subject('Restablecimiento de Contraseña - APU System')
                 ->htmlTemplate('emails/password_reset.html.twig')

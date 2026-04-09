@@ -1,22 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Verificación de email — Superadmin{% endblock %}
+{% block title %}{{ 'security.superadmin_verify.title'|trans }}{% endblock %}
 
 {% block body %}
   <div class="container py-4">
-    <h1>Verificación adicional para superadmin</h1>
-    <p>Se ha enviado un código temporal a tu correo. Ingresa el código para completar el inicio de sesión.</p>
+    <h1>{{ 'security.superadmin_verify.header'|trans }}</h1>
+    <p>{{ 'security.superadmin_verify.instruction'|trans }}</p>
 
     <form method="post">
       <div class="mb-3">
-        <label class="form-label">Código</label>
-        <input name="code" class="form-control" required />
+        <label class="form-label">{{ 'security.superadmin_verify.code_label'|trans }}</label>
+        <input name="code" class="form-control" required autocomplete="one-time-code" />
       </div>
-      <button class="btn btn-primary">Verificar</button>
+      <button class="btn btn-primary">{{ 'security.superadmin_verify.verify'|trans }}</button>
     </form>
 
-    {% if expires %}
-      <p class="mt-3"><small>El código expira: {{ expires }}</small></p>
+    {% if expires is not null %}
+      {# Use the date filter to obtain UNIX timestamps safely from strings or DateTime objects #}
+      {% set now_ts = "now"|date('U') %}
+      {% set expires_ts = expires|date('U') %}
+      {% set remaining = expires_ts - now_ts %}
+      {% if remaining > 0 %}
+        {% set minutes = (remaining / 60)|round(0, 'ceil') %}
+        <p class="mt-3"><small>{{ 'security.superadmin_verify.expires_in'|trans({'%minutes%': minutes, '%time%': expires|date('H:i')}) }}</small></p>
+      {% else %}
+        <p class="mt-3"><small>{{ 'security.superadmin_verify.expired'|trans }}</small></p>
+      {% endif %}
     {% endif %}
   </div>
 {% endblock %}

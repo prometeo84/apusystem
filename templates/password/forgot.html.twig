@@ -18,13 +18,13 @@
 
                         {% for message in app.flashes('error') %}
                             <div class="alert alert-danger">
-                                <i class="bi bi-exclamation-triangle-fill"></i> {{ message }}
+                                <i class="bi bi-exclamation-triangle-fill"></i> {{ message|trans }}
                             </div>
                         {% endfor %}
 
                         {% for message in app.flashes('success') %}
                             <div class="alert alert-success">
-                                <i class="bi bi-check-circle-fill"></i> {{ message }}
+                                <i class="bi bi-check-circle-fill"></i> {{ message|trans }}
                             </div>
                         {% endfor %}
 
@@ -42,9 +42,7 @@
                                     autofocus
                                     placeholder="tu-email@ejemplo.com"
                                 >
-                                <small class="form-text text-muted">
-                                    📧 Para pruebas usa: admin@demo.com, admin@abc.com o user@abc.com
-                                </small>
+                                <small class="form-text text-muted">{{ 'password.test_emails'|trans }}</small>
                             </div>
 
                             <div class="alert alert-info">

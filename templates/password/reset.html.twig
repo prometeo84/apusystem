@@ -18,7 +18,7 @@
 
                         {% for message in app.flashes('error') %}
                             <div class="alert alert-danger">
-                                <i class="bi bi-exclamation-triangle-fill"></i> {{ message }}
+                                <i class="bi bi-exclamation-triangle-fill"></i> {{ message|trans }}
                             </div>
                         {% endfor %}
 
@@ -43,7 +43,7 @@
                                         name="password"
                                         required
                                         minlength="8"
-                                        placeholder="Ingrese su nueva contraseña"
+                                        placeholder="{{ 'password.reset_description'|trans }}"
                                     >
                                     <button class="btn btn-outline-secondary" type="button" id="togglePassword">
                                         <i class="bi bi-eye" id="toggleIcon"></i>
@@ -63,7 +63,7 @@
                                         name="password_confirm"
                                         required
                                         minlength="8"
-                                        placeholder="Confirme su nueva contraseña"
+                                        placeholder="{{ 'password.confirm_new'|trans }}"
                                     >
                                     <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirm">
                                         <i class="bi bi-eye" id="toggleIcon2"></i>
@@ -79,7 +79,7 @@
 
                             <div class="text-center">
                                 <a href="{{ path('app_login') }}" class="text-decoration-none" style="color: var(--primary-color);">
-                                    <i class="bi bi-arrow-left"></i> Volver al Login
+                                    <i class="bi bi-arrow-left"></i> {{ 'password.back_to_login'|trans }}
                                 </a>
                             </div>
                         </form>

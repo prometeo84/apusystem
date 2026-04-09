@@ -11,14 +11,14 @@
 
             {% for message in app.flashes('error') %}
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="bi bi-exclamation-triangle"></i> {{ message }}
+                    <i class="bi bi-exclamation-triangle"></i> {{ message|trans }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             {% endfor %}
 
             {% for message in app.flashes('success') %}
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="bi bi-check-circle"></i> {{ message }}
+                    <i class="bi bi-check-circle"></i> {{ message|trans }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             {% endfor %}
@@ -39,12 +39,13 @@
                             </div>
                         </div>
 
-                        <div id="fileInfo" class="alert alert-info" style="display: none;">
-                            <strong>Archivo seleccionado:</strong>
+                        <div id="fileInfo" class="alert alert-info" style="display: none;"
+                             data-unknown-text="{{ 'revit.upload.unknown'|trans }}">
+                            <strong>{{ 'revit.upload.selected_file'|trans }}:</strong>
                             <ul class="mb-0 mt-2">
-                                <li>Nombre: <span id="fileName"></span></li>
-                                <li>Tamaño: <span id="fileSize"></span></li>
-                                <li>Tipo: <span id="fileType"></span></li>
+                                <li>{{ 'revit.label.name'|trans }}: <span id="fileName"></span></li>
+                                <li>{{ 'revit.label.size'|trans }}: <span id="fileSize"></span></li>
+                                <li>{{ 'revit.label.type'|trans }}: <span id="fileType"></span></li>
                             </ul>
                         </div>
 
@@ -62,7 +63,7 @@
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" data-uploading-text="{{ 'revit.upload.uploading'|trans }}">
                                 <i class="bi bi-cloud-upload"></i> {{ 'revit.upload_process'|trans }}
                             </button>
                             <a href="{{ path('app_revit_files') }}" class="btn btn-outline-secondary">
@@ -76,20 +77,20 @@
             <div class="mt-4">
                 <div class="card">
                     <div class="card-header">
-                        <i class="bi bi-lightbulb"></i> ¿Cómo funciona?
+                        <i class="bi bi-lightbulb"></i> {{ 'revit.how.title'|trans }}
                     </div>
                     <div class="card-body">
                         <ol>
-                            <li>Exporte los datos desde Revit en formato IFC o JSON</li>
-                            <li>Suba el archivo usando este formulario</li>
-                            <li>El sistema procesará automáticamente:
+                            <li>{{ 'revit.how.step1'|trans }}</li>
+                            <li>{{ 'revit.how.step2'|trans }}</li>
+                            <li>{{ 'revit.how.step3'|trans }}
                                 <ul>
-                                    <li>Extracción de elementos (muros, losas, columnas)</li>
-                                    <li>Cálculo de cantidades y volúmenes</li>
-                                    <li>Generación de APUs basados en los datos</li>
+                                    <li>{{ 'revit.how.step3.item1'|trans }}</li>
+                                    <li>{{ 'revit.how.step3.item2'|trans }}</li>
+                                    <li>{{ 'revit.how.step3.item3'|trans }}</li>
                                 </ul>
                             </li>
-                            <li>Revise y ajuste los APUs generados</li>
+                            <li>{{ 'revit.how.step4'|trans }}</li>
                         </ol>
                     </div>
                 </div>
@@ -99,14 +100,15 @@
 </div>
 
 <script>
-document.getElementById('revit_file').addEventListener('change', function(e) {
+        document.getElementById('revit_file').addEventListener('change', function(e) {
     const file = e.target.files[0];
     const fileInfo = document.getElementById('fileInfo');
 
     if (file) {
         document.getElementById('fileName').textContent = file.name;
         document.getElementById('fileSize').textContent = formatFileSize(file.size);
-        document.getElementById('fileType').textContent = file.type || 'Desconocido';
+        const unknownText = fileInfo ? fileInfo.dataset.unknownText || 'Unknown' : 'Unknown';
+        document.getElementById('fileType').textContent = file.type || unknownText;
         fileInfo.style.display = 'block';
     } else {
         fileInfo.style.display = 'none';
@@ -116,7 +118,8 @@ document.getElementById('revit_file').addEventListener('change', function(e) {
 document.getElementById('uploadForm').addEventListener('submit', function(e) {
     const submitBtn = document.getElementById('submitBtn');
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Subiendo...';
+    const uploadingText = submitBtn.dataset.uploadingText || 'Uploading...';
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> ' + uploadingText;
 });
 
 function formatFileSize(bytes) {

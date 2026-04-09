@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+      .header { background-color: {{ primary_color|e('html') }}; color: white; padding: 16px; text-align: center; }
+      .container { font-family: Arial, Helvetica, sans-serif; padding: 24px; }
+      .card { border-radius: 8px; padding: 20px; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.08); text-align:center }
+      .code { font-size: 36px; font-weight: 700; color: {{ secondary_color|e('html') }}; letter-spacing: 2px; margin: 16px 0; }
+      .muted { color: #666; font-size: 14px; }
+      .button { display:inline-block; padding: 10px 18px; background: {{ primary_color|e('html') }}; color: #fff; border-radius: 6px; text-decoration:none; margin-top:12px }
+      .footer { font-size:12px; color:#999; margin-top:20px; text-align:center }
+    </style>
+  </head>
+  <body style="background:#f6f8fb; margin:0">
+    <div class="header">
+      <strong>APU System</strong>
+    </div>
+    <div class="container">
+      <div class="card">
+        <h2>{{ 'email.superadmin_code.title'|trans }}</h2>
+        <p class="muted">{{ 'email.superadmin_code.greeting'|trans({'%name%': user.getFullName()}) }}</p>
+        <p class="muted">{{ 'email.superadmin_code.instruction'|trans }}</p>
+        <div class="code">{{ code }}</div>
+        {% if expires is not null %}
+        {% set mins = ((expires.timestamp - "now"|date('U')) / 60)|round(0, 'ceil') %}
+        <p class="muted">{{ 'email.superadmin_code.expires_in'|trans({'%mins%': mins, '%datetime%': expires|date('d/m/Y H:i')}) }}</p>
+        {% endif %}
+        <p class="muted">{{ 'email.superadmin_code.no_request_notice'|trans }}</p>
+      </div>
+      <div class="footer">APU System · Seguridad</div>
+    </div>
+  </body>
+</html>

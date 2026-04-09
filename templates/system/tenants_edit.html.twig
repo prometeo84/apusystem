@@ -14,7 +14,7 @@
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
                     <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
-                        {{ message }}
+                        {{ message|trans }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 {% endfor %}
@@ -45,9 +45,9 @@
                                     <div class="col-md-4 mb-3">
                                         <label for="plan" class="form-label">{{ 'system.plan'|trans }} *</label>
                                         <select class="form-select" id="plan" name="plan" required>
-                                            <option value="basic" {% if tenant.plan == 'basic' %}selected{% endif %}>Basic</option>
-                                            <option value="professional" {% if tenant.plan == 'professional' %}selected{% endif %}>Professional</option>
-                                            <option value="enterprise" {% if tenant.plan == 'enterprise' %}selected{% endif %}>Enterprise</option>
+                                            <option value="basic" {% if tenant.plan == 'basic' %}selected{% endif %}>{{ 'system.plan_basic'|trans }}</option>
+                                            <option value="professional" {% if tenant.plan == 'professional' %}selected{% endif %}>{{ 'system.plan_professional'|trans }}</option>
+                                            <option value="enterprise" {% if tenant.plan == 'enterprise' %}selected{% endif %}>{{ 'system.plan_enterprise'|trans }}</option>
                                         </select>
                                     </div>
 
@@ -75,14 +75,14 @@
                                         </select>
                                         <div class="form-text">
                                             {% if tenant.planExpiresAt %}
-                                                Vence: {{ tenant.planExpiresAt|date('d/m/Y') }}
+                                                {{ 'system.expires_label'|trans }} {{ tenant.planExpiresAt|date('d/m/Y') }}
                                                 {% if tenant.isPlanExpired %}
-                                                    <span class="text-danger">(EXPIRADO)</span>
+                                                    <span class="text-danger">({{ 'system.expired'|trans }})</span>
                                                 {% else %}
-                                                    ({{ tenant.daysUntilExpiration }} días)
+                                                    ({{ tenant.daysUntilExpiration }} {{ 'system.days'|trans }})
                                                 {% endif %}
                                             {% else %}
-                                                Sin límite de tiempo
+                                                {{ 'system.unlimited_time'|trans }}
                                             {% endif %}
                                         </div>
                                     </div>

@@ -298,14 +298,14 @@ class SystemController extends AbstractController
             $planMonths = (int)$request->request->get('plan_months');
 
             if (!$name || !$slug || !$plan) {
-                $this->addFlash('error', 'Por favor complete todos los campos obligatorios.');
+                $this->addFlash('error', 'flash.fill_required_fields');
                 return $this->redirectToRoute('app_system_tenants_create');
             }
 
             // Verificar slug único
             $existing = $this->em->getRepository(\App\Entity\Tenant::class)->findOneBy(['slug' => $slug]);
             if ($existing) {
-                $this->addFlash('error', 'El subdominio ya está en uso.');
+                $this->addFlash('error', 'flash.subdomain_in_use');
                 return $this->redirectToRoute('app_system_tenants_create');
             }
 
@@ -325,7 +325,7 @@ class SystemController extends AbstractController
             $this->em->persist($tenant);
             $this->em->flush();
 
-            $this->addFlash('success', "Empresa '{$name}' creada exitosamente.");
+            $this->addFlash('success', $this->container->get('translator')->trans('flash.company_created', ['%name%' => $name]));
             return $this->redirectToRoute('app_system_tenants');
         }
 
@@ -338,7 +338,7 @@ class SystemController extends AbstractController
         $tenant = $this->em->getRepository(\App\Entity\Tenant::class)->find($id);
 
         if (!$tenant) {
-            $this->addFlash('error', 'Empresa no encontrada.');
+            $this->addFlash('error', 'flash.company_not_found');
             return $this->redirectToRoute('app_system_tenants');
         }
 
@@ -364,7 +364,7 @@ class SystemController extends AbstractController
 
             $this->em->flush();
 
-            $this->addFlash('success', "Empresa '{$name}' actualizada exitosamente.");
+            $this->addFlash('success', $this->container->get('translator')->trans('flash.company_updated', ['%name%' => $name]));
             return $this->redirectToRoute('app_system_tenants');
         }
 

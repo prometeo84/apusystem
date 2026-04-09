@@ -148,8 +148,9 @@ cd apu-system
 ### 2️⃣ Con Docker (Recomendado)
 
 ```bash
-# Copiar configuración de ejemplo
-cp .env.example .env
+# Copiar plantilla de variables de entorno para desarrollo
+# Edita .env.dev con valores reales (no comitear)
+cp .env.dist .env.dev
 
 # Iniciar contenedores
 docker-compose up -d
@@ -192,9 +193,12 @@ php -S localhost:8000 -t public/
 
 ## ⚙️ Configuración
 
-### Variables de Entorno (.env)
+### Variables de Entorno (usar `.env.dev` en desarrollo y `.env.prod` en producción)
 
 ```bash
+# Nota: copia `.env.dist` a `.env.dev` para desarrollo y a `.env.prod` en el servidor,
+# o exporta variables de entorno en el host/servicio de despliegue.
+
 # Ambiente
 APP_ENV=prod
 APP_SECRET=cambiar_por_clave_secreta_aleatoria
@@ -394,6 +398,27 @@ vendor/bin/phpstan analyse
 - [Arquitectura de Roles](docs/ROLES_ARCHITECTURE.md) - Explicación detallada de SUPER_ADMIN, ADMIN y USER
 - [Sistema Multi-Tenant](docs/MULTI_TENANT.md) - Por qué NO usamos subdominios
 - [API REST](docs/API.md) - Documentación de endpoints
+
+## 🧾 Environment variables (ejemplo `.env.dist`)
+
+Copia `.env.dist` a `.env.dev` para desarrollo y completa los valores reales. No comitees secretos (usar `.env.prod` o variables de entorno en producción).
+
+Ejemplo mínimo (ver `.env.dist` en la raíz del proyecto):
+
+```bash
+APP_ENV=dev
+APP_DEBUG=1
+APP_SECRET=change_me_replace_with_strong_random
+DATABASE_URL=mysql://db_user:db_pass@127.0.0.1:3306/db_name
+MAILER_DSN=smtp://localhost:1025
+MAILER_FROM_ADDRESS=noreply@example.com
+MAILER_FROM_NAME="APU System"
+DEFAULT_URI=http://localhost
+SESSION_LIFETIME=3600
+```
+
+Para producción, provee valores desde el entorno del host o el gestor de secretos de tu plataforma (no subir `.env.prod` al repositorio).
+
 - [Seguridad](docs/SECURITY.md) - Guía de seguridad
 
 ---

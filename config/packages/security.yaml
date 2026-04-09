@@ -36,6 +36,7 @@ security:
     access_control:
         - { path: ^/favicon.ico$, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/set-locale, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/2fa-setup, roles: IS_AUTHENTICATED_REMEMBERED }
         # Allow public access to uploaded avatars so they can be served by Symfony

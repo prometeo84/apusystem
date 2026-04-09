@@ -30,8 +30,12 @@ class LocaleSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
 
         // Si el locale ya está en la sesión, usarlo
-        if ($locale = $request->getSession()->get('_locale')) {
-            $request->setLocale($locale);
+        $sessionLocale = $request->getSession()->get('_locale');
+        if ($sessionLocale) {
+            $request->setLocale($sessionLocale);
+
+            // Removed ad-hoc debug logging for session locale read.
+
             return;
         }
 
@@ -47,6 +51,8 @@ class LocaleSubscriber implements EventSubscriberInterface
 
         // Por defecto, usar español
         $request->setLocale($this->defaultLocale);
+
+        // Removed ad-hoc debug logging for default locale fallback.
     }
 
     public static function getSubscribedEvents(): array

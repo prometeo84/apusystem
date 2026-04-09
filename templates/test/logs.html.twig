@@ -12,7 +12,7 @@
         <div class="container-fluid p-4 content-wrapper">
             {% for message in app.flashes('success') %}
                 <div class="alert alert-success alert-dismissible fade show">
-                    <i class="bi bi-check-circle-fill"></i> {{ message }}
+                    <i class="bi bi-check-circle-fill"></i> {{ message|trans }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             {% endfor %}

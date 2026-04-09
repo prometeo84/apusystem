@@ -15,7 +15,9 @@
             "approve": true,
             "matchCommandLine": true
         },
-        "exit": true
+        "exit": true,
+        "command": true,
+        "pre-commit": true
     },
     "intelephense.environment.includePaths": ["vendor", "."],
     "intelephense.stubs": [

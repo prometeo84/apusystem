@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Detalles - {{ file.originalFilename }}{% endblock %}
+{% block title %}{{ 'revit.details'|trans }} - {{ file.originalFilename }}{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ path('app_revit_files') }}">Archivos Revit</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_revit_files') }}">{{ 'revit.files'|trans }}</a></li>
             <li class="breadcrumb-item active">{{ file.originalFilename }}</li>
         </ol>
     </nav>
@@ -17,7 +17,7 @@
             {% if file.status == 'error' %}
                 <form method="POST" action="{{ path('app_revit_file_reprocess', {id: file.id}) }}" style="display: inline;">
                     <button type="submit" class="btn btn-warning">
-                        <i class="bi bi-arrow-clockwise"></i> Reprocesar
+                        <i class="bi bi-arrow-clockwise"></i> {{ 'revit.reprocess'|trans }}
                     </button>
                 </form>
             {% endif %}
@@ -26,7 +26,7 @@
                   onsubmit="return confirm('{{ 'revit.confirm_delete'|trans }}')"
                   style="display: inline;">
                 <button type="submit" class="btn btn-danger">
-                    <i class="bi bi-trash"></i> Eliminar
+                    <i class="bi bi-trash"></i> {{ 'revit.delete'|trans }}
                 </button>
             </form>
         </div>
@@ -34,14 +34,14 @@
 
     {% for message in app.flashes('error') %}
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle"></i> {{ message }}
+            <i class="bi bi-exclamation-triangle"></i> {{ message|trans }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     {% endfor %}
 
     {% for message in app.flashes('success') %}
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle"></i> {{ message }}
+            <i class="bi bi-check-circle"></i> {{ message|trans }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     {% endfor %}
@@ -54,7 +54,7 @@
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <strong>Tipo:</strong>
+                        <strong>{{ 'revit.label.type'|trans }}:</strong>
                         <span class="badge bg-secondary float-end">{{ file.fileType|upper }}</span>
                     </li>
                     <li class="list-group-item">
@@ -62,35 +62,35 @@
                         <span class="float-end">{{ file.fileSizeFormatted }}</span>
                     </li>
                     <li class="list-group-item">
-                        <strong>Estado:</strong>
+                        <strong>{{ 'revit.label.status'|trans }}:</strong>
                         <span class="float-end">
                             {% if file.status == 'completed' %}
-                                <span class="badge bg-success">Completado</span>
+                                <span class="badge bg-success">{{ 'revit.status.completed'|trans }}</span>
                             {% elseif file.status == 'processing' %}
-                                <span class="badge bg-warning text-dark">Procesando</span>
+                                <span class="badge bg-warning text-dark">{{ 'revit.status.processing'|trans }}</span>
                             {% elseif file.status == 'pending' %}
-                                <span class="badge bg-info text-dark">Pendiente</span>
+                                <span class="badge bg-info text-dark">{{ 'revit.status.pending'|trans }}</span>
                             {% elseif file.status == 'error' %}
-                                <span class="badge bg-danger">Error</span>
+                                <span class="badge bg-danger">{{ 'revit.status.error'|trans }}</span>
                             {% endif %}
                         </span>
                     </li>
                     <li class="list-group-item">
-                        <strong>Hash (SHA-256):</strong>
+                        <strong>{{ 'revit.label.hash'|trans }}:</strong>
                         <br>
                         <code class="small">{{ file.fileHash }}</code>
                     </li>
                     <li class="list-group-item">
-                        <strong>Subido por:</strong>
+                        <strong>{{ 'revit.label.uploaded_by'|trans }}:</strong>
                         <span class="float-end">{{ file.uploadedBy.username }}</span>
                     </li>
                     <li class="list-group-item">
-                        <strong>Fecha de subida:</strong>
+                        <strong>{{ 'revit.label.uploaded_at'|trans }}:</strong>
                         <span class="float-end">{{ file.uploadedAt|date('d/m/Y H:i:s') }}</span>
                     </li>
                     {% if file.processedAt %}
                         <li class="list-group-item">
-                            <strong>Procesado:</strong>
+                            <strong>{{ 'revit.label.processed_at'|trans }}:</strong>
                             <span class="float-end">{{ file.processedAt|date('d/m/Y H:i:s') }}</span>
                         </li>
                     {% endif %}
@@ -100,17 +100,17 @@
             {% if file.metadata %}
                 <div class="card mb-3">
                     <div class="card-header">
-                        <i class="bi bi-database"></i> Metadatos
+                        <i class="bi bi-database"></i> {{ 'revit.metadata'|trans }}
                     </div>
                     <div class="card-body">
-                        {% if file.metadata.project_name is defined %}
-                            <p><strong>Proyecto:</strong> {{ file.metadata.project_name }}</p>
-                        {% endif %}
+                                {% if file.metadata.project_name is defined %}
+                                    <p><strong>{{ 'revit.label.project'|trans }}:</strong> {{ file.metadata.project_name }}</p>
+                                {% endif %}
                         {% if file.metadata.version is defined %}
                             <p><strong>{{ 'revit.label.version'|trans }}:</strong> {{ file.metadata.version }}</p>
                         {% endif %}
                         {% if file.metadata.elements_count is defined %}
-                            <p><strong>Elementos:</strong> {{ file.metadata.elements_count }}</p>
+                            <p><strong>{{ 'revit.label.elements'|trans }}:</strong> {{ file.metadata.elements_count }}</p>
                         {% endif %}
                         {% if file.metadata.categories is defined %}
                             <p><strong>{{ 'revit.label.categories'|trans }}:</strong></p>
@@ -128,7 +128,7 @@
         <div class="col-md-8">
             {% if file.status == 'error' and file.errorMessage %}
                 <div class="alert alert-danger">
-                    <h5><i class="bi bi-exclamation-triangle"></i> Error de Procesamiento</h5>
+                    <h5><i class="bi bi-exclamation-triangle"></i> {{ 'revit.processing_error'|trans }}</h5>
                     <p class="mb-0">{{ file.errorMessage }}</p>
                 </div>
             {% endif %}
@@ -136,7 +136,7 @@
             {% if file.processingResult %}
                 <div class="card mb-3">
                     <div class="card-header">
-                        <i class="bi bi-clipboard-check"></i> Resultado del Procesamiento
+                        <i class="bi bi-clipboard-check"></i> {{ 'revit.processing_result'|trans }}
                     </div>
                     <div class="card-body">
                         {% if file.processingResult.created is defined %}
@@ -145,7 +145,7 @@
                                     <div class="card bg-success text-white">
                                         <div class="card-body">
                                             <h3>{{ file.processingResult.created }}</h3>
-                                            <p class="mb-0">APUs Creados</p>
+                                            <p class="mb-0">{{ 'revit.processing.created'|trans }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -153,7 +153,7 @@
                                     <div class="card bg-warning text-dark">
                                         <div class="card-body">
                                             <h3>{{ file.processingResult.skipped|default(0) }}</h3>
-                                            <p class="mb-0">Elementos Omitidos</p>
+                                            <p class="mb-0">{{ 'revit.processing.skipped'|trans }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -161,7 +161,7 @@
                                     <div class="card bg-info text-white">
                                         <div class="card-body">
                                             <h3>{{ file.processingResult.total|default(0) }}</h3>
-                                            <p class="mb-0">Total Procesados</p>
+                                            <p class="mb-0">{{ 'revit.processing.total'|trans }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -169,16 +169,16 @@
                         {% endif %}
 
                         {% if file.processingResult.elements is defined %}
-                            <h5>Elementos Procesados</h5>
+                            <h5>{{ 'revit.processed_elements'|trans }}</h5>
                             <div class="table-responsive">
                                 <table class="table table-sm">
                                     <thead>
                                         <tr>
-                                            <th>Nombre</th>
-                                            <th>{{ 'revit.table.category'|trans }}</th>
-                                            <th>Cantidad</th>
-                                            <th>Unidad</th>
-                                            <th>Estado</th>
+                                                    <th>{{ 'revit.table.name'|trans }}</th>
+                                                    <th>{{ 'revit.table.category'|trans }}</th>
+                                                    <th>{{ 'revit.table.quantity'|trans }}</th>
+                                                    <th>{{ 'revit.table.unit'|trans }}</th>
+                                                    <th>{{ 'revit.table.status'|trans }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -190,9 +190,9 @@
                                                 <td>{{ element.unit|default('N/A') }}</td>
                                                 <td>
                                                     {% if element.created %}
-                                                        <span class="badge bg-success">Creado</span>
+                                                        <span class="badge bg-success">{{ 'revit.table.created'|trans }}</span>
                                                     {% else %}
-                                                        <span class="badge bg-warning text-dark">Omitido</span>
+                                                        <span class="badge bg-warning text-dark">{{ 'revit.table.skipped'|trans }}</span>
                                                     {% endif %}
                                                 </td>
                                             </tr>
@@ -202,7 +202,7 @@
                             </div>
                             {% if file.processingResult.elements|length > 50 %}
                                 <p class="text-muted small">
-                                    Mostrando 50 de {{ file.processingResult.elements|length }} elementos
+                                    {{ 'revit.showing'|trans({'%shown%': 50, '%total%': file.processingResult.elements|length}) }}
                                 </p>
                             {% endif %}
                         {% endif %}
@@ -229,9 +229,9 @@
                     <i class="bi bi-code-square"></i> {{ 'revit.info_technical'|trans }}
                 </div>
                 <div class="card-body">
-                    <p><strong>Nombre almacenado:</strong> <code>{{ file.storedFilename }}</code></p>
-                    <p><strong>Ruta:</strong> <code>{{ file.filePath }}</code></p>
-                    <p class="mb-0"><strong>ID del archivo:</strong> <code>{{ file.id }}</code></p>
+                    <p><strong>{{ 'revit.label.stored_filename'|trans }}:</strong> <code>{{ file.storedFilename }}</code></p>
+                    <p><strong>{{ 'revit.label.path'|trans }}:</strong> <code>{{ file.filePath }}</code></p>
+                    <p class="mb-0"><strong>{{ 'revit.label.file_id'|trans }}:</strong> <code>{{ file.id }}</code></p>
                 </div>
             </div>
         </div>

@@ -107,7 +107,7 @@ class AdminController extends AbstractController
 
             // Validar campos
             if (!$email || !$username || !$firstName || !$lastName || !$password) {
-                $this->addFlash('error', 'Todos los campos son obligatorios.');
+                $this->addFlash('error', 'flash.all_fields_required');
                 return $this->redirectToRoute('app_admin_users_create');
             }
 
@@ -116,7 +116,7 @@ class AdminController extends AbstractController
                 ->findOneBy(['tenant' => $tenant, 'email' => $email]);
 
             if ($existingUser) {
-                $this->addFlash('error', 'Ya existe un usuario con ese correo electrónico.');
+                $this->addFlash('error', 'flash.email_exists');
                 return $this->redirectToRoute('app_admin_users_create');
             }
 
@@ -140,7 +140,7 @@ class AdminController extends AbstractController
                 'new_user_email' => $newUser->getEmail()
             ]);
 
-            $this->addFlash('success', 'Usuario creado exitosamente.');
+            $this->addFlash('success', 'flash.user_created');
             return $this->redirectToRoute('app_admin_users');
         }
 
@@ -180,7 +180,7 @@ class AdminController extends AbstractController
                 'edited_user_email' => $userToEdit->getEmail()
             ]);
 
-            $this->addFlash('success', 'Usuario actualizado exitosamente.');
+            $this->addFlash('success', 'flash.user_updated');
             return $this->redirectToRoute('app_admin_users');
         }
 
@@ -204,7 +204,7 @@ class AdminController extends AbstractController
         }
 
         if ($userToToggle->getId() === $currentUser->getId()) {
-            $this->addFlash('error', 'No puedes desactivar tu propia cuenta.');
+            $this->addFlash('error', 'flash.cannot_deactivate_self');
             return $this->redirectToRoute('app_admin_users');
         }
 
@@ -212,7 +212,7 @@ class AdminController extends AbstractController
         $this->em->flush();
 
         $action = $userToToggle->isActive() ? 'activado' : 'desactivado';
-        $this->addFlash('success', "Usuario {$action} exitosamente.");
+        $this->addFlash('success', $this->container->get('translator')->trans('flash.user_toggled', ['%action%' => $action]));
 
         return $this->redirectToRoute('app_admin_users');
     }
@@ -270,7 +270,7 @@ class AdminController extends AbstractController
 
             $this->em->flush();
 
-            $this->addFlash('success', 'Configuración del tenant actualizada.');
+            $this->addFlash('success', 'flash.tenant_settings_updated');
             return $this->redirectToRoute('app_admin_tenant', ['tenant_id' => $tenant->getId()]);
         }
 

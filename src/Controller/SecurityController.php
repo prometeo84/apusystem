@@ -7,6 +7,7 @@ use App\Entity\LoginSession;
 use App\Service\SecurityLogger;
 use App\Service\RateLimitingService;
 use App\Service\SessionAnomalyDetector;
+use App\Service\TwoFactorAuthService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,8 @@ class SecurityController extends AbstractController
         private EntityManagerInterface $em,
         private SecurityLogger $securityLogger,
         private RateLimitingService $rateLimiting,
-        private UserPasswordHasherInterface $passwordHasher
+        private UserPasswordHasherInterface $passwordHasher,
+        private TwoFactorAuthService $twoFactorService
     ) {}
 
     #[Route('/login', name: 'app_login')]
@@ -41,7 +43,7 @@ class SecurityController extends AbstractController
         // Verificar rate limiting por IP
         $ipAddress = $request->getClientIp();
         if (!$this->rateLimiting->checkLoginRateLimit($ipAddress)) {
-            $this->addFlash('error', 'Demasiados intentos de inicio de sesión. Por favor, intente más tarde.');
+            $this->addFlash('error', 'auth.too_many_attempts');
         }
 
         return $this->render('security/login.html.twig', [
@@ -80,9 +82,8 @@ class SecurityController extends AbstractController
         if ($request->isMethod('POST')) {
             $code = $request->request->get('code');
 
-            // Verificar el código TOTP usando el servicio existente
-            $twofaService = $this->container->get('App\\Service\\TwoFactorAuthService');
-            if ($twofaService->verifyTotpCode($user->getTotpSecret() ?? '', $code)) {
+            // Verificar el código TOTP usando el servicio inyectado
+            if ($this->twoFactorService->verifyTotpCode($user->getTotpSecret() ?? '', $code)) {
                 $request->getSession()->set('2fa_verified', true);
                 $this->securityLogger->log2FASuccess($user, 'totp');
 
@@ -95,7 +96,7 @@ class SecurityController extends AbstractController
             }
 
             $this->securityLogger->log2FAFailed($user, 'totp', 'Invalid code');
-            $this->addFlash('error', 'Código 2FA inválido');
+            $this->addFlash('error', 'flash.2fa_invalid');
         }
 
         return $this->render('security/2fa_verify.html.twig', [
@@ -115,13 +116,26 @@ class SecurityController extends AbstractController
         $hash = $session->get('superadmin_email_code_hash');
         $expires = $session->get('superadmin_email_expires_at');
 
+        // Convertir string ISO a DateTime para la plantilla y calcular tiempo restante
+        $expiresAt = null;
+        if ($expires) {
+            try {
+                $expiresAt = new \DateTimeImmutable($expires);
+            } catch (\Throwable $_) {
+                $expiresAt = null;
+            }
+        }
+
         if (!$hash) {
             return $this->redirectToRoute('app_dashboard');
         }
 
         if ($request->isMethod('POST')) {
             $code = $request->request->get('code');
-            if ($code && password_verify((string)$code, $hash)) {
+
+            $ok = $code && $hash && password_verify((string)$code, $hash);
+
+            if ($ok) {
                 $session->set('superadmin_email_verified', true);
                 // limpiar datos sensibles
                 $session->remove('superadmin_email_code_hash');
@@ -138,11 +152,11 @@ class SecurityController extends AbstractController
                 return $this->redirectToRoute('app_2fa_verify');
             }
 
-            $this->addFlash('error', 'Código inválido o expirado');
+            $this->addFlash('error', 'flash.code_invalid_or_expired');
         }
 
         return $this->render('security/superadmin_verify_email.html.twig', [
-            'expires' => $expires
+            'expires' => $expiresAt,
         ]);
     }
 

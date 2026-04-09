@@ -20,7 +20,7 @@
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
                     <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
-                        {{ message }}
+                        {{ message|trans }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 {% endfor %}
@@ -50,27 +50,27 @@
                                 <div class="mb-3">
                                     <label for="timezone" class="form-label">{{ 'preferences.timezone'|trans }}</label>
                                     <select name="timezone" id="timezone" class="form-select" required>
-                                        <optgroup label="América">
-                                            <option value="America/Guayaquil" {% if user.timezone == 'America/Guayaquil' %}selected{% endif %}>Ecuador (UTC-5)</option>
-                                            <option value="America/New_York" {% if user.timezone == 'America/New_York' %}selected{% endif %}>Nueva York (UTC-5/-4)</option>
-                                            <option value="America/Chicago" {% if user.timezone == 'America/Chicago' %}selected{% endif %}>Chicago (UTC-6/-5)</option>
-                                            <option value="America/Los_Angeles" {% if user.timezone == 'America/Los_Angeles' %}selected{% endif %}>Los Ángeles (UTC-8/-7)</option>
-                                            <option value="America/Mexico_City" {% if user.timezone == 'America/Mexico_City' %}selected{% endif %}>Ciudad de México (UTC-6)</option>
-                                            <option value="America/Bogota" {% if user.timezone == 'America/Bogota' %}selected{% endif %}>Bogotá (UTC-5)</option>
-                                            <option value="America/Lima" {% if user.timezone == 'America/Lima' %}selected{% endif %}>Lima (UTC-5)</option>
-                                            <option value="America/Santiago" {% if user.timezone == 'America/Santiago' %}selected{% endif %}>Santiago (UTC-4/-3)</option>
-                                            <option value="America/Buenos_Aires" {% if user.timezone == 'America/Buenos_Aires' %}selected{% endif %}>Buenos Aires (UTC-3)</option>
+                                        <optgroup label="{{ 'timezone.region.America'|trans }}">
+                                            <option value="America/Guayaquil" {% if user.timezone == 'America/Guayaquil' %}selected{% endif %}>{{ 'timezone.America_Guayaquil'|trans }}</option>
+                                            <option value="America/New_York" {% if user.timezone == 'America/New_York' %}selected{% endif %}>{{ 'timezone.America_New_York'|trans }}</option>
+                                            <option value="America/Chicago" {% if user.timezone == 'America/Chicago' %}selected{% endif %}>{{ 'timezone.America_Chicago'|trans }}</option>
+                                            <option value="America/Los_Angeles" {% if user.timezone == 'America/Los_Angeles' %}selected{% endif %}>{{ 'timezone.America_Los_Angeles'|trans }}</option>
+                                            <option value="America/Mexico_City" {% if user.timezone == 'America/Mexico_City' %}selected{% endif %}>{{ 'timezone.America_Mexico_City'|trans }}</option>
+                                            <option value="America/Bogota" {% if user.timezone == 'America/Bogota' %}selected{% endif %}>{{ 'timezone.America_Bogota'|trans }}</option>
+                                            <option value="America/Lima" {% if user.timezone == 'America/Lima' %}selected{% endif %}>{{ 'timezone.America_Lima'|trans }}</option>
+                                            <option value="America/Santiago" {% if user.timezone == 'America/Santiago' %}selected{% endif %}>{{ 'timezone.America_Santiago'|trans }}</option>
+                                            <option value="America/Buenos_Aires" {% if user.timezone == 'America/Buenos_Aires' %}selected{% endif %}>{{ 'timezone.America_Buenos_Aires'|trans }}</option>
                                         </optgroup>
-                                        <optgroup label="Europa">
-                                            <option value="Europe/London" {% if user.timezone == 'Europe/London' %}selected{% endif %}>Londres (UTC+0/+1)</option>
-                                            <option value="Europe/Paris" {% if user.timezone == 'Europe/Paris' %}selected{% endif %}>París (UTC+1/+2)</option>
-                                            <option value="Europe/Madrid" {% if user.timezone == 'Europe/Madrid' %}selected{% endif %}>Madrid (UTC+1/+2)</option>
-                                            <option value="Europe/Berlin" {% if user.timezone == 'Europe/Berlin' %}selected{% endif %}>Berlín (UTC+1/+2)</option>
+                                        <optgroup label="{{ 'timezone.region.Europe'|trans }}">
+                                            <option value="Europe/London" {% if user.timezone == 'Europe/London' %}selected{% endif %}>{{ 'timezone.Europe_London'|trans }}</option>
+                                            <option value="Europe/Paris" {% if user.timezone == 'Europe/Paris' %}selected{% endif %}>{{ 'timezone.Europe_Paris'|trans }}</option>
+                                            <option value="Europe/Madrid" {% if user.timezone == 'Europe/Madrid' %}selected{% endif %}>{{ 'timezone.Europe_Madrid'|trans }}</option>
+                                            <option value="Europe/Berlin" {% if user.timezone == 'Europe/Berlin' %}selected{% endif %}>{{ 'timezone.Europe_Berlin'|trans }}</option>
                                         </optgroup>
-                                        <optgroup label="Asia">
-                                            <option value="Asia/Dubai" {% if user.timezone == 'Asia/Dubai' %}selected{% endif %}>Dubái (UTC+4)</option>
-                                            <option value="Asia/Shanghai" {% if user.timezone == 'Asia/Shanghai' %}selected{% endif %}>Shanghai (UTC+8)</option>
-                                            <option value="Asia/Tokyo" {% if user.timezone == 'Asia/Tokyo' %}selected{% endif %}>Tokio (UTC+9)</option>
+                                        <optgroup label="{{ 'timezone.region.Asia'|trans }}">
+                                            <option value="Asia/Dubai" {% if user.timezone == 'Asia/Dubai' %}selected{% endif %}>{{ 'timezone.Asia_Dubai'|trans }}</option>
+                                            <option value="Asia/Shanghai" {% if user.timezone == 'Asia/Shanghai' %}selected{% endif %}>{{ 'timezone.Asia_Shanghai'|trans }}</option>
+                                            <option value="Asia/Tokyo" {% if user.timezone == 'Asia/Tokyo' %}selected{% endif %}>{{ 'timezone.Asia_Tokyo'|trans }}</option>
                                         </optgroup>
                                     </select>
                                     <div class="form-text">

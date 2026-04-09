@@ -11,13 +11,13 @@
 
         <div class="container-fluid p-4 content-wrapper">
             {% if is_granted('ROLE_SUPER_ADMIN') and allTenants is defined %}
-                <form method="get" class="mb-3">
+                        <form method="get" class="mb-3">
                     <div class="d-flex align-items-center gap-2">
-                        <label class="form-label mb-0">Seleccionar Empresa:</label>
+                        <label class="form-label mb-0">{{ 'admin.select_company_label'|trans }}</label>
                         <select name="tenant_id" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
                             {% for t in allTenants %}
-                                <option value="{{ t.id }}" {{ t.id == tenant.id ? 'selected' : '' }}>
-                                    {{ t.name }} - {{ t.isActive ? 'Activo' : 'Inactivo' }}
+                                    <option value="{{ t.id }}" {{ t.id == tenant.id ? 'selected' : '' }}>
+                                    {{ t.name }} - {{ t.isActive ? ('system.status_active'|trans) : ('system.status_inactive'|trans) }}
                                 </option>
                             {% endfor %}
                         </select>
@@ -26,7 +26,7 @@
             {% endif %}
             {% for message in app.flashes('success') %}
                 <div class="alert alert-success alert-dismissible fade show">
-                    <i class="bi bi-check-circle-fill"></i> {{ message }}
+                    <i class="bi bi-check-circle-fill"></i> {{ message|trans }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             {% endfor %}
@@ -41,7 +41,7 @@
                             <form method="post" action="{{ path('app_admin_tenant') }}">
                                 <input type="hidden" name="tenant_id" value="{{ tenant.id }}">
                                 <div class="mb-3">
-                                    <label class="form-label">Nombre Comercial</label>
+                                    <label class="form-label">{{ 'system.commercial_name'|trans }}</label>
                                     <input type="text" name="name" class="form-control"
                                            value="{{ tenant.name }}" required>
                                 </div>
@@ -60,7 +60,7 @@
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Teléfono</label>
+                                        <label class="form-label">{{ 'admin.phone'|trans }}</label>
                                         <input type="tel" name="phone" class="form-control" value="">
                                     </div>
                                     <div class="col-md-6 mb-3">
@@ -70,7 +70,7 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">Dirección</label>
+                                    <label class="form-label">{{ 'admin.address'|trans }}</label>
                                     <textarea name="address" class="form-control" rows="2"></textarea>
                                 </div>
 
@@ -80,18 +80,18 @@
                                         <input type="text" name="city" class="form-control" value="">
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">Estado/Región</label>
+                                        <label class="form-label">{{ 'admin.state_region'|trans }}</label>
                                         <input type="text" name="state" class="form-control" value="">
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">País</label>
+                                        <label class="form-label">{{ 'admin.country'|trans }}</label>
                                         <input type="text" name="country" class="form-control" value="">
                                     </div>
                                 </div>
                                 #}
 
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-save"></i> Guardar Cambios
+                                    <i class="bi bi-save"></i> {{ 'profile.save'|trans }}
                                 </button>
                             </form>
                         </div>
@@ -99,7 +99,7 @@
 
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="mb-0"><i class="bi bi-gear"></i> Configuración del Sistema</h5>
+                            <h5 class="mb-0"><i class="bi bi-gear"></i> {{ 'admin.system_settings'|trans }}</h5>
                         </div>
                         <div class="card-body">
                             <form method="post" action="{{ path('app_admin_tenant') }}">
@@ -107,7 +107,7 @@
                                 <input type="hidden" name="settings_form" value="1">
 
                                 <div class="mb-3">
-                                    <label class="form-label">Zona Horaria</label>
+                                    <label class="form-label">{{ 'admin.timezone_label'|trans }}</label>
                                     <select name="timezone" class="form-select">
                                         <option value="America/Bogota" {{ tenant.settings.timezone|default('America/Bogota') == 'America/Bogota' ? 'selected' : '' }}>
                                             América/Bogotá (GMT-5)
@@ -125,22 +125,22 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">Moneda</label>
+                                    <label class="form-label">{{ 'admin.currency_label'|trans }}</label>
                                     <select name="currency" class="form-select">
                                         <option value="COP" {{ tenant.settings.currency|default('COP') == 'COP' ? 'selected' : '' }}>
-                                            Peso Colombiano (COP)
+                                            {{ 'system.currency.COP'|trans }}
                                         </option>
                                         <option value="USD" {{ tenant.settings.currency|default('') == 'USD' ? 'selected' : '' }}>
-                                            Dólar Americano (USD)
+                                            {{ 'system.currency.USD'|trans }}
                                         </option>
                                         <option value="MXN" {{ tenant.settings.currency|default('') == 'MXN' ? 'selected' : '' }}>
-                                            Peso Mexicano (MXN)
+                                            {{ 'system.currency.MXN'|trans }}
                                         </option>
                                         <option value="PEN" {{ tenant.settings.currency|default('') == 'PEN' ? 'selected' : '' }}>
-                                            Nuevo Sol (PEN)
+                                            {{ 'system.currency.PEN'|trans }}
                                         </option>
                                         <option value="CLP" {{ tenant.settings.currency|default('') == 'CLP' ? 'selected' : '' }}>
-                                            Peso Chileno (CLP)
+                                            {{ 'system.currency.CLP'|trans }}
                                         </option>
                                     </select>
                                 </div>
@@ -149,7 +149,7 @@
                                     <input type="checkbox" name="require_2fa" class="form-check-input" id="require2FA"
                                            {{ tenant.settings.require2fa|default(false) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="require2FA">
-                                        Requerir autenticación de dos factores para todos los usuarios
+                                        {{ 'admin.require_2fa_label'|trans }}
                                     </label>
                                 </div>
 
@@ -157,12 +157,12 @@
                                     <input type="checkbox" name="enable_email_notifications" class="form-check-input" id="emailNotifications"
                                            {{ tenant.settings.emailNotifications|default(true) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="emailNotifications">
-                                        Habilitar notificaciones por email
+                                        {{ 'admin.enable_email_notifications'|trans }}
                                     </label>
                                 </div>
 
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-save"></i> Guardar Configuración
+                                    <i class="bi bi-save"></i> {{ 'admin.save_settings'|trans }}
                                 </button>
                             </form>
                         </div>
@@ -172,33 +172,33 @@
                 <div class="col-md-4">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="mb-0"><i class="bi bi-credit-card"></i> Plan Actual</h5>
+                            <h5 class="mb-0"><i class="bi bi-credit-card"></i> {{ 'admin.current_plan'|trans }}</h5>
                         </div>
                         <div class="card-body text-center">
                             <h2 class="text-primary">{{ tenant.plan|upper }}</h2>
                             <p class="text-muted">
                                 {% if tenant.plan == 'trial' %}
-                                    Plan de prueba
+                                    {{ 'system.plan_trial'|trans }}
                                 {% elseif tenant.plan == 'basic' %}
-                                    Plan básico
+                                    {{ 'system.plan_basic'|trans }}
                                 {% elseif tenant.plan == 'professional' %}
-                                    Plan profesional
+                                    {{ 'system.plan_professional'|trans }}
                                 {% elseif tenant.plan == 'enterprise' %}
-                                    Plan empresarial
+                                    {{ 'system.plan_enterprise'|trans }}
                                 {% endif %}
                             </p>
 
                             <div class="alert alert-{{ tenant.isActive ? 'success' : 'danger' }}">
-                                Estado: <strong>{{ tenant.isActive ? 'Activo' : 'Inactivo' }}</strong>
+                                {{ 'system.status'|trans }}: <strong>{{ tenant.isActive ? ('system.status_active'|trans) : ('system.status_inactive'|trans) }}</strong>
                             </div>
 
                             <hr>
 
                             <dl class="row text-start">
-                                <dt class="col-6">Usuarios:</dt>
-                                <dd class="col-6">{{ tenant.maxUsers }} máximo</dd>
+                                <dt class="col-6">{{ 'admin.users_label'|trans }}:</dt>
+                                <dd class="col-6">{{ tenant.maxUsers }} {{ 'admin.max_label'|trans }}</dd>
 
-                                <dt class="col-6">Proyectos:</dt>
+                                <dt class="col-6">{{ 'admin.projects_label'|trans }}:</dt>
                                 <dd class="col-6">{{ tenant.maxProjects }}</dd>
                             </dl>
                         </div>
@@ -206,17 +206,17 @@
 
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="mb-0"><i class="bi bi-info-circle"></i> Información del Sistema</h5>
+                            <h5 class="mb-0"><i class="bi bi-info-circle"></i> {{ 'admin.system_information'|trans }}</h5>
                         </div>
                         <div class="card-body">
                             <dl class="mb-0">
-                                <dt>Cuenta creada:</dt>
+                                <dt>{{ 'common.created'|trans }}:</dt>
                                 <dd>{{ tenant.createdAt|date('d/m/Y') }}</dd>
 
-                                <dt>ID del Tenant:</dt>
+                                <dt>{{ 'system.tenant_id_label'|trans }}:</dt>
                                 <dd><code>{{ tenant.id }}</code></dd>
 
-                                <dt>Dominio:</dt>
+                                <dt>{{ 'system.subdomain'|trans }}:</dt>
                                 <dd>{{ tenant.slug }}</dd>
                             </dl>
                         </div>

@@ -81,22 +81,22 @@ class ProfileController extends AbstractController
 
                             $user->setAvatar('/uploads/avatars/' . $filename);
                         } else {
-                            $this->addFlash('error', 'La imagen no puede superar 2MB.');
+                            $this->addFlash('error', 'flash.avatar_too_large');
                             return $this->redirectToRoute('app_profile_edit');
                         }
                     } else {
-                        $this->addFlash('error', 'Formato de imagen no válido. Use: JPG, PNG, GIF o WEBP.');
+                        $this->addFlash('error', 'flash.invalid_avatar_format');
                         return $this->redirectToRoute('app_profile_edit');
                     }
                 }
 
                 $this->em->flush();
 
-                $this->addFlash('success', 'Perfil actualizado exitosamente.');
+                $this->addFlash('success', 'flash.profile_updated');
                 return $this->redirectToRoute('app_profile');
             }
 
-            $this->addFlash('error', 'Por favor completa todos los campos obligatorios.');
+            $this->addFlash('error', 'flash.fill_required_fields');
         }
 
         return $this->render('profile/edit.html.twig', [
@@ -117,19 +117,19 @@ class ProfileController extends AbstractController
 
             // Verificar contraseña actual
             if (!$this->passwordHasher->isPasswordValid($user, $currentPassword)) {
-                $this->addFlash('error', 'La contraseña actual es incorrecta.');
+                $this->addFlash('error', 'flash.current_password_incorrect');
                 return $this->redirectToRoute('app_profile_change_password');
             }
 
             // Verificar que las contraseñas coincidan
             if ($newPassword !== $confirmPassword) {
-                $this->addFlash('error', 'Las contraseñas nuevas no coinciden.');
+                $this->addFlash('error', 'flash.passwords_do_not_match');
                 return $this->redirectToRoute('app_profile_change_password');
             }
 
             // Verificar política de contraseña
             if (!$this->passwordPolicy->isStrongPassword($newPassword)) {
-                $this->addFlash('error', 'La contraseña no cumple la política de seguridad. Debe tener al menos 12 caracteres, incluir mayúsculas, minúsculas, números y símbolos.');
+                $this->addFlash('error', 'flash.password_policy_not_met');
                 return $this->redirectToRoute('app_profile_change_password');
             }
 
@@ -147,7 +147,7 @@ class ProfileController extends AbstractController
                 ['ip' => $request->getClientIp()]
             );
 
-            $this->addFlash('success', 'Contraseña cambiada exitosamente.');
+            $this->addFlash('success', 'flash.password_changed');
             return $this->redirectToRoute('app_profile');
         }
 
@@ -194,7 +194,7 @@ class ProfileController extends AbstractController
 
             $this->em->flush();
 
-            $this->addFlash('success', 'Preferencias actualizadas exitosamente.');
+            $this->addFlash('success', 'flash.preferences_updated');
             return $this->redirectToRoute('app_profile_preferences');
         }
 
@@ -215,7 +215,7 @@ class ProfileController extends AbstractController
 
         $this->em->flush();
 
-        $this->addFlash('success', 'Tema restablecido a los colores predeterminados.');
+        $this->addFlash('success', 'flash.theme_reset');
         return $this->redirectToRoute('app_profile_preferences');
     }
 }

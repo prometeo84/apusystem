@@ -42,7 +42,7 @@ class TestEmailCommand extends Command
         try {
             // Correo simple de prueba
             $email = (new Email())
-                ->from(new Address('noreply@apusystem.com', 'APU System'))
+                ->from(new Address(getenv('MAILER_FROM_ADDRESS') ?: 'noreply@apusystem.com', getenv('MAILER_FROM_NAME') ?: 'APU System'))
                 ->to(new Address($toEmail))
                 ->subject('✅ Correo de Prueba - APU System')
                 ->text('Este es un correo de prueba enviado desde APU System.')

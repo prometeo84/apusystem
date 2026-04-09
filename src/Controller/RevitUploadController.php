@@ -29,7 +29,7 @@ class RevitUploadController extends AbstractController
             $file = $request->files->get('revit_file');
 
             if (!$file) {
-                $this->addFlash('error', 'Debe seleccionar un archivo');
+                $this->addFlash('error', 'flash.select_file');
                 return $this->redirectToRoute('app_revit_upload');
             }
 
@@ -43,15 +43,14 @@ class RevitUploadController extends AbstractController
                     $user
                 );
 
-                $this->addFlash('success', \sprintf(
-                    'Archivo "%s" subido correctamente. Estado: %s',
-                    $revitFile->getOriginalFilename(),
-                    $revitFile->getStatus()
-                ));
+                $this->addFlash('success', $this->container->get('translator')->trans('flash.file_uploaded_status', [
+                    '%filename%' => $revitFile->getOriginalFilename(),
+                    '%status%' => $revitFile->getStatus()
+                ]));
 
                 return $this->redirectToRoute('app_revit_files');
             } catch (\Exception $e) {
-                $this->addFlash('error', 'Error al procesar el archivo: ' . $e->getMessage());
+                $this->addFlash('error', $this->container->get('translator')->trans('flash.error_processing_file', ['%error%' => $e->getMessage()]));
                 return $this->redirectToRoute('app_revit_upload');
             }
         }
@@ -107,9 +106,9 @@ class RevitUploadController extends AbstractController
 
         try {
             $this->fileProcessor->deleteFile($file);
-            $this->addFlash('success', 'Archivo eliminado correctamente');
+            $this->addFlash('success', 'flash.file_deleted_success');
         } catch (\Exception $e) {
-            $this->addFlash('error', 'Error al eliminar el archivo: ' . $e->getMessage());
+            $this->addFlash('error', $this->container->get('translator')->trans('flash.error_deleting_file', ['%error%' => $e->getMessage()]));
         }
 
         return $this->redirectToRoute('app_revit_files');
@@ -136,9 +135,9 @@ class RevitUploadController extends AbstractController
             // Aquí iría la lógica de re-procesamiento
             // Por ahora solo cambiamos el estado
 
-            $this->addFlash('success', 'Archivo marcado para re-procesamiento');
+            $this->addFlash('success', 'flash.file_marked_reprocess');
         } catch (\Exception $e) {
-            $this->addFlash('error', 'Error: ' . $e->getMessage());
+            $this->addFlash('error', $this->container->get('translator')->trans('flash.error_generic_with_message', ['%error%' => $e->getMessage()]));
         }
 
         return $this->redirectToRoute('app_revit_file_detail', ['id' => $id]);

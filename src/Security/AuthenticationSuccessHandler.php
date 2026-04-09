@@ -8,6 +8,8 @@ use App\Service\SecurityLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,22 +69,34 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $isSuper = in_array('ROLE_SUPER_ADMIN', $roles, true);
 
         if ($isSuper) {
-            // Generar código, enviar por email y guardar hash en sesión
+            // Generar un único código, enviar por email y guardar hash en sesión
             $code = random_int(100000, 999999);
+
             $hash = password_hash((string)$code, PASSWORD_DEFAULT);
+
             $request->getSession()->set('superadmin_email_code_hash', $hash);
             $request->getSession()->set('superadmin_email_sent_at', (new \DateTime())->format(DATE_ATOM));
             $request->getSession()->set('superadmin_email_expires_at', (new \DateTime('+10 minutes'))->format(DATE_ATOM));
 
-            // Enviar correo
+            // Enviar correo con el código usando plantilla HTML con estilos del sistema
             try {
-                $email = (new Email())
-                    ->from('noreply@apusystem.com')
-                    ->to($user->getEmail())
-                    ->subject('Código de verificación de acceso — APU System')
-                    ->text(sprintf("Tu código de acceso para cuenta de administrador es: %s", $code));
+                $expiresAt = (new \DateTime('+10 minutes'));
 
-                $this->mailer->send($email);
+                $templated = (new TemplatedEmail())
+                    ->from(new Address(getenv('MAILER_FROM_ADDRESS') ?: 'noreply@apusystem.com', getenv('MAILER_FROM_NAME') ?: 'APU System'))
+                    ->to(new Address($user->getEmail(), $user->getFullName()))
+                    ->subject('Código de acceso — APU System')
+                    ->htmlTemplate('emails/superadmin_code.html.twig')
+                    ->textTemplate('emails/superadmin_code.txt.twig')
+                    ->context([
+                        'user' => $user,
+                        'code' => $code,
+                        'expires' => $expiresAt,
+                        'primary_color' => $user->getThemePrimaryColor() ?? '#667eea',
+                        'secondary_color' => $user->getThemeSecondaryColor() ?? '#764ba2',
+                    ]);
+
+                $this->mailer->send($templated);
             } catch (\Throwable $e) {
                 // No cortar el flujo si falla el correo; dejar la comprobación activa
             }

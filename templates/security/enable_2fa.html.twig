@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Habilitar 2FA - APU System{% endblock %}
+{% block title %}{{ 'security_2fa.enable_2fa_title'|trans }}{% endblock %}
 
 {% block body %}
 <div class="d-flex">
@@ -31,7 +31,7 @@
                                     </div>
 
                                     <div class="alert alert-info">
-                                        <strong>Clave secreta:</strong>
+                                        <strong>{{ 'security_2fa.secret_key'|trans }}:</strong>
                                         <code>{{ secret }}</code>
                                         <p class="small mb-0 mt-2">
                                             {{ 'security_2fa.manual_key'|trans }}
@@ -75,11 +75,11 @@
                             <hr class="my-4">
 
                             <div class="alert alert-primary">
-                                <h6><i class="bi bi-info-circle"></i> Aplicaciones Recomendadas</h6>
+                                <h6><i class="bi bi-info-circle"></i> {{ 'security_2fa.recommended_apps'|trans }}</h6>
                                 <ul class="mb-0">
-                                    <li><strong>Google Authenticator:</strong> Disponible para iOS y Android</li>
-                                    <li><strong>Microsoft Authenticator:</strong> Disponible para iOS y Android</li>
-                                    <li><strong>Authy:</strong> Disponible para iOS, Android y Desktop</li>
+                                    <li>{{ 'security_2fa.recommended.google'|trans }}</li>
+                                    <li>{{ 'security_2fa.recommended.microsoft'|trans }}</li>
+                                    <li>{{ 'security_2fa.recommended.authy'|trans }}</li>
                                 </ul>
                             </div>
                         </div>

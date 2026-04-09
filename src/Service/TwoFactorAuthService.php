@@ -10,6 +10,7 @@ use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
 use App\Service\SecurityLogger;
+use App\Service\EncryptionService;
 
 class TwoFactorAuthService
 {
@@ -21,7 +22,8 @@ class TwoFactorAuthService
         private Google2FA $google2fa,
         private SecurityLogger $securityLogger,
         private \App\Service\RateLimitingService $rateLimiting,
-        private \Symfony\Component\Mailer\MailerInterface $mailer
+        private \Symfony\Component\Mailer\MailerInterface $mailer,
+        private EncryptionService $encryptionService
     ) {}
 
     /**
@@ -60,7 +62,73 @@ class TwoFactorAuthService
      */
     public function verifyTotpCode(string $secret, string $code): bool
     {
-        return $this->google2fa->verifyKey($secret, $code);
+        // Si el secret está encriptado, desencriptarlo antes de verificar
+        $decrypted = $this->encryptionService->decryptOrNull($secret);
+        $actualSecret = $decrypted !== null ? $decrypted : $secret;
+
+        // Normalizar: eliminar espacios
+        $actualSecret = trim($actualSecret);
+
+        // Registro de depuración: usar SecurityLogger en lugar de escribir en archivo
+        $now = (new \DateTime())->format(DATE_ATOM);
+        $decryptedFlag = $decrypted !== null ? 'yes' : 'no';
+        $secretLen = is_string($actualSecret) ? strlen($actualSecret) : 0;
+        try {
+            $this->securityLogger->log('totp_debug', 'DEBUG', null, [
+                'time' => $now,
+                'decrypted' => $decryptedFlag,
+                'secret_len' => $secretLen,
+                'provided_code' => $code,
+            ]);
+        } catch (\Throwable $_) {
+            // ignore logging errors
+        }
+
+        $ok = false;
+        $verifyException = null;
+        try {
+            // Si no se desencriptó y el valor parece un ciphertext, registrar y abortar
+            if ($decrypted === null && is_string($secret) && $secretLen > 24 && preg_match('/^[A-Za-z0-9+\/]+=*$/', $secret)) {
+                try {
+                    $this->securityLogger->log('totp_decryption_failed', 'WARNING', null, [
+                        'time' => $now,
+                        'secret_len' => $secretLen,
+                        'note' => 'input looks like ciphertext but decryptOrNull returned null'
+                    ]);
+                } catch (\Throwable $_) {
+                    // ignore
+                }
+
+                $ok = false;
+            } else {
+                // Log expected OTP to help debugging
+                try {
+                    $expected = $this->google2fa->getCurrentOtp($actualSecret);
+                    $this->securityLogger->log('totp_debug', 'DEBUG', null, ['expected_otp' => $expected, 'time' => $now]);
+                } catch (\Throwable $_) {
+                    $this->securityLogger->log('totp_debug', 'DEBUG', null, ['expected_otp' => 'ERROR', 'time' => $now]);
+                }
+
+                // Allow a small window (1 step = 30s) to tolerate minor clock skew
+                $ok = $this->google2fa->verifyKey($actualSecret, $code, 1);
+            }
+        } catch (\Throwable $e) {
+            $verifyException = $e->getMessage();
+            $ok = false;
+        }
+
+        // Registrar resultado
+        try {
+            $this->securityLogger->log('totp_debug_result', 'DEBUG', null, [
+                'time' => $now,
+                'result' => $ok ? 'OK' : 'FAIL',
+                'exception' => $verifyException ?? 'none'
+            ]);
+        } catch (\Throwable $_) {
+            // ignore
+        }
+
+        return $ok;
     }
 
     /**
@@ -203,7 +271,7 @@ class TwoFactorAuthService
                     // Enviar correo de alerta al usuario
                     try {
                         $email = (new \Symfony\Bridge\Twig\Mime\TemplatedEmail())
-                            ->from(new \Symfony\Component\Mime\Address('noreply@apusystem.com', 'APU System'))
+                            ->from(new \Symfony\Component\Mime\Address(getenv('MAILER_FROM_ADDRESS') ?: 'noreply@apusystem.com', getenv('MAILER_FROM_NAME') ?: 'APU System'))
                             ->to(new \Symfony\Component\Mime\Address($user->getEmail(), $user->getFullName()))
                             ->subject('Alerta: uso de código de recuperación')
                             ->htmlTemplate('emails/recovery_code_used.html.twig')

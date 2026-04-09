@@ -14,7 +14,7 @@
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
                     <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
-                        {{ message }}
+                        {{ message|trans }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 {% endfor %}
@@ -53,18 +53,18 @@
                                         </td>
                                         <td>
                                             <span class="badge bg-{{ tenant.plan == 'enterprise' ? 'danger' : (tenant.plan == 'professional' ? 'warning' : 'info') }}">
-                                                {{ tenant.plan|upper }}
+                                                {{ ('system.plan_' ~ tenant.plan)|trans }}
                                             </span>
                                         </td>
                                         <td>
                                             {% if tenant.planExpiresAt %}
                                                 {% if tenant.isPlanExpired %}
-                                                    <span class="badge bg-danger">EXPIRADO</span><br>
+                                                    <span class="badge bg-danger">{{ 'system.expired'|trans }}</span><br>
                                                     <small class="text-muted">{{ tenant.planExpiresAt|date('d/m/Y') }}</small>
                                                 {% else %}
                                                     {% set days = tenant.daysUntilExpiration %}
                                                     <span class="badge bg-{{ days <= 7 ? 'danger' : (days <= 30 ? 'warning' : 'success') }}">
-                                                        {{ days }} días
+                                                        {{ days }} {{ 'system.days'|trans }}
                                                     </span><br>
                                                     <small class="text-muted">{{ tenant.planExpiresAt|date('d/m/Y') }}</small>
                                                 {% endif %}
@@ -143,13 +143,13 @@
                         </div>
                         <div class="col-md-6">
                             <dl class="row">
-                                <dt class="col-sm-5">Usuarios:</dt>
+                                <dt class="col-sm-5">{{ 'admin.users_label'|trans }}</dt>
                                 <dd class="col-sm-7">{{ tenant.users|length }} / {{ tenant.maxUsers }}</dd>
 
-                                <dt class="col-sm-5">Proyectos:</dt>
+                                <dt class="col-sm-5">{{ 'admin.projects_label'|trans }}</dt>
                                 <dd class="col-sm-7">0 / {{ tenant.maxProjects }}</dd>
 
-                                <dt class="col-sm-5">Registro:</dt>
+                                <dt class="col-sm-5">{{ 'system.registration'|trans }}</dt>
                                 <dd class="col-sm-7">{{ tenant.createdAt|date('d/m/Y H:i') }}</dd>
                             </dl>
                         </div>

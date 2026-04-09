@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Alertas del Sistema - APU System{% endblock %}
+{% block title %}{{ 'system_alerts.title_page'|trans }} - APU System{% endblock %}
 
 {% block body %}
 <div class="d-flex">
@@ -60,11 +60,11 @@
                                         <div class="flex-grow-1">
                                             <div class="d-flex align-items-center mb-2">
                                                 {% if alert.category == 'security' %}
-                                                    <span class="badge bg-danger me-2">SEGURIDAD</span>
+                                                    <span class="badge bg-danger me-2">{{ 'system.category.security'|trans }}</span>
                                                 {% elseif alert.category == 'billing' %}
-                                                    <span class="badge bg-warning me-2">FACTURACIÓN</span>
+                                                    <span class="badge bg-warning me-2">{{ 'system.category.billing'|trans }}</span>
                                                 {% else %}
-                                                    <span class="badge bg-secondary me-2">SISTEMA</span>
+                                                    <span class="badge bg-secondary me-2">{{ 'system.category.system'|trans }}</span>
                                                 {% endif %}
                                                 <h6 class="mb-0">{{ alert.title }}</h6>
                                             </div>

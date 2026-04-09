@@ -429,9 +429,11 @@ WORKDIR /var/www/html/proyecto
 RUN chown -R www-data:www-data /var/www/html
 ```
 
-### Variables de Entorno (.env)
+### Variables de Entorno (usar `.env.dev` en desarrollo)
 
 ```bash
+# Nota: copie `.env.dist` a `.env.dev` y ajuste los valores locales.
+
 # Ambiente
 APP_ENV=dev
 APP_SECRET=cambiar_por_clave_secreta_de_32_caracteres

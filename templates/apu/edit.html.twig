@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Editar APU{% endblock %}
+{% block title %}{{ 'apu.edit.title'|trans }} - APU System{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
@@ -9,7 +9,7 @@
     <form method="POST" id="apuForm">
         <div class="card mb-3">
             <div class="card-header bg-primary text-white">
-                Datos Principales
+                {{ 'apu.main_data'|trans }}
             </div>
             <div class="card-body">
                 <div class="row">
@@ -22,15 +22,15 @@
                     </div>
                     <div class="col-md-4">
                         <div class="mb-3">
-                            <label class="form-label">Unidad</label>
+                            <label class="form-label">{{ 'apu.unit'|trans }}</label>
                             <select class="form-select" name="unit" required>
-                                <option value="">Seleccionar...</option>
-                                <option value="m²" {% if apu_item.unit == 'm²' %}selected{% endif %}>m²</option>
-                                <option value="m³" {% if apu_item.unit == 'm³' %}selected{% endif %}>m³</option>
-                                <option value="m" {% if apu_item.unit == 'm' %}selected{% endif %}>m (metro lineal)</option>
-                                <option value="kg" {% if apu_item.unit == 'kg' %}selected{% endif %}>kg</option>
-                                <option value="u" {% if apu_item.unit == 'u' %}selected{% endif %}>u (unidad)</option>
-                                <option value="GLB" {% if apu_item.unit == 'GLB' %}selected{% endif %}>GLB (global)</option>
+                                <option value="">{{ 'common.select'|trans }}</option>
+                                <option value="m²" {% if apu_item.unit == 'm²' %}selected{% endif %}>{{ 'units.m2'|trans }}</option>
+                                <option value="m³" {% if apu_item.unit == 'm³' %}selected{% endif %}>{{ 'units.m3'|trans }}</option>
+                                <option value="m" {% if apu_item.unit == 'm' %}selected{% endif %}>{{ 'units.m'|trans }}</option>
+                                <option value="kg" {% if apu_item.unit == 'kg' %}selected{% endif %}>{{ 'units.kg'|trans }}</option>
+                                <option value="u" {% if apu_item.unit == 'u' %}selected{% endif %}>{{ 'units.u'|trans }}</option>
+                                <option value="GLB" {% if apu_item.unit == 'GLB' %}selected{% endif %}>{{ 'units.GLB'|trans }}</option>
                             </select>
                         </div>
                     </div>
@@ -59,9 +59,9 @@
         <!-- Por brevedad, usar mismo código JavaScript -->
 
         <div class="text-end">
-            <a href="{{ path('app_apu_index') }}" class="btn btn-outline-secondary">Cancelar</a>
+            <a href="{{ path('app_apu_index') }}" class="btn btn-outline-secondary">{{ 'buttons.cancel'|trans }}</a>
             <button type="submit" class="btn btn-primary">
-                <i class="bi bi-save"></i> Actualizar APU
+                <i class="bi bi-save"></i> {{ 'apu.update'|trans }}
             </button>
         </div>
     </form>

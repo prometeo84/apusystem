@@ -479,6 +479,13 @@
     <service id="App\Controller\FaviconController" class="App\Controller\FaviconController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
     </service>
+    <service id="App\Controller\LocaleController" class="App\Controller\LocaleController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\LocaleController"/>
+      </call>
+    </service>
     <service id="App\Controller\PasswordResetController" class="App\Controller\PasswordResetController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -519,6 +526,7 @@
       <argument type="service" id="App\Service\SecurityLogger"/>
       <argument type="service" id="App\Service\RateLimitingService"/>
       <argument type="service" id="security.user_password_hasher"/>
+      <argument type="service" id="App\Service\TwoFactorAuthService"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\SecurityController"/>
       </call>
@@ -631,6 +639,7 @@
       <argument type="service" id="App\Service\SecurityLogger"/>
       <argument type="service" id="App\Service\RateLimitingService"/>
       <argument type="service" id="mailer.mailer"/>
+      <argument type="service" id="App\Service\EncryptionService"/>
     </service>
     <service id="App\Service\UserTimezoneService" class="App\Service\UserTimezoneService" autowire="true" autoconfigure="true">
       <argument type="service" id="security.token_storage"/>
@@ -5901,6 +5910,13 @@
         <argument>null</argument>
       </call>
       <call method="add">
+        <argument type="service" id=".security.request_matcher.yZGCWLp"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
         <argument type="service" id=".security.request_matcher.7hffHUr"/>
         <argument type="collection">
           <argument>PUBLIC_ACCESS</argument>
@@ -6595,6 +6611,14 @@
         <argument type="service" id=".security.request_matcher.T8BdVIN"/>
       </argument>
     </service>
+    <service id=".security.request_matcher.Rm0I6Qc" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/set-locale</argument>
+    </service>
+    <service id=".security.request_matcher.yZGCWLp" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.Rm0I6Qc"/>
+      </argument>
+    </service>
     <service id=".security.request_matcher.LORg6t3" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
       <argument>^/register</argument>
     </service>
@@ -7074,6 +7098,9 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\DashboardController" class="App\Controller\DashboardController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\DashboardController" class="App\Controller\DashboardController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\DashboardController" class="App\Controller\DashboardController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\LocaleController" class="App\Controller\LocaleController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\LocaleController" class="App\Controller\LocaleController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\LocaleController" class="App\Controller\LocaleController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\PasswordResetController" class="App\Controller\PasswordResetController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\PasswordResetController" class="App\Controller\PasswordResetController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\PasswordResetController" class="App\Controller\PasswordResetController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -8314,6 +8341,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\LocaleController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\LocaleController"/>
+      <argument>App\Controller\LocaleController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\PasswordResetController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\PasswordResetController"/>
       <argument>App\Controller\PasswordResetController</argument>
@@ -8529,6 +8562,7 @@
           <argument>App\Controller\CronController</argument>
           <argument>App\Controller\DashboardController</argument>
           <argument>App\Controller\FaviconController</argument>
+          <argument>App\Controller\LocaleController</argument>
           <argument>App\Controller\PasswordResetController</argument>
           <argument>App\Controller\ProfileController</argument>
           <argument>App\Controller\RevitUploadController</argument>

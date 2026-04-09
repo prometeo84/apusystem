@@ -62,7 +62,7 @@ class TestController extends AbstractController
             ]);
         }
 
-        $this->addFlash('success', 'Logs de prueba generados exitosamente. Revisa los archivos de log.');
+        $this->addFlash('success', 'flash.test_logs_generated');
 
         return $this->render('test/logs.html.twig', [
             'timezone' => $timezone,

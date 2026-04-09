@@ -60,7 +60,7 @@ class SecuritySettingsController extends AbstractController
         $user = $this->getUser();
 
         if ($user->isTotpEnabled()) {
-            $this->addFlash('info', 'La autenticación 2FA ya está habilitada.');
+            $this->addFlash('info', 'flash.2fa_already_enabled');
             return $this->redirectToRoute('app_security');
         }
 
@@ -70,7 +70,7 @@ class SecuritySettingsController extends AbstractController
             $code = $request->request->get('verification_code');
 
             if (!$secret) {
-                $this->addFlash('error', 'Sesión expirada. Por favor, inicia el proceso nuevamente.');
+                $this->addFlash('error', 'flash.session_expired');
                 return $this->redirectToRoute('app_security_2fa_enable');
             }
 
@@ -81,11 +81,11 @@ class SecuritySettingsController extends AbstractController
                 $request->getSession()->remove('totp_secret');
                 $request->getSession()->set('recovery_codes', $recoveryCodes);
 
-                $this->addFlash('success', 'Autenticación 2FA habilitada exitosamente.');
+                $this->addFlash('success', 'flash.2fa_enabled');
                 return $this->redirectToRoute('app_security_2fa_recovery_codes');
             }
 
-            $this->addFlash('error', 'Código de verificación incorrecto. Intenta nuevamente.');
+            $this->addFlash('error', 'flash.code_incorrect_try_again');
 
             // Regenerar QR code para mostrar en caso de error
             $qrCode = $this->twoFactorService->generateQrCode($user, $secret);
@@ -118,21 +118,21 @@ class SecuritySettingsController extends AbstractController
         $user = $this->getUser();
 
         if (!$user->isTotpEnabled()) {
-            $this->addFlash('info', 'La autenticación 2FA no está habilitada.');
+            $this->addFlash('info', 'flash.2fa_not_enabled');
             return $this->redirectToRoute('app_security');
         }
 
         $code = $request->request->get('verification_code');
 
         if (!$this->twoFactorService->verifyTotpCode($user->getTotpSecret(), $code)) {
-            $this->addFlash('error', 'Código de verificación incorrecto.');
+            $this->addFlash('error', 'flash.code_incorrect');
             return $this->redirectToRoute('app_security');
         }
 
         $this->twoFactorService->disableTotp($user);
         $this->securityLogger->log('2fa_disabled', 'WARNING', $user);
 
-        $this->addFlash('success', 'Autenticación 2FA deshabilitada.');
+        $this->addFlash('success', 'flash.2fa_disabled');
         return $this->redirectToRoute('app_security');
     }
 
@@ -145,7 +145,7 @@ class SecuritySettingsController extends AbstractController
         $recoveryCodes = $request->getSession()->get('recovery_codes', []);
 
         if (empty($recoveryCodes)) {
-            $this->addFlash('error', 'No hay códigos de recuperación para mostrar.');
+            $this->addFlash('error', 'flash.no_recovery_codes');
             return $this->redirectToRoute('app_security');
         }
 
@@ -170,13 +170,13 @@ class SecuritySettingsController extends AbstractController
         if ($request->isMethod('POST')) {
             $password = $request->request->get('current_password');
             if (!$this->passwordHasher->isPasswordValid($user, $password)) {
-                $this->addFlash('error', 'Contraseña incorrecta.');
+                $this->addFlash('error', 'flash.password_incorrect');
                 return $this->redirectToRoute('app_security');
             }
 
             $recoveryCodes = $this->twoFactorService->generateRecoveryCodes($user, $user);
             $request->getSession()->set('recovery_codes', $recoveryCodes);
-            $this->addFlash('success', 'Se han generado nuevos códigos de recuperación. Revisa tu panel.');
+            $this->addFlash('success', 'flash.recovery_codes_generated');
 
             return $this->redirectToRoute('app_security_2fa_recovery_codes');
         }
@@ -203,7 +203,7 @@ class SecuritySettingsController extends AbstractController
             'session_id' => $session->getSessionId()
         ]);
 
-        $this->addFlash('success', 'Sesión revocada exitosamente.');
+        $this->addFlash('success', 'flash.session_revoked');
         return $this->redirectToRoute('app_security');
     }
 }

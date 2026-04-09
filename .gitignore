@@ -9,7 +9,9 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-
+/.env.*.local
+.env.dev
+.env.prod
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Crear Usuario - APU System{% endblock %}
+{% block title %}{{ 'admin_users.create_user_title'|trans }} - APU System{% endblock %}
 
 {% block body %}
 <div class="d-flex">
@@ -14,7 +14,7 @@
                 <div class="col-md-8">
                     {% for message in app.flashes('error') %}
                         <div class="alert alert-danger alert-dismissible fade show">
-                            <i class="bi bi-exclamation-triangle-fill"></i> {{ message }}
+                            <i class="bi bi-exclamation-triangle-fill"></i> {{ message|trans }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     {% endfor %}

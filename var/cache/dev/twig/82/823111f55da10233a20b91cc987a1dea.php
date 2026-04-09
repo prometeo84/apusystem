@@ -193,6 +193,24 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
             border-color: #3a3a3a !important;
         }
 
+        /* List groups (listas) en modo oscuro */
+        html[data-theme=\"dark\"] .list-group,
+        html[data-theme=\"dark\"] .list-group-item,
+        html[data-theme=\"dark\"] .list-group-item-action,
+        html[data-theme=\"dark\"] .list-group-flush .list-group-item {
+            background-color: #2b2b2b !important;
+            color: #e0e0e0 !important;
+            border-color: #3a3a3a !important;
+        }
+
+        /* En modales, usar fondo transparente para que herede de .modal-content */
+        html[data-theme=\"dark\"] .modal-content .list-group,
+        html[data-theme=\"dark\"] .modal-content .list-group-item {
+            background-color: transparent !important;
+            color: #e0e0e0 !important;
+            border-color: transparent !important;
+        }
+
         /* Pre y code dentro de modales deben tener texto legible */
         html[data-theme=\"dark\"] .modal-content pre,
         html[data-theme=\"dark\"] .modal-content code {
@@ -202,6 +220,45 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
 
         html[data-theme=\"dark\"] .text-muted {
             color: #aaa !important;
+        }
+
+        /* Asegurar legibilidad de textos de ayuda y pequeños (form-text) en modo oscuro */
+        html[data-theme=\"dark\"] .form-text {
+            color: #bdbdbd !important;
+        }
+
+        /* Navbar: asegurar que el título y links sean visibles en modo oscuro */
+        html[data-theme=\"dark\"] .navbar {
+            background: #2d2d2d !important;
+            color: #e0e0e0 !important;
+        }
+        html[data-theme=\"dark\"] .navbar .navbar-brand,
+        html[data-theme=\"dark\"] .navbar .nav-link,
+        html[data-theme=\"dark\"] .navbar .text-muted {
+            color: #e0e0e0 !important;
+        }
+
+        /* Breadcrumbs */
+        html[data-theme=\"dark\"] .breadcrumb {
+            background: transparent !important;
+            color: #e0e0e0 !important;
+        }
+        html[data-theme=\"dark\"] .breadcrumb .breadcrumb-item,
+        html[data-theme=\"dark\"] .breadcrumb .breadcrumb-item a {
+            color: #e0e0e0 !important;
+        }
+
+        /* Card footers and white backgrounds within cards */
+        html[data-theme=\"dark\"] .card-footer,
+        html[data-theme=\"dark\"] .card-footer.bg-white {
+            background-color: #2d2d2d !important;
+            color: #e0e0e0 !important;
+            border-top: 1px solid #404040 !important;
+        }
+
+        /* Evitar que clases utilitarias forcen texto negro en modo oscuro */
+        html[data-theme=\"dark\"] .text-dark {
+            color: inherit !important;
         }
 
         html[data-theme=\"dark\"] .container-fluid {
@@ -332,22 +389,22 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         }
     </style>
     ";
-        // line 263
+        // line 320
         yield from $this->unwrap()->yieldBlock('stylesheets', $context, $blocks);
-        // line 264
+        // line 321
         yield "</head>
 <body>
     ";
-        // line 266
+        // line 323
         yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
-        // line 267
+        // line 324
         yield "
     <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js\"
             integrity=\"sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz\"
             crossorigin=\"anonymous\"></script>
 
     ";
-        // line 273
+        // line 330
         yield "    <script>
         (function() {
             const html = document.documentElement;
@@ -369,9 +426,9 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
     </script>
 
     ";
-        // line 293
+        // line 350
         yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
-        // line 294
+        // line 351
         yield "</body>
 </html>
 ";
@@ -407,7 +464,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         yield from [];
     }
 
-    // line 263
+    // line 320
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -429,7 +486,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         yield from [];
     }
 
-    // line 266
+    // line 323
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -451,7 +508,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         yield from [];
     }
 
-    // line 293
+    // line 350
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -494,7 +551,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  455 => 293,  433 => 266,  411 => 263,  388 => 6,  375 => 294,  373 => 293,  351 => 273,  344 => 267,  342 => 266,  338 => 264,  336 => 263,  88 => 18,  84 => 17,  80 => 16,  76 => 15,  64 => 6,  55 => 2,  52 => 1,);
+        return array (  512 => 350,  490 => 323,  468 => 320,  445 => 6,  432 => 351,  430 => 350,  408 => 330,  401 => 324,  399 => 323,  395 => 321,  393 => 320,  88 => 18,  84 => 17,  80 => 16,  76 => 15,  64 => 6,  55 => 2,  52 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -623,6 +680,24 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
             border-color: #3a3a3a !important;
         }
 
+        /* List groups (listas) en modo oscuro */
+        html[data-theme=\"dark\"] .list-group,
+        html[data-theme=\"dark\"] .list-group-item,
+        html[data-theme=\"dark\"] .list-group-item-action,
+        html[data-theme=\"dark\"] .list-group-flush .list-group-item {
+            background-color: #2b2b2b !important;
+            color: #e0e0e0 !important;
+            border-color: #3a3a3a !important;
+        }
+
+        /* En modales, usar fondo transparente para que herede de .modal-content */
+        html[data-theme=\"dark\"] .modal-content .list-group,
+        html[data-theme=\"dark\"] .modal-content .list-group-item {
+            background-color: transparent !important;
+            color: #e0e0e0 !important;
+            border-color: transparent !important;
+        }
+
         /* Pre y code dentro de modales deben tener texto legible */
         html[data-theme=\"dark\"] .modal-content pre,
         html[data-theme=\"dark\"] .modal-content code {
@@ -632,6 +707,45 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
 
         html[data-theme=\"dark\"] .text-muted {
             color: #aaa !important;
+        }
+
+        /* Asegurar legibilidad de textos de ayuda y pequeños (form-text) en modo oscuro */
+        html[data-theme=\"dark\"] .form-text {
+            color: #bdbdbd !important;
+        }
+
+        /* Navbar: asegurar que el título y links sean visibles en modo oscuro */
+        html[data-theme=\"dark\"] .navbar {
+            background: #2d2d2d !important;
+            color: #e0e0e0 !important;
+        }
+        html[data-theme=\"dark\"] .navbar .navbar-brand,
+        html[data-theme=\"dark\"] .navbar .nav-link,
+        html[data-theme=\"dark\"] .navbar .text-muted {
+            color: #e0e0e0 !important;
+        }
+
+        /* Breadcrumbs */
+        html[data-theme=\"dark\"] .breadcrumb {
+            background: transparent !important;
+            color: #e0e0e0 !important;
+        }
+        html[data-theme=\"dark\"] .breadcrumb .breadcrumb-item,
+        html[data-theme=\"dark\"] .breadcrumb .breadcrumb-item a {
+            color: #e0e0e0 !important;
+        }
+
+        /* Card footers and white backgrounds within cards */
+        html[data-theme=\"dark\"] .card-footer,
+        html[data-theme=\"dark\"] .card-footer.bg-white {
+            background-color: #2d2d2d !important;
+            color: #e0e0e0 !important;
+            border-top: 1px solid #404040 !important;
+        }
+
+        /* Evitar que clases utilitarias forcen texto negro en modo oscuro */
+        html[data-theme=\"dark\"] .text-dark {
+            color: inherit !important;
         }
 
         html[data-theme=\"dark\"] .container-fluid {

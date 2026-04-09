@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Crear APU{% endblock %}
+{% block title %}{{ 'apu.create_title'|trans }} - APU System{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
@@ -9,7 +9,7 @@
     <form method="POST" id="apuForm">
         <div class="card mb-3">
             <div class="card-header bg-primary text-white">
-                Datos Principales
+                {{ 'apu.main_data'|trans }}
             </div>
             <div class="card-body">
                 <div class="row">
@@ -22,15 +22,15 @@
                     </div>
                     <div class="col-md-4">
                         <div class="mb-3">
-                            <label class="form-label">Unidad</label>
+                            <label class="form-label">{{ 'apu.unit'|trans }}</label>
                             <select class="form-select" name="unit" required>
-                                <option value="">Seleccionar...</option>
-                                <option value="m²">m²</option>
-                                <option value="m³">m³</option>
-                                <option value="m">m (metro lineal)</option>
-                                <option value="kg">kg</option>
-                                <option value="u">u (unidad)</option>
-                                <option value="GLB">GLB (global)</option>
+                                <option value="">{{ 'common.select'|trans }}</option>
+                                <option value="m²">{{ 'units.m2'|trans }}</option>
+                                <option value="m³">{{ 'units.m3'|trans }}</option>
+                                <option value="m">{{ 'units.m'|trans }}</option>
+                                <option value="kg">{{ 'units.kg'|trans }}</option>
+                                <option value="u">{{ 'units.u'|trans }}</option>
+                                <option value="GLB">{{ 'units.GLB'|trans }}</option>
                             </select>
                         </div>
                     </div>
@@ -56,20 +56,20 @@
         <!-- Sección EQUIPO -->
         <div class="card mb-3">
             <div class="card-header bg-warning">
-                <i class="bi bi-tools"></i> Equipo
+                <i class="bi bi-tools"></i> {{ 'apu.equipment'|trans }}
                 <button type="button" class="btn btn-sm btn-light float-end" onclick="addEquipmentRow()">
-                    <i class="bi bi-plus"></i> Agregar
+                    <i class="bi bi-plus"></i> {{ 'buttons.add'|trans }}
                 </button>
             </div>
             <div class="card-body">
                 <table class="table table-sm" id="equipmentTable">
                     <thead>
                         <tr>
-                            <th style="width: 40%">Descripción</th>
-                            <th style="width: 10%">Número</th>
-                            <th style="width: 20%">Tarifa</th>
-                            <th style="width: 20%">C/HORA</th>
-                            <th style="width: 10%">Acciones</th>
+                            <th style="width: 40%">{{ 'apu.col_description'|trans }}</th>
+                            <th style="width: 10%">{{ 'apu.col_number'|trans }}</th>
+                            <th style="width: 20%">{{ 'apu.col_rate'|trans }}</th>
+                            <th style="width: 20%">{{ 'apu.col_cost_hour'|trans }}</th>
+                            <th style="width: 10%">{{ 'apu.actions'|trans }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,20 +82,20 @@
         <!-- Sección MANO DE OBRA -->
         <div class="card mb-3">
             <div class="card-header bg-info text-white">
-                <i class="bi bi-people"></i> Mano de Obra
+                <i class="bi bi-people"></i> {{ 'apu.labor'|trans }}
                 <button type="button" class="btn btn-sm btn-light float-end" onclick="addLaborRow()">
-                    <i class="bi bi-plus"></i> Agregar
+                    <i class="bi bi-plus"></i> {{ 'buttons.add'|trans }}
                 </button>
             </div>
             <div class="card-body">
                 <table class="table table-sm" id="laborTable">
                     <thead>
                         <tr>
-                            <th style="width: 40%">Descripción</th>
-                            <th style="width: 10%">Número</th>
-                            <th style="width: 20%">JOR./HORA</th>
-                            <th style="width: 20%">C/HORA</th>
-                            <th style="width: 10%">Acciones</th>
+                            <th style="width: 40%">{{ 'apu.col_description'|trans }}</th>
+                            <th style="width: 10%">{{ 'apu.col_number'|trans }}</th>
+                            <th style="width: 20%">{{ 'apu.col_jh'|trans }}</th>
+                            <th style="width: 20%">{{ 'apu.col_cost_hour'|trans }}</th>
+                            <th style="width: 10%">{{ 'apu.actions'|trans }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -108,20 +108,20 @@
         <!-- Sección MATERIALES -->
         <div class="card mb-3">
             <div class="card-header bg-success text-white">
-                <i class="bi bi-box-seam"></i> Materiales
+                <i class="bi bi-box-seam"></i> {{ 'apu.materials'|trans }}
                 <button type="button" class="btn btn-sm btn-light float-end" onclick="addMaterialRow()">
-                    <i class="bi bi-plus"></i> Agregar
+                    <i class="bi bi-plus"></i> {{ 'buttons.add'|trans }}
                 </button>
             </div>
             <div class="card-body">
                 <table class="table table-sm" id="materialTable">
                     <thead>
                         <tr>
-                            <th style="width: 40%">Descripción</th>
-                            <th style="width: 15%">Unidad</th>
-                            <th style="width: 20%">Cantidad</th>
-                            <th style="width: 15%">Precio Unit.</th>
-                            <th style="width: 10%">Acciones</th>
+                            <th style="width: 40%">{{ 'apu.col_description'|trans }}</th>
+                            <th style="width: 15%">{{ 'apu.col_unit'|trans }}</th>
+                            <th style="width: 20%">{{ 'apu.col_quantity'|trans }}</th>
+                            <th style="width: 15%">{{ 'apu.col_unit_price'|trans }}</th>
+                            <th style="width: 10%">{{ 'apu.actions'|trans }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -134,21 +134,21 @@
         <!-- Sección TRANSPORTE -->
         <div class="card mb-3">
             <div class="card-header bg-secondary text-white">
-                <i class="bi bi-truck"></i> Transporte
+                <i class="bi bi-truck"></i> {{ 'apu.transport'|trans }}
                 <button type="button" class="btn btn-sm btn-light float-end" onclick="addTransportRow()">
-                    <i class="bi bi-plus"></i> Agregar
+                    <i class="bi bi-plus"></i> {{ 'buttons.add'|trans }}
                 </button>
             </div>
             <div class="card-body">
                 <table class="table table-sm" id="transportTable">
                     <thead>
                         <tr>
-                            <th style="width: 30%">Descripción</th>
-                            <th style="width: 15%">Unidad</th>
-                            <th style="width: 15%">Cantidad</th>
-                            <th style="width: 15%">DMT (km)</th>
-                            <th style="width: 15%">Tarifa/km</th>
-                            <th style="width: 10%">Acciones</th>
+                            <th style="width: 30%">{{ 'common.description'|trans }}</th>
+                            <th style="width: 15%">{{ 'apu.col_unit'|trans }}</th>
+                            <th style="width: 15%">{{ 'apu.col_quantity'|trans }}</th>
+                            <th style="width: 15%">{{ 'apu.col_dmt'|trans }}</th>
+                            <th style="width: 15%">{{ 'apu.col_rate_km'|trans }}</th>
+                            <th style="width: 10%">{{ 'apu.actions'|trans }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -159,9 +159,9 @@
         </div>
 
         <div class="text-end">
-            <button type="button" class="btn btn-outline-secondary" onclick="history.back()">Cancelar</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="history.back()">{{ 'buttons.cancel'|trans }}</button>
             <button type="submit" class="btn btn-primary">
-                <i class="bi bi-save"></i> Guardar APU
+                <i class="bi bi-save"></i> {{ 'apu.save'|trans }}
             </button>
         </div>
     </form>

@@ -1,0 +1,15 @@
+{{ 'email.superadmin_code.greeting'|trans({'%name%': user.getFullName()}) }}
+
+{{ 'email.superadmin_code.message'|trans({'%code%': code}) }}
+{% if expires is not null %}
+{% set mins = ((expires.timestamp - "now"|date('U')) / 60)|round(0, 'ceil') %}
+{% if mins > 0 %}
+{{ 'email.superadmin_code.expires_in'|trans({'%mins%': mins, '%datetime%': expires|date('d/m/Y H:i')}) }}
+{% else %}
+{{ 'email.superadmin_code.expired'|trans }}
+{% endif %}
+{% endif %}
+
+{{ 'email.superadmin_code.ignore_if_not_requested'|trans }}
+
+APU System
