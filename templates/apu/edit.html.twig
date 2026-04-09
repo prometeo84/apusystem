@@ -59,10 +59,9 @@
         <!-- Por brevedad, usar mismo código JavaScript -->
 
         <div class="text-end">
-            <a href="{{ path('app_apu_index') }}" class="btn btn-outline-secondary">{{ 'buttons.cancel'|trans }}</a>
-            <button type="submit" class="btn btn-primary">
-                <i class="bi bi-save"></i> {{ 'apu.update'|trans }}
-            </button>
+            {% import 'partials/_button.html.twig' as btn %}
+            {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_apu_index')}) }}
+            {{ btn.button('apu.update'|trans, 'primary', 'bi-save', {'type':'submit'}) }}
         </div>
     </form>
 </div>

@@ -50,15 +50,10 @@
                     </div>
 
                     <div class="btn-group" role="group">
-                        <a href="{{ path('app_password_forgot') }}" class="btn btn-primary">
-                            <i class="bi bi-envelope"></i> {{ 'test_mail.goto_password_recovery'|trans }}
-                        </a>
-                        <a href="http://localhost:8025" target="_blank" class="btn btn-outline-primary">
-                            <i class="bi bi-mailbox"></i> Abrir Mailpit
-                        </a>
-                        <a href="{{ path('app_test_logs') }}" class="btn btn-outline-secondary">
-                            <i class="bi bi-file-text"></i> Probar Logs
-                        </a>
+                            {% import 'partials/_button.html.twig' as btn %}
+                            {{ btn.button('password.forgot'|trans, 'primary', 'bi-envelope', {'href': path('app_password_forgot')}) }}
+                            {{ btn.button('Abrir Mailpit', 'outline-primary', 'bi-mailbox', {'href':'http://localhost:8025','target':'_blank'}) }}
+                            {{ btn.button('Probar Logs', 'outline-secondary', 'bi-file-text', {'href': path('app_test_logs')}) }}
                     </div>
                 </div>
             </div>

@@ -87,6 +87,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         // line 18
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["user_theme"] ?? null), "secondary_rgb", [], "any", true, true, false, 18)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user_theme"]) || array_key_exists("user_theme", $context) ? $context["user_theme"] : (function () { throw new RuntimeError('Variable "user_theme" does not exist.', 18, $this->source); })()), "secondary_rgb", [], "any", false, false, false, 18), "118, 75, 162")) : ("118, 75, 162")), "html", null, true);
         yield ";
+            --app-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             --danger-color: #dc3545;
             --success-color: #28a745;
             --warning-color: #ffc107;
@@ -95,7 +96,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
 
         /* Estilos Base */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: var(--app-font);
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             min-height: 100vh;
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -389,22 +390,22 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         }
     </style>
     ";
-        // line 320
-        yield from $this->unwrap()->yieldBlock('stylesheets', $context, $blocks);
         // line 321
+        yield from $this->unwrap()->yieldBlock('stylesheets', $context, $blocks);
+        // line 322
         yield "</head>
 <body>
     ";
-        // line 323
-        yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
         // line 324
+        yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
+        // line 325
         yield "
     <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js\"
             integrity=\"sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz\"
             crossorigin=\"anonymous\"></script>
 
     ";
-        // line 330
+        // line 331
         yield "    <script>
         (function() {
             const html = document.documentElement;
@@ -426,9 +427,9 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
     </script>
 
     ";
-        // line 350
-        yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
         // line 351
+        yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
+        // line 352
         yield "</body>
 </html>
 ";
@@ -464,7 +465,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         yield from [];
     }
 
-    // line 320
+    // line 321
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -486,7 +487,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         yield from [];
     }
 
-    // line 323
+    // line 324
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -508,7 +509,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         yield from [];
     }
 
-    // line 350
+    // line 351
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -551,7 +552,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  512 => 350,  490 => 323,  468 => 320,  445 => 6,  432 => 351,  430 => 350,  408 => 330,  401 => 324,  399 => 323,  395 => 321,  393 => 320,  88 => 18,  84 => 17,  80 => 16,  76 => 15,  64 => 6,  55 => 2,  52 => 1,);
+        return array (  513 => 351,  491 => 324,  469 => 321,  446 => 6,  433 => 352,  431 => 351,  409 => 331,  402 => 325,  400 => 324,  396 => 322,  394 => 321,  88 => 18,  84 => 17,  80 => 16,  76 => 15,  64 => 6,  55 => 2,  52 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -574,6 +575,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
             --secondary-color: {{ user_theme.secondary_color|default('#764ba2') }};
             --primary-rgb: {{ user_theme.primary_rgb|default('102, 126, 234') }};
             --secondary-rgb: {{ user_theme.secondary_rgb|default('118, 75, 162') }};
+            --app-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             --danger-color: #dc3545;
             --success-color: #28a745;
             --warning-color: #ffc107;
@@ -582,7 +584,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
 
         /* Estilos Base */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: var(--app-font);
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             min-height: 100vh;
             transition: background-color 0.3s ease, color 0.3s ease;

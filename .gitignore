@@ -47,3 +47,6 @@ yarn-error.log
 # Exports
 /public/exports/
 /public/uploads/
+
+# Backup files created by scripts
+*.bak

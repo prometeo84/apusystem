@@ -3,6 +3,7 @@
 {% block title %}{{ 'security_2fa.regenerate_title'|trans }}{% endblock %}
 
 {% block body %}
+{% import 'partials/_button.html.twig' as btn %}
   <div class="container py-4">
     <h1>{{ 'security_2fa.regenerate_header'|trans }}</h1>
     <p>{{ 'security_2fa.regenerate_instructions'|trans }}</p>
@@ -12,7 +13,7 @@
         <label class="form-label">{{ 'security_2fa.current_password'|trans }}</label>
         <input name="current_password" type="password" class="form-control" required />
       </div>
-      <button class="btn btn-primary">{{ 'security_2fa.regenerate_button'|trans }}</button>
+      {{ btn.button('security_2fa.regenerate_button'|trans, 'primary', null, {}) }}
     </form>
   </div>
 {% endblock %}

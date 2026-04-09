@@ -159,10 +159,9 @@
         </div>
 
         <div class="text-end">
-            <button type="button" class="btn btn-outline-secondary" onclick="history.back()">{{ 'buttons.cancel'|trans }}</button>
-            <button type="submit" class="btn btn-primary">
-                <i class="bi bi-save"></i> {{ 'apu.save'|trans }}
-            </button>
+            {% import 'partials/_button.html.twig' as btn %}
+            {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'type':'button', 'onclick':'history.back()'}) }}
+            {{ btn.button('apu.save'|trans, 'primary', 'bi-save', {'type':'submit'}) }}
         </div>
     </form>
 </div>

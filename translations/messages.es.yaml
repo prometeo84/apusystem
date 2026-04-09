@@ -84,6 +84,7 @@ auth:
 
 buttons:
   back_to_login: "Volver al inicio de sesión"
+  add: "Agregar"
   cancel: "Cancelar"
   close: "Cerrar"
   confirm: "Confirmar"
@@ -182,8 +183,6 @@ dashboard:
   no_projects: "No hay proyectos registrados"
   plan: "Plan"
   plan_label: "Plan"
-  max_users: "usuarios máx."
-  quick_actions: "Acciones Rápidas"
   export_report: "Exportar Reporte"
   no_recent_activity: "No hay actividad reciente"
   account_information: "Información de la Cuenta"
@@ -197,6 +196,17 @@ dashboard:
   templates: "Plantillas"
   users: "Usuarios"
   welcome: "Bienvenido"
+
+  # Plan names (from en catalog)
+  plan_trial: "Plan de prueba"
+  plan_basic: "Plan básico"
+  plan_professional: "Plan profesional"
+  plan_enterprise: "Plan empresarial"
+  # Date units
+  month: "mes"
+  months: "meses"
+  year: "año"
+  years: "años"
 
 login:
   email: "Correo Electrónico"
@@ -272,9 +282,6 @@ emails:
   enable_2fa: "Habilita la autenticación de dos factores (2FA) para mayor seguridad."
   automated_notice: "Este es un correo automatizado, por favor no respondas."
   rights_reserved: "Todos los derechos reservados."
-
-test:
-  valid_emails: "Correos válidos para prueba:"
 
 mails:
   important: "IMPORTANTE"
@@ -364,6 +371,27 @@ security:
   back_to_security: "Volver a Seguridad"
   no_active_sessions: "No hay sesiones activas."
 
+  superadmin_verify:
+    title: "Verificación de email — Superadmin"
+    header: "Verificación adicional para superadmin"
+    instruction: "Se ha enviado un código temporal a tu correo. Ingresa el código para completar el inicio de sesión."
+    code_label: "Código"
+    verify: "Verificar"
+    expires_in: "El código expira en %minutes% minuto(s) (%time%)."
+    expired: "El código ha expirado."
+
+  regenerate_title: "Regenerar Códigos de Recuperación"
+  regenerate_header: "Regenerar códigos de recuperación"
+  regenerate_instructions: "Para regenerar tus códigos de recuperación debes confirmar tu contraseña actual."
+  current_password: "Contraseña actual"
+
+  recommended_apps: "Aplicaciones Recomendadas"
+  recommended:
+    google: "Google Authenticator: Disponible para iOS y Android"
+    microsoft: "Microsoft Authenticator: Disponible para iOS y Android"
+    authy: "Authy: Disponible para iOS, Android y Desktop"
+  secret_key: "Clave secreta"
+
 security_2fa:
   code_from_app: "Código de 6 dígitos desde tu aplicación de autenticación"
   code_invalidated: "El código se invalidará después de usarse"
@@ -395,28 +423,6 @@ security_2fa:
   verify_description: "Ingresa el código de 6 dígitos desde tu aplicación de autenticación"
   verify_enable: "Verificar y Habilitar"
   verify_title: "Verificación de Dos Factores"
-
-security:
-  superadmin_verify:
-    title: "Verificación de email — Superadmin"
-    header: "Verificación adicional para superadmin"
-    instruction: "Se ha enviado un código temporal a tu correo. Ingresa el código para completar el inicio de sesión."
-    code_label: "Código"
-    verify: "Verificar"
-    expires_in: "El código expira en %minutes% minuto(s) (%time%)."
-    expired: "El código ha expirado."
-
-  regenerate_title: "Regenerar Códigos de Recuperación"
-  regenerate_header: "Regenerar códigos de recuperación"
-  regenerate_instructions: "Para regenerar tus códigos de recuperación debes confirmar tu contraseña actual."
-  current_password: "Contraseña actual"
-
-  recommended_apps: "Aplicaciones Recomendadas"
-  recommended:
-    google: "Google Authenticator: Disponible para iOS y Android"
-    microsoft: "Microsoft Authenticator: Disponible para iOS y Android"
-    authy: "Authy: Disponible para iOS, Android y Desktop"
-  secret_key: "Clave secreta"
 
 system:
   title: "Sistema"
@@ -473,10 +479,14 @@ system:
   message: "Mensaje"
   monitoring: "Monitoreo"
   monitoring_title: "Monitoreo del Sistema"
-  expires_label: 'Vence:'
-  expired: 'EXPIRADO'
-  days: 'días'
-  unlimited_time: 'Sin límite de tiempo'
+  expires_label: "Vence:"
+  expired: "EXPIRADO"
+  days: "días"
+  month: "mes"
+  months: "meses"
+  year: "año"
+  years: "años"
+  unlimited_time: "Sin límite de tiempo"
   multiple_sessions: "Múltiples sesiones: 3+ sesiones simultáneas desde IPs diferentes"
   new_tenant: "Nueva Empresa"
   new_tenant_title: "Nueva Empresa / Tenant"
@@ -590,6 +600,8 @@ system_alerts:
   alert_types_heading: "Tipos de Alertas"
   billing_section: "Facturación"
   no_active_alerts_msg: "No hay alertas activas"
+  security_section: "Seguridad"
+  title_page: "Alertas del Sistema"
 
 system_errors:
   filter_all: "Todos"
@@ -617,6 +629,7 @@ system_tenants:
   registration_label: "Registro"
 
 test:
+  valid_emails: "Correos válidos para prueba:"
   back_dashboard: "Volver al Dashboard"
   critical_message: "CRITICAL Mensaje crítico con excepción"
   current_time: "Hora Actual"
@@ -778,9 +791,6 @@ units.kg: "kg"
 units.u: "u (unidad)"
 units.GLB: "GLB (global)"
 common.select: "Seleccionar..."
-buttons:
-  add: "Agregar"
-  cancel: "Cancelar"
 apu.update: "Actualizar APU"
 
 security.2fa.important: "Importante"

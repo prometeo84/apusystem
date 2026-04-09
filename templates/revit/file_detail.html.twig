@@ -3,6 +3,7 @@
 {% block title %}{{ 'revit.details'|trans }} - {{ file.originalFilename }}{% endblock %}
 
 {% block body %}
+{% import 'partials/_button.html.twig' as btn %}
 <div class="container mt-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -16,18 +17,14 @@
         <div class="btn-group" role="group">
             {% if file.status == 'error' %}
                 <form method="POST" action="{{ path('app_revit_file_reprocess', {id: file.id}) }}" style="display: inline;">
-                    <button type="submit" class="btn btn-warning">
-                        <i class="bi bi-arrow-clockwise"></i> {{ 'revit.reprocess'|trans }}
-                    </button>
+                    {{ btn.button('revit.reprocess'|trans, 'warning', 'bi-bi-arrow-clockwise', {'type':'submit'}) }}
                 </form>
             {% endif %}
             <form method="POST"
                   action="{{ path('app_revit_file_delete', {id: file.id}) }}"
                   onsubmit="return confirm('{{ 'revit.confirm_delete'|trans }}')"
                   style="display: inline;">
-                <button type="submit" class="btn btn-danger">
-                    <i class="bi bi-trash"></i> {{ 'revit.delete'|trans }}
-                </button>
+                {{ btn.button('revit.delete'|trans, 'danger', 'bi-bi-trash', {'type':'submit'}) }}
             </form>
         </div>
     </div>

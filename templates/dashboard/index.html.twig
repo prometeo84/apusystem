@@ -3,6 +3,7 @@
 {% block title %}Dashboard - APU System{% endblock %}
 
 {% block body %}
+{% import 'partials/_button.html.twig' as btn %}
 <div class="d-flex">
     {% include 'partials/_sidebar.html.twig' %}
 
@@ -99,9 +100,7 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0"><i class="bi bi-folder"></i> {{ 'dashboard.recent_projects'|trans }}</h5>
-                            <a href="#" class="btn btn-sm btn-primary">
-                                <i class="bi bi-plus-circle"></i> {{ 'dashboard.new_project'|trans }}
-                            </a>
+                            {{ btn.button('dashboard.new_project'|trans, 'primary', 'bi-plus-circle', {'href': '#', 'class':'btn-sm'}) }}
                         </div>
                         <div class="card-body">
                             {% if proyectosRecientes|length > 0 %}
@@ -136,9 +135,7 @@
                                                         {% endif %}
                                                     </td>
                                                     <td>
-                                                        <a href="#" class="btn btn-sm btn-outline-primary">
-                                                            <i class="bi bi-eye"></i>
-                                                        </a>
+                                                        {{ btn.button('', 'outline-primary', 'bi-eye', {'href': '#', 'class':'btn-sm'}) }}
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -149,9 +146,7 @@
                                 <div class="text-center py-5">
                                     <i class="bi bi-folder-x" style="font-size: 3rem; opacity: 0.3;"></i>
                                     <p class="text-muted mt-3">{{ 'dashboard.no_projects'|trans }}</p>
-                                    <a href="#" class="btn btn-primary">
-                                        <i class="bi bi-plus-circle"></i> {{ 'dashboard.create_first_project'|trans }}
-                                    </a>
+                                    {{ btn.button('dashboard.create_first_project'|trans, 'primary', 'bi-plus-circle', {'href': '#'}) }}
                                 </div>
                             {% endif %}
                         </div>
@@ -165,18 +160,10 @@
                         </div>
                         <div class="card-body">
                             <div class="d-grid gap-2">
-                                <a href="#" class="btn btn-primary">
-                                    <i class="bi bi-folder-plus"></i> {{ 'dashboard.new_project'|trans }}
-                                </a>
-                                <a href="#" class="btn btn-outline-primary">
-                                    <i class="bi bi-file-earmark-bar-graph"></i> {{ 'dashboard.create_apu'|trans }}
-                                </a>
-                                <a href="#" class="btn btn-outline-secondary">
-                                    <i class="bi bi-box"></i> {{ 'dashboard.add_material'|trans }}
-                                </a>
-                                <a href="#" class="btn btn-outline-secondary">
-                                    <i class="bi bi-people"></i> {{ 'dashboard.add_labor'|trans }}
-                                </a>
+                                {{ btn.button('dashboard.new_project'|trans, 'primary', 'bi-folder-plus', {'href': '#'}) }}
+                                {{ btn.button('dashboard.create_apu'|trans, 'outline-primary', 'bi-file-earmark-bar-graph', {'href': '#'}) }}
+                                {{ btn.button('dashboard.add_material'|trans, 'outline-secondary', 'bi-box', {'href': '#'}) }}
+                                {{ btn.button('dashboard.add_labor'|trans, 'outline-secondary', 'bi-people', {'href': '#'}) }}
                             </div>
                         </div>
                     </div>
@@ -288,15 +275,9 @@
                                 <i class="bi bi-lightning-fill"></i> {{ 'dashboard.quick_actions'|trans }}
                             </h5>
                             <div class="d-flex gap-2">
-                                <button class="btn btn-primary">
-                                    <i class="bi bi-plus-circle"></i> {{ 'dashboard.new_project'|trans }}
-                                </button>
-                                <button class="btn btn-outline-primary">
-                                    <i class="bi bi-file-earmark-plus"></i> {{ 'dashboard.create_apu'|trans }}
-                                </button>
-                                <button class="btn btn-outline-primary">
-                                    <i class="bi bi-download"></i> {{ 'dashboard.export_report'|trans }}
-                                </button>
+                                {{ btn.button('dashboard.new_project'|trans, 'primary', 'bi-bi-plus-circle', {}) }}
+                                {{ btn.button('dashboard.create_apu'|trans, 'outline-primary', 'bi-bi-file-earmark-plus', {}) }}
+                                {{ btn.button('dashboard.export_report'|trans, 'outline-primary', 'bi-bi-download', {}) }}
                             </div>
                         </div>
                     </div>

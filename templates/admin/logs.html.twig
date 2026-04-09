@@ -3,11 +3,12 @@
 {% block title %}{{ 'system_errors.title'|trans }} - APU System{% endblock %}
 
 {% block body %}
+{% import 'partials/_button.html.twig' as btn %}
 <div class="d-flex">
     {% include 'partials/_sidebar.html.twig' %}
 
     <div class="flex-grow-1">
-        {% include 'partials/_navbar.html.twig' with {'title': 'Logs de Seguridad'} %}
+        {% include 'partials/_navbar.html.twig' with {'title': 'nav.security_logs'|trans} %}
 
         <div class="container-fluid p-4 content-wrapper">
             <div class="card">
@@ -168,7 +169,7 @@
                         </dl>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'buttons.close'|trans }}</button>
+                        {{ btn.button('buttons.close'|trans, 'secondary', null, {}) }}
                     </div>
                 </div>
             </div>

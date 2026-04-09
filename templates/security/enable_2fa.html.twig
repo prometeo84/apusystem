@@ -3,6 +3,7 @@
 {% block title %}{{ 'security_2fa.enable_2fa_title'|trans }}{% endblock %}
 
 {% block body %}
+{% import 'partials/_button.html.twig' as btn %}
 <div class="d-flex">
     {% include 'partials/_sidebar.html.twig' %}
 
@@ -64,9 +65,7 @@
                                             <button type="submit" class="btn btn-primary btn-lg">
                                                 <i class="bi bi-check-circle"></i> {{ 'security_2fa.verify_enable'|trans }}
                                             </button>
-                                            <a href="{{ path('app_security') }}" class="btn btn-outline-secondary">
-                                                <i class="bi bi-x-circle"></i> {{ 'buttons.cancel'|trans }}
-                                            </a>
+                                            {{ btn.button('buttons.cancel'|trans, 'outline-secondary', 'bi-bi-x-circle', {'href': path('app_security')}) }}
                                         </div>
                                     </form>
                                 </div>

@@ -42,16 +42,13 @@
                                 <p class="small text-muted">
                                     {{ 'security.recovery_codes_available'|trans }}: <strong>{{ recoveryCodes }}</strong>
                                 </p>
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#disable2FAModal">
-                                    <i class="bi bi-x-circle"></i> {{ 'security.disable_2fa'|trans }}
-                                </button>
+                                {{ btn.button('security.disable_2fa'|trans, 'danger', 'bi-bi-x-circle', {}) }}
                             {% else %}
                                 <div class="alert alert-warning">
                                     <i class="bi bi-exclamation-triangle"></i> {{ 'security.2fa_disabled'|trans }}
                                 </div>
-                                <a href="{{ path('app_security_2fa_enable') }}" class="btn btn-primary">
-                                    <i class="bi bi-shield-check"></i> {{ 'security.enable_2fa'|trans }}
-                                </a>
+                                {% import 'partials/_button.html.twig' as btn %}
+                                {{ btn.button('security.enable_2fa'|trans, 'primary', 'bi-shield-check', {'href': path('app_security_2fa_enable')}) }}
                             {% endif %}
                         </div>
                     </div>
@@ -70,9 +67,7 @@
                             <p class="small text-muted">
                                 {{ 'security.password_recommendation'|trans }}
                             </p>
-                            <a href="{{ path('app_profile_change_password') }}" class="btn btn-primary">
-                                <i class="bi bi-shield-lock"></i> {{ 'password.change'|trans }}
-                            </a>
+                            {{ btn.button('password.change'|trans, 'primary', 'bi-shield-lock', {'href': path('app_profile_change_password')}) }}
                         </div>
                     </div>
                 </div>
@@ -177,8 +172,8 @@
                            placeholder="{{ 'security.2fa.code_placeholder'|trans }}" required pattern="[0-9]{6}">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'buttons.cancel'|trans }}</button>
-                    <button type="submit" class="btn btn-danger">{{ 'security.disable_2fa'|trans }}</button>
+                    {{ btn.button('buttons.cancel'|trans, 'secondary', null, {'type':'button','data-bs-dismiss':'modal'}) }}
+                    {{ btn.button('security.disable_2fa'|trans, 'secondary', null, {'type':'submit','class':'btn btn-danger'}) }}
                 </div>
             </form>
         </div>

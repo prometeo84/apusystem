@@ -3,6 +3,7 @@
 {% block title %}{{ 'security.superadmin_verify.title'|trans }}{% endblock %}
 
 {% block body %}
+{% import 'partials/_button.html.twig' as btn %}
   <div class="container py-4">
     <h1>{{ 'security.superadmin_verify.header'|trans }}</h1>
     <p>{{ 'security.superadmin_verify.instruction'|trans }}</p>
@@ -12,7 +13,7 @@
         <label class="form-label">{{ 'security.superadmin_verify.code_label'|trans }}</label>
         <input name="code" class="form-control" required autocomplete="one-time-code" />
       </div>
-      <button class="btn btn-primary">{{ 'security.superadmin_verify.verify'|trans }}</button>
+      {{ btn.button('security.superadmin_verify.verify'|trans, 'primary', null, {}) }}
     </form>
 
     {% if expires is not null %}

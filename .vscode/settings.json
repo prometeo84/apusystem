@@ -17,7 +17,10 @@
         },
         "exit": true,
         "command": true,
-        "pre-commit": true
+        "pre-commit": true,
+        "getfacl": true,
+        "getent": true,
+        "egrep": true
     },
     "intelephense.environment.includePaths": ["vendor", "."],
     "intelephense.stubs": [

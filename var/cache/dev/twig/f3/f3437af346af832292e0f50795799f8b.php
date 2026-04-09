@@ -73,13 +73,19 @@ class __TwigTemplate_195e7d70615122033d26f8115c4c6efd extends Template
         // line 16
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_profile");
         yield "\">
-                        <i class=\"bi bi-person\"></i> Mi Perfil
+                        <i class=\"bi bi-person\"></i> ";
+        // line 17
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.profile"), "html", null, true);
+        yield "
                     </a></li>
                     <li><a class=\"dropdown-item\" href=\"";
         // line 19
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_security");
         yield "\">
-                        <i class=\"bi bi-shield-check\"></i> Seguridad
+                        <i class=\"bi bi-shield-check\"></i> ";
+        // line 20
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("nav.security"), "html", null, true);
+        yield "
                     </a></li>
                     <li><hr class=\"dropdown-divider\"></li>
                     <li><a class=\"dropdown-item\" href=\"";
@@ -127,7 +133,7 @@ class __TwigTemplate_195e7d70615122033d26f8115c4c6efd extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  91 => 24,  87 => 23,  80 => 19,  74 => 16,  63 => 8,  58 => 6,  52 => 3,  48 => 1,);
+        return array (  97 => 24,  93 => 23,  87 => 20,  83 => 19,  78 => 17,  74 => 16,  63 => 8,  58 => 6,  52 => 3,  48 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -148,10 +154,10 @@ class __TwigTemplate_195e7d70615122033d26f8115c4c6efd extends Template
                 </button>
                 <ul class=\"dropdown-menu dropdown-menu-end\">
                     <li><a class=\"dropdown-item\" href=\"{{ path('app_profile') }}\">
-                        <i class=\"bi bi-person\"></i> Mi Perfil
+                        <i class=\"bi bi-person\"></i> {{ 'nav.profile'|trans }}
                     </a></li>
                     <li><a class=\"dropdown-item\" href=\"{{ path('app_security') }}\">
-                        <i class=\"bi bi-shield-check\"></i> Seguridad
+                        <i class=\"bi bi-shield-check\"></i> {{ 'nav.security'|trans }}
                     </a></li>
                     <li><hr class=\"dropdown-divider\"></li>
                     <li><a class=\"dropdown-item\" href=\"{{ path('app_logout') }}\">

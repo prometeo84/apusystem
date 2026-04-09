@@ -1,0 +1,29 @@
+{#
+  Button macro: usage examples:
+  {% import 'partials/_button.html.twig' as btn %}
+  {{ btn.button('buttons.save'|trans, 'primary', 'bi-check-lg', {'type':'submit'}) }}
+  Or pass translation key directly: {{ btn.button('buttons.save', 'primary', 'bi-check-lg', {'type':'submit'}) }}
+#}
+{% macro button(label, variant='primary', icon=null, attrs={}) %}
+    {%- set classes = 'btn' -%}
+    {%- if variant == 'primary' -%}
+        {%- set classes = classes ~ ' btn btn-primary animate-raise' -%}
+    {%- elseif variant == 'secondary' -%}
+        {%- set classes = classes ~ ' btn btn-outline-secondary animate-raise' -%}
+    {%- elseif variant == 'link' -%}
+        {%- set classes = classes ~ ' btn btn-link' -%}
+    {%- endif -%}
+
+    {%- if attrs.href is defined -%}
+        {%- set href = attrs.href -%}
+        <a class="{{ classes }}" href="{{ href }}" {% for k,v in attrs %}{% if k != 'href' %} {{ k }}="{{ v }}"{% endif %}{% endfor %}>
+            {% if icon %}<i class="bi {{ icon }}"></i>{% endif %}
+            {{ label is iterable ? label : (label|raw) }}
+        </a>
+    {%- else -%}
+        <button class="{{ classes }}" {% for k,v in attrs %} {{ k }}="{{ v }}"{% endfor %}>
+            {% if icon %}<i class="bi {{ icon }}"></i>{% endif %}
+            {{ label is iterable ? label : (label|raw) }}
+        </button>
+    {%- endif -%}
+{% endmacro %}

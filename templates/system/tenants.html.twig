@@ -23,9 +23,8 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0"><i class="bi bi-building"></i> {{ 'system_tenants.registered_tenants_section'|trans }}</h5>
-                    <a href="{{ path('app_system_tenants_create') }}" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i> {{ 'system_tenants.create_new_tenant'|trans }}
-                    </a>
+                        {% import 'partials/_button.html.twig' as btn %}
+                        {{ btn.button('system.create_tenant'|trans, 'primary', 'bi-building', {'href': path('app_system_tenants_create')}) }}
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -87,9 +86,7 @@
                                         </td>
                                         <td>
                                             <div class="btn-group btn-group-sm">
-                                                <a href="{{ path('app_system_tenants_edit', {id: tenant.id}) }}" class="btn btn-outline-primary" title="{{ 'common.edit'|trans }}">
-                                                    <i class="bi bi-pencil"></i>
-                                                </a>
+                                                {{ btn.button('common.edit'|trans, 'outline-primary', 'bi-bi-pencil', {'href': path('path('app_system_tenants_edit', {id: tenant.id})')}) }}
                                                 <button type="button" class="btn btn-outline-info" title="{{ 'common.view_details'|trans }}"
                                                         data-bs-toggle="modal" data-bs-target="#tenantModal{{ tenant.id }}">
                                                     <i class="bi bi-eye"></i>
@@ -178,7 +175,7 @@
                     </ul>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'buttons.close'|trans }}</button>
+                    {{ btn.button('buttons.close'|trans, 'secondary', null, {}) }}
                 </div>
             </div>
         </div>

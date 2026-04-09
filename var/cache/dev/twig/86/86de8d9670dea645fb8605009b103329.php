@@ -275,16 +275,28 @@ class __TwigTemplate_ae2cd9a870eb744671283ebcf0b1c3e1 extends Template
             yield "
                 </a>
                 <a class=\"nav-link\" href=\"#\">
-                    <i class=\"bi bi-tags\"></i> Rubros
+                    <i class=\"bi bi-tags\"></i> ";
+            // line 85
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("dashboard.rubros"), "html", null, true);
+            yield "
                 </a>
                 <a class=\"nav-link\" href=\"#\">
-                    <i class=\"bi bi-box\"></i> Materiales
+                    <i class=\"bi bi-box\"></i> ";
+            // line 88
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("dashboard.materials"), "html", null, true);
+            yield "
                 </a>
                 <a class=\"nav-link\" href=\"#\">
-                    <i class=\"bi bi-people\"></i> Mano de Obra
+                    <i class=\"bi bi-people\"></i> ";
+            // line 91
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("dashboard.labor"), "html", null, true);
+            yield "
                 </a>
                 <a class=\"nav-link\" href=\"#\">
-                    <i class=\"bi bi-tools\"></i> Equipos
+                    <i class=\"bi bi-tools\"></i> ";
+            // line 94
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\TranslationExtension']->trans("dashboard.equipment"), "html", null, true);
+            yield "
                 </a>
 
                 <hr class=\"my-2\">
@@ -404,7 +416,7 @@ class __TwigTemplate_ae2cd9a870eb744671283ebcf0b1c3e1 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  370 => 122,  366 => 121,  361 => 119,  357 => 118,  351 => 117,  345 => 114,  341 => 113,  335 => 112,  329 => 109,  325 => 108,  319 => 107,  316 => 106,  313 => 105,  307 => 102,  303 => 101,  296 => 100,  294 => 99,  274 => 82,  268 => 79,  262 => 76,  256 => 73,  252 => 72,  245 => 71,  243 => 70,  237 => 67,  233 => 66,  227 => 65,  222 => 63,  218 => 62,  212 => 61,  207 => 59,  203 => 58,  197 => 57,  193 => 56,  185 => 51,  181 => 50,  175 => 49,  170 => 47,  166 => 46,  160 => 45,  155 => 43,  151 => 42,  145 => 41,  140 => 39,  136 => 38,  130 => 37,  124 => 35,  122 => 34,  120 => 33,  113 => 28,  106 => 25,  98 => 23,  96 => 22,  93 => 21,  87 => 19,  85 => 18,  81 => 17,  78 => 16,  71 => 13,  68 => 12,  60 => 10,  58 => 9,  48 => 1,);
+        return array (  382 => 122,  378 => 121,  373 => 119,  369 => 118,  363 => 117,  357 => 114,  353 => 113,  347 => 112,  341 => 109,  337 => 108,  331 => 107,  328 => 106,  325 => 105,  319 => 102,  315 => 101,  308 => 100,  306 => 99,  298 => 94,  292 => 91,  286 => 88,  280 => 85,  274 => 82,  268 => 79,  262 => 76,  256 => 73,  252 => 72,  245 => 71,  243 => 70,  237 => 67,  233 => 66,  227 => 65,  222 => 63,  218 => 62,  212 => 61,  207 => 59,  203 => 58,  197 => 57,  193 => 56,  185 => 51,  181 => 50,  175 => 49,  170 => 47,  166 => 46,  160 => 45,  155 => 43,  151 => 42,  145 => 41,  140 => 39,  136 => 38,  130 => 37,  124 => 35,  122 => 34,  120 => 33,  113 => 28,  106 => 25,  98 => 23,  96 => 22,  93 => 21,  87 => 19,  85 => 18,  81 => 17,  78 => 16,  71 => 13,  68 => 12,  60 => 10,  58 => 9,  48 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -493,16 +505,16 @@ class __TwigTemplate_ae2cd9a870eb744671283ebcf0b1c3e1 extends Template
                     <i class=\"bi bi-file-earmark-text\"></i> {{ 'dashboard.templates'|trans }}
                 </a>
                 <a class=\"nav-link\" href=\"#\">
-                    <i class=\"bi bi-tags\"></i> Rubros
+                    <i class=\"bi bi-tags\"></i> {{ 'dashboard.rubros'|trans }}
                 </a>
                 <a class=\"nav-link\" href=\"#\">
-                    <i class=\"bi bi-box\"></i> Materiales
+                    <i class=\"bi bi-box\"></i> {{ 'dashboard.materials'|trans }}
                 </a>
                 <a class=\"nav-link\" href=\"#\">
-                    <i class=\"bi bi-people\"></i> Mano de Obra
+                    <i class=\"bi bi-people\"></i> {{ 'dashboard.labor'|trans }}
                 </a>
                 <a class=\"nav-link\" href=\"#\">
-                    <i class=\"bi bi-tools\"></i> Equipos
+                    <i class=\"bi bi-tools\"></i> {{ 'dashboard.equipment'|trans }}
                 </a>
 
                 <hr class=\"my-2\">

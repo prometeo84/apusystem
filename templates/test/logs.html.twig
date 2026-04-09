@@ -5,18 +5,12 @@
 {% block body %}
 <div class="d-flex">
     {% include 'partials/_sidebar.html.twig' %}
-
-    <div class="flex-grow-1">
-        {% include 'partials/_navbar.html.twig' with {'title': 'test.logs_title'|trans} %}
-
-        <div class="container-fluid p-4 content-wrapper">
-            {% for message in app.flashes('success') %}
-                <div class="alert alert-success alert-dismissible fade show">
-                    <i class="bi bi-check-circle-fill"></i> {{ message|trans }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
-
+                                <div class="btn-group" role="group">
+                                    {% import 'partials/_button.html.twig' as btn %}
+                                    {{ btn.button('test.generate_error'|trans, 'primary', 'bi-exclamation-circle', {'href': path('app_test_error'), 'onclick': 'return confirm(\'' ~ 'test.generate_error'|trans ~ '\')'}) }}
+                                    {{ btn.button('password.forgot'|trans, 'primary', 'bi-key', {'href': path('app_password_forgot')}) }}
+                                    {{ btn.button('system_errors.title'|trans, 'secondary', 'bi-journal-text', {'href': path('app_system_errors')}) }}
+                                </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
@@ -56,23 +50,14 @@
                             <div class="mt-4">
                                 <h6>{{ 'test.other_tests'|trans }}:</h6>
                                 <div class="btn-group" role="group">
-                                    <a href="{{ path('app_test_error') }}" class="btn btn-danger"
-                                       onclick="return confirm('{{ 'test.generate_error'|trans }}')">
-                                        <i class="bi bi-exclamation-triangle"></i> {{ 'test.generate_error'|trans }}
-                                    </a>
-                                    <a href="{{ path('app_password_forgot') }}" class="btn btn-primary">
-                                        <i class="bi bi-envelope"></i> {{ 'test.test_email'|trans }}
-                                    </a>
-                                    <a href="{{ path('app_system_errors') }}" class="btn btn-secondary">
-                                        <i class="bi bi-file-text"></i> {{ 'test.view_system_logs'|trans }}
-                                    </a>
+                                    {{ btn.button('test.generate_error'|trans, 'danger', 'bi-bi-exclamation-triangle', {'href': path('app_test_error')}) }}
+                                    {{ btn.button('test.test_email'|trans, 'primary', 'bi-bi-envelope', {'href': path('app_password_forgot')}) }}
+                                    {{ btn.button('test.view_system_logs'|trans, 'secondary', 'bi-bi-file-text', {'href': path('app_system_errors')}) }}
                                 </div>
                             </div>
 
                             <div class="mt-4">
-                                <a href="{{ path('app_system') }}" class="btn btn-outline-secondary">
-                                    <i class="bi bi-arrow-left"></i> {{ 'test.back_dashboard'|trans }}
-                                </a>
+                                {{ btn.button('test.back_dashboard'|trans, 'outline-secondary', 'bi-bi-arrow-left', {'href': path('app_system')}) }}
                             </div>
                         </div>
                     </div>

@@ -83,6 +83,7 @@ auth:
 
 buttons:
   back_to_login: "Back to login"
+  add: "Add"
   cancel: "Cancel"
   close: "Close"
   confirm: "Confirm"
@@ -148,6 +149,17 @@ common:
   user: "User"
   view_details: "View Details"
   yes: "Yes"
+
+  # Plan names (from es catalog)
+  plan_trial: "Trial Plan"
+  plan_basic: "Basic Plan"
+  plan_professional: "Professional Plan"
+  plan_enterprise: "Enterprise Plan"
+  # Date units
+  month: "month"
+  months: "months"
+  year: "year"
+  years: "years"
 
 dashboard:
   actions: "Actions"
@@ -271,9 +283,6 @@ emails:
   automated_notice: "This is an automated message, please do not reply."
   rights_reserved: "All rights reserved."
 
-test:
-  valid_emails: "Valid emails for testing:"
-
 mails:
   important: "IMPORTANT"
 
@@ -369,6 +378,18 @@ security:
   current_password: "Current password"
 
   recommended_apps: "Recommended Apps"
+  min_8_chars: "Minimum 8 characters"
+  password_advice: "We recommend changing your password regularly to keep your account secure."
+  recent_events: "Recent Security Events"
+  recommendation: "It is recommended to use uppercase, lowercase, numbers and symbols"
+  recommended:
+    authy: "Authy: Available for iOS, Android and Desktop"
+    google: "Google Authenticator: Available for iOS and Android"
+    microsoft: "Microsoft Authenticator: Available for iOS and Android"
+  recovery_codes: "Recovery codes available"
+  requirements: "Security requirements"
+  secret_key: "Secret key"
+  severity: "Severity"
 
 security_2fa:
   code_from_app: "6-digit code from your authentication app"
@@ -405,10 +426,14 @@ security_2fa:
 system:
   title: "System"
   actions: "Actions"
-  expires_label: 'Expires:'
-  expired: 'EXPIRED'
-  days: 'days'
-  unlimited_time: 'No time limit'
+  expires_label: "Expires:"
+  expired: "EXPIRED"
+  days: "days"
+  month: "month"
+  months: "months"
+  year: "year"
+  years: "years"
+  unlimited_time: "No time limit"
   plan_basic: "Basic"
   plan_professional: "Professional"
   plan_enterprise: "Enterprise"
@@ -553,6 +578,7 @@ system_tenants:
   registration_label: "Registration"
 
 test:
+  valid_emails: "Valid emails for testing:"
   back_dashboard: "Back to Dashboard"
   critical_message: "CRITICAL Critical message with exception"
   current_time: "Current Time"
@@ -764,9 +790,6 @@ units.kg: "kg"
 units.u: "u (unit)"
 units.GLB: "GLB (global)"
 common.select: "Select..."
-buttons:
-  add: "Add"
-  cancel: "Cancel"
 apu.update: "Update APU"
 
 security.2fa.important: "Important"

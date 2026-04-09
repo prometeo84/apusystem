@@ -6,9 +6,8 @@
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-calculator"></i> {{ 'apu.header'|trans }}</h1>
-        <a href="{{ path('app_apu_create') }}" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> {{ 'apu.new_apu'|trans }}
-        </a>
+            {% import 'partials/_button.html.twig' as btn %}
+            {{ btn.button('apu.new_apu'|trans, 'primary', 'bi-plus-circle', {'href': path('app_apu_create')}) }}
     </div>
 
     {% for message in app.flashes('success') %}
@@ -45,12 +44,8 @@
                                 </td>
                                 <td>{{ item.createdAt|date('d/m/Y') }}</td>
                                 <td class="text-center">
-                                    <a href="{{ path('app_apu_edit', {id: item.id}) }}" class="btn btn-sm btn-outline-primary" title="{{ 'apu.edit'|trans }}">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <a href="{{ path('app_apu_export_excel', {id: item.id}) }}" class="btn btn-sm btn-outline-success" title="{{ 'apu.export_excel'|trans }}">
-                                        <i class="bi bi-file-earmark-excel"></i>
-                                    </a>
+                                    {{ btn.button('', 'outline-primary', 'bi-pencil', {'href': '{{ path('app_apu_edit', {id: item.id}) }}', 'title': '{{ 'apu.edit'|trans }}', 'class':'btn-sm'}) }}
+                                    {{ btn.button('', 'outline-success', 'bi-file-earmark-excel', {'href': '{{ path('app_apu_export_excel', {id: item.id}) }}', 'title': '{{ 'apu.export_excel'|trans }}', 'class':'btn-sm'}) }}
                                 </td>
                             </tr>
                         {% endfor %}

@@ -41,9 +41,8 @@
                             <p class="mb-3">
                                 <span class="badge bg-secondary">{{ user.role|upper }}</span>
                             </p>
-                            <a href="{{ path('app_profile_edit') }}" class="btn btn-primary btn-sm">
-                                <i class="bi bi-pencil"></i> {{ 'buttons.edit'|trans }} {{ 'profile.title'|trans }}
-                            </a>
+                            {% import 'partials/_button.html.twig' as btn %}
+                            {{ btn.button('buttons.edit'|trans ~ ' ' ~ ('profile.title'|trans), 'primary', 'bi-pencil', {'href': path('app_profile_edit')}) }}
                         </div>
                     </div>
 
@@ -124,9 +123,7 @@
                                     <p class="text-muted">{{ 'password.last_update'|trans }}:
                                         {{ user.passwordChangedAt ? user.passwordChangedAt|date('d/m/Y') : ('common.never'|trans) }}
                                     </p>
-                                    <a href="{{ path('app_profile_change_password') }}" class="btn btn-outline-primary">
-                                        <i class="bi bi-shield-lock"></i> {{ 'password.change'|trans }}
-                                    </a>
+                                    {{ btn.button('password.change'|trans, 'outline-primary', 'bi-bi-shield-lock', {'href': path('app_profile_change_password')}) }}
                                 </div>
                             </div>
                         </div>
@@ -145,9 +142,7 @@
                                             <span class="badge bg-warning">{{ 'security.disabled'|trans }}</span>
                                         {% endif %}
                                     </p>
-                                    <a href="{{ path('app_security') }}" class="btn btn-outline-primary">
-                                        <i class="bi bi-gear"></i> {{ 'security.configure'|trans }}
-                                    </a>
+                                    {{ btn.button('security.configure'|trans, 'outline-primary', 'bi-bi-gear', {'href': path('app_security')}) }}
                                 </div>
                             </div>
                         </div>

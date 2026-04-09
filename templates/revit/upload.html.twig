@@ -63,12 +63,9 @@
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" data-uploading-text="{{ 'revit.upload.uploading'|trans }}">
-                                <i class="bi bi-cloud-upload"></i> {{ 'revit.upload_process'|trans }}
-                            </button>
-                            <a href="{{ path('app_revit_files') }}" class="btn btn-outline-secondary">
-                                <i class="bi bi-list"></i> {{ 'revit.view_uploaded'|trans }}
-                            </a>
+                                {% import 'partials/_button.html.twig' as btn %}
+                                {{ btn.button('revit.upload_new'|trans, 'primary', 'bi-upload', {'type':'submit','id':'submitBtn','data-uploading-text': ('revit.upload.uploading'|trans)}) }}
+                                {{ btn.button('revit.files'|trans, 'secondary', 'bi-folder', {'href': path('app_revit_files')}) }}
                         </div>
                     </form>
                 </div>

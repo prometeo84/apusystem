@@ -3,6 +3,7 @@
 {% block title %}{{ 'webauthn.title'|trans }}{% endblock %}
 
 {% block body %}
+{% import 'partials/_button.html.twig' as btn %}
   <div class="container py-4">
     <h1>{{ 'webauthn.header'|trans }}</h1>
 
@@ -22,7 +23,7 @@
     </div>
 
     <div class="mt-4">
-      <button id="registerBtn" class="btn btn-primary">{{ 'webauthn.register'|trans }}</button>
+      {{ btn.button('webauthn.register'|trans, 'primary', null, {}) }}
     </div>
   </div>
 
