@@ -176,7 +176,6 @@ dashboard:
   no_projects: "No projects registered"
   plan: "Plan"
   plan_label: "Plan"
-  max_users: "max users"
   quick_actions: "Quick Actions"
   export_report: "Export Report"
   no_recent_activity: "No recent activity"
