@@ -221,7 +221,7 @@ messages:
   invalid_data: "Datos inválidos"
   success: "Cambios guardados exitosamente"
   unauthorized: "No autorizado"
-   system.info: "Info"
+  system.info: "Info"
 
 nav:
   admin: "Administración"
