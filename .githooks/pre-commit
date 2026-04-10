@@ -1,3 +1,31 @@
+#!/usr/bin/env bash
+# Pre-commit hook: check PHP syntax for staged PHP files
+set -euo pipefail
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.php$" || true)
+if [ -z "$STAGED" ]; then
+  exit 0
+fi
+
+HAS_ERROR=0
+for file in $STAGED; do
+  # If file was deleted or not present in worktree, skip
+  if [ ! -f "$file" ]; then
+    continue
+  fi
+  php -l "$file" >/dev/null 2>&1 || {
+    echo "PHP syntax error in staged file: $file"
+    php -l "$file"
+    HAS_ERROR=1
+  }
+done
+
+if [ "$HAS_ERROR" -ne 0 ]; then
+  echo "Commit aborted due to PHP syntax errors. Fix them before committing." >&2
+  exit 1
+fi
+
+exit 0
 #!/bin/sh
 # Simple pre-commit hook: check PHP syntax and Twig syntax for staged files.
 STAGED=$(git diff --cached --name-only --diff-filter=ACM)
