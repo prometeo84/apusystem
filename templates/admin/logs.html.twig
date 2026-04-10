@@ -87,14 +87,15 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div id="logsFooter" class="d-flex justify-content-between align-items-center"
+                         data-per-page="{{ perPage }}"
+                         data-show-template="{{ 'system.showing_events'|trans({'%count%':'%COUNT%'}) }}"
+                         data-pageof-template="{{ 'pagination.page_of'|trans({'%page%':'%PAGE%','%total%':'%TOTAL%'}) }}">
                         <small class="text-muted">
-                            {{ 'system.showing_events'|trans({'%count%': securityEvents|length}) }}
-                            {% if totalPages > 1 %}
-                                &mdash; {{ pager.info(currentPage, totalPages) }}
-                            {% endif %}
+                            <span id="logsCount">{{ 'system.showing_events'|trans({'%count%': securityEvents|length}) }}</span>
+                            <span id="logsPageInfo">{% if totalPages > 1 %}&mdash; {{ pager.info(currentPage, totalPages) }}{% endif %}</span>
                         </small>
-                        {{ pager.render(currentPage, totalPages, 'app_admin_logs') }}
+                        <div id="logsPager">{{ pager.render(currentPage, totalPages, 'app_admin_logs') }}</div>
                     </div>
                 </div>
             </div>
@@ -162,6 +163,34 @@ document.addEventListener('DOMContentLoaded', function() {
     // Filtros de severidad
     const filterButtons = document.querySelectorAll('[data-filter]');
     const rows = document.querySelectorAll('#logsTable tbody tr');
+    const logsFooter = document.getElementById('logsFooter');
+    const logsCountEl = document.getElementById('logsCount');
+    const logsPageInfoEl = document.getElementById('logsPageInfo');
+    const logsPagerEl = document.getElementById('logsPager');
+
+    function updatePaginationDisplay() {
+        if (!logsFooter) return;
+        const perPage = parseInt(logsFooter.dataset.perPage || '20', 10);
+        const showTemplate = logsFooter.dataset.showTemplate || '%COUNT%';
+        const pageOfTemplate = logsFooter.dataset.pageofTemplate || 'Page %PAGE% of %TOTAL%';
+
+        const visibleRows = Array.from(rows).filter(r => r.style.display !== 'none');
+        const count = visibleRows.length;
+        const totalPagesVisible = Math.max(1, Math.ceil(count / perPage));
+
+        // Update showing count
+        logsCountEl.textContent = showTemplate.replace('%COUNT%', count);
+
+        // Update page info
+        if (totalPagesVisible > 1) {
+            logsPageInfoEl.innerHTML = '&mdash; ' + pageOfTemplate.replace('%PAGE%', '1').replace('%TOTAL%', totalPagesVisible);
+            // show pager (simplest approach: keep server pager but hide if only 1 page)
+            logsPagerEl.style.display = '';
+        } else {
+            logsPageInfoEl.innerHTML = '';
+            logsPagerEl.style.display = 'none';
+        }
+    }
 
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -180,6 +209,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
+
+    // Update display initially in case some rows are hidden by server-side
+    updatePaginationDisplay();
     });
 
     // DataTables si está disponible
