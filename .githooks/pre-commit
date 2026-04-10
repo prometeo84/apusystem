@@ -1,3 +1,37 @@
+#!/bin/sh
+# Simple pre-commit hook: check PHP syntax and Twig syntax for staged files.
+STAGED=$(git diff --cached --name-only --diff-filter=ACM)
+if [ -z "$STAGED" ]; then
+  exit 0
+fi
+ERR=0
+for file in $STAGED; do
+  case "$file" in
+    *.php)
+      docker exec apache php -l "$file" >/dev/null 2>&1
+      if [ $? -ne 0 ]; then
+        echo "PHP syntax error in $file"
+        docker exec apache php -l "$file"
+        ERR=1
+      fi
+      ;;
+    *.twig)
+      docker exec apache php bin/console lint:twig "$file" >/dev/null 2>&1
+      if [ $? -ne 0 ]; then
+        echo "Twig syntax error in $file"
+        docker exec apache php bin/console lint:twig "$file"
+        ERR=1
+      fi
+      ;;
+  esac
+done
+
+if [ "$ERR" -ne 0 ]; then
+  echo "Commit aborted due to syntax errors. Fix them and try again."
+  exit 1
+fi
+
+exit 0
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════
 #  Pre-commit hook — APU System
