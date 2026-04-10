@@ -216,11 +216,10 @@ login:
   submit: "Sign In"
   title: "Login"
 
-messages:
-  error: "An error occurred"
-  invalid_data: "Invalid data"
-  success: "Changes saved successfully"
-  unauthorized: "Unauthorized"
+error: "An error occurred"
+invalid_data: "Invalid data"
+success: "Changes saved successfully"
+unauthorized: "Unauthorized"
 
 nav:
   admin: "Administration"
