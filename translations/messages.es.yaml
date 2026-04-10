@@ -216,12 +216,11 @@ login:
   submit: "Ingresar"
   title: "Iniciar Sesión"
 
-messages:
-  error: "Ha ocurrido un error"
-  invalid_data: "Datos inválidos"
-  success: "Cambios guardados exitosamente"
-  unauthorized: "No autorizado"
-  system.info: "Info"
+error: "Ha ocurrido un error"
+invalid_data: "Datos inválidos"
+success: "Cambios guardados exitosamente"
+unauthorized: "No autorizado"
+system.info: "Info"
 
 nav:
   admin: "Administración"
