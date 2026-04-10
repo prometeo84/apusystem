@@ -8,6 +8,8 @@
                                 {% import 'partials/_button.html.twig' as btn %}
             <div class="row">
                 <div class="col-md-12">
+                    {# Consumir flashes aquí para que no se filtren a otras páginas #}
+                    {% include 'partials/_flashes.html.twig' %}
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0"><i class="bi bi-bug"></i> {{ 'test.test_system'|trans }}</h5>

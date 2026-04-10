@@ -12,6 +12,10 @@ Options -Indexes
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
 
+    # Si el archivo existe en public/ (build/, uploads/, bundles/, etc.), servirlo directamente
+    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
+    RewriteRule ^(.*)$ public/$1 [L]
+
     # Redirigir todas las demás peticiones al front controller de Symfony en public/
     RewriteRule ^(.*)$ public/index.php [QSA,L]
 </IfModule>

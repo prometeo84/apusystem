@@ -28,6 +28,7 @@
                         </div>
                         <div class="card-body">
                             <form method="post" action="{{ path('app_system_tenants_create') }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="name" class="form-label">{{ 'system.company_name'|trans }} *</label>
@@ -93,7 +94,7 @@
                                 <div class="d-flex gap-2">
                                     {% import 'partials/_button.html.twig' as btn %}
                                     {{ btn.button('system.create_tenant'|trans, 'primary', 'bi-check-lg', {'type':'submit'}) }}
-                                    {{ btn.button('common.cancel'|trans, 'secondary', 'bi-x-lg', {'href': path('app_system_tenants')}) }}
+                                    {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_system_tenants')}) }}
                                 </div>
                             </form>
                         </div>

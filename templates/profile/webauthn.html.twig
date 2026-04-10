@@ -5,62 +5,169 @@
 {% block body %}
 {% import 'partials/_button.html.twig' as btn %}
   <div class="container py-4">
-    <h1>{{ 'webauthn.header'|trans }}</h1>
-
-    <div id="creds">
-      <ul>
-        {% for c in credentials %}
-          <li>
-            {{ c.createdAt|date('Y-m-d H:i') }} — fmt: {{ c.fmt ?: 'unknown' }} — aaguid: {{ c.aaguid ?: 'n/a' }}
-            <form method="post" action="{{ path('webauthn_revoke', {'id': c.id}) }}" style="display:inline;">
-              {{ btn.button('webauthn.revoke'|trans, 'danger', null, {'type':'submit','class':'btn-sm'}) }}
-            </form>
-          </li>
-        {% else %}
-          <li>{{ 'webauthn.no_credentials'|trans }}</li>
-        {% endfor %}
-      </ul>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-fingerprint"></i> {{ 'webauthn.header'|trans }}</h1>
+        {{ btn.button('common.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_security')}) }}
     </div>
 
-    <div class="mt-4">
-      {{ btn.button('webauthn.register'|trans, 'primary', null, {}) }}
+    {% include 'partials/_flashes.html.twig' %}
+
+    <div id="webauthn-alert" class="d-none"></div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-key"></i> {{ 'webauthn.registered_keys'|trans }}</h5>
+        </div>
+        <div class="card-body">
+            {% if credentials|length > 0 %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>{{ 'webauthn.registered_at'|trans }}</th>
+                            <th>{{ 'webauthn.format'|trans }}</th>
+                            <th>{{ 'webauthn.aaguid'|trans }}</th>
+                            <th class="text-end">{{ 'webauthn.actions'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for c in credentials %}
+                        <tr>
+                            <td>{{ c.createdAt|date('Y-m-d H:i') }}</td>
+                            <td><span class="badge bg-secondary">{{ c.fmt ?: 'none' }}</span></td>
+                            <td><code class="small">{{ c.aaguid ?: 'n/a' }}</code></td>
+                            <td class="text-end">
+                                <button type="button"
+                                        class="btn btn-outline-danger btn-sm revoke-btn"
+                                        data-credential-id="{{ c.id }}"
+                                        data-revoke-url="{{ path('webauthn_revoke', {'id': c.id}) }}">
+                                    <i class="bi bi-trash"></i> {{ 'webauthn.revoke'|trans }}
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <p class="text-muted mb-0"><i class="bi bi-info-circle"></i> {{ 'webauthn.no_credentials'|trans }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-plus-circle"></i> {{ 'webauthn.register_new_key'|trans }}</h5>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">{{ 'webauthn.register_description'|trans }}</p>
+            <button type="button" id="registerBtn" class="btn btn-primary animate-raise">
+                <i class="bi bi-fingerprint"></i> {{ 'webauthn.register'|trans }}
+            </button>
+        </div>
     </div>
   </div>
 
   <script>
-    document.getElementById('registerBtn').addEventListener('click', async function(){
-      // Start
-      const start = await fetch('{{ path('webauthn_register_start') }}', {method:'POST'});
-      const opts = await start.json();
-      // Decode challenge
-      opts.challenge = Uint8Array.from(window.atob(opts.challenge.replace(/-/g,'+').replace(/_/g,'/')), c=>c.charCodeAt(0));
-      opts.user.id = Uint8Array.from(window.atob(opts.user.id.replace(/-/g,'+').replace(/_/g,'/')), c=>c.charCodeAt(0));
+  (function() {
+    function showAlert(msg, type) {
+        const el = document.getElementById('webauthn-alert');
+        el.className = 'alert alert-' + type + ' alert-dismissible fade show';
+        el.innerHTML = msg + '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
+        el.classList.remove('d-none');
+    }
 
-      const cred = await navigator.credentials.create({publicKey: opts});
-      const response = cred.response;
+    function b64urlToBuffer(b64url) {
+        const b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
+        const bin = atob(b64);
+        return Uint8Array.from(bin, c => c.charCodeAt(0)).buffer;
+    }
 
-      const clientDataJSON = btoa(String.fromCharCode(...new Uint8Array(response.clientDataJSON)));
-      const attestationObject = btoa(String.fromCharCode(...new Uint8Array(response.attestationObject)));
-      const rawId = btoa(String.fromCharCode(...new Uint8Array(cred.rawId)));
+    function bufferToB64url(buf) {
+        return btoa(String.fromCharCode(...new Uint8Array(buf)))
+            .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+    }
 
-      // Try to extract fmt quickly if present in object (best-effort)
-      let fmt = null;
-      try { fmt = cred.response.getClientExtensionResults && cred.response.getClientExtensionResults().fmt; } catch(e){}
+    const csrfToken = '{{ csrf_token('submit') }}';
 
-      await fetch('{{ path('webauthn_register_finish') }}', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          attestationObject: attestationObject,
-          clientDataJSON: clientDataJSON,
-          rawId: rawId,
-          publicKey: '',
-          fmt: fmt
-        })
-      });
+    // REGISTER
+    document.getElementById('registerBtn').addEventListener('click', async function() {
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> {{ 'webauthn.registering'|trans }}';
+        try {
+            const startRes = await fetch('{{ path('webauthn_register_start') }}', {
+                method: 'POST',
+                headers: { 'X-CSRF-Token': csrfToken }
+            });
+            if (!startRes.ok) throw new Error('{{ 'webauthn.error_start'|trans }}');
+            const opts = await startRes.json();
 
-      location.reload();
+            opts.challenge = b64urlToBuffer(opts.challenge);
+            opts.user.id  = b64urlToBuffer(opts.user.id);
+
+            const cred = await navigator.credentials.create({ publicKey: opts });
+            const resp = cred.response;
+
+            const payload = {
+                attestationObject: bufferToB64url(resp.attestationObject),
+                clientDataJSON:    bufferToB64url(resp.clientDataJSON),
+                rawId:             bufferToB64url(cred.rawId),
+                transports:        resp.getTransports ? resp.getTransports() : [],
+                fmt:               null
+            };
+
+            const finishRes = await fetch('{{ path('webauthn_register_finish') }}', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify(payload),
+            });
+
+            const result = await finishRes.json();
+            if (result.ok) {
+                showAlert('<i class="bi bi-check-circle-fill me-1"></i> {{ 'webauthn.registered_ok'|trans }}', 'success');
+                setTimeout(() => location.reload(), 1500);
+            } else if (result.error === 'admin_requires_hardware_attestation') {
+                showAlert('<i class="bi bi-exclamation-triangle-fill me-1"></i> {{ 'webauthn.error_admin_hardware'|trans }}', 'danger');
+            } else {
+                showAlert('<i class="bi bi-exclamation-triangle-fill me-1"></i> {{ 'webauthn.error_registration'|trans }}: ' + (result.error || ''), 'danger');
+            }
+        } catch (e) {
+            if (e.name === 'NotAllowedError') {
+                showAlert('<i class="bi bi-exclamation-circle me-1"></i> {{ 'webauthn.error_user_cancelled'|trans }}', 'warning');
+            } else {
+                showAlert('<i class="bi bi-exclamation-triangle-fill me-1"></i> ' + e.message, 'danger');
+            }
+        } finally {
+            this.disabled = false;
+            this.innerHTML = '<i class="bi bi-fingerprint"></i> {{ 'webauthn.register'|trans }}';
+        }
     });
-  </script>
 
+    // REVOKE
+    document.querySelectorAll('.revoke-btn').forEach(btn => {
+        btn.addEventListener('click', async function() {
+            if (!confirm('{{ 'webauthn.confirm_revoke'|trans }}')) return;
+            const url = this.dataset.revokeUrl;
+            this.disabled = true;
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'X-CSRF-Token': csrfToken }
+                });
+                const result = await res.json();
+                if (result.ok) {
+                    this.closest('tr').remove();
+                    showAlert('<i class="bi bi-check-circle-fill me-1"></i> {{ 'webauthn.revoked_ok'|trans }}', 'success');
+                } else {
+                    showAlert('<i class="bi bi-exclamation-triangle-fill me-1"></i> {{ 'webauthn.error_revoke'|trans }}', 'danger');
+                    this.disabled = false;
+                }
+            } catch (e) {
+                showAlert('<i class="bi bi-exclamation-triangle-fill me-1"></i> ' + e.message, 'danger');
+                this.disabled = false;
+            }
+        });
+    });
+  })();
+  </script>
 {% endblock %}

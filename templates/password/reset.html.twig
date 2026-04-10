@@ -23,6 +23,7 @@
                         {% endfor %}
 
                         <form method="post" action="{{ path('app_password_reset', {token: token}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                             <div class="alert alert-info mb-3">
                                 <strong>{{ 'password.reset.requirements'|trans }}</strong>
                                 <ul class="mb-0 mt-2">

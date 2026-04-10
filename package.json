@@ -10,12 +10,20 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "test:e2e": "npx playwright test",
+        "test:e2e:update": "npx playwright test --update-snapshots",
+        "test:accessibility": "node tools/run-lighthouse.js http://localhost:8080/admin/logs"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "@playwright/test": "^1.59.1",
+        "axe-playwright": "^2.2.2",
+        "chrome-launcher": "^1.2.1",
+        "lighthouse": "^13.1.0",
+        "playwright": "^1.59.1",
         "vite": "^7.3.1",
         "vite-plugin-symfony": "^8.2.3"
     },

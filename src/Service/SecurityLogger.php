@@ -21,24 +21,23 @@ class SecurityLogger
         ?User $user = null,
         ?array $eventData = null
     ): void {
-        $request = $this->requestStack->getCurrentRequest();
-        $ipAddress = $request ? $request->getClientIp() : '0.0.0.0';
+        $request   = $this->requestStack->getCurrentRequest();
+        $ipAddress = $request ? ($request->getClientIp() ?? '0.0.0.0') : '0.0.0.0';
         $userAgent = $request ? $request->headers->get('User-Agent') : null;
 
-        $tenant = $user ? $user->getTenant() : null;
-
-        $event = new SecurityEvent($eventType, $ipAddress, $severity, $user, $tenant);
-        
-        if ($userAgent) {
-            $event->setUserAgent($userAgent);
-        }
-        
-        if ($eventData) {
-            $event->setEventData($eventData);
-        }
-
-        $this->em->persist($event);
-        $this->em->flush();
+        // Use raw DBAL INSERT to avoid forcing an ORM flush that could persist
+        // unrelated pending entity changes and incur a full unit-of-work traversal.
+        $conn = $this->em->getConnection();
+        $conn->insert('security_events', [
+            'tenant_id'  => $user?->getTenant()?->getId(),
+            'user_id'    => $user?->getId(),
+            'event_type' => $eventType,
+            'severity'   => $severity,
+            'ip_address' => $ipAddress,
+            'user_agent' => $userAgent,
+            'event_data' => $eventData ? json_encode($eventData, \JSON_UNESCAPED_UNICODE) : null,
+            'created_at' => (new \DateTime())->format('Y-m-d H:i:s'),
+        ]);
     }
 
     // Convenience methods for common events

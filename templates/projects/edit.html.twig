@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'project.edit_title'|trans }} - {{ project.nombre }}{% endblock %}
+
+{% block body %}
+{% import 'partials/_button.html.twig' as btn %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ path('app_project_index') }}">{{ 'project.title'|trans }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.nombre }}</a></li>
+                    <li class="breadcrumb-item active">{{ 'common.edit'|trans }}</li>
+                </ol>
+            </nav>
+            <h1 class="mb-0"><i class="bi bi-pencil-square"></i> {{ 'project.edit_title'|trans }}</h1>
+        </div>
+        {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_project_show', {id: project.id})}) }}
+    </div>
+
+    {% include 'partials/_flashes.html.twig' %}
+
+    <form method="POST" action="{{ path('app_project_edit', {id: project.id}) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('project_edit_' ~ project.id) }}">
+
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-info-circle"></i> {{ 'project.general_info'|trans }}
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.col_name'|trans }} <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="nombre" maxlength="255"
+                               value="{{ project.nombre }}" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.col_code'|trans }} <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="codigo" maxlength="100"
+                               value="{{ project.codigo }}" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label fw-semibold">{{ 'common.description'|trans }}</label>
+                        <textarea class="form-control" name="descripcion" rows="3">{{ project.descripcion }}</textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.col_client'|trans }}</label>
+                        <input type="text" class="form-control" name="cliente" maxlength="255"
+                               value="{{ project.cliente }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.col_location'|trans }}</label>
+                        <input type="text" class="form-control" name="ubicacion" maxlength="255"
+                               value="{{ project.ubicacion }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-calendar3"></i> {{ 'project.dates_budget'|trans }}
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.col_status'|trans }}</label>
+                        <select class="form-select" name="estado">
+                            {% for statusKey in ['planificacion','en_proceso','pausado','finalizado'] %}
+                                <option value="{{ statusKey }}" {{ project.estado == statusKey ? 'selected' : '' }}>
+                                    {{ ('project.status.' ~ statusKey)|trans }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.start_date'|trans }}</label>
+                        <input type="date" class="form-control" name="fecha_inicio"
+                               value="{{ project.fechaInicio ? project.fechaInicio|date('Y-m-d') : '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.end_date'|trans }}</label>
+                        <input type="date" class="form-control" name="fecha_fin"
+                               value="{{ project.fechaFin ? project.fechaFin|date('Y-m-d') : '' }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.col_budget'|trans }} (USD)</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" step="0.01" min="0" class="form-control" name="presupuesto_total"
+                                   value="{{ project.presupuestoTotal }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-end">
+            {{ btn.button('buttons.cancel'|trans, 'secondary', 'bi-x-circle', {'href': path('app_project_show', {id: project.id})}) }}
+            &nbsp;
+            {{ btn.button('project.save'|trans, 'primary', 'bi-save', {'type':'submit'}) }}
+        </div>
+    </form>
+</div>
+{% endblock %}

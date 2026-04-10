@@ -79,19 +79,9 @@ class SessionActivityListener implements EventSubscriberInterface
         // Actualizar lastActivityAt y extender expiresAt
         $loginSession->updateActivity();
 
-        $lifetime = (int) (getenv('SESSION_LIFETIME') ?: 3600);
+        $lifetime = (int) (getenv('SESSION_LIFETIME') ?: 10800); // 3 horas por defecto
         $expiresAt = (clone $now)->modify('+' . $lifetime . ' seconds');
-
-        // Reflection or setter needed - update via property if method exists
-        try {
-            $method = new \ReflectionMethod(LoginSession::class, 'getExpiresAt');
-            // Use existing methods: no setter available, so update by reflection
-            $prop = new \ReflectionProperty(LoginSession::class, 'expiresAt');
-            $prop->setAccessible(true);
-            $prop->setValue($loginSession, $expiresAt);
-        } catch (\ReflectionException $e) {
-            // If reflection fails, skip updating expiresAt
-        }
+        $loginSession->setExpiresAt($expiresAt);
 
         $this->em->persist($loginSession);
         $this->em->flush();

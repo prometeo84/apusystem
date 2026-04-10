@@ -54,10 +54,19 @@ Sistema multi-tenant para análisis y gestión de APUs (Análisis de Precios Uni
 
 ### 📊 APUs y Proyectos
 
-- Creación y gestión de APUs
-- Proyectos multi-empresa
-- Catálogo de materiales, mano de obra y equipos
-- Plantillas reutilizables
+Flujo completo de análisis de precios unitarios organizado jerárquicamente:
+
+```
+LOGIN → PROYECTOS → PLANTILLAS → RUBROS → APU → REPORTE (PDF / Excel)
+```
+
+- **Proyectos**: creación, edición y duplicación de proyectos de obra
+- **Rubros Personalizados**: catálogo de rubros CRUD con código, unidad y tipo
+- **Plantillas de Presupuesto**: agrupan rubros asignados a cada proyecto
+- **APU por Rubro**: Equipo, Mano de Obra, Materiales y Transporte con cálculo automático
+- **Utilidad y Precio Ofertado**: porcentaje configurable y precio final por APU
+- **Reportes PDF y Excel**: por plantilla individual o por proyecto completo
+- **Duplicar Proyectos y Plantillas**: copia estructura sin APUs
 - Importación desde Revit (BIM)
 
 ### 🌐 Internacionalización

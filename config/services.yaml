@@ -53,10 +53,8 @@ services:
         tags:
             - { name: monolog.processor }
 
-    # WebAuthnService is autowired; HttpClient is optional and will be used when available.
-    App\Service\WebAuthnService:
-        arguments:
-            $httpClient: "@http_client"
+    # WebAuthnService: signature verification using OpenSSL
+    App\Service\WebAuthnService: ~
 
     App\Service\RateLimitingService:
         arguments:

@@ -3,6 +3,7 @@
 {% block title %}{{ 'security_2fa.verify_title'|trans }} - APU System{% endblock %}
 
 {% block body %}
+{% import 'partials/_button.html.twig' as btn %}
 <div class="main-content">
     <div class="container">
         <div class="row justify-content-center">
@@ -25,6 +26,7 @@
                         {% endfor %}
 
                         <form method="post">
+                            <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                             <div class="mb-4">
                                 <label for="code" class="form-label text-center w-100">
                                     {{ 'security_2fa.enter_code'|trans }}

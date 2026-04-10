@@ -28,7 +28,7 @@ security:
                 target: app_login
             remember_me:
                 secret: "%kernel.secret%"
-                lifetime: 604800 # 1 week
+                lifetime: 10800 # 3 hours
                 path: /
                 always_remember_me: false
 
@@ -38,6 +38,10 @@ security:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/set-locale, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
+        - { path: ^/webauthn/login, roles: PUBLIC_ACCESS }
+        - { path: ^/password/forgot, roles: PUBLIC_ACCESS }
+        - { path: ^/password/reset, roles: PUBLIC_ACCESS }
+        - { path: ^/api/, roles: PUBLIC_ACCESS }
         - { path: ^/2fa-setup, roles: IS_AUTHENTICATED_REMEMBERED }
         # Allow public access to uploaded avatars so they can be served by Symfony
         - { path: ^/uploads/avatars, roles: PUBLIC_ACCESS }

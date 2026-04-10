@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'project.create_title'|trans }} - APU System{% endblock %}
+
+{% block body %}
+{% import 'partials/_button.html.twig' as btn %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-folder-plus"></i> {{ 'project.create_title'|trans }}</h1>
+        {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_project_index')}) }}
+    </div>
+
+    {% include 'partials/_flashes.html.twig' %}
+
+    <form method="POST" action="{{ path('app_project_create') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('project_create') }}">
+
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-info-circle"></i> {{ 'project.general_info'|trans }}
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.col_name'|trans }} <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="nombre" maxlength="255"
+                               placeholder="{{ 'project.placeholder_name'|trans }}" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.col_code'|trans }} <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="codigo" maxlength="100"
+                               placeholder="{{ 'project.placeholder_code'|trans }}" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label fw-semibold">{{ 'common.description'|trans }}</label>
+                        <textarea class="form-control" name="descripcion" rows="3"
+                                  placeholder="{{ 'project.placeholder_description'|trans }}"></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.col_client'|trans }}</label>
+                        <input type="text" class="form-control" name="cliente" maxlength="255"
+                               placeholder="{{ 'project.placeholder_client'|trans }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.col_location'|trans }}</label>
+                        <input type="text" class="form-control" name="ubicacion" maxlength="255"
+                               placeholder="{{ 'project.placeholder_location'|trans }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-calendar3"></i> {{ 'project.dates_budget'|trans }}
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.col_status'|trans }}</label>
+                        <select class="form-select" name="estado">
+                            <option value="planificacion">{{ 'project.status.planificacion'|trans }}</option>
+                            <option value="en_proceso">{{ 'project.status.en_proceso'|trans }}</option>
+                            <option value="pausado">{{ 'project.status.pausado'|trans }}</option>
+                            <option value="finalizado">{{ 'project.status.finalizado'|trans }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.start_date'|trans }}</label>
+                        <input type="date" class="form-control" name="fecha_inicio">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.end_date'|trans }}</label>
+                        <input type="date" class="form-control" name="fecha_fin">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">{{ 'project.col_budget'|trans }} (USD)</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" step="0.01" min="0" class="form-control" name="presupuesto_total"
+                                   placeholder="0.00">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-end">
+            {{ btn.button('buttons.cancel'|trans, 'secondary', 'bi-x-circle', {'href': path('app_project_index')}) }}
+            &nbsp;
+            {{ btn.button('project.save'|trans, 'primary', 'bi-save', {'type':'submit'}) }}
+        </div>
+    </form>
+</div>
+{% endblock %}

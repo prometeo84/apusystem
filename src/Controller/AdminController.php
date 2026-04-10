@@ -75,18 +75,32 @@ class AdminController extends AbstractController
     }
 
     #[Route('/users', name: 'app_admin_users')]
-    public function users(): Response
+    public function users(Request $request): Response
     {
         /** @var User $user */
         $user = $this->getUser();
         $tenant = $user->getTenant();
 
-        $users = $this->em->getRepository(User::class)
-            ->findBy(['tenant' => $tenant], ['createdAt' => 'DESC']);
+        $perPage = 20;
+        $currentPage = max(1, (int) $request->query->get('page', 1));
+
+        $repo  = $this->em->getRepository(User::class);
+        $total = $repo->count(['tenant' => $tenant]);
+        $users = $repo->findBy(
+            ['tenant' => $tenant],
+            ['createdAt' => 'DESC'],
+            $perPage,
+            ($currentPage - 1) * $perPage
+        );
+        $totalPages = (int) ceil($total / $perPage);
 
         return $this->render('admin/users.html.twig', [
-            'user' => $user,
-            'users' => $users,
+            'user'        => $user,
+            'users'       => $users,
+            'currentPage' => $currentPage,
+            'totalPages'  => $totalPages,
+            'totalItems'  => $total,
+            'perPage'     => $perPage,
         ]);
     }
 
@@ -108,6 +122,13 @@ class AdminController extends AbstractController
             // Validar campos
             if (!$email || !$username || !$firstName || !$lastName || !$password) {
                 $this->addFlash('error', 'flash.all_fields_required');
+                return $this->redirectToRoute('app_admin_users_create');
+            }
+
+            // Verificar límite de usuarios del tenant
+            $userCount = $this->em->getRepository(User::class)->count(['tenant' => $tenant]);
+            if ($userCount >= $tenant->getMaxUsers()) {
+                $this->addFlash('error', 'flash.tenant_user_limit_reached');
                 return $this->redirectToRoute('app_admin_users_create');
             }
 
@@ -218,22 +239,35 @@ class AdminController extends AbstractController
     }
 
     #[Route('/logs', name: 'app_admin_logs')]
-    public function logs(): Response
+    public function logs(Request $request): Response
     {
         /** @var User $user */
         $user = $this->getUser();
         $tenant = $user->getTenant();
 
+        $perPage = 20;
+        $totalEvents = $this->em->getRepository(\App\Entity\SecurityEvent::class)
+            ->count(['tenant' => $tenant]);
+        $totalPages = max(1, (int) ceil($totalEvents / $perPage));
+
+        $page = max(1, min($totalPages, (int) $request->query->get('page', 1)));
+        $offset = ($page - 1) * $perPage;
+
         $securityEvents = $this->em->getRepository(\App\Entity\SecurityEvent::class)
             ->findBy(
                 ['tenant' => $tenant],
                 ['createdAt' => 'DESC'],
-                100
+                $perPage,
+                $offset
             );
 
         return $this->render('admin/logs.html.twig', [
             'user' => $user,
             'securityEvents' => $securityEvents,
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'totalEvents' => $totalEvents,
+            'perPage' => $perPage,
         ]);
     }
 
@@ -250,8 +284,9 @@ class AdminController extends AbstractController
         // Por defecto trabajamos sobre el tenant del usuario
         $tenant = $user->getTenant();
 
-        // Si el superadmin indica un tenant_id (GET o POST), cargar ese tenant
-        $requestedTenantId = $request->query->get('tenant_id') ?? $request->request->get('tenant_id');
+        // Si el superadmin indica un tenant_id (sólo mediante GET), cargar ese tenant
+        // El POST nunca cambia el tenant activo para evitar manipulación cross-tenant
+        $requestedTenantId = $request->query->get('tenant_id');
         if ($requestedTenantId) {
             $candidate = $this->em->getRepository(Tenant::class)->find((int) $requestedTenantId);
             if ($candidate) {

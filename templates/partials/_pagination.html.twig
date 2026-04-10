@@ -1,0 +1,64 @@
+{#
+  Generic pagination macro.
+
+  Usage:
+    {% import 'partials/_pagination.html.twig' as pager %}
+    {{ pager.render(currentPage, totalPages, 'route_name') }}
+    {{ pager.render(currentPage, totalPages, 'route_name', {'extra_param': value}) }}
+
+  Show page info separately:
+    {{ pager.info(currentPage, totalPages) }}
+#}
+
+{% macro render(currentPage, totalPages, route, routeParams={}, size='sm') %}
+    {% if totalPages > 1 %}
+    <nav aria-label="{{ 'pagination.nav_label'|trans }}">
+        <ul class="pagination{% if size %} pagination-{{ size }}{% endif %} mb-0 flex-wrap">
+            {# Anterior #}
+            <li class="page-item{{ currentPage <= 1 ? ' disabled' : '' }}">
+                {% if currentPage > 1 %}
+                    <a class="page-link" href="{{ path(route, routeParams|merge({'page': currentPage - 1})) }}"
+                       aria-label="{{ 'pagination.previous'|trans }}">{{ 'pagination.previous'|trans }}</a>
+                {% else %}
+                    <span class="page-link" aria-hidden="true">{{ 'pagination.previous'|trans }}</span>
+                {% endif %}
+            </li>
+
+            {# Páginas con ventana  #}
+            {% set window = 2 %}
+            {% set showFirst = false %}
+            {% set showLast = false %}
+            {% for p in 1..totalPages %}
+                {% if p == 1 or p == totalPages or (p >= currentPage - window and p <= currentPage + window) %}
+                    {% if p == currentPage - window and p > 2 %}
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    {% endif %}
+                    <li class="page-item{{ p == currentPage ? ' active' : '' }}"
+                        {% if p == currentPage %}aria-current="page"{% endif %}>
+                        <a class="page-link" href="{{ path(route, routeParams|merge({'page': p})) }}">{{ p }}</a>
+                    </li>
+                    {% if p == currentPage + window and p < totalPages - 1 %}
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {# Siguiente #}
+            <li class="page-item{{ currentPage >= totalPages ? ' disabled' : '' }}">
+                {% if currentPage < totalPages %}
+                    <a class="page-link" href="{{ path(route, routeParams|merge({'page': currentPage + 1})) }}"
+                       aria-label="{{ 'pagination.next'|trans }}">{{ 'pagination.next'|trans }}</a>
+                {% else %}
+                    <span class="page-link" aria-hidden="true">{{ 'pagination.next'|trans }}</span>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+{% endmacro %}
+
+{% macro info(currentPage, totalPages) %}
+    <small class="text-muted">
+        {{ 'pagination.page_of'|trans({'%page%': currentPage, '%total%': totalPages}) }}
+    </small>
+{% endmacro %}

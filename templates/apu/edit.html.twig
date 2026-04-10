@@ -1,23 +1,45 @@
 {% extends 'base.html.twig' %}
+{% import 'partials/_button.html.twig' as btn %}
 
 {% block title %}{{ 'apu.edit.title'|trans }} - APU System{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
-    <h1><i class="bi bi-pencil"></i> {{ 'apu.edit.title'|trans }}</h1>
+    <h1><i class="bi bi-pencil"></i> {{ 'apu.edit.title'|trans }}
+        <small class="text-muted fs-6 ms-2">#{{ apu_item.id }} — {{ apu_item.description }}</small>
+    </h1>
+
+    {% if plantillaRubro %}
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_project_index') }}">{{ 'nav.projects'|trans }}</a></li>
+            <li class="breadcrumb-item">
+                <a href="{{ path('app_plantilla_index', {'projectId': plantillaRubro.plantilla.proyecto.id}) }}">
+                    {{ plantillaRubro.plantilla.proyecto.nombre }}
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{{ path('app_plantilla_show', {'projectId': plantillaRubro.plantilla.proyecto.id, 'id': plantillaRubro.plantilla.id}) }}">
+                    {{ plantillaRubro.plantilla.nombre }}
+                </a>
+            </li>
+            <li class="breadcrumb-item active">{{ 'apu.edit.title'|trans }}</li>
+        </ol>
+    </nav>
+    {% endif %}
 
     <form method="POST" id="apuForm">
+        <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
+
+        <!-- Datos Principales -->
         <div class="card mb-3">
-            <div class="card-header bg-primary text-white">
-                {{ 'apu.main_data'|trans }}
-            </div>
+            <div class="card-header bg-primary text-white">{{ 'apu.main_data'|trans }}</div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-8">
                         <div class="mb-3">
                             <label class="form-label">{{ 'apu.label.item_description'|trans }}</label>
-                            <input type="text" class="form-control" name="description"
-                                   value="{{ apu_item.description }}" required>
+                            <input type="text" class="form-control" name="description" value="{{ apu_item.description }}" required>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -25,44 +47,367 @@
                             <label class="form-label">{{ 'apu.unit'|trans }}</label>
                             <select class="form-select" name="unit" required>
                                 <option value="">{{ 'common.select'|trans }}</option>
-                                <option value="m²" {% if apu_item.unit == 'm²' %}selected{% endif %}>{{ 'units.m2'|trans }}</option>
-                                <option value="m³" {% if apu_item.unit == 'm³' %}selected{% endif %}>{{ 'units.m3'|trans }}</option>
-                                <option value="m" {% if apu_item.unit == 'm' %}selected{% endif %}>{{ 'units.m'|trans }}</option>
-                                <option value="kg" {% if apu_item.unit == 'kg' %}selected{% endif %}>{{ 'units.kg'|trans }}</option>
-                                <option value="u" {% if apu_item.unit == 'u' %}selected{% endif %}>{{ 'units.u'|trans }}</option>
-                                <option value="GLB" {% if apu_item.unit == 'GLB' %}selected{% endif %}>{{ 'units.GLB'|trans }}</option>
+                                {% for val, label in {'m²': 'units.m2', 'm³': 'units.m3', 'm': 'units.m', 'kg': 'units.kg', 'u': 'units.u', 'GLB': 'units.GLB'} %}
+                                <option value="{{ val }}" {% if apu_item.unit == val %}selected{% endif %}>{{ label|trans }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label">K(H/U)</label>
-                            <input type="number" step="0.0001" class="form-control" name="khu"
-                                   value="{{ apu_item.khu }}" required>
+                            <input type="number" step="0.0001" class="form-control" name="khu" value="{{ apu_item.khu }}" required>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label">Rend. u/h</label>
-                            <input type="number" step="0.0001" class="form-control" name="rendimiento_uh"
-                                   value="{{ apu_item.rendimientoUh }}" required>
+                            <input type="number" step="0.0001" class="form-control" name="rendimiento_uh" value="{{ apu_item.rendimientoUh }}" required>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Secciones Equipo, Labor, Materials, Transport igual que create.html.twig -->
-        <!-- Por brevedad, usar mismo código JavaScript -->
+        <!-- EQUIPO -->
+        <div class="card mb-3">
+            <div class="card-header bg-warning">
+                <i class="bi bi-tools"></i> {{ 'apu.equipment'|trans }}
+                {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addEquipmentRow()','class':'btn-sm float-end'}) }}
+            </div>
+            <div class="card-body">
+                <table class="table table-sm" id="equipmentTable">
+                    <thead><tr>
+                        <th style="width:40%">{{ 'apu.col_description'|trans }}</th>
+                        <th style="width:10%">{{ 'apu.col_number'|trans }}</th>
+                        <th style="width:20%">{{ 'apu.col_rate'|trans }}</th>
+                        <th style="width:20%" class="text-end">{{ 'apu.col_subtotal'|trans }}</th>
+                        <th style="width:10%">{{ 'apu.actions'|trans }}</th>
+                    </tr></thead>
+                    <tbody>
+                        {% for equip in apu_item.equipment %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm" name="equipment[{{ loop.index0 }}][descripcion]" value="{{ equip.descripcion }}" required></td>
+                            <td><input type="number" class="form-control form-control-sm calc-input" data-section="equipment" name="equipment[{{ loop.index0 }}][numero]" value="{{ equip.numero }}" min="0" step="1" required></td>
+                            <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="equipment" name="equipment[{{ loop.index0 }}][tarifa]" value="{{ equip.tarifa }}" min="0" required></td>
+                            <td class="fw-semibold text-end row-subtotal">${{ (equip.numero * equip.tarifa)|number_format(2) }}</td>
+                            <input type="hidden" name="equipment[{{ loop.index0 }}][c_hora]" class="row-hidden-total" value="{{ equip.cHora }}">
+                            <td>{{ btn.button('', 'danger', 'bi-trash', {'type':'button','onclick':'removeRow(this)','class':'btn-sm'}) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-        <div class="text-end">
-            {% import 'partials/_button.html.twig' as btn %}
-            {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_apu_index')}) }}
+        <!-- LABOR -->
+        <div class="card mb-3">
+            <div class="card-header bg-info text-white">
+                <i class="bi bi-people"></i> {{ 'apu.labor'|trans }}
+                {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addLaborRow()','class':'btn-sm float-end'}) }}
+            </div>
+            <div class="card-body">
+                <table class="table table-sm" id="laborTable">
+                    <thead><tr>
+                        <th style="width:40%">{{ 'apu.col_description'|trans }}</th>
+                        <th style="width:10%">{{ 'apu.col_number'|trans }}</th>
+                        <th style="width:20%">{{ 'apu.col_jh'|trans }}</th>
+                        <th style="width:20%" class="text-end">{{ 'apu.col_subtotal'|trans }}</th>
+                        <th style="width:10%">{{ 'apu.actions'|trans }}</th>
+                    </tr></thead>
+                    <tbody>
+                        {% for labor in apu_item.labor %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm" name="labor[{{ loop.index0 }}][descripcion]" value="{{ labor.descripcion }}" required></td>
+                            <td><input type="number" class="form-control form-control-sm calc-input" data-section="labor" name="labor[{{ loop.index0 }}][numero]" value="{{ labor.numero }}" min="0" step="1" required></td>
+                            <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="labor" name="labor[{{ loop.index0 }}][jor_hora]" value="{{ labor.jorHora }}" min="0" required></td>
+                            <td class="fw-semibold text-end row-subtotal">${{ (labor.numero * labor.jorHora)|number_format(2) }}</td>
+                            <input type="hidden" name="labor[{{ loop.index0 }}][c_hora]" class="row-hidden-total" value="{{ labor.cHora }}">
+                            <td>{{ btn.button('', 'danger', 'bi-trash', {'type':'button','onclick':'removeRow(this)','class':'btn-sm'}) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- MATERIALES -->
+        <div class="card mb-3">
+            <div class="card-header bg-success text-white">
+                <i class="bi bi-box-seam"></i> {{ 'apu.materials'|trans }}
+                {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addMaterialRow()','class':'btn-sm float-end'}) }}
+            </div>
+            <div class="card-body">
+                <table class="table table-sm" id="materialTable">
+                    <thead><tr>
+                        <th style="width:35%">{{ 'apu.col_description'|trans }}</th>
+                        <th style="width:12%">{{ 'apu.col_unit'|trans }}</th>
+                        <th style="width:13%">{{ 'apu.col_quantity'|trans }}</th>
+                        <th style="width:15%">{{ 'apu.col_unit_price'|trans }}</th>
+                        <th style="width:13%" class="text-end">{{ 'apu.col_subtotal'|trans }}</th>
+                        <th style="width:12%">{{ 'apu.actions'|trans }}</th>
+                    </tr></thead>
+                    <tbody>
+                        {% for mat in apu_item.materials %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm" name="materials[{{ loop.index0 }}][descripcion]" value="{{ mat.descripcion }}" required></td>
+                            <td><input type="text" class="form-control form-control-sm" name="materials[{{ loop.index0 }}][unidad]" value="{{ mat.unidad }}" required></td>
+                            <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="material" name="materials[{{ loop.index0 }}][cantidad]" value="{{ mat.cantidad }}" min="0" required></td>
+                            <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="material" name="materials[{{ loop.index0 }}][precio_unitario]" value="{{ mat.precioUnitario }}" min="0" required></td>
+                            <td class="fw-semibold text-end row-subtotal">${{ (mat.cantidad * mat.precioUnitario)|number_format(2) }}</td>
+                            <td>{{ btn.button('', 'danger', 'bi-trash', {'type':'button','onclick':'removeRow(this)','class':'btn-sm'}) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TRANSPORTE -->
+        <div class="card mb-3">
+            <div class="card-header bg-secondary text-white">
+                <i class="bi bi-truck"></i> {{ 'apu.transport'|trans }}
+                {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addTransportRow()','class':'btn-sm float-end'}) }}
+            </div>
+            <div class="card-body">
+                <table class="table table-sm" id="transportTable">
+                    <thead><tr>
+                        <th style="width:25%">{{ 'common.description'|trans }}</th>
+                        <th style="width:10%">{{ 'apu.col_unit'|trans }}</th>
+                        <th style="width:12%">{{ 'apu.col_quantity'|trans }}</th>
+                        <th style="width:12%">{{ 'apu.col_dmt'|trans }}</th>
+                        <th style="width:13%">{{ 'apu.col_rate_km'|trans }}</th>
+                        <th style="width:10%" class="text-end">{{ 'apu.col_subtotal'|trans }}</th>
+                        <th style="width:10%">{{ 'apu.actions'|trans }}</th>
+                    </tr></thead>
+                    <tbody>
+                        {% for trn in apu_item.transport %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm" name="transport[{{ loop.index0 }}][descripcion]" value="{{ trn.descripcion }}" required></td>
+                            <td><input type="text" class="form-control form-control-sm" name="transport[{{ loop.index0 }}][unidad]" value="{{ trn.unidad }}" required></td>
+                            <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="transport" name="transport[{{ loop.index0 }}][cantidad]" value="{{ trn.cantidad }}" min="0" required></td>
+                            <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="transport" name="transport[{{ loop.index0 }}][dmt]" value="{{ trn.dmt }}" min="0" required></td>
+                            <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="transport" name="transport[{{ loop.index0 }}][tarifa_km]" value="{{ trn.tarifaKm }}" min="0" required></td>
+                            <td class="fw-semibold text-end row-subtotal">${{ (trn.cantidad * trn.dmt * trn.tarifaKm)|number_format(2) }}</td>
+                            <td>{{ btn.button('', 'danger', 'bi-trash', {'type':'button','onclick':'removeRow(this)','class':'btn-sm'}) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Panel Resumen de Costos -->
+        <div class="card mb-3 border-primary shadow-sm">
+            <div class="card-header bg-primary text-white fw-bold">
+                <i class="bi bi-calculator-fill"></i> {{ 'apu.cost_summary'|trans }}
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-sm mb-0">
+                            <tbody>
+                                <tr><td>{{ 'apu.subtotal_equipment'|trans }}</td><td class="text-end fw-semibold" id="summaryEquipment">${{ apu_item.equipmentCost|default(0)|number_format(2) }}</td></tr>
+                                <tr><td>{{ 'apu.subtotal_labor'|trans }}</td><td class="text-end fw-semibold" id="summaryLabor">${{ apu_item.laborCost|default(0)|number_format(2) }}</td></tr>
+                                <tr><td>{{ 'apu.subtotal_materials'|trans }}</td><td class="text-end fw-semibold" id="summaryMaterials">${{ apu_item.materialCost|default(0)|number_format(2) }}</td></tr>
+                                <tr><td>{{ 'apu.subtotal_transport'|trans }}</td><td class="text-end fw-semibold" id="summaryTransport">${{ apu_item.transportCost|default(0)|number_format(2) }}</td></tr>
+                                <tr class="table-primary"><td><strong>{{ 'apu.total_direct_costs'|trans }}</strong></td><td class="text-end fw-bold fs-5" id="summaryTotal">${{ apu_item.totalCost|default(0)|number_format(2) }}</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-sm mb-0">
+                            <tbody>
+                                <tr>
+                                    <td><label class="form-label mb-0">{{ 'apu.utilidad_pct'|trans }}</label></td>
+                                    <td class="text-end" style="width:45%">
+                                        <div class="input-group input-group-sm">
+                                            <input type="number" class="form-control text-end" id="utilidadPct" name="utilidad_pct"
+                                                   value="{{ apu_item.utilidadPct ?? 20 }}" min="0" max="100" step="0.1">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'apu.precio_calculo'|trans }}</td>
+                                    <td class="text-end fw-semibold" id="summaryPrecioCalculo">${{ apu_item.precioCalculo|number_format(2) }}</td>
+                                </tr>
+                                <tr class="table-success">
+                                    <td><strong>{{ 'apu.precio_ofertado'|trans }} (USD)</strong></td>
+                                    <td class="text-end">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control text-end fw-bold" id="precioOfertado"
+                                                   name="precio_ofertado" step="0.01" min="0"
+                                                   value="{{ apu_item.precioOfertado ?? '' }}" placeholder="0.00">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            {% if plantillaRubro %}
+                {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left',
+                    {'href': path('app_plantilla_show', {'projectId': plantillaRubro.plantilla.proyecto.id, 'id': plantillaRubro.plantilla.id})}) }}
+            {% else %}
+                {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_apu_index')}) }}
+            {% endif %}
             {{ btn.button('apu.update'|trans, 'primary', 'bi-save', {'type':'submit'}) }}
         </div>
     </form>
 </div>
+
+<script>
+let equipmentIndex = {{ apu_item.equipment|length }};
+let laborIndex     = {{ apu_item.labor|length }};
+let materialIndex  = {{ apu_item.materials|length }};
+let transportIndex = {{ apu_item.transport|length }};
+
+function addEquipmentRow() {
+    const tbody = document.querySelector('#equipmentTable tbody');
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td><input type="text" class="form-control form-control-sm" name="equipment[${equipmentIndex}][descripcion]" required></td>
+        <td><input type="number" class="form-control form-control-sm calc-input" data-section="equipment" name="equipment[${equipmentIndex}][numero]" value="1" min="0" step="1" required></td>
+        <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="equipment" name="equipment[${equipmentIndex}][tarifa]" value="0" min="0" required></td>
+        <td class="fw-semibold text-end row-subtotal">$0.00</td>
+        <input type="hidden" name="equipment[${equipmentIndex}][c_hora]" class="row-hidden-total">
+        <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)"><i class="bi bi-trash"></i></button></td>
+    `;
+    tbody.appendChild(row);
+    equipmentIndex++;
+    attachInputListeners(row);
+    calculateTotals();
+}
+
+function addLaborRow() {
+    const tbody = document.querySelector('#laborTable tbody');
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td><input type="text" class="form-control form-control-sm" name="labor[${laborIndex}][descripcion]" required></td>
+        <td><input type="number" class="form-control form-control-sm calc-input" data-section="labor" name="labor[${laborIndex}][numero]" value="1" min="0" step="1" required></td>
+        <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="labor" name="labor[${laborIndex}][jor_hora]" value="0" min="0" required></td>
+        <td class="fw-semibold text-end row-subtotal">$0.00</td>
+        <input type="hidden" name="labor[${laborIndex}][c_hora]" class="row-hidden-total">
+        <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)"><i class="bi bi-trash"></i></button></td>
+    `;
+    tbody.appendChild(row);
+    laborIndex++;
+    attachInputListeners(row);
+    calculateTotals();
+}
+
+function addMaterialRow() {
+    const tbody = document.querySelector('#materialTable tbody');
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td><input type="text" class="form-control form-control-sm" name="materials[${materialIndex}][descripcion]" required></td>
+        <td><input type="text" class="form-control form-control-sm" name="materials[${materialIndex}][unidad]" required></td>
+        <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="material" name="materials[${materialIndex}][cantidad]" value="0" min="0" required></td>
+        <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="material" name="materials[${materialIndex}][precio_unitario]" value="0" min="0" required></td>
+        <td class="fw-semibold text-end row-subtotal">$0.00</td>
+        <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)"><i class="bi bi-trash"></i></button></td>
+    `;
+    tbody.appendChild(row);
+    materialIndex++;
+    attachInputListeners(row);
+    calculateTotals();
+}
+
+function addTransportRow() {
+    const tbody = document.querySelector('#transportTable tbody');
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td><input type="text" class="form-control form-control-sm" name="transport[${transportIndex}][descripcion]" required></td>
+        <td><input type="text" class="form-control form-control-sm" name="transport[${transportIndex}][unidad]" required></td>
+        <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="transport" name="transport[${transportIndex}][cantidad]" value="0" min="0" required></td>
+        <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="transport" name="transport[${transportIndex}][dmt]" value="0" min="0" required></td>
+        <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="transport" name="transport[${transportIndex}][tarifa_km]" value="0" min="0" required></td>
+        <td class="fw-semibold text-end row-subtotal">$0.00</td>
+        <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)"><i class="bi bi-trash"></i></button></td>
+    `;
+    tbody.appendChild(row);
+    transportIndex++;
+    attachInputListeners(row);
+    calculateTotals();
+}
+
+function removeRow(btn) {
+    btn.closest('tr').remove();
+    calculateTotals();
+}
+
+function attachInputListeners(row) {
+    row.querySelectorAll('.calc-input').forEach(input => {
+        input.addEventListener('input', () => { updateRowSubtotal(row); calculateTotals(); });
+    });
+}
+
+function updateRowSubtotal(row) {
+    const inputs = row.querySelectorAll('.calc-input');
+    let subtotal = 0;
+    if (inputs.length >= 2) {
+        const vals = Array.from(inputs).map(i => parseFloat(i.value) || 0);
+        subtotal = vals[0] * vals[1];
+        if (inputs.length === 3) subtotal = vals[0] * vals[1] * vals[2];
+    }
+    const subtotalCell = row.querySelector('.row-subtotal');
+    if (subtotalCell) subtotalCell.textContent = '$' + subtotal.toFixed(2);
+    const hiddenInput = row.querySelector('.row-hidden-total');
+    if (hiddenInput) hiddenInput.value = subtotal.toFixed(4);
+}
+
+function sectionTotal(tableId) {
+    let total = 0;
+    document.querySelectorAll(`#${tableId} tbody .row-subtotal`).forEach(cell => {
+        total += parseFloat(cell.textContent.replace('$', '')) || 0;
+    });
+    return total;
+}
+
+function calculateTotals() {
+    const eq = sectionTotal('equipmentTable');
+    const lb = sectionTotal('laborTable');
+    const mt = sectionTotal('materialTable');
+    const tr = sectionTotal('transportTable');
+    const total = eq + lb + mt + tr;
+    const utilidad = parseFloat(document.getElementById('utilidadPct').value) || 0;
+    const precioCalculo = total * (1 + utilidad / 100);
+
+    document.getElementById('summaryEquipment').textContent     = '$' + eq.toFixed(2);
+    document.getElementById('summaryLabor').textContent         = '$' + lb.toFixed(2);
+    document.getElementById('summaryMaterials').textContent     = '$' + mt.toFixed(2);
+    document.getElementById('summaryTransport').textContent     = '$' + tr.toFixed(2);
+    document.getElementById('summaryTotal').textContent         = '$' + total.toFixed(2);
+    document.getElementById('summaryPrecioCalculo').textContent = '$' + precioCalculo.toFixed(2);
+
+    const precioOfertadoInput = document.getElementById('precioOfertado');
+    if (!precioOfertadoInput.dataset.manuallySet) {
+        precioOfertadoInput.value = precioCalculo.toFixed(2);
+    }
+}
+
+document.getElementById('utilidadPct').addEventListener('input', calculateTotals);
+document.getElementById('precioOfertado').addEventListener('input', function() {
+    this.dataset.manuallySet = '1';
+});
+
+// Si precio_ofertado ya tiene valor guardado, marcarlo como manual
+{% if apu_item.precioOfertado %}
+document.getElementById('precioOfertado').dataset.manuallySet = '1';
+{% endif %}
+
+// Adjuntar listeners a filas existentes y recalcular
+document.querySelectorAll('#equipmentTable tbody tr, #laborTable tbody tr, #materialTable tbody tr, #transportTable tbody tr').forEach(row => {
+    attachInputListeners(row);
+});
+calculateTotals();
+</script>
 {% endblock %}

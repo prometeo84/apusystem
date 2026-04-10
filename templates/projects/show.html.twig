@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ project.nombre }} - APU System{% endblock %}
+
+{% block body %}
+{% import 'partials/_button.html.twig' as btn %}
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ path('app_project_index') }}">{{ 'project.title'|trans }}</a></li>
+                    <li class="breadcrumb-item active">{{ project.nombre }}</li>
+                </ol>
+            </nav>
+            <h1 class="mb-0"><i class="bi bi-folder2-open"></i> {{ project.nombre }}</h1>
+        </div>
+        <div>
+            {{ btn.button('common.edit'|trans, 'primary', 'bi-pencil', {'href': path('app_project_edit', {id: project.id})}) }}
+            {{ btn.button('report.full_project'|trans, 'success', 'bi-file-earmark-bar-graph', {'href': path('app_report_project_full', {id: project.id}), 'title': 'report.full_project'|trans}) }}
+            {# Duplicar proyecto #}
+            <form method="POST" action="{{ path('app_project_duplicate', {id: project.id}) }}" class="d-inline">
+                <input type="hidden" name="_token" value="{{ csrf_token('project_dup_' ~ project.id) }}">
+                {{ btn.button('project.duplicate'|trans, 'outline-secondary', 'bi-copy', {'type':'submit'}) }}
+            </form>
+            {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_project_index')}) }}
+        </div>
+    </div>
+
+    {% include 'partials/_flashes.html.twig' %}
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <i class="bi bi-info-circle"></i> {{ 'project.general_info'|trans }}
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3">{{ 'project.col_code'|trans }}</dt>
+                        <dd class="col-sm-9"><span class="badge bg-secondary fs-6">{{ project.codigo }}</span></dd>
+
+                        {% if project.descripcion %}
+                        <dt class="col-sm-3">{{ 'common.description'|trans }}</dt>
+                        <dd class="col-sm-9">{{ project.descripcion }}</dd>
+                        {% endif %}
+
+                        {% if project.cliente %}
+                        <dt class="col-sm-3">{{ 'project.col_client'|trans }}</dt>
+                        <dd class="col-sm-9">{{ project.cliente }}</dd>
+                        {% endif %}
+
+                        {% if project.ubicacion %}
+                        <dt class="col-sm-3">{{ 'project.col_location'|trans }}</dt>
+                        <dd class="col-sm-9">{{ project.ubicacion }}</dd>
+                        {% endif %}
+                    </dl>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-layout-text-sidebar"></i> {{ 'plantilla.title'|trans }}</span>
+                    {{ btn.button('plantilla.new'|trans, 'light', 'bi-plus', {'href': path('app_plantilla_create', {projectId: project.id}), 'class':'btn-sm'}) }}
+                </div>
+                {% if project.plantillas|length > 0 %}
+                <div class="list-group list-group-flush">
+                    {% for plantilla in project.plantillas %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ plantilla.nombre }}</strong>
+                            <span class="badge bg-secondary ms-2">{{ plantilla.plantillaRubros|length }} {{ 'plantilla.rubros'|trans }}</span>
+                            <div class="text-muted small mt-1">${{ plantilla.totalPresupuesto|number_format(2, '.', ',') }}</div>
+                        </div>
+                        <div class="d-flex gap-1">
+                            {{ btn.button('', 'outline-primary', 'bi-eye', {'href': path('app_plantilla_show', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm'}) }}
+                            {{ btn.button('', 'success', 'bi-file-earmark-bar-graph', {'href': path('app_report_plantilla', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm', 'title': 'report.generate'|trans}) }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="card-body text-center text-muted py-3">
+                    <p class="mb-2">{{ 'project.no_apus_yet'|trans }}</p>
+                    {{ btn.button('plantilla.new'|trans, 'primary', 'bi-plus-circle', {'href': path('app_plantilla_create', {projectId: project.id})}) }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <i class="bi bi-calendar3"></i> {{ 'project.dates_budget'|trans }}
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-5">{{ 'project.col_status'|trans }}</dt>
+                        <dd class="col-sm-7">
+                            {% set statusClass = {
+                                'planificacion': 'warning',
+                                'en_proceso': 'primary',
+                                'pausado': 'secondary',
+                                'finalizado': 'success'
+                            }[project.estado] ?? 'secondary' %}
+                            <span class="badge bg-{{ statusClass }}">{{ ('project.status.' ~ project.estado)|trans }}</span>
+                        </dd>
+
+                        {% if project.fechaInicio %}
+                        <dt class="col-sm-5">{{ 'project.start_date'|trans }}</dt>
+                        <dd class="col-sm-7">{{ project.fechaInicio|date('d/m/Y') }}</dd>
+                        {% endif %}
+
+                        {% if project.fechaFin %}
+                        <dt class="col-sm-5">{{ 'project.end_date'|trans }}</dt>
+                        <dd class="col-sm-7">{{ project.fechaFin|date('d/m/Y') }}</dd>
+                        {% endif %}
+
+                        {% if project.presupuestoTotal %}
+                        <dt class="col-sm-5">{{ 'project.col_budget'|trans }}</dt>
+                        <dd class="col-sm-7"><strong>${{ project.presupuestoTotal|number_format(2, '.', ',') }}</strong></dd>
+                        {% endif %}
+
+                        <dt class="col-sm-5">{{ 'common.created_at'|trans }}</dt>
+                        <dd class="col-sm-7">{{ project.createdAt|date('d/m/Y') }}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header text-danger fw-semibold">
+                    <i class="bi bi-exclamation-triangle"></i> {{ 'common.danger_zone'|trans }}
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ path('app_project_delete', {id: project.id}) }}"
+                          onsubmit="return confirm('{{ 'project.confirm_delete'|trans }}')">
+                        <input type="hidden" name="_token" value="{{ csrf_token('project_delete_' ~ project.id) }}">
+                        {{ btn.button('common.delete'|trans, 'danger', 'bi-trash', {'type':'submit', 'class':'w-100'}) }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

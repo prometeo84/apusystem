@@ -3,16 +3,40 @@
   {% import 'partials/_button.html.twig' as btn %}
   {{ btn.button('buttons.save'|trans, 'primary', 'bi-check-lg', {'type':'submit'}) }}
   Or pass translation key directly: {{ btn.button('buttons.save', 'primary', 'bi-check-lg', {'type':'submit'}) }}
+
+  Supported variants: primary, secondary, danger, success, warning, info, light, dark, link,
+                      outline-primary, outline-secondary, outline-danger, outline-success,
+                      outline-warning, outline-info, outline-light, outline-dark
+
+  CSRF field helper (add to any POST form):
+  {{ btn.csrf_field() }}
 #}
+{% macro csrf_field() %}
+    <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
+{% endmacro %}
+
 {% macro button(label, variant='primary', icon=null, attrs={}) %}
-    {%- set classes = 'btn' -%}
-    {%- if variant == 'primary' -%}
-        {%- set classes = classes ~ ' btn-primary animate-raise' -%}
-    {%- elseif variant == 'secondary' -%}
-        {%- set classes = classes ~ ' btn-outline-secondary animate-raise' -%}
-    {%- elseif variant == 'link' -%}
-        {%- set classes = classes ~ ' btn-link' -%}
-    {%- endif -%}
+    {%- set variantMap = {
+        'primary':          'btn-primary animate-raise',
+        'secondary':        'btn-outline-secondary animate-raise',
+        'danger':           'btn-danger',
+        'success':          'btn-success',
+        'warning':          'btn-warning',
+        'info':             'btn-info',
+        'light':            'btn-light',
+        'dark':             'btn-dark',
+        'link':             'btn-link',
+        'outline-primary':  'btn-outline-primary',
+        'outline-secondary':'btn-outline-secondary',
+        'outline-danger':   'btn-outline-danger',
+        'outline-success':  'btn-outline-success',
+        'outline-warning':  'btn-outline-warning',
+        'outline-info':     'btn-outline-info',
+        'outline-light':    'btn-outline-light',
+        'outline-dark':     'btn-outline-dark',
+    } -%}
+    {%- set variantClass = variantMap[variant] is defined ? variantMap[variant] : ('btn-' ~ variant) -%}
+    {%- set classes = 'btn ' ~ variantClass -%}
 
     {# capture any extra class passed in attrs to merge correctly #}
     {%- set extra_class = attrs.class is defined ? attrs.class : '' -%}

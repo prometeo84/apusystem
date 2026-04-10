@@ -69,23 +69,39 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
           crossorigin=\"anonymous\">
     <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css\"
           crossorigin=\"anonymous\">
-    <style>
+    ";
+        // line 13
+        yield $this->extensions['App\Twig\AppExtension']->viteEntryLinkTags("app");
+        yield "
+    ";
+        // line 14
+        yield from $this->unwrap()->yieldBlock('stylesheets', $context, $blocks);
+        // line 15
+        yield "    <style>
         :root {
             --primary-color: ";
-        // line 15
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["user_theme"] ?? null), "primary_color", [], "any", true, true, false, 15)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user_theme"]) || array_key_exists("user_theme", $context) ? $context["user_theme"] : (function () { throw new RuntimeError('Variable "user_theme" does not exist.', 15, $this->source); })()), "primary_color", [], "any", false, false, false, 15), "#667eea")) : ("#667eea")), "html", null, true);
+        // line 17
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["user_theme"] ?? null), "primary_color", [], "any", true, true, false, 17)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user_theme"]) || array_key_exists("user_theme", $context) ? $context["user_theme"] : (function () { throw new RuntimeError('Variable "user_theme" does not exist.', 17, $this->source); })()), "primary_color", [], "any", false, false, false, 17), "#667eea")) : ("#667eea")), "html", null, true);
         yield ";
             --secondary-color: ";
-        // line 16
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["user_theme"] ?? null), "secondary_color", [], "any", true, true, false, 16)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user_theme"]) || array_key_exists("user_theme", $context) ? $context["user_theme"] : (function () { throw new RuntimeError('Variable "user_theme" does not exist.', 16, $this->source); })()), "secondary_color", [], "any", false, false, false, 16), "#764ba2")) : ("#764ba2")), "html", null, true);
+        // line 18
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["user_theme"] ?? null), "secondary_color", [], "any", true, true, false, 18)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user_theme"]) || array_key_exists("user_theme", $context) ? $context["user_theme"] : (function () { throw new RuntimeError('Variable "user_theme" does not exist.', 18, $this->source); })()), "secondary_color", [], "any", false, false, false, 18), "#764ba2")) : ("#764ba2")), "html", null, true);
         yield ";
             --primary-rgb: ";
-        // line 17
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["user_theme"] ?? null), "primary_rgb", [], "any", true, true, false, 17)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user_theme"]) || array_key_exists("user_theme", $context) ? $context["user_theme"] : (function () { throw new RuntimeError('Variable "user_theme" does not exist.', 17, $this->source); })()), "primary_rgb", [], "any", false, false, false, 17), "102, 126, 234")) : ("102, 126, 234")), "html", null, true);
+        // line 19
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["user_theme"] ?? null), "primary_rgb", [], "any", true, true, false, 19)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user_theme"]) || array_key_exists("user_theme", $context) ? $context["user_theme"] : (function () { throw new RuntimeError('Variable "user_theme" does not exist.', 19, $this->source); })()), "primary_rgb", [], "any", false, false, false, 19), "102, 126, 234")) : ("102, 126, 234")), "html", null, true);
         yield ";
             --secondary-rgb: ";
-        // line 18
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["user_theme"] ?? null), "secondary_rgb", [], "any", true, true, false, 18)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user_theme"]) || array_key_exists("user_theme", $context) ? $context["user_theme"] : (function () { throw new RuntimeError('Variable "user_theme" does not exist.', 18, $this->source); })()), "secondary_rgb", [], "any", false, false, false, 18), "118, 75, 162")) : ("118, 75, 162")), "html", null, true);
+        // line 20
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["user_theme"] ?? null), "secondary_rgb", [], "any", true, true, false, 20)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user_theme"]) || array_key_exists("user_theme", $context) ? $context["user_theme"] : (function () { throw new RuntimeError('Variable "user_theme" does not exist.', 20, $this->source); })()), "secondary_rgb", [], "any", false, false, false, 20), "118, 75, 162")) : ("118, 75, 162")), "html", null, true);
+        yield ";
+            --primary-text-color: ";
+        // line 21
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["user_theme"] ?? null), "primary_text_color", [], "any", true, true, false, 21)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user_theme"]) || array_key_exists("user_theme", $context) ? $context["user_theme"] : (function () { throw new RuntimeError('Variable "user_theme" does not exist.', 21, $this->source); })()), "primary_text_color", [], "any", false, false, false, 21), "#ffffff")) : ("#ffffff")), "html", null, true);
+        yield ";
+            --secondary-text-color: ";
+        // line 22
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["user_theme"] ?? null), "secondary_text_color", [], "any", true, true, false, 22)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["user_theme"]) || array_key_exists("user_theme", $context) ? $context["user_theme"] : (function () { throw new RuntimeError('Variable "user_theme" does not exist.', 22, $this->source); })()), "secondary_text_color", [], "any", false, false, false, 22), "#ffffff")) : ("#ffffff")), "html", null, true);
         yield ";
             --app-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             --danger-color: #dc3545;
@@ -97,15 +113,14 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         /* Estilos Base */
         body {
             font-family: var(--app-font);
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: #f8f9fa;
             min-height: 100vh;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Modo Oscuro */
         html[data-theme=\"dark\"] body {
-            /* Use user's colors with a dark overlay for consistent branding in dark mode */
-            background-image: linear-gradient(135deg, rgba(var(--primary-rgb), 0.12), rgba(var(--secondary-rgb), 0.12)), linear-gradient(135deg, #0b0b0b 0%, #111 100%);
+            background: #111111;
             color: #e0e0e0;
         }
 
@@ -249,13 +264,8 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
             color: #e0e0e0 !important;
         }
 
-        /* Card footers and white backgrounds within cards */
-        html[data-theme=\"dark\"] .card-footer,
-        html[data-theme=\"dark\"] .card-footer.bg-white {
-            background-color: #2d2d2d !important;
-            color: #e0e0e0 !important;
-            border-top: 1px solid #404040 !important;
-        }
+        /* Card footers and white backgrounds within cards
+           Moved to assets/styles/app.css to centralize theme overrides */
 
         /* Evitar que clases utilitarias forcen texto negro en modo oscuro */
         html[data-theme=\"dark\"] .text-dark {
@@ -303,28 +313,54 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
             color: #e0e0e0;
         }
 
-        /* Botones con colores personalizados */
+        /* Botones con colores personalizados (único lugar donde se aplica el color del usuario) */
         .btn-primary {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
             border: none !important;
-            color: white !important;
+            color: var(--primary-text-color) !important;
             padding: 12px 30px;
             font-weight: 600;
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover,
+        .btn-primary:focus,
+        .btn-primary:active {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .bg-primary {
+            box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.4) !important;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
         }
 
-        .text-primary,
-        a {
+        /* Outline primary usa el color primario del usuario */
+        .btn-outline-primary {
             color: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color) !important;
+            color: white !important;
+        }
+
+        .text-primary,
+        a:not(.page-link):not(.btn) {
+            color: var(--primary-color) !important;
+        }
+
+        /* Paginación en tema oscuro: color claro para contraste sobre fondo oscuro.
+           Se declara aquí (inline style) y también en app.css para máxima cobertura. */
+        html[data-theme=\"dark\"] .pagination .page-link {
+            color: #e9ecef !important;
+            background-color: rgba(255,255,255,.04) !important;
+            border-color: rgba(255,255,255,.12) !important;
+        }
+        html[data-theme=\"dark\"] .pagination .page-item.active .page-link {
+            color: #ffffff !important;
+            background-color: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+        }
+        html[data-theme=\"dark\"] .pagination .page-item.disabled .page-link {
+            color: rgba(255,255,255,.35) !important;
         }
 
         .border-primary {
@@ -349,7 +385,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         .form-control:focus,
         .form-select:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.25);
         }
 
         /* Alerts */
@@ -380,32 +416,31 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
 
         .sidebar .nav-link:hover,
         .sidebar .nav-link.active {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white !important;
+            background: rgba(0, 0, 0, 0.06);
+            color: #333 !important;
+            border-left: 3px solid var(--primary-color);
         }
 
         html[data-theme=\"dark\"] .sidebar .nav-link:hover,
         html[data-theme=\"dark\"] .sidebar .nav-link.active {
-            color: white !important;
+            background: rgba(255, 255, 255, 0.08);
+            color: #e0e0e0 !important;
+            border-left: 3px solid var(--primary-color);
         }
     </style>
-    ";
-        // line 321
-        yield from $this->unwrap()->yieldBlock('stylesheets', $context, $blocks);
-        // line 322
-        yield "</head>
+</head>
 <body>
     ";
-        // line 324
+        // line 350
         yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
-        // line 325
+        // line 351
         yield "
     <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js\"
             integrity=\"sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz\"
             crossorigin=\"anonymous\"></script>
 
     ";
-        // line 331
+        // line 357
         yield "    <script>
         (function() {
             const html = document.documentElement;
@@ -427,9 +462,9 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
     </script>
 
     ";
-        // line 351
+        // line 377
         yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
-        // line 352
+        // line 378
         yield "</body>
 </html>
 ";
@@ -465,7 +500,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         yield from [];
     }
 
-    // line 321
+    // line 14
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -487,7 +522,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         yield from [];
     }
 
-    // line 324
+    // line 350
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -509,7 +544,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         yield from [];
     }
 
-    // line 351
+    // line 377
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -552,7 +587,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  513 => 351,  491 => 324,  469 => 321,  446 => 6,  433 => 352,  431 => 351,  409 => 331,  402 => 325,  400 => 324,  396 => 322,  394 => 321,  88 => 18,  84 => 17,  80 => 16,  76 => 15,  64 => 6,  55 => 2,  52 => 1,);
+        return array (  548 => 377,  526 => 350,  504 => 14,  481 => 6,  468 => 378,  466 => 377,  444 => 357,  437 => 351,  435 => 350,  104 => 22,  100 => 21,  96 => 20,  92 => 19,  88 => 18,  84 => 17,  80 => 15,  78 => 14,  74 => 13,  64 => 6,  55 => 2,  52 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -569,12 +604,16 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
           crossorigin=\"anonymous\">
     <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css\"
           crossorigin=\"anonymous\">
+    {{ vite_entry_link_tags('app') }}
+    {% block stylesheets %}{% endblock %}
     <style>
         :root {
             --primary-color: {{ user_theme.primary_color|default('#667eea') }};
             --secondary-color: {{ user_theme.secondary_color|default('#764ba2') }};
             --primary-rgb: {{ user_theme.primary_rgb|default('102, 126, 234') }};
             --secondary-rgb: {{ user_theme.secondary_rgb|default('118, 75, 162') }};
+            --primary-text-color: {{ user_theme.primary_text_color|default('#ffffff') }};
+            --secondary-text-color: {{ user_theme.secondary_text_color|default('#ffffff') }};
             --app-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             --danger-color: #dc3545;
             --success-color: #28a745;
@@ -585,15 +624,14 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         /* Estilos Base */
         body {
             font-family: var(--app-font);
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: #f8f9fa;
             min-height: 100vh;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Modo Oscuro */
         html[data-theme=\"dark\"] body {
-            /* Use user's colors with a dark overlay for consistent branding in dark mode */
-            background-image: linear-gradient(135deg, rgba(var(--primary-rgb), 0.12), rgba(var(--secondary-rgb), 0.12)), linear-gradient(135deg, #0b0b0b 0%, #111 100%);
+            background: #111111;
             color: #e0e0e0;
         }
 
@@ -737,13 +775,8 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
             color: #e0e0e0 !important;
         }
 
-        /* Card footers and white backgrounds within cards */
-        html[data-theme=\"dark\"] .card-footer,
-        html[data-theme=\"dark\"] .card-footer.bg-white {
-            background-color: #2d2d2d !important;
-            color: #e0e0e0 !important;
-            border-top: 1px solid #404040 !important;
-        }
+        /* Card footers and white backgrounds within cards
+           Moved to assets/styles/app.css to centralize theme overrides */
 
         /* Evitar que clases utilitarias forcen texto negro en modo oscuro */
         html[data-theme=\"dark\"] .text-dark {
@@ -791,28 +824,54 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
             color: #e0e0e0;
         }
 
-        /* Botones con colores personalizados */
+        /* Botones con colores personalizados (único lugar donde se aplica el color del usuario) */
         .btn-primary {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
             border: none !important;
-            color: white !important;
+            color: var(--primary-text-color) !important;
             padding: 12px 30px;
             font-weight: 600;
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover,
+        .btn-primary:focus,
+        .btn-primary:active {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .bg-primary {
+            box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.4) !important;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
         }
 
-        .text-primary,
-        a {
+        /* Outline primary usa el color primario del usuario */
+        .btn-outline-primary {
             color: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color) !important;
+            color: white !important;
+        }
+
+        .text-primary,
+        a:not(.page-link):not(.btn) {
+            color: var(--primary-color) !important;
+        }
+
+        /* Paginación en tema oscuro: color claro para contraste sobre fondo oscuro.
+           Se declara aquí (inline style) y también en app.css para máxima cobertura. */
+        html[data-theme=\"dark\"] .pagination .page-link {
+            color: #e9ecef !important;
+            background-color: rgba(255,255,255,.04) !important;
+            border-color: rgba(255,255,255,.12) !important;
+        }
+        html[data-theme=\"dark\"] .pagination .page-item.active .page-link {
+            color: #ffffff !important;
+            background-color: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+        }
+        html[data-theme=\"dark\"] .pagination .page-item.disabled .page-link {
+            color: rgba(255,255,255,.35) !important;
         }
 
         .border-primary {
@@ -837,7 +896,7 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
         .form-control:focus,
         .form-select:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.25);
         }
 
         /* Alerts */
@@ -868,16 +927,18 @@ class __TwigTemplate_41d80ecc4b178f95e9f28778aadff37d extends Template
 
         .sidebar .nav-link:hover,
         .sidebar .nav-link.active {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white !important;
+            background: rgba(0, 0, 0, 0.06);
+            color: #333 !important;
+            border-left: 3px solid var(--primary-color);
         }
 
         html[data-theme=\"dark\"] .sidebar .nav-link:hover,
         html[data-theme=\"dark\"] .sidebar .nav-link.active {
-            color: white !important;
+            background: rgba(255, 255, 255, 0.08);
+            color: #e0e0e0 !important;
+            border-left: 3px solid var(--primary-color);
         }
     </style>
-    {% block stylesheets %}{% endblock %}
 </head>
 <body>
     {% block body %}{% endblock %}

@@ -4,6 +4,7 @@
 
 {% block body %}
 {% import 'partials/_button.html.twig' as btn %}
+{% import 'partials/_pagination.html.twig' as pager %}
 <div class="d-flex">
     {% include 'partials/_sidebar.html.twig' %}
 
@@ -85,24 +86,15 @@
                         </table>
                     </div>
                 </div>
-                <div class="card-footer bg-white">
+                <div class="card-footer">
                     <div class="d-flex justify-content-between align-items-center">
                         <small class="text-muted">
                             {{ 'system.showing_events'|trans({'%count%': securityEvents|length}) }}
+                            {% if totalPages > 1 %}
+                                &mdash; {{ pager.info(currentPage, totalPages) }}
+                            {% endif %}
                         </small>
-                        <nav>
-                            <ul class="pagination pagination-sm mb-0">
-                                <li class="page-item disabled">
-                                    <span class="page-link">{{ 'pagination.previous'|trans }}</span>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">{{ 'pagination.next'|trans }}</a>
-                                </li>
-                            </ul>
-                        </nav>
+                        {{ pager.render(currentPage, totalPages, 'app_admin_logs') }}
                     </div>
                 </div>
             </div>

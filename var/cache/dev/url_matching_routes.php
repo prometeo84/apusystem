@@ -34,8 +34,12 @@ return [
         '/profile/change-password' => [[['_route' => 'app_profile_change_password', '_controller' => 'App\\Controller\\ProfileController::changePassword'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/profile/preferences' => [[['_route' => 'app_profile_preferences', '_controller' => 'App\\Controller\\ProfileController::preferences'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/profile/reset-theme' => [[['_route' => 'app_profile_reset_theme', '_controller' => 'App\\Controller\\ProfileController::resetTheme'], null, ['POST' => 0], null, false, false, null]],
+        '/projects' => [[['_route' => 'app_project_index', '_controller' => 'App\\Controller\\ProjectController::index'], null, null, null, true, false, null]],
+        '/projects/create' => [[['_route' => 'app_project_create', '_controller' => 'App\\Controller\\ProjectController::create'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/revit/upload' => [[['_route' => 'app_revit_upload', '_controller' => 'App\\Controller\\RevitUploadController::upload'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/revit/files' => [[['_route' => 'app_revit_files', '_controller' => 'App\\Controller\\RevitUploadController::listFiles'], null, ['GET' => 0], null, false, false, null]],
+        '/rubros' => [[['_route' => 'app_rubro_index', '_controller' => 'App\\Controller\\RubroController::index'], null, null, null, true, false, null]],
+        '/rubros/create' => [[['_route' => 'app_rubro_create', '_controller' => 'App\\Controller\\RubroController::create'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/login' => [[['_route' => 'app_login', '_controller' => 'App\\Controller\\SecurityController::login'], null, null, null, false, false, null]],
         '/logout' => [[['_route' => 'app_logout', '_controller' => 'App\\Controller\\SecurityController::logout'], null, null, null, false, false, null]],
         '/2fa/verify' => [[['_route' => 'app_2fa_verify', '_controller' => 'App\\Controller\\SecurityController::verify2FA'], null, null, null, false, false, null]],
@@ -58,6 +62,8 @@ return [
         '/webauthn/credentials' => [[['_route' => 'webauthn_list', '_controller' => 'App\\Controller\\WebAuthnController::listCredentials'], null, null, null, false, false, null]],
         '/webauthn/register/start' => [[['_route' => 'webauthn_register_start', '_controller' => 'App\\Controller\\WebAuthnController::startRegistration'], null, ['POST' => 0], null, false, false, null]],
         '/webauthn/register/finish' => [[['_route' => 'webauthn_register_finish', '_controller' => 'App\\Controller\\WebAuthnController::finishRegistration'], null, ['POST' => 0], null, false, false, null]],
+        '/webauthn/login/start' => [[['_route' => 'webauthn_login_start', '_controller' => 'App\\Controller\\WebAuthnController::startLogin'], null, ['POST' => 0], null, false, false, null]],
+        '/webauthn/login/finish' => [[['_route' => 'webauthn_login_finish', '_controller' => 'App\\Controller\\WebAuthnController::finishLogin'], null, ['POST' => 0], null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'
@@ -85,33 +91,72 @@ return [
                             .'|elements(*:245)'
                             .'|calculations(*:265)'
                         .')'
-                        .'|u/([^/]++)/e(?'
-                            .'|dit(*:292)'
-                            .'|xport/excel(*:311)'
+                        .'|u/(?'
+                            .'|([^/]++)/e(?'
+                                .'|dit(*:295)'
+                                .'|xport/excel(*:314)'
+                            .')'
+                            .'|create\\-for\\-rubro/(\\d+)(*:347)'
                         .')'
                     .')'
                     .'|dmin/users/([^/]++)/(?'
-                        .'|edit(*:348)'
-                        .'|toggle(*:362)'
+                        .'|edit(*:384)'
+                        .'|toggle(*:398)'
                     .')'
                 .')'
-                .'|/uploads/avatars/([^/]++)(*:397)'
+                .'|/uploads/avatars/([^/]++)(*:433)'
                 .'|/s(?'
                     .'|e(?'
-                        .'|t\\-locale/([^/]++)(*:432)'
-                        .'|curity/sessions/([^/]++)/revoke(*:471)'
+                        .'|t\\-locale/([^/]++)(*:468)'
+                        .'|curity/sessions/([^/]++)/revoke(*:507)'
                     .')'
-                    .'|ystem/tenants/([^/]++)/edit(*:507)'
+                    .'|ystem/tenants/([^/]++)/edit(*:543)'
                 .')'
-                .'|/password/reset/([^/]++)(*:540)'
-                .'|/revit/file/([^/]++)(?'
-                    .'|(*:571)'
-                    .'|/(?'
-                        .'|delete(*:589)'
-                        .'|reprocess(*:606)'
+                .'|/p(?'
+                    .'|assword/reset/([^/]++)(*:579)'
+                    .'|rojects/(?'
+                        .'|([^/]++)/plantillas(?'
+                            .'|(*:620)'
+                            .'|/(?'
+                                .'|create(*:638)'
+                                .'|(\\d+)(*:651)'
+                                .'|(\\d+)/edit(*:669)'
+                                .'|(\\d+)/add\\-rubro(*:693)'
+                                .'|(\\d+)/remove\\-rubro/(\\d+)(*:726)'
+                                .'|(\\d+)/duplicate(*:749)'
+                                .'|(\\d+)/delete(*:769)'
+                            .')'
+                        .')'
+                        .'|(\\d+)(*:784)'
+                        .'|(\\d+)/edit(*:802)'
+                        .'|(\\d+)/delete(*:822)'
+                        .'|(\\d+)/duplicate(*:845)'
                     .')'
                 .')'
-                .'|/webauthn/revoke/([^/]++)(*:641)'
+                .'|/r(?'
+                    .'|e(?'
+                        .'|ports/project/(?'
+                            .'|(\\d+)/plantilla/(\\d+)(*:902)'
+                            .'|(\\d+)/plantilla/(\\d+)/pdf(*:935)'
+                            .'|(\\d+)/plantilla/(\\d+)/excel(*:970)'
+                            .'|(\\d+)/full(*:988)'
+                            .'|(\\d+)/full/pdf(*:1010)'
+                            .'|(\\d+)/full/excel(*:1035)'
+                        .')'
+                        .'|vit/file/([^/]++)(?'
+                            .'|(*:1065)'
+                            .'|/(?'
+                                .'|delete(*:1084)'
+                                .'|reprocess(*:1102)'
+                            .')'
+                        .')'
+                    .')'
+                    .'|ubros/(?'
+                        .'|(\\d+)/edit(*:1133)'
+                        .'|(\\d+)/delete(*:1154)'
+                    .')'
+                .')'
+                .'|/webauthn/revoke/([^/]++)(*:1190)'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
@@ -125,19 +170,40 @@ return [
         191 => [[['_route' => '_profiler', '_controller' => 'web_profiler.controller.profiler::panelAction'], ['token'], null, null, false, true, null]],
         245 => [[['_route' => 'api_revit_send_elements', '_controller' => 'App\\Controller\\API\\RevitAPIController::sendElements'], ['projectId'], ['POST' => 0], null, false, false, null]],
         265 => [[['_route' => 'api_revit_get_calculations', '_controller' => 'App\\Controller\\API\\RevitAPIController::getCalculations'], ['projectId'], ['GET' => 0], null, false, false, null]],
-        292 => [[['_route' => 'app_apu_edit', '_controller' => 'App\\Controller\\APUController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        311 => [[['_route' => 'app_apu_export_excel', '_controller' => 'App\\Controller\\APUController::exportExcel'], ['id'], null, null, false, false, null]],
-        348 => [[['_route' => 'app_admin_users_edit', '_controller' => 'App\\Controller\\AdminController::editUser'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        362 => [[['_route' => 'app_admin_users_toggle', '_controller' => 'App\\Controller\\AdminController::toggleUser'], ['id'], ['POST' => 0], null, false, false, null]],
-        397 => [[['_route' => 'avatar_serve', '_controller' => 'App\\Controller\\AvatarController::serve'], ['filename'], ['GET' => 0], null, false, true, null]],
-        432 => [[['_route' => 'app_set_locale', '_controller' => 'App\\Controller\\LocaleController::setLocale'], ['locale'], null, null, false, true, null]],
-        471 => [[['_route' => 'app_security_session_revoke', '_controller' => 'App\\Controller\\SecuritySettingsController::revokeSession'], ['id'], ['POST' => 0], null, false, false, null]],
-        507 => [[['_route' => 'app_system_tenants_edit', '_controller' => 'App\\Controller\\SystemController::editTenant'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        540 => [[['_route' => 'app_password_reset', '_controller' => 'App\\Controller\\PasswordResetController::resetPassword'], ['token'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
-        571 => [[['_route' => 'app_revit_file_detail', '_controller' => 'App\\Controller\\RevitUploadController::fileDetail'], ['id'], ['GET' => 0], null, false, true, null]],
-        589 => [[['_route' => 'app_revit_file_delete', '_controller' => 'App\\Controller\\RevitUploadController::deleteFile'], ['id'], ['POST' => 0], null, false, false, null]],
-        606 => [[['_route' => 'app_revit_file_reprocess', '_controller' => 'App\\Controller\\RevitUploadController::reprocessFile'], ['id'], ['POST' => 0], null, false, false, null]],
-        641 => [
+        295 => [[['_route' => 'app_apu_edit', '_controller' => 'App\\Controller\\APUController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        314 => [[['_route' => 'app_apu_export_excel', '_controller' => 'App\\Controller\\APUController::exportExcel'], ['id'], null, null, false, false, null]],
+        347 => [[['_route' => 'app_apu_create_for_rubro', '_controller' => 'App\\Controller\\APUController::createForRubro'], ['plantillaRubroId'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        384 => [[['_route' => 'app_admin_users_edit', '_controller' => 'App\\Controller\\AdminController::editUser'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        398 => [[['_route' => 'app_admin_users_toggle', '_controller' => 'App\\Controller\\AdminController::toggleUser'], ['id'], ['POST' => 0], null, false, false, null]],
+        433 => [[['_route' => 'avatar_serve', '_controller' => 'App\\Controller\\AvatarController::serve'], ['filename'], ['GET' => 0], null, false, true, null]],
+        468 => [[['_route' => 'app_set_locale', '_controller' => 'App\\Controller\\LocaleController::setLocale'], ['locale'], null, null, false, true, null]],
+        507 => [[['_route' => 'app_security_session_revoke', '_controller' => 'App\\Controller\\SecuritySettingsController::revokeSession'], ['id'], ['POST' => 0], null, false, false, null]],
+        543 => [[['_route' => 'app_system_tenants_edit', '_controller' => 'App\\Controller\\SystemController::editTenant'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        579 => [[['_route' => 'app_password_reset', '_controller' => 'App\\Controller\\PasswordResetController::resetPassword'], ['token'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        620 => [[['_route' => 'app_plantilla_index', '_controller' => 'App\\Controller\\PlantillaController::index'], ['projectId'], null, null, true, false, null]],
+        638 => [[['_route' => 'app_plantilla_create', '_controller' => 'App\\Controller\\PlantillaController::create'], ['projectId'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        651 => [[['_route' => 'app_plantilla_show', '_controller' => 'App\\Controller\\PlantillaController::show'], ['projectId', 'id'], null, null, false, true, null]],
+        669 => [[['_route' => 'app_plantilla_edit', '_controller' => 'App\\Controller\\PlantillaController::edit'], ['projectId', 'id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        693 => [[['_route' => 'app_plantilla_add_rubro', '_controller' => 'App\\Controller\\PlantillaController::addRubro'], ['projectId', 'id'], ['POST' => 0], null, false, false, null]],
+        726 => [[['_route' => 'app_plantilla_remove_rubro', '_controller' => 'App\\Controller\\PlantillaController::removeRubro'], ['projectId', 'id', 'prId'], ['POST' => 0], null, false, true, null]],
+        749 => [[['_route' => 'app_plantilla_duplicate', '_controller' => 'App\\Controller\\PlantillaController::duplicate'], ['projectId', 'id'], ['POST' => 0], null, false, false, null]],
+        769 => [[['_route' => 'app_plantilla_delete', '_controller' => 'App\\Controller\\PlantillaController::delete'], ['projectId', 'id'], ['POST' => 0], null, false, false, null]],
+        784 => [[['_route' => 'app_project_show', '_controller' => 'App\\Controller\\ProjectController::show'], ['id'], null, null, false, true, null]],
+        802 => [[['_route' => 'app_project_edit', '_controller' => 'App\\Controller\\ProjectController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        822 => [[['_route' => 'app_project_delete', '_controller' => 'App\\Controller\\ProjectController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        845 => [[['_route' => 'app_project_duplicate', '_controller' => 'App\\Controller\\ProjectController::duplicate'], ['id'], ['POST' => 0], null, false, false, null]],
+        902 => [[['_route' => 'app_report_plantilla', '_controller' => 'App\\Controller\\ReportController::preview'], ['projectId', 'id'], null, null, false, true, null]],
+        935 => [[['_route' => 'app_report_plantilla_pdf', '_controller' => 'App\\Controller\\ReportController::pdf'], ['projectId', 'id'], null, null, false, false, null]],
+        970 => [[['_route' => 'app_report_plantilla_excel', '_controller' => 'App\\Controller\\ReportController::excel'], ['projectId', 'id'], null, null, false, false, null]],
+        988 => [[['_route' => 'app_report_project_full', '_controller' => 'App\\Controller\\ReportController::projectFull'], ['id'], null, null, false, false, null]],
+        1010 => [[['_route' => 'app_report_project_full_pdf', '_controller' => 'App\\Controller\\ReportController::projectFullPdf'], ['id'], null, null, false, false, null]],
+        1035 => [[['_route' => 'app_report_project_full_excel', '_controller' => 'App\\Controller\\ReportController::projectFullExcel'], ['id'], null, null, false, false, null]],
+        1065 => [[['_route' => 'app_revit_file_detail', '_controller' => 'App\\Controller\\RevitUploadController::fileDetail'], ['id'], ['GET' => 0], null, false, true, null]],
+        1084 => [[['_route' => 'app_revit_file_delete', '_controller' => 'App\\Controller\\RevitUploadController::deleteFile'], ['id'], ['POST' => 0], null, false, false, null]],
+        1102 => [[['_route' => 'app_revit_file_reprocess', '_controller' => 'App\\Controller\\RevitUploadController::reprocessFile'], ['id'], ['POST' => 0], null, false, false, null]],
+        1133 => [[['_route' => 'app_rubro_edit', '_controller' => 'App\\Controller\\RubroController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1154 => [[['_route' => 'app_rubro_delete', '_controller' => 'App\\Controller\\RubroController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        1190 => [
             [['_route' => 'webauthn_revoke', '_controller' => 'App\\Controller\\WebAuthnController::revoke'], ['id'], ['POST' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

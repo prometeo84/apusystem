@@ -19,6 +19,7 @@
                             </h4>
 
                             <form method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                                 {# Avatar / Imagen de Perfil #}
                                 <div class="mb-4 text-center">
                                     <label class="form-label d-block">{{ 'common.image_profile'|trans }}</label>

@@ -93,7 +93,134 @@ Password: Admin123!
 
 ---
 
-## 🎨 Personalización
+## �️ Flujo Principal: Proyecto → Plantilla → Rubro → APU → Reporte
+
+### Prueba 4: Crear un Proyecto
+
+```
+URL: http://localhost/projects/new
+```
+
+**Pasos:**
+
+1. Click en "Proyectos" en el sidebar
+2. Click en "Nuevo Proyecto"
+3. Completar: Nombre, Código, Cliente, Ubicación, Estado
+4. Guardar → redirige al detalle del proyecto
+
+**Verifica:**
+
+- ✅ El proyecto aparece en la lista con su código
+- ✅ El botón "Reporte Completo" está disponible (aunque sin plantillas)
+- ✅ El botón "Duplicar" genera una copia con sufijo `(copia)`
+
+### Prueba 5: Crear Rubros Personalizados
+
+```
+URL: http://localhost/rubros
+```
+
+**Pasos:**
+
+1. Click en "Rubros" en el sidebar
+2. Click en "Nuevo Rubro"
+3. Completar: Código, Nombre, Descripción, Unidad, Tipo
+4. Guardar
+
+**Verifica:**
+
+- ✅ El rubro aparece en la lista con su tipo (badge)
+- ✅ Se puede editar y eliminar (eliminar protegido si está en uso)
+
+### Prueba 6: Crear Plantilla y Asignar Rubros
+
+```
+URL: http://localhost/projects/{id}/plantillas/new
+```
+
+**Pasos:**
+
+1. Abrir un proyecto → click en "Ver Plantillas" o tab Plantillas
+2. Click en "Nueva Plantilla"
+3. Ingresar nombre y descripción → Guardar
+4. En la vista de plantilla, seleccionar un rubro del dropdown → click "Agregar Rubro"
+5. Repetir para varios rubros
+6. Ingresar la cantidad de cada rubro en la tabla
+
+**Verifica:**
+
+- ✅ Los rubros aparecen en la tabla con su estado (⚠ Sin APU o ✓ APU completo)
+- ✅ El total de la plantilla se actualiza en tiempo real
+- ✅ No se puede agregar el mismo rubro dos veces a la misma plantilla
+
+### Prueba 7: Crear APU para un Rubro
+
+**Pasos:**
+
+1. En la tabla de la plantilla, click en "Crear APU" del rubro deseado
+2. Completar la descripción (pre-llenada con el nombre del rubro) y unidad
+3. Ingresar K(H/U) y Rendimiento
+4. Agregar filas de **Equipo**, **Mano de Obra**, **Materiales** y **Transporte**
+5. El panel de resumen calcula automáticamente los costos
+6. Ingresar % de Utilidad → el Precio de Cálculo se actualiza
+7. El Precio Ofertado se sugiere automáticamente (editable)
+8. Click "Guardar" → regresa a la plantilla
+
+**Verifica:**
+
+- ✅ La columna "Precio Unit." y "Subtotal" se llenan en la plantilla
+- ✅ El total de la plantilla se actualiza
+
+### Prueba 8: Editar APU existente
+
+**Pasos:**
+
+1. En la tabla de la plantilla, click en el ícono de edición del rubro con APU
+2. El formulario se pre-llena con todos los datos: equipo, labor, materiales, transporte
+3. El panel de resumen muestra los costos actuales
+4. El % de Utilidad y el Precio Ofertado se pre-llenan con los valores guardados
+5. Modificar valores → Guardar → regresa a la plantilla
+
+**Verifica:**
+
+- ✅ Todos los campos tienen los valores previos al entrar
+- ✅ Al guardar, los costos en la plantilla reflejan los cambios
+- ✅ El breadcrumb muestra la ruta Proyecto → Plantilla → Editar APU
+
+### Prueba 9: Generar Reporte
+
+**Reporte por plantilla:**
+
+1. En la vista de una plantilla, click en "Reporte" (ícono verde)
+2. Vista previa HTML del presupuesto
+3. Botones: "Descargar PDF" y "Descargar Excel"
+
+**Reporte completo del proyecto:**
+
+1. En la vista del proyecto, click en "Reporte Completo del Proyecto" (botón verde)
+2. Vista previa agrupa todas las plantillas con sus rubros
+3. Muestra subtotal por plantilla y **TOTAL GENERAL** del proyecto
+4. Botones: "Descargar PDF" y "Descargar Excel"
+
+**Verifica:**
+
+- ✅ El PDF contiene tabla de rubros con precios correctos
+- ✅ El Excel tiene hojas con estilos y formato moneda
+- ✅ El reporte completo muestra el total sumado de todas las plantillas
+
+### Prueba 10: Duplicar Proyecto
+
+**Pasos:**
+
+1. En el detalle de un proyecto, click en "Duplicar"
+2. Se crea una copia con sufijo `(copia)` en el nombre
+3. Las plantillas y rubros se copian **sin los APUs** (estructura vacía)
+
+**Verifica:**
+
+- ✅ El proyecto duplicado aparece en la lista
+- ✅ Tiene las mismas plantillas con los mismos rubros
+- ✅ Los rubros tienen estado "⚠ Sin APU" (cada APU debe crearse de nuevo)
 
 ### 1. Cambiar Idioma
 
@@ -538,4 +665,4 @@ docker exec apache php bin/console debug:config
 
 ---
 
-**Última actualización:** 19/03/2026
+## **Última actualización:** 19/03/2026

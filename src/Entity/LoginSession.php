@@ -70,6 +70,11 @@ class LoginSession
         $this->lastActivityAt = new \DateTime();
     }
 
+    public function setExpiresAt(\DateTimeInterface $expiresAt): void
+    {
+        $this->expiresAt = $expiresAt;
+    }
+
     public function isExpired(): bool
     {
         return $this->expiresAt < new \DateTime();
@@ -81,14 +86,44 @@ class LoginSession
     }
 
     // Getters
-    public function getId(): ?int { return $this->id; }
-    public function getUser(): User { return $this->user; }
-    public function getSessionId(): string { return $this->sessionId; }
-    public function getIpAddress(): string { return $this->ipAddress; }
-    public function getUserAgent(): string { return $this->userAgent; }
-    public function getFingerprint(): string { return $this->fingerprint; }
-    public function getLastActivityAt(): \DateTimeInterface { return $this->lastActivityAt; }
-    public function getExpiresAt(): \DateTimeInterface { return $this->expiresAt; }
-    public function isActive(): bool { return $this->isActive; }
-    public function getCreatedAt(): \DateTimeInterface { return $this->createdAt; }
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+    public function getSessionId(): string
+    {
+        return $this->sessionId;
+    }
+    public function getIpAddress(): string
+    {
+        return $this->ipAddress;
+    }
+    public function getUserAgent(): string
+    {
+        return $this->userAgent;
+    }
+    public function getFingerprint(): string
+    {
+        return $this->fingerprint;
+    }
+    public function getLastActivityAt(): \DateTimeInterface
+    {
+        return $this->lastActivityAt;
+    }
+    public function getExpiresAt(): \DateTimeInterface
+    {
+        return $this->expiresAt;
+    }
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+    public function getCreatedAt(): \DateTimeInterface
+    {
+        return $this->createdAt;
+    }
 }

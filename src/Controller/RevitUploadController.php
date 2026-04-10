@@ -59,19 +59,31 @@ class RevitUploadController extends AbstractController
     }
 
     #[Route('/files', name: 'app_revit_files', methods: ['GET'])]
-    public function listFiles(): Response
+    public function listFiles(Request $request): Response
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
+        $perPage = 20;
+        $currentPage = max(1, (int) $request->query->get('page', 1));
 
-        $files = $this->em->getRepository(RevitFile::class)
-            ->findBy(
-                ['tenant' => $user->getTenant()],
-                ['uploadedAt' => 'DESC']
-            );
+        $repo = $this->em->getRepository(RevitFile::class);
+        $totalItems = $repo->count(['tenant' => $user->getTenant()]);
+        $totalPages = max(1, (int) ceil($totalItems / $perPage));
+        $currentPage = min($currentPage, $totalPages);
+
+        $files = $repo->findBy(
+            ['tenant' => $user->getTenant()],
+            ['uploadedAt' => 'DESC'],
+            $perPage,
+            ($currentPage - 1) * $perPage
+        );
 
         return $this->render('revit/files.html.twig', [
-            'files' => $files,
+            'files'       => $files,
+            'currentPage' => $currentPage,
+            'totalPages'  => $totalPages,
+            'totalItems'  => $totalItems,
+            'perPage'     => $perPage,
         ]);
     }
 

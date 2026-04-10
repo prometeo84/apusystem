@@ -8,46 +8,46 @@ Bienvenido a la documentación técnica del Sistema de Análisis de Precios Unit
 
 Arquitectura multi-tenant, jerarquía de roles y estructura del sistema.
 
-- Sistema multi-tenant basado en sesión
-- 3 niveles de roles: SUPER_ADMIN, ADMIN, USER
-- Estructura de base de datos y stack tecnológico
-
 ### 2. [👤 Guía de Usuario](02-GUIA_USUARIO.md)
 
-Guía completa para usuarios del sistema.
-
-- Personalización (idioma, zona horaria, temas)
-- Seguridad (2FA, recuperación de contraseña)
-- **Credenciales de prueba** para testing
-- Sistema de correo y notificaciones
+Guía completa: credenciales de prueba, flujo APU jerárquico, personalización, seguridad 2FA.
 
 ### 3. [🔒 Seguridad OWASP](03-SEGURIDAD_OWASP.md)
 
-Análisis y validación de seguridad según OWASP Top 10 2026.
-
-- Análisis inicial de vulnerabilidades
-- Correcciones implementadas
-- Validación y cumplimiento (10/10)
-- Código de implementación
+Análisis y validación OWASP Top 10 — 10/10 cumplidos.
 
 ### 4. [🔌 API Revit](04-API_REVIT.md)
 
-Integración con Autodesk Revit mediante API REST.
-
-- Endpoints de autenticación y carga
-- Cliente Python completo
-- Ejemplos de uso
+Integración BIM con Autodesk Revit via API REST.
 
 ### 5. [⚙️ Desarrollo](05-DESARROLLO.md)
 
-Guía para desarrolladores.
+Guía para desarrolladores, comandos útiles y configuración.
 
-- Estado actual del proyecto
-- Sistema APU completo
-- Módulo Super Admin
-- Comandos útiles y configuración
+### 6. [🧪 Casos de Uso & QA](casos_de_uso.md) ← **NUEVO**
+
+Tabla completa de casos de uso UC-01..UC-H09, resultados de pruebas PHPUnit/Playwright.
 
 ---
+
+## 🏗️ Flujo Principal del Sistema
+
+```
+LOGIN → PROYECTOS → PLANTILLAS → RUBROS → APU → REPORTE (PDF/Excel)
+```
+
+## 🚀 Inicio Rápido
+
+```bash
+docker compose up -d
+# App disponible en http://localhost
+# Admin: admin@demo.com / Admin123!
+```
+
+## 🗓️ Versión
+
+**Stack:** Symfony 7 / PHP 8.3 / MySQL 8 / Bootstrap 5
+**Tests:** 113 PHPUnit + 39 Playwright E2E
 
 ## 🚀 Quick Start
 

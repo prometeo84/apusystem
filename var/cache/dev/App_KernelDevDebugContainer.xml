@@ -127,11 +127,11 @@
     <parameter key="session.storage.options" type="collection">
       <parameter key="cache_limiter" type="string">0</parameter>
       <parameter key="name">APPSESSID</parameter>
-      <parameter key="cookie_lifetime">3600</parameter>
+      <parameter key="cookie_lifetime">0</parameter>
       <parameter key="cookie_secure">auto</parameter>
       <parameter key="cookie_httponly">true</parameter>
       <parameter key="cookie_samesite">lax</parameter>
-      <parameter key="gc_maxlifetime">3600</parameter>
+      <parameter key="gc_maxlifetime">10800</parameter>
     </parameter>
     <parameter key="session.save_path">null</parameter>
     <parameter key="session.metadata.update_threshold">0</parameter>
@@ -372,9 +372,7 @@
         <parameter>@WebProfiler/Collector/config.html.twig</parameter>
       </parameter>
     </parameter>
-    <parameter key="console.command.ids" type="collection">
-      <parameter>console.command.public_alias.App\Command\PurgeExpiredSessionsCommand</parameter>
-    </parameter>
+    <parameter key="console.command.ids" type="collection"/>
   </parameters>
   <services>
     <service id="service_container" class="Symfony\Component\DependencyInjection\ContainerInterface" public="true" synthetic="true"/>
@@ -413,6 +411,9 @@
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
       <argument type="service" id="doctrine"/>
+      <call method="setName">
+        <argument>app:purge-expired-sessions</argument>
+      </call>
     </service>
     <service id="App\Command\TestEmailCommand" class="App\Command\TestEmailCommand" autowire="true" autoconfigure="true">
       <tag name="console.command"/>
@@ -439,6 +440,7 @@
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\ExcelReportService"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\APUController"/>
       </call>
@@ -499,6 +501,14 @@
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\PasswordResetController"/>
       </call>
     </service>
+    <service id="App\Controller\PlantillaController" class="App\Controller\PlantillaController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\PlantillaController"/>
+      </call>
+    </service>
     <service id="App\Controller\ProfileController" class="App\Controller\ProfileController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -510,6 +520,23 @@
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\ProfileController"/>
       </call>
     </service>
+    <service id="App\Controller\ProjectController" class="App\Controller\ProjectController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\ProjectController"/>
+      </call>
+    </service>
+    <service id="App\Controller\ReportController" class="App\Controller\ReportController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\BudgetReportService"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\ReportController"/>
+      </call>
+    </service>
     <service id="App\Controller\RevitUploadController" class="App\Controller\RevitUploadController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -517,6 +544,14 @@
       <argument type="service" id="App\Service\RevitFileProcessor"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\RevitUploadController"/>
+      </call>
+    </service>
+    <service id="App\Controller\RubroController" class="App\Controller\RubroController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\RubroController"/>
       </call>
     </service>
     <service id="App\Controller\SecurityController" class="App\Controller\SecurityController" public="true" autowire="true" autoconfigure="true">
@@ -568,6 +603,11 @@
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\WebAuthnController"/>
       </call>
     </service>
+    <service id="App\EventListener\CsrfProtectionSubscriber" class="App\EventListener\CsrfProtectionSubscriber" autowire="true" autoconfigure="true">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="security.csrf.same_origin_token_manager"/>
+    </service>
     <service id="App\EventListener\LocaleSubscriber" class="App\EventListener\LocaleSubscriber" autowire="true" autoconfigure="true">
       <tag name="kernel.event_subscriber"/>
       <tag name="container.hot_path"/>
@@ -605,6 +645,7 @@
     <service id="App\Security\UserProvider" class="App\Security\UserProvider" autowire="true" autoconfigure="true">
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
     </service>
+    <service id="App\Service\BudgetReportService" class="App\Service\BudgetReportService" autowire="true" autoconfigure="true"/>
     <service id="App\Service\EncryptionService" class="App\Service\EncryptionService" autowire="true" autoconfigure="true">
       <argument>%env(APP_SECRET)%</argument>
     </service>
@@ -646,7 +687,6 @@
     </service>
     <service id="App\Service\WebAuthnService" class="App\Service\WebAuthnService" autowire="true" autoconfigure="true">
       <argument type="service" id="monolog.logger"/>
-      <argument type="service" id=".debug.http_client"/>
     </service>
     <service id="App\Twig\AppExtension" class="App\Twig\AppExtension" autowire="true" autoconfigure="true">
       <tag name="twig.extension"/>
@@ -2643,6 +2683,14 @@
           <argument>onKernelResponse</argument>
         </argument>
         <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="App\EventListener\CsrfProtectionSubscriber"/>
+          <argument>onRequest</argument>
+        </argument>
+        <argument>10</argument>
       </call>
       <call method="addListener">
         <argument>kernel.request</argument>
@@ -5924,6 +5972,34 @@
         <argument>null</argument>
       </call>
       <call method="add">
+        <argument type="service" id=".security.request_matcher.KuHIB_9"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.TjOZWRv"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.4ZEjT8r"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.I_Hqzgo"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
         <argument type="service" id=".security.request_matcher.LyszRTg"/>
         <argument type="collection">
           <argument>IS_AUTHENTICATED_REMEMBERED</argument>
@@ -6493,7 +6569,7 @@
       <argument type="service" id="request_stack"/>
       <argument type="collection">
         <argument key="secret">%env(APP_SECRET)%</argument>
-        <argument key="lifetime">604800</argument>
+        <argument key="lifetime">10800</argument>
         <argument key="path">/</argument>
         <argument key="always_remember_me">false</argument>
         <argument key="user_providers" type="collection"/>
@@ -6625,6 +6701,38 @@
     <service id=".security.request_matcher.7hffHUr" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
       <argument type="collection">
         <argument type="service" id=".security.request_matcher.LORg6t3"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.B1QQtGX" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/webauthn/login</argument>
+    </service>
+    <service id=".security.request_matcher.KuHIB_9" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.B1QQtGX"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.geGy5Ek" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/password/forgot</argument>
+    </service>
+    <service id=".security.request_matcher.TjOZWRv" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.geGy5Ek"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.PhF6Jdn" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/password/reset</argument>
+    </service>
+    <service id=".security.request_matcher.4ZEjT8r" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.PhF6Jdn"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.5n1UlhU" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/api/</argument>
+    </service>
+    <service id=".security.request_matcher.I_Hqzgo" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.5n1UlhU"/>
       </argument>
     </service>
     <service id=".security.request_matcher.wTfQwmN" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
@@ -7104,12 +7212,24 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\PasswordResetController" class="App\Controller\PasswordResetController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\PasswordResetController" class="App\Controller\PasswordResetController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\PasswordResetController" class="App\Controller\PasswordResetController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\PlantillaController" class="App\Controller\PlantillaController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\PlantillaController" class="App\Controller\PlantillaController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\PlantillaController" class="App\Controller\PlantillaController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ProfileController" class="App\Controller\ProfileController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ProfileController" class="App\Controller\ProfileController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\ProfileController" class="App\Controller\ProfileController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ProjectController" class="App\Controller\ProjectController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ProjectController" class="App\Controller\ProjectController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\ProjectController" class="App\Controller\ProjectController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ReportController" class="App\Controller\ReportController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ReportController" class="App\Controller\ReportController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\ReportController" class="App\Controller\ReportController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\RevitUploadController" class="App\Controller\RevitUploadController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\RevitUploadController" class="App\Controller\RevitUploadController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\RevitUploadController" class="App\Controller\RevitUploadController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\RubroController" class="App\Controller\RubroController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\RubroController" class="App\Controller\RubroController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\RubroController" class="App\Controller\RubroController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -7125,6 +7245,8 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\WebAuthnController" class="App\Controller\WebAuthnController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\WebAuthnController" class="App\Controller\WebAuthnController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\WebAuthnController" class="App\Controller\WebAuthnController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\CsrfProtectionSubscriber" class="App\EventListener\CsrfProtectionSubscriber" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\EventListener\CsrfProtectionSubscriber" class="App\EventListener\CsrfProtectionSubscriber" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\LocaleSubscriber" class="App\EventListener\LocaleSubscriber" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\EventListener\LocaleSubscriber" class="App\EventListener\LocaleSubscriber" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\RateLimitSubscriber" class="App\EventListener\RateLimitSubscriber" autowire="true" abstract="true"/>
@@ -8353,15 +8475,39 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\PlantillaController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\PlantillaController"/>
+      <argument>App\Controller\PlantillaController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\ProfileController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ProfileController"/>
       <argument>App\Controller\ProfileController</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\ProjectController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ProjectController"/>
+      <argument>App\Controller\ProjectController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\ReportController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ReportController"/>
+      <argument>App\Controller\ReportController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\RevitUploadController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\RevitUploadController"/>
       <argument>App\Controller\RevitUploadController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\RubroController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\RubroController"/>
+      <argument>App\Controller\RubroController</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
@@ -8564,8 +8710,12 @@
           <argument>App\Controller\FaviconController</argument>
           <argument>App\Controller\LocaleController</argument>
           <argument>App\Controller\PasswordResetController</argument>
+          <argument>App\Controller\PlantillaController</argument>
           <argument>App\Controller\ProfileController</argument>
+          <argument>App\Controller\ProjectController</argument>
+          <argument>App\Controller\ReportController</argument>
           <argument>App\Controller\RevitUploadController</argument>
+          <argument>App\Controller\RubroController</argument>
           <argument>App\Controller\SecurityController</argument>
           <argument>App\Controller\SecuritySettingsController</argument>
           <argument>App\Controller\SystemController</argument>
@@ -9375,10 +9525,11 @@
     </service>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.Kl4L7BW"/>
+      <argument type="service" id=".service_locator.koN3.pK"/>
       <argument type="collection">
         <argument key="app:migrate:encrypt-totp">App\Command\EncryptTotpSecretsCommand</argument>
         <argument key="app:migrate:hash-recovery-codes">App\Command\HashRecoveryCodesCommand</argument>
+        <argument key="app:purge-expired-sessions">App\Command\PurgeExpiredSessionsCommand</argument>
         <argument key="app:test-email">App\Command\TestEmailCommand</argument>
         <argument key="about">console.command.about</argument>
         <argument key="assets:install">console.command.assets_install</argument>
@@ -9484,11 +9635,12 @@
         <argument key="make:webhook">maker.auto_command.make_webhook</argument>
       </argument>
     </service>
-    <service id=".service_locator.Kl4L7BW" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.koN3.pK" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Command\EncryptTotpSecretsCommand" type="service_closure" id=".App\Command\EncryptTotpSecretsCommand.lazy"/>
         <argument key="App\Command\HashRecoveryCodesCommand" type="service_closure" id=".App\Command\HashRecoveryCodesCommand.lazy"/>
+        <argument key="App\Command\PurgeExpiredSessionsCommand" type="service_closure" id="App\Command\PurgeExpiredSessionsCommand"/>
         <argument key="App\Command\TestEmailCommand" type="service_closure" id=".App\Command\TestEmailCommand.lazy"/>
         <argument key="console.command.about" type="service_closure" id=".console.command.about.lazy"/>
         <argument key="console.command.assets_install" type="service_closure" id=".console.command.assets_install.lazy"/>
@@ -9898,6 +10050,5 @@
     <service id=".service_locator.c0wzfI4" alias=".service_locator.1vYpZ1B"/>
     <service id=".service_locator.uBwBrvQ" alias=".service_locator.0MQaTBY"/>
     <service id=".service_locator.Q2FF2no" alias=".service_locator.TJNRSaV"/>
-    <service id="console.command.public_alias.App\Command\PurgeExpiredSessionsCommand" alias="App\Command\PurgeExpiredSessionsCommand" public="true"/>
   </services>
 </container>

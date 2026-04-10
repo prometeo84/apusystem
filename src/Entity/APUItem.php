@@ -49,6 +49,14 @@ class APUItem
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private ?string $transportCost = null;
 
+    /** Porcentaje de utilidad aplicado al precio de cálculo */
+    #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
+    private ?string $utilidadPct = null;
+
+    /** Precio ofertado final (USD) definido manualmente o igual al precio de cálculo */
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    private ?string $precioOfertado = null;
+
     #[ORM\OneToMany(targetEntity: APUEquipment::class, mappedBy: 'apuItem', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $equipment;
 
@@ -363,5 +371,33 @@ class APUItem
         $this->totalCost = (string) ($equipmentSum + $laborSum + $materialSum + $transportSum);
 
         return $this;
+    }
+
+    public function getUtilidadPct(): ?string
+    {
+        return $this->utilidadPct;
+    }
+    public function setUtilidadPct(?string $v): self
+    {
+        $this->utilidadPct = $v;
+        return $this;
+    }
+
+    public function getPrecioOfertado(): ?string
+    {
+        return $this->precioOfertado;
+    }
+    public function setPrecioOfertado(?string $v): self
+    {
+        $this->precioOfertado = $v;
+        return $this;
+    }
+
+    /** Precio de cálculo = totalCost * (1 + utilidadPct/100) */
+    public function getPrecioCalculo(): float
+    {
+        $base = (float) ($this->totalCost ?? 0);
+        $pct  = (float) ($this->utilidadPct ?? 0);
+        return $base * (1 + $pct / 100);
     }
 }

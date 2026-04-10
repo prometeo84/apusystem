@@ -55,9 +55,14 @@ class ProfileController extends AbstractController
                 $avatarFile = $request->files->get('avatar');
                 if ($avatarFile) {
                     $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                    $allowedMimeTypes  = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
                     $extension = strtolower($avatarFile->getClientOriginalExtension());
 
-                    if (in_array($extension, $allowedExtensions)) {
+                    // Validar extensión Y tipo MIME real del archivo
+                    $finfo    = new \finfo(\FILEINFO_MIME_TYPE);
+                    $mimeType = $finfo->file($avatarFile->getPathname());
+
+                    if (in_array($extension, $allowedExtensions, true) && in_array($mimeType, $allowedMimeTypes, true)) {
                         $maxSize = 2 * 1024 * 1024; // 2MB
                         if ($avatarFile->getSize() <= $maxSize) {
                             $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads/avatars';

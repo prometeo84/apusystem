@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import 'partials/_pagination.html.twig' as pager %}
 
 {% block title %}{{ 'admin_users.title_page'|trans }} - APU System{% endblock %}
 
@@ -86,6 +87,7 @@
                                             <div class="btn-group btn-group-sm">
                                                 {{ btn.button('common.edit'|trans, 'outline-primary', 'bi-pencil', {'href': path('app_admin_users_edit', {id: user.id})}) }}
                                                 <form method="post" action="{{ path('app_admin_users_toggle', {id: user.id}) }}" style="display: inline;">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                                                     {{ btn.button('', user.isActive ? 'outline-warning' : 'outline-success', 'bi-' ~ (user.isActive ? 'pause-fill' : 'play-fill'), {'type':'submit','title': user.isActive ? 'Desactivar' : 'Activar'}) }}
                                                 </form>
                                             </div>
@@ -95,6 +97,7 @@
                             </tbody>
                         </table>
                     </div>
+                    {{ pager.render(currentPage, totalPages, 'app_admin_users') }}
                 </div>
             </div>
         </div>

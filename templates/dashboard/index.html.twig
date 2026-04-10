@@ -100,7 +100,7 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0"><i class="bi bi-folder"></i> {{ 'dashboard.recent_projects'|trans }}</h5>
-                            {{ btn.button('dashboard.new_project'|trans, 'primary', 'bi-plus-circle', {'href': '#', 'class':'btn-sm'}) }}
+                            {{ btn.button('dashboard.new_project'|trans, 'primary', 'bi-plus-circle', {'href': path('app_project_create'), 'class':'btn-sm'}) }}
                         </div>
                         <div class="card-body">
                             {% if proyectosRecientes|length > 0 %}
@@ -135,7 +135,7 @@
                                                         {% endif %}
                                                     </td>
                                                     <td>
-                                                        {{ btn.button('', 'outline-primary', 'bi-eye', {'href': '#', 'class':'btn-sm'}) }}
+                                                        {{ btn.button('', 'outline-primary', 'bi-eye', {'href': path('app_project_show', {id: proyecto.id}), 'class':'btn-sm'}) }}
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -146,7 +146,7 @@
                                 <div class="text-center py-5">
                                     <i class="bi bi-folder-x" style="font-size: 3rem; opacity: 0.3;"></i>
                                     <p class="text-muted mt-3">{{ 'dashboard.no_projects'|trans }}</p>
-                                    {{ btn.button('dashboard.create_first_project'|trans, 'primary', 'bi-plus-circle', {'href': '#'}) }}
+                                    {{ btn.button('dashboard.create_first_project'|trans, 'primary', 'bi-plus-circle', {'href': path('app_project_create')}) }}
                                 </div>
                             {% endif %}
                         </div>
@@ -160,10 +160,10 @@
                         </div>
                         <div class="card-body">
                             <div class="d-grid gap-2">
-                                {{ btn.button('dashboard.new_project'|trans, 'primary', 'bi-folder-plus', {'href': '#'}) }}
-                                {{ btn.button('dashboard.create_apu'|trans, 'outline-primary', 'bi-file-earmark-bar-graph', {'href': '#'}) }}
-                                {{ btn.button('dashboard.add_material'|trans, 'outline-secondary', 'bi-box', {'href': '#'}) }}
-                                {{ btn.button('dashboard.add_labor'|trans, 'outline-secondary', 'bi-people', {'href': '#'}) }}
+                                {{ btn.button('dashboard.new_project'|trans, 'primary', 'bi-folder-plus', {'href': path('app_project_create')}) }}
+                                {{ btn.button('dashboard.create_apu'|trans, 'outline-primary', 'bi-file-earmark-bar-graph', {'href': path('app_apu_create')}) }}
+                                {{ btn.button('dashboard.add_material'|trans, 'outline-secondary', 'bi-box', {'href': path('app_apu_create')}) }}
+                                {{ btn.button('dashboard.add_labor'|trans, 'outline-secondary', 'bi-people', {'href': path('app_apu_create')}) }}
                             </div>
                         </div>
                     </div>
@@ -191,148 +191,6 @@
                                     <div class="progress-bar bg-success" style="width: {{ (stats.total_proyectos / tenant.maxProjects * 100)|round }}%"></div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-            <!-- Stats Cards -->
-            <div class="row g-4 mb-4">
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <p class="text-muted mb-1">{{ 'dashboard.active_projects'|trans }}</p>
-                                    <h3 class="mb-0">0</h3>
-                                </div>
-                                <div class="fs-1 text-primary">
-                                    <i class="bi bi-folder"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <p class="text-muted mb-1">{{ 'dashboard.apus_created'|trans }}</p>
-                                    <h3 class="mb-0">0</h3>
-                                </div>
-                                <div class="fs-1 text-success">
-                                    <i class="bi bi-file-earmark-text"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <p class="text-muted mb-1">{{ 'dashboard.templates_label'|trans }}</p>
-                                    <h3 class="mb-0">0</h3>
-                                </div>
-                                <div class="fs-1 text-warning">
-                                    <i class="bi bi-layout-text-sidebar"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <p class="text-muted mb-1">{{ 'dashboard.total_budget'|trans }}</p>
-                                    <h3 class="mb-0">$0</h3>
-                                </div>
-                                <div class="fs-1 text-info">
-                                    <i class="bi bi-currency-dollar"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title mb-3">
-                                <i class="bi bi-lightning-fill"></i> {{ 'dashboard.quick_actions'|trans }}
-                            </h5>
-                            <div class="d-flex gap-2">
-                                {{ btn.button('dashboard.new_project'|trans, 'primary', 'bi-bi-plus-circle', {}) }}
-                                {{ btn.button('dashboard.create_apu'|trans, 'outline-primary', 'bi-bi-file-earmark-plus', {}) }}
-                                {{ btn.button('dashboard.export_report'|trans, 'outline-primary', 'bi-bi-download', {}) }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recent Activity -->
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title mb-3">
-                                <i class="bi bi-clock-history"></i> {{ 'dashboard.recent_activity'|trans }}
-                            </h5>
-                            <div class="text-center text-muted py-5">
-                                <i class="bi bi-inbox" style="font-size: 3rem;"></i>
-                                <p class="mt-3">{{ 'dashboard.no_recent_activity'|trans }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title mb-3">
-                                <i class="bi bi-info-circle"></i> {{ 'dashboard.account_information'|trans }}
-                            </h5>
-                            <ul class="list-unstyled">
-                                <li class="mb-2">
-                                    <i class="bi bi-building text-primary"></i>
-                                    <strong>{{ 'common.company'|trans }}:</strong> {{ tenant.name }}
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-person text-primary"></i>
-                                    <strong>{{ 'common.user'|trans }}:</strong> {{ user.email }}
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-shield-check text-success"></i>
-                                    <strong>2FA:</strong>
-                                    {% if user.twoFactorEnabled %}
-                                        <span class="badge bg-success">{{ 'security.enabled'|trans }}</span>
-                                    {% else %}
-                                        <span class="badge bg-warning">{{ 'security.disabled'|trans }}</span>
-                                    {% endif %}
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-star text-warning"></i>
-                                    <strong>{{ 'dashboard.plan'|trans }}:</strong> {{ tenant.plan|upper }}
-                                </li>
-                                <li class="mb-2">
-                                    <i class="bi bi-people text-info"></i>
-                                    <strong>{{ 'admin.users_label'|trans }}:</strong> {{ tenant.users|length }} / {{ tenant.maxUsers }}
-                                </li>
-                            </ul>
                         </div>
                     </div>
                 </div>

@@ -3,10 +3,14 @@
 {% block title %}{{ 'revit.upload_title'|trans }}{% endblock %}
 
 {% block body %}
+{% import 'partials/_button.html.twig' as btn %}
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-8 offset-md-2">
-            <h1><i class="bi bi-cloud-upload"></i> {{ 'revit.upload_header'|trans }}</h1>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1><i class="bi bi-cloud-upload"></i> {{ 'revit.upload_header'|trans }}</h1>
+                {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_revit_files')}) }}
+            </div>
             <p class="text-muted">{{ 'revit.upload_instruction'|trans }}</p>
 
             {% for message in app.flashes('error') %}
@@ -26,6 +30,7 @@
             <div class="card">
                 <div class="card-body">
                     <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                        <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                         <div class="mb-3">
                             <label for="revit_file" class="form-label">{{ 'revit.select_file'|trans }}</label>
                             <input type="file"

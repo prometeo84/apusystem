@@ -30,6 +30,7 @@
                         {% endfor %}
 
                         <form method="post" action="{{ path('app_password_forgot') }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                             <div class="mb-3">
                                 <label for="email" class="form-label">
                                     <i class="bi bi-envelope"></i> {{ 'login.email'|trans }}

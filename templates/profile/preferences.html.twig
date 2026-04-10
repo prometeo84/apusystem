@@ -35,6 +35,7 @@
                             </h5>
 
                             <form method="post" action="{{ path('app_profile_preferences') }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                                 <div class="mb-3">
                                     <label for="locale" class="form-label">{{ 'preferences.language'|trans }}</label>
                                     <select name="locale" id="locale" class="form-select" required>
@@ -96,6 +97,7 @@
                             </h5>
 
                             <form method="post" action="{{ path('app_profile_preferences') }}" id="themeForm">
+                                <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                                 <div class="mb-3">
                                     <label for="theme_primary_color" class="form-label">{{ 'preferences.primary_color'|trans }}</label>
                                     <div class="input-group">
@@ -218,6 +220,11 @@ function resetTheme() {
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = '{{ path('app_profile_reset_theme') }}';
+        const tokenInput = document.createElement('input');
+        tokenInput.type = 'hidden';
+        tokenInput.name = '_token';
+        tokenInput.value = '{{ csrf_token('submit') }}';
+        form.appendChild(tokenInput);
         document.body.appendChild(form);
         form.submit();
     }

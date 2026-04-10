@@ -28,6 +28,7 @@
                         </div>
                         <div class="card-body">
                             <form method="post" action="{{ path('app_system_tenants_edit', {id: tenant.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="name" class="form-label">{{ 'system.company_name'|trans }} *</label>

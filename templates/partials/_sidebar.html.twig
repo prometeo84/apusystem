@@ -72,26 +72,17 @@
                    href="{{ path('app_dashboard') }}">
                     <i class="bi bi-speedometer2"></i> {{ 'nav.dashboard'|trans }}
                 </a>
-                <a class="nav-link" href="#">
+                <a class="nav-link {% if app.request.get('_route') starts with 'app_project' %}active{% endif %}"
+                   href="{{ path('app_project_index') }}">
                     <i class="bi bi-folder"></i> {{ 'dashboard.projects'|trans }}
                 </a>
-                <a class="nav-link" href="#">
+                <a class="nav-link {% if app.request.get('_route') starts with 'app_apu' %}active{% endif %}"
+                   href="{{ path('app_apu_index') }}">
                     <i class="bi bi-file-earmark-bar-graph"></i> {{ 'dashboard.apus'|trans }}
                 </a>
-                <a class="nav-link" href="#">
-                    <i class="bi bi-file-earmark-text"></i> {{ 'dashboard.templates'|trans }}
-                </a>
-                <a class="nav-link" href="#">
+                <a class="nav-link {% if app.request.get('_route') starts with 'app_rubro' %}active{% endif %}"
+                   href="{{ path('app_rubro_index') }}">
                     <i class="bi bi-tags"></i> {{ 'dashboard.rubros'|trans }}
-                </a>
-                <a class="nav-link" href="#">
-                    <i class="bi bi-box"></i> {{ 'dashboard.materials'|trans }}
-                </a>
-                <a class="nav-link" href="#">
-                    <i class="bi bi-people"></i> {{ 'dashboard.labor'|trans }}
-                </a>
-                <a class="nav-link" href="#">
-                    <i class="bi bi-tools"></i> {{ 'dashboard.equipment'|trans }}
                 </a>
 
                 <hr class="my-2">

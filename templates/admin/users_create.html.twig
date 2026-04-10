@@ -25,6 +25,7 @@
                         </div>
                         <div class="card-body">
                             <form method="post" action="{{ path('app_admin_users_create') }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">{{ 'admin.first_name'|trans }}</label>
@@ -85,7 +86,7 @@
                                 <div class="d-flex gap-2">
                                     {% import 'partials/_button.html.twig' as btn %}
                                     {{ btn.button('admin.create_user'|trans, 'primary', 'bi-save', {'type':'submit'}) }}
-                                    {{ btn.button('buttons.cancel'|trans, 'secondary', 'bi-x-circle', {'href': path('app_admin_users')}) }}
+                                    {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_admin_users')}) }}
                                 </div>
                             </form>
                         </div>

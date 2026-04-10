@@ -118,17 +118,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private function generateUuid(): string
     {
-        return sprintf(
-            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            \mt_rand(0, 0xffff),
-            \mt_rand(0, 0xffff),
-            \mt_rand(0, 0xffff),
-            \mt_rand(0, 0x0fff) | 0x4000,
-            \mt_rand(0, 0x3fff) | 0x8000,
-            \mt_rand(0, 0xffff),
-            \mt_rand(0, 0xffff),
-            \mt_rand(0, 0xffff)
-        );
+        $data = random_bytes(16);
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // version 4
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // variant RFC 4122
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
     // UserInterface methods
@@ -147,6 +140,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $roles[] = 'ROLE_ADMIN';
         } elseif ($this->role === 'super_admin') {
             $roles[] = 'ROLE_SUPER_ADMIN';
+            $roles[] = 'ROLE_ADMIN';
         }
 
         return array_unique($roles);
@@ -289,7 +283,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
     public function setRole(string $role): self
     {
-        $this->role = $role;
+        // Normalize: accept both 'ROLE_ADMIN' and 'admin' formats
+        $map = [
+            'ROLE_USER'        => 'user',
+            'ROLE_MANAGER'     => 'manager',
+            'ROLE_ADMIN'       => 'admin',
+            'ROLE_SUPER_ADMIN' => 'super_admin',
+        ];
+        $this->role = $map[$role] ?? strtolower(str_replace('ROLE_', '', $role));
         $this->updatedAt = new \DateTime();
         return $this;
     }

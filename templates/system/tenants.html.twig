@@ -3,6 +3,8 @@
 {% block title %}{{ 'system.tenants_management'|trans }} - APU System{% endblock %}
 
 {% block body %}
+{% import 'partials/_button.html.twig' as btn %}
+{% import 'partials/_pagination.html.twig' as pager %}
 <div class="d-flex">
     {% include 'partials/_sidebar.html.twig' %}
 
@@ -11,24 +13,16 @@
 
         <div class="container-fluid p-4 content-wrapper">
 
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
-                        {{ message|trans }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                {% endfor %}
-            {% endfor %}
+            {% include 'partials/_flashes.html.twig' %}
 
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0"><i class="bi bi-building"></i> {{ 'system_tenants.registered_tenants_section'|trans }}</h5>
-                        {% import 'partials/_button.html.twig' as btn %}
-                        {{ btn.button('system.create_tenant'|trans, 'primary', 'bi-building', {'href': path('app_system_tenants_create')}) }}
+                    {{ btn.button('system.create_tenant'|trans, 'primary', 'bi-building', {'href': path('app_system_tenants_create')}) }}
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-hover" id="tenantsTable">
+                        <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <th>{{ 'common.company'|trans }}</th>
@@ -68,7 +62,7 @@
                                                     <small class="text-muted">{{ tenant.planExpiresAt|date('d/m/Y') }}</small>
                                                 {% endif %}
                                             {% else %}
-                                                    <span class="badge bg-secondary">{{ 'system.no_limit'|trans }}</span>
+                                                <span class="badge bg-secondary">{{ 'system.no_limit'|trans }}</span>
                                             {% endif %}
                                         </td>
                                         <td>
@@ -96,6 +90,12 @@
                         </table>
                     </div>
                 </div>
+                {% if totalPages > 1 %}
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    {{ pager.info(currentPage, totalPages) }}
+                    {{ pager.render(currentPage, totalPages, 'app_system_tenants') }}
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -172,23 +172,10 @@
                     </ul>
                 </div>
                 <div class="modal-footer">
-                    {{ btn.button('buttons.close'|trans, 'secondary', null, {}) }}
+                    {{ btn.button('buttons.close'|trans, 'secondary', null, {'data-bs-dismiss': 'modal'}) }}
                 </div>
             </div>
         </div>
     </div>
 {% endfor %}
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    if (typeof $ !== 'undefined' && $.fn.DataTable) {
-        $('#tenantsTable').DataTable({
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
-            },
-            order: [[6, 'desc']]
-        });
-    }
-});
-</script>
 {% endblock %}

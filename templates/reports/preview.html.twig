@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'report.preview_title'|trans }} - {{ plantilla.nombre }}{% endblock %}
+{% block body %}
+{% import 'partials/_button.html.twig' as btn %}
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ path('app_project_index') }}">{{ 'project.title'|trans }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.nombre }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_plantilla_index', {projectId: project.id}) }}">{{ 'plantilla.title'|trans }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_plantilla_show', {projectId: project.id, id: plantilla.id}) }}">{{ plantilla.nombre }}</a></li>
+                    <li class="breadcrumb-item active">{{ 'report.preview_title'|trans }}</li>
+                </ol>
+            </nav>
+            <h1 class="mb-0"><i class="bi bi-file-earmark-bar-graph"></i> {{ 'report.preview_title'|trans }}</h1>
+        </div>
+        <div class="d-flex gap-2">
+            {{ btn.button('report.download_pdf'|trans, 'danger', 'bi-file-earmark-pdf', {'href': path('app_report_plantilla_pdf', {projectId: project.id, id: plantilla.id})}) }}
+            {{ btn.button('report.download_excel'|trans, 'success', 'bi-file-earmark-excel', {'href': path('app_report_plantilla_excel', {projectId: project.id, id: plantilla.id})}) }}
+            {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_plantilla_show', {projectId: project.id, id: plantilla.id})}) }}
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="p-4" style="background:#fff;">
+                {{ html|raw }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

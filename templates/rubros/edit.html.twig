@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'rubro.edit_title'|trans }} - {{ rubro.nombre }}{% endblock %}
+{% block body %}
+{% import 'partials/_button.html.twig' as btn %}
+<div class="container mt-4" style="max-width:700px">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-pencil-square"></i> {{ 'rubro.edit_title'|trans }}</h1>
+        {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_rubro_index')}) }}
+    </div>
+    {% include 'partials/_flashes.html.twig' %}
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="{{ path('app_rubro_edit', {id: rubro.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('rubro_edit_' ~ rubro.id) }}">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">{{ 'rubro.col_code'|trans }} <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="codigo" maxlength="100" value="{{ rubro.codigo }}" required>
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label class="form-label fw-semibold">{{ 'rubro.col_name'|trans }} <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="nombre" maxlength="255" value="{{ rubro.nombre }}" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ 'common.description'|trans }}</label>
+                    <textarea class="form-control" name="descripcion" rows="2">{{ rubro.descripcion }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ 'rubro.col_unit'|trans }} <span class="text-danger">*</span></label>
+                    <select class="form-select" name="unidad" required>
+                        {% for u in ['m²','m³','m','kg','u','GLB','h','t'] %}
+                            <option value="{{ u }}" {{ rubro.unidad == u ? 'selected' : '' }}>{{ u }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="text-end mt-4">
+                    {{ btn.button('buttons.cancel'|trans, 'secondary', 'bi-x', {'href': path('app_rubro_index')}) }}
+                    &nbsp;
+                    {{ btn.button('rubro.save'|trans, 'primary', 'bi-save', {'type':'submit'}) }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -3,34 +3,33 @@
 {% block title %}{{ 'apu.title'|trans }}{% endblock %}
 
 {% block body %}
+{% import 'partials/_button.html.twig' as btn %}
+{% import 'partials/_pagination.html.twig' as pager %}
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-calculator"></i> {{ 'apu.header'|trans }}</h1>
-            {% import 'partials/_button.html.twig' as btn %}
+        <div class="d-flex gap-2">
             {{ btn.button('apu.new_apu'|trans, 'primary', 'bi-plus-circle', {'href': path('app_apu_create')}) }}
+            {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_dashboard')}) }}
+        </div>
     </div>
 
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ message|trans }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    {% endfor %}
+    {% include 'partials/_flashes.html.twig' %}
 
     {% if apu_items|length > 0 %}
         <div class="card">
             <div class="card-body">
                 <table class="table table-hover">
                     <thead>
-                            <tr>
-                                <th>{{ 'apu.column_description'|trans }}</th>
-                                <th>{{ 'apu.column_unit'|trans }}</th>
-                                <th>{{ 'apu.column_khu'|trans }}</th>
-                                <th>{{ 'apu.column_rend'|trans }}</th>
-                                <th class="text-end">{{ 'apu.column_total_cost'|trans }}</th>
-                                <th>{{ 'apu.column_date'|trans }}</th>
-                                <th class="text-center">{{ 'apu.actions'|trans }}</th>
-                            </tr>
+                        <tr>
+                            <th>{{ 'apu.column_description'|trans }}</th>
+                            <th>{{ 'apu.column_unit'|trans }}</th>
+                            <th>{{ 'apu.column_khu'|trans }}</th>
+                            <th>{{ 'apu.column_rend'|trans }}</th>
+                            <th class="text-end">{{ 'apu.column_total_cost'|trans }}</th>
+                            <th>{{ 'apu.column_date'|trans }}</th>
+                            <th class="text-center">{{ 'apu.actions'|trans }}</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {% for item in apu_items %}
@@ -52,6 +51,12 @@
                     </tbody>
                 </table>
             </div>
+            {% if totalPages > 1 %}
+            <div class="card-footer d-flex justify-content-between align-items-center">
+                {{ pager.info(currentPage, totalPages) }}
+                {{ pager.render(currentPage, totalPages, 'app_apu_index') }}
+            </div>
+            {% endif %}
         </div>
     {% else %}
         <div class="alert alert-info">

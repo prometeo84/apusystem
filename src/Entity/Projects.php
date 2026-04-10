@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'projects')]
@@ -50,8 +52,13 @@ class Projects
     #[ORM\Column(name: 'updated_at', type: 'datetime')]
     private ?\DateTimeInterface $updatedAt = null;
 
+    #[ORM\OneToMany(targetEntity: Plantilla::class, mappedBy: 'proyecto', cascade: ['remove'])]
+    #[ORM\OrderBy(['createdAt' => 'ASC'])]
+    private Collection $plantillas;
+
     public function __construct()
     {
+        $this->plantillas = new ArrayCollection();
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
     }
@@ -185,5 +192,20 @@ class Projects
     {
         $this->updatedAt = $updatedAt;
         return $this;
+    }
+
+    public function getPlantillas(): Collection
+    {
+        return $this->plantillas;
+    }
+
+    /** Total presupuesto calculado sumando todas las plantillas */
+    public function getTotalCalculado(): float
+    {
+        $total = 0.0;
+        foreach ($this->plantillas as $plantilla) {
+            $total += $plantilla->getTotalPresupuesto();
+        }
+        return $total;
     }
 }

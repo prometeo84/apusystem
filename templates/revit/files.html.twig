@@ -3,26 +3,15 @@
 {% block title %}{{ 'revit.files'|trans }}{% endblock %}
 
 {% block body %}
+{% import 'partials/_button.html.twig' as btn %}
+{% import 'partials/_pagination.html.twig' as pager %}
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-folder"></i> {{ 'revit.files'|trans }}</h1>
-        {% import 'partials/_button.html.twig' as btn %}
         {{ btn.button('revit.upload_new'|trans, 'primary', 'bi-upload', {'href': path('app_revit_upload')}) }}
     </div>
 
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle"></i> {{ message|trans }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    {% endfor %}
-
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle"></i> {{ message|trans }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    {% endfor %}
+    {% include 'partials/_flashes.html.twig' %}
 
     {% if files is empty %}
         <div class="alert alert-info">
@@ -35,7 +24,7 @@
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
-                                <tr>
+                            <tr>
                                 <th width="5%"><i class="bi bi-file-earmark"></i></th>
                                 <th width="30%">{{ 'revit.table.file'|trans }}</th>
                                 <th width="10%">{{ 'revit.table.type'|trans }}</th>
@@ -109,6 +98,12 @@
                     </table>
                 </div>
             </div>
+            {% if totalPages > 1 %}
+            <div class="card-footer d-flex justify-content-between align-items-center">
+                {{ pager.info(currentPage, totalPages) }}
+                {{ pager.render(currentPage, totalPages, 'app_revit_files') }}
+            </div>
+            {% endif %}
         </div>
 
         <div class="mt-3">
@@ -116,7 +111,7 @@
                 <div class="col-md-3">
                     <div class="card text-center">
                         <div class="card-body">
-                            <h5 class="card-title">{{ files|length }}</h5>
+                            <h5 class="card-title">{{ totalItems }}</h5>
                             <p class="card-text text-muted">{{ 'revit.total_files'|trans }}</p>
                         </div>
                     </div>

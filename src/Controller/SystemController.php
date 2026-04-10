@@ -276,13 +276,29 @@ class SystemController extends AbstractController
     }
 
     #[Route('/tenants', name: 'app_system_tenants')]
-    public function tenants(): Response
+    public function tenants(Request $request): Response
     {
-        $tenants = $this->em->getRepository(\App\Entity\Tenant::class)
-            ->findBy([], ['createdAt' => 'DESC']);
+        $perPage = 20;
+        $currentPage = max(1, (int) $request->query->get('page', 1));
+
+        $repo = $this->em->getRepository(\App\Entity\Tenant::class);
+        $totalItems = $repo->count([]);
+        $totalPages = max(1, (int) ceil($totalItems / $perPage));
+        $currentPage = min($currentPage, $totalPages);
+
+        $tenants = $repo->findBy(
+            [],
+            ['createdAt' => 'DESC'],
+            $perPage,
+            ($currentPage - 1) * $perPage
+        );
 
         return $this->render('system/tenants.html.twig', [
-            'tenants' => $tenants,
+            'tenants'     => $tenants,
+            'currentPage' => $currentPage,
+            'totalPages'  => $totalPages,
+            'totalItems'  => $totalItems,
+            'perPage'     => $perPage,
         ]);
     }
 

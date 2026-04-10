@@ -9,6 +9,7 @@
     <p>{{ 'security.superadmin_verify.instruction'|trans }}</p>
 
     <form method="post">
+        <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
       <div class="mb-3">
         <label class="form-label">{{ 'security.superadmin_verify.code_label'|trans }}</label>
         <input name="code" class="form-control" required autocomplete="one-time-code" />

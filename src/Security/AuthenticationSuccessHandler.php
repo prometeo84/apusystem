@@ -43,7 +43,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $sessionId = $request->getSession()->getId();
         $userAgent = $request->headers->get('User-Agent') ?? 'Unknown';
 
-        $lifetime = (int) (getenv('SESSION_LIFETIME') ?: 3600);
+        $lifetime = (int) (getenv('SESSION_LIFETIME') ?: 10800); // 3 horas por defecto
 
         $loginSession = new LoginSession(
             $user,

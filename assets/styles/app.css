@@ -1,8 +1,8 @@
 /* APU System - Main Styles */
+/* NOTA: --primary-color, --secondary-color se inyectan dinámicamente en base.html.twig
+   via ThemeSubscriber según las preferencias del usuario. NO definir aquí. */
 
 :root {
-    --primary-color: #667eea;
-    --secondary-color: #764ba2;
     --danger-color: #dc3545;
     --success-color: #28a745;
     --app-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -11,6 +11,8 @@
 body {
     font-family: var(--app-font);
 }
+
+/* ── Botones ─────────────────────────────────────────────────── */
 
 .btn-gradient {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -23,7 +25,6 @@ body {
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
 
-/* Ensure all buttons use the same font and have smooth interactions */
 .btn {
     font-family: var(--app-font);
     transition:
@@ -37,14 +38,15 @@ body {
     opacity: 0.98;
 }
 
-/* Icon spacing for bootstrap icons (used across templates) */
+/* Icon spacing for bootstrap icons */
 .btn .bi,
 .icon {
     margin-right: 0.5rem;
     vertical-align: -0.125em;
 }
 
-/* Small reusable animation utilities */
+/* ── Animaciones ─────────────────────────────────────────────── */
+
 .animate-fade {
     animation: fadeIn 300ms ease forwards;
 }
@@ -54,6 +56,7 @@ body {
         transform 180ms ease,
         box-shadow 180ms ease;
 }
+
 .animate-raise:hover {
     transform: translateY(-4px);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
@@ -70,9 +73,114 @@ body {
     }
 }
 
-/* Ensure outline secondary buttons also have a gentle raise on hover even if class missing */
 .btn-outline-secondary:hover,
 .btn-outline-secondary.animate-raise:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Paginación – tema claro ─────────────────────────────────── */
+/* Usamos un azul más oscuro (#4a5fd4) para garantizar contraste 4.5:1 sobre fondo blanco */
+
+.pagination .page-link {
+    color: #4a5fd4;
+    background-color: transparent;
+    border: 1px solid #dee2e6;
+}
+
+.pagination .page-link.active,
+.pagination .page-item.active .page-link {
+    color: #fff;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.pagination .page-link:hover {
+    color: #fff;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* ── Paginación – tema oscuro (html[data-theme="dark"]) ──────── */
+
+html[data-theme='dark'] {
+    /* Variables propias */
+    --pagination-color: #e9ecef;
+    --pagination-bg: rgba(255, 255, 255, 0.04);
+    --pagination-border: rgba(255, 255, 255, 0.12);
+    --pagination-active-color: #fff;
+    --pagination-hover-color: #fff;
+
+    /* Variables BS en html (para @media auto-dark si se usa) */
+    --bs-pagination-color: #e9ecef;
+    --bs-pagination-active-color: #fff;
+    --bs-pagination-active-bg: var(--primary-color);
+    --bs-pagination-hover-color: #fff;
+    --bs-pagination-hover-bg: rgba(255, 255, 255, 0.1);
+    --bs-pagination-disabled-color: rgba(255, 255, 255, 0.35);
+    --bs-pagination-disabled-bg: transparent;
+    --bs-pagination-disabled-border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Bootstrap define --bs-pagination-color sobre .pagination, por lo que hay que
+   sobreescribirlo también sobre .pagination para que la herencia CSS funcione */
+html[data-theme='dark'] .pagination {
+    --bs-pagination-color: #e9ecef;
+    --bs-pagination-bg: rgba(255, 255, 255, 0.04);
+    --bs-pagination-border-color: rgba(255, 255, 255, 0.12);
+    --bs-pagination-active-color: #fff;
+    --bs-pagination-active-bg: var(--primary-color);
+    --bs-pagination-hover-color: #fff;
+    --bs-pagination-hover-bg: rgba(255, 255, 255, 0.1);
+    --bs-pagination-disabled-color: rgba(255, 255, 255, 0.35);
+    --bs-pagination-disabled-bg: transparent;
+    --bs-pagination-disabled-border-color: rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme='dark'] .pagination .page-link {
+    color: #e9ecef !important;
+    background-color: rgba(255, 255, 255, 0.04) !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+html[data-theme='dark'] .pagination .page-item.active .page-link {
+    color: #fff !important;
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+html[data-theme='dark'] .pagination .page-item.disabled .page-link,
+html[data-theme='dark'] .pagination .page-item.disabled span.page-link {
+    color: rgba(255, 255, 255, 0.35) !important;
+    background-color: transparent !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-theme='dark'] .pagination .page-link:hover {
+    color: #fff !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ── card-footer en tema oscuro ──────────────────────────────── */
+
+html[data-theme='dark'] .card-footer,
+html[data-theme='dark'] .card-footer.bg-white {
+    background-color: #2d2d2d !important;
+    color: #e0e0e0 !important;
+    border-top: 1px solid #404040 !important;
+}
+
+/* ── Sistema de preferencia automática ───────────────────────── */
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+        --bs-pagination-color: #e9ecef;
+        --bs-pagination-bg: rgba(255, 255, 255, 0.04);
+        --bs-pagination-border-color: rgba(255, 255, 255, 0.12);
+        --bs-pagination-active-color: #fff;
+        --bs-pagination-active-bg: var(--primary-color);
+        --bs-pagination-hover-color: #fff;
+        --bs-pagination-hover-bg: rgba(255, 255, 255, 0.1);
+        --bs-pagination-disabled-color: rgba(255, 255, 255, 0.35);
+    }
 }

@@ -51,12 +51,18 @@ class ThemeSubscriber implements EventSubscriberInterface
         $primaryRgb = $this->hexToRgb($primaryHex);
         $secondaryRgb = $this->hexToRgb($secondaryHex);
 
+        // Compute accessible text colors (WCAG contrast: black or white)
+        $primaryTextColor = $this->contrastColor($primaryHex);
+        $secondaryTextColor = $this->contrastColor($secondaryHex);
+
         // Inyectar variables globales en Twig
         $this->twig->addGlobal('user_theme', [
             'primary_color' => $primaryHex,
             'secondary_color' => $secondaryHex,
             'primary_rgb' => $primaryRgb,
             'secondary_rgb' => $secondaryRgb,
+            'primary_text_color' => $primaryTextColor,
+            'secondary_text_color' => $secondaryTextColor,
             'mode' => $mode,
         ]);
     }
@@ -74,6 +80,35 @@ class ThemeSubscriber implements EventSubscriberInterface
             $b = hexdec(substr($hex, 4, 2));
         }
         return sprintf('%d, %d, %d', $r, $g, $b);
+    }
+
+    /**
+     * Returns #ffffff or #000000 for maximum WCAG contrast against the given hex background.
+     * Uses the relative luminance formula (WCAG 2.1).
+     */
+    private function contrastColor(string $hex): string
+    {
+        $hex = ltrim($hex, '#');
+        if (strlen($hex) === 3) {
+            $r = hexdec(str_repeat($hex[0], 2));
+            $g = hexdec(str_repeat($hex[1], 2));
+            $b = hexdec(str_repeat($hex[2], 2));
+        } else {
+            $r = hexdec(substr($hex, 0, 2));
+            $g = hexdec(substr($hex, 2, 2));
+            $b = hexdec(substr($hex, 4, 2));
+        }
+
+        // Linearize sRGB channels
+        $linearize = static function (int $channel): float {
+            $c = $channel / 255.0;
+            return $c <= 0.04045 ? $c / 12.92 : (($c + 0.055) / 1.055) ** 2.4;
+        };
+
+        $L = 0.2126 * $linearize($r) + 0.7152 * $linearize($g) + 0.0722 * $linearize($b);
+
+        // WCAG threshold: luminance > 0.179 → dark text; otherwise → light text
+        return $L > 0.179 ? '#000000' : '#ffffff';
     }
 
     public static function getSubscribedEvents(): array
