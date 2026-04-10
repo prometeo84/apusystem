@@ -637,6 +637,7 @@ test:
     test_system: "Sistema de Prueba"
     system_datetime: "Fecha/Hora Sistema"
     test_email: "Probar Envío de Email"
+    timezone_info: "Información de Zona Horaria"
   current_time: "Hora Actual"
   current_timezone: "Zona Horaria Actual"
   debug_message: "Mensaje de depuración"

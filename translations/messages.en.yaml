@@ -585,6 +585,7 @@ test:
   test_system: "Test System"
   system_datetime: "System DateTime"
   test_email: "Test Email"
+  timezone_info: "Timezone Information"
   current_time: "Current Time"
   current_timezone: "Current Timezone"
   debug_message: "Debug message"
