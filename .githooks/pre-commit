@@ -271,41 +271,46 @@ if [ -n "$STAGED_PHP" ]; then
             [ -f "$PHPSTAN_CFG" ] && PHPSTAN_CFGARG="--configuration=$PHPSTAN_CFG"
 
             result=$("$PHPSTAN_BIN" analyse \
-                --level=5 \
-                --no-progress \
-                $PHPSTAN_CFGARG \
-                "${PHPSTAN_FILES[@]}" 2>&1)
-            if [ $? -ne 0 ]; then
-                echo -e "${YELLOW}  ⚠  PHPStan encontró problemas:${NC}"
-                echo "$result" | sed 's/^/      /'
-            else
-                echo -e "${GREEN}  ✓ Sin errores PHPStan (nivel 5)${NC}"
-            fi
-        else
-            echo "  ℹ  Ningún archivo staged pertenece a src/"
-        fi
-    else
-        echo "  ℹ  phpstan no encontrado — se omite"
-    fi
-else
-    echo "  ℹ  Sin archivos .php staged"
-fi
+                #!/bin/sh
+                # Pre-commit: comprueba sintaxis PHP y Twig para archivos staged
+                # Usa el directorio de trabajo del proyecto dentro del contenedor para resolver rutas.
+                STAGED=$(git diff --cached --name-only --diff-filter=ACM)
+                if [ -z "$STAGED" ]; then
+                    exit 0
+                fi
 
-# ── 6. ESLint (assets/) ───────────────────────────────────────
-echo ""
-echo -e "${YELLOW}[6/7] ESLint (assets/ — archivos JS staged)${NC}"
+                CONTAINER=apache
+                CONTAINER_ROOT=/var/www/html/proyecto
+                ERR=0
 
-if [ -n "$STAGED_JS" ]; then
-    ESLINT_BIN="$GIT_ROOT/node_modules/.bin/eslint"
-    [ -f "$ESLINT_BIN" ] || ESLINT_BIN=$(command -v eslint 2>/dev/null || true)
+                for file in $STAGED; do
+                    case "$file" in
+                        *.php)
+                            docker exec -w "$CONTAINER_ROOT" $CONTAINER php -l "$file" >/dev/null 2>&1
+                            if [ $? -ne 0 ]; then
+                                echo "PHP syntax error in $file"
+                                docker exec -w "$CONTAINER_ROOT" $CONTAINER php -l "$file"
+                                ERR=1
+                            fi
+                            ;;
+                        *.twig)
+                            docker exec -w "$CONTAINER_ROOT" $CONTAINER php bin/console lint:twig "$file" >/dev/null 2>&1
+                            if [ $? -ne 0 ]; then
+                                echo "Twig syntax error in $file"
+                                docker exec -w "$CONTAINER_ROOT" $CONTAINER php bin/console lint:twig "$file"
+                                ERR=1
+                            fi
+                            ;;
+                    esac
+                done
 
-    if [ -n "$ESLINT_BIN" ] && [ -f "$ESLINT_BIN" ]; then
-        ESLINT_FILES=()
-        while IFS= read -r file; do
-            [ -z "$file" ] && continue
-            ABS_FILE="$GIT_ROOT/$file"
-            [ -f "$ABS_FILE" ] && ESLINT_FILES+=("$ABS_FILE")
-        done <<< "$STAGED_JS"
+                if [ "$ERR" -ne 0 ]; then
+                    echo "Commit aborted due to syntax errors. Fix them and try again."
+                    exit 1
+                fi
+
+                exit 0
+
 
         if [ ${#ESLINT_FILES[@]} -gt 0 ]; then
             result=$("$ESLINT_BIN" "${ESLINT_FILES[@]}" 2>&1)
