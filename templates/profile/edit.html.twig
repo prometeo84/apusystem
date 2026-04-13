@@ -32,8 +32,33 @@
                                             </div>
                                         {% endif %}
                                     </div>
-                                    <input type="file" class="form-control" id="avatar" name="avatar" accept="image/jpeg,image/png,image/gif,image/webp">
+                                    <div class="input-group mb-2" id="avatar-control">
+                                        <input type="text" class="form-control" id="avatar_filename" value="" placeholder="{{ 'common.no_file_selected'|trans }}" readonly>
+                                        <button type="button" class="btn btn-outline-secondary" id="avatar_browse">{{ 'buttons.browse'|trans }}</button>
+                                        <button type="button" class="btn btn-outline-danger d-none" id="avatar_remove">{{ 'buttons.remove'|trans }}</button>
+                                        <input type="file" id="avatar" name="avatar" lang="{{ app.request.locale }}" accept="image/jpeg,image/png,image/gif,image/webp" class="d-none" aria-hidden="true">
+                                    </div>
                                     <small class="text-muted">{{ 'common.allowed_formats'|trans }}. {{ 'common.max_size'|trans }}.</small>
+                                    <script>
+                                        (function(){
+                                            var fileInput = document.getElementById('avatar');
+                                            var browse = document.getElementById('avatar_browse');
+                                            var remove = document.getElementById('avatar_remove');
+                                            var filename = document.getElementById('avatar_filename');
+                                            if(!fileInput || !browse || !filename) return;
+                                            browse.addEventListener('click', function(e){ e.preventDefault(); fileInput.click(); });
+                                            fileInput.addEventListener('change', function(){
+                                                if(this.files && this.files.length){
+                                                    filename.value = this.files[0].name;
+                                                    remove.classList.remove('d-none');
+                                                } else {
+                                                    filename.value = '';
+                                                    remove.classList.add('d-none');
+                                                }
+                                            });
+                                            remove.addEventListener('click', function(e){ e.preventDefault(); fileInput.value = ''; filename.value = ''; remove.classList.add('d-none'); });
+                                        })();
+                                    </script>
                                 </div>
 
                                 <div class="row mb-3">

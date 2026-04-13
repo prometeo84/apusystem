@@ -12,6 +12,11 @@ body {
     font-family: var(--app-font);
 }
 
+/* Corrección: asegurar propiedad estándar para text-size-adjust */
+body {
+    text-size-adjust: 100%;
+}
+
 /* ── Botones ─────────────────────────────────────────────────── */
 
 .btn-gradient {

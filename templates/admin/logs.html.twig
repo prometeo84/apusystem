@@ -20,10 +20,10 @@
                         </div>
                         <div class="col-auto">
                             <div class="btn-group">
-                                {{ btn.button('system.all'|trans, 'outline-secondary', null, {'class':'btn-sm active','data-filter':'all','type':'button'}) }}
-                                {{ btn.button('system.info'|trans, 'outline-success', null, {'class':'btn-sm','data-filter':'INFO','type':'button'}) }}
-                                {{ btn.button('system.warnings'|trans, 'outline-warning', null, {'class':'btn-sm','data-filter':'WARNING','type':'button'}) }}
-                                {{ btn.button('system.critical'|trans, 'outline-danger', null, {'class':'btn-sm','data-filter':'CRITICAL','type':'button'}) }}
+                                {{ btn.button('system.all'|trans, 'outline-secondary', null, {'class':'btn-sm' ~ (activeSeverity == '' ? ' active' : ''),'href':path('app_admin_logs')}) }}
+                                {{ btn.button('system.info'|trans, 'outline-success', null, {'class':'btn-sm' ~ (activeSeverity == 'INFO' ? ' active' : ''),'href':path('app_admin_logs', {'severity':'INFO'})}) }}
+                                {{ btn.button('system.warnings'|trans, 'outline-warning', null, {'class':'btn-sm' ~ (activeSeverity == 'WARNING' ? ' active' : ''),'href':path('app_admin_logs', {'severity':'WARNING'})}) }}
+                                {{ btn.button('system.critical'|trans, 'outline-danger', null, {'class':'btn-sm' ~ (activeSeverity == 'CRITICAL' ? ' active' : ''),'href':path('app_admin_logs', {'severity':'CRITICAL'})}) }}
                             </div>
                         </div>
                     </div>
@@ -87,15 +87,16 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div id="logsFooter" class="d-flex justify-content-between align-items-center"
-                         data-per-page="{{ perPage }}"
-                         data-show-template="{{ 'system.showing_events'|trans({'%count%':'%COUNT%'}) }}"
-                         data-pageof-template="{{ 'pagination.page_of'|trans({'%page%':'%PAGE%','%total%':'%TOTAL%'}) }}">
+                    <div class="d-flex justify-content-between align-items-center">
                         <small class="text-muted">
-                            <span id="logsCount">{{ 'system.showing_events'|trans({'%count%': securityEvents|length}) }}</span>
-                            <span id="logsPageInfo">{% if totalPages > 1 %}&mdash; {{ pager.info(currentPage, totalPages) }}{% endif %}</span>
+                            {{ 'system.showing_events'|trans({'%count%': securityEvents|length}) }}
+                            {% if totalPages > 1 %}
+                                &mdash; {{ pager.info(currentPage, totalPages) }}
+                            {% endif %}
                         </small>
-                        <div id="logsPager">{{ pager.render(currentPage, totalPages, 'app_admin_logs') }}</div>
+                        <span id="logsPagination">
+                            {{ pager.render(currentPage, totalPages, 'app_admin_logs', activeSeverity != '' ? {'severity': activeSeverity} : {}) }}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -158,72 +159,4 @@
     {% endif %}
 {% endfor %}
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Filtros de severidad
-    const filterButtons = document.querySelectorAll('[data-filter]');
-    const rows = document.querySelectorAll('#logsTable tbody tr');
-    const logsFooter = document.getElementById('logsFooter');
-    const logsCountEl = document.getElementById('logsCount');
-    const logsPageInfoEl = document.getElementById('logsPageInfo');
-    const logsPagerEl = document.getElementById('logsPager');
-
-    function updatePaginationDisplay() {
-        if (!logsFooter) return;
-        const perPage = parseInt(logsFooter.dataset.perPage || '20', 10);
-        const showTemplate = logsFooter.dataset.showTemplate || '%COUNT%';
-        const pageOfTemplate = logsFooter.dataset.pageofTemplate || 'Page %PAGE% of %TOTAL%';
-
-        const visibleRows = Array.from(rows).filter(r => r.style.display !== 'none');
-        const count = visibleRows.length;
-        const totalPagesVisible = Math.max(1, Math.ceil(count / perPage));
-
-        // Update showing count
-        logsCountEl.textContent = showTemplate.replace('%COUNT%', count);
-
-        // Update page info
-        if (totalPagesVisible > 1) {
-            logsPageInfoEl.innerHTML = '&mdash; ' + pageOfTemplate.replace('%PAGE%', '1').replace('%TOTAL%', totalPagesVisible);
-            // show pager (simplest approach: keep server pager but hide if only 1 page)
-            logsPagerEl.style.display = '';
-        } else {
-            logsPageInfoEl.innerHTML = '';
-            logsPagerEl.style.display = 'none';
-        }
-    }
-
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const filter = this.dataset.filter;
-
-            // Actualizar botones activos
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-
-            // Filtrar filas
-            rows.forEach(row => {
-                if (filter === 'all' || row.dataset.severity === filter) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
-
-    // Update display initially in case some rows are hidden by server-side
-    updatePaginationDisplay();
-    });
-
-    // DataTables si está disponible
-    if (typeof $ !== 'undefined' && $.fn.DataTable) {
-        $('#logsTable').DataTable({
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
-            },
-            order: [[0, 'desc']],
-            pageLength: 50
-        });
-    }
-});
-</script>
 {% endblock %}

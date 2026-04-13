@@ -13,7 +13,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-layout-text-sidebar"></i> {{ 'plantilla.title'|trans }}</h1>
         <div class="d-flex gap-2">
-            {{ btn.button('plantilla.new'|trans, 'primary', 'bi-plus-circle', {'href': path('app_plantilla_create', {projectId: project.id})}) }}
+            {{ btn.button('plantilla.new'|trans, 'primary', 'bi-plus-circle', {'href': path('app_plantilla_create', {projectId: project.id}), 'class':'btn-gradient'}) }}
             {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_project_show', {id: project.id})}) }}
         </div>
     </div>
@@ -48,7 +48,6 @@
     <div class="text-center py-5">
         <i class="bi bi-layout-text-sidebar display-1 text-muted"></i>
         <p class="text-muted mt-3 fs-5">{{ 'plantilla.no_plantillas'|trans }}</p>
-        {{ btn.button('plantilla.new'|trans, 'primary', 'bi-plus-circle', {'href': path('app_plantilla_create', {projectId: project.id})}) }}
     </div>
     {% endif %}
 </div>

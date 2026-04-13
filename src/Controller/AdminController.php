@@ -245,9 +245,18 @@ class AdminController extends AbstractController
         $user = $this->getUser();
         $tenant = $user->getTenant();
 
+        $validSeverities = ['INFO', 'WARNING', 'CRITICAL'];
+        $severity = strtoupper((string) $request->query->get('severity', ''));
+        $severity = in_array($severity, $validSeverities, true) ? $severity : '';
+
+        $criteria = ['tenant' => $tenant];
+        if ($severity !== '') {
+            $criteria['severity'] = $severity;
+        }
+
         $perPage = 20;
         $totalEvents = $this->em->getRepository(\App\Entity\SecurityEvent::class)
-            ->count(['tenant' => $tenant]);
+            ->count($criteria);
         $totalPages = max(1, (int) ceil($totalEvents / $perPage));
 
         $page = max(1, min($totalPages, (int) $request->query->get('page', 1)));
@@ -255,7 +264,7 @@ class AdminController extends AbstractController
 
         $securityEvents = $this->em->getRepository(\App\Entity\SecurityEvent::class)
             ->findBy(
-                ['tenant' => $tenant],
+                $criteria,
                 ['createdAt' => 'DESC'],
                 $perPage,
                 $offset
@@ -268,6 +277,7 @@ class AdminController extends AbstractController
             'totalPages' => $totalPages,
             'totalEvents' => $totalEvents,
             'perPage' => $perPage,
+            'activeSeverity' => $severity,
         ]);
     }
 

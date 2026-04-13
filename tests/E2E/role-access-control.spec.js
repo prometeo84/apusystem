@@ -8,7 +8,7 @@ const { test, expect } = require('@playwright/test');
  */
 
 const ADMIN = { email: 'admin@abc.com', password: 'Admin123!' };
-const USER  = { email: 'user@abc.com',  password: 'Admin123!' };
+const USER = { email: 'user@abc.com', password: 'Admin123!' };
 
 async function login(page, creds) {
     await page.goto('/login');
@@ -24,7 +24,6 @@ async function login(page, creds) {
 // ROLE_ADMIN — acceso permitido a rutas de escritura
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('ROLE_ADMIN — rutas de escritura accesibles', () => {
-
     test.beforeEach(async ({ page }) => {
         await login(page, ADMIN);
     });
@@ -51,7 +50,9 @@ test.describe('ROLE_ADMIN — rutas de escritura accesibles', () => {
         await expect(page.locator('a[href*="/rubros/create"]').first()).toBeVisible();
     });
 
-    test('Admin puede acceder a reporte macro del proyecto (primero que encuentre)', async ({ page }) => {
+    test('Admin puede acceder a reporte macro del proyecto (primero que encuentre)', async ({
+        page,
+    }) => {
         // Obtener un ID de proyecto existente
         await page.goto('/projects/');
         const firstLink = page.locator('a[href*="/projects/"]').first();
@@ -68,14 +69,12 @@ test.describe('ROLE_ADMIN — rutas de escritura accesibles', () => {
             }
         }
     });
-
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ROLE_USER — acceso denegado a rutas de escritura
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('ROLE_USER — rutas de escritura bloqueadas', () => {
-
     test.beforeEach(async ({ page }) => {
         await login(page, USER);
     });
@@ -91,7 +90,9 @@ test.describe('ROLE_USER — rutas de escritura bloqueadas', () => {
         expect(isBlocked).toBeTruthy();
     });
 
-    test('Usuario ROLE_USER no puede acceder a crear proyecto (403 o redirect)', async ({ page }) => {
+    test('Usuario ROLE_USER no puede acceder a crear proyecto (403 o redirect)', async ({
+        page,
+    }) => {
         const response = await page.goto('/projects/create');
         const isBlocked =
             (response && response.status() === 403) ||
@@ -140,14 +141,12 @@ test.describe('ROLE_USER — rutas de escritura bloqueadas', () => {
         const hasList = (await page.locator('table, .text-center').count()) > 0;
         expect(hasList).toBeTruthy();
     });
-
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HTTP — test de script shell (rutas directas con curl)
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('Control de acceso sin sesión', () => {
-
     test('GET /rubros/create sin sesión redirige a /login', async ({ page }) => {
         await page.goto('/rubros/create');
         await expect(page).toHaveURL(/\/login/);
@@ -162,5 +161,4 @@ test.describe('Control de acceso sin sesión', () => {
         await page.goto('/reports/project/1/full');
         await expect(page).toHaveURL(/\/login/);
     });
-
 });
