@@ -12,10 +12,13 @@ VNU_JAR="$TOOLS_DIR/vnu.jar"
 mkdir -p "$TOOLS_DIR"
 
 if [ ! -f "$VNU_JAR" ]; then
-  echo "vnu.jar no encontrado. Descargando..."
+  echo "vnu.jar no encontrado. Descargando 20.6.30..."
   curl -fSL --retry 3 --retry-delay 5 \
-    -o "$VNU_JAR" \
-    "https://github.com/validator/validator/releases/download/2023-11-19/vnu.jar"
+    -o "$TOOLS_DIR/vnu.jar.zip" \
+    "https://github.com/validator/validator/releases/download/20.6.30/vnu.jar_20.6.30.zip"
+  unzip -o "$TOOLS_DIR/vnu.jar.zip" dist/vnu.jar -d "$TOOLS_DIR/"
+  mv "$TOOLS_DIR/dist/vnu.jar" "$VNU_JAR"
+  rm -rf "$TOOLS_DIR/vnu.jar.zip" "$TOOLS_DIR/dist"
   echo "Descargado $VNU_JAR ($(du -sh "$VNU_JAR" | cut -f1))"
 fi
 

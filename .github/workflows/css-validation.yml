@@ -38,16 +38,19 @@ jobs:
               uses: actions/cache@v4
               with:
                   path: .tools/vnu.jar
-                  key: vnu-jar-2023-v1
+                  key: vnu-jar-20.6.30-v1
 
             - name: Download vnu.jar (if not cached)
               if: steps.cache-vnu.outputs.cache-hit != 'true'
               run: |
                   mkdir -p .tools
-                  echo "Descargando vnu.jar..."
+                  echo "Descargando vnu.jar 20.6.30..."
                   curl -fSL --retry 3 --retry-delay 5 \
-                    -o .tools/vnu.jar \
-                    "https://github.com/validator/validator/releases/download/2023-11-19/vnu.jar"
+                    -o .tools/vnu.jar.zip \
+                    "https://github.com/validator/validator/releases/download/20.6.30/vnu.jar_20.6.30.zip"
+                  unzip -o .tools/vnu.jar.zip dist/vnu.jar -d .tools/
+                  mv .tools/dist/vnu.jar .tools/vnu.jar
+                  rm -rf .tools/vnu.jar.zip .tools/dist
                   echo "Descarga completa: $(du -sh .tools/vnu.jar | cut -f1)"
 
             - name: Install dependencies
