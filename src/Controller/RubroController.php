@@ -47,6 +47,7 @@ class RubroController extends AbstractController
     }
 
     #[Route('/create', name: 'app_rubro_create', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function create(Request $request): Response
     {
         if ($request->isMethod('POST')) {
@@ -74,6 +75,7 @@ class RubroController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_rubro_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(int $id, Request $request): Response
     {
         $rubro = $this->em->getRepository(Rubro::class)->findOneBy([
@@ -107,6 +109,7 @@ class RubroController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'app_rubro_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(int $id, Request $request): Response
     {
         $rubro = $this->em->getRepository(Rubro::class)->findOneBy([

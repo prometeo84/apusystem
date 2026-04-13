@@ -104,6 +104,7 @@ class ReportController extends AbstractController
 
     /** Vista previa HTML del reporte completo del proyecto */
     #[Route('/project/{id}/full', name: 'app_report_project_full', requirements: ['id' => '\d+'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function projectFull(int $id): Response
     {
         $project = $this->getProject($id);
@@ -116,6 +117,7 @@ class ReportController extends AbstractController
 
     /** Exportar PDF del presupuesto completo del proyecto */
     #[Route('/project/{id}/full/pdf', name: 'app_report_project_full_pdf', requirements: ['id' => '\d+'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function projectFullPdf(int $id): Response
     {
         $project = $this->getProject($id);
@@ -132,6 +134,7 @@ class ReportController extends AbstractController
 
     /** Exportar Excel del presupuesto completo del proyecto */
     #[Route('/project/{id}/full/excel', name: 'app_report_project_full_excel', requirements: ['id' => '\d+'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function projectFullExcel(int $id): Response
     {
         $project = $this->getProject($id);

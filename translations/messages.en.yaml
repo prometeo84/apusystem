@@ -89,6 +89,8 @@ buttons:
   confirm: "Confirm"
   delete: "Delete"
   edit: "Edit"
+  browse: "Browse"
+  remove: "Remove"
   save: "Save"
   back: "Back"
 
@@ -132,6 +134,7 @@ common:
   optional: "Optional"
   personal_information: "Personal Information"
   preview: "Preview"
+  no_file_selected: "No file selected"
   browser: "Browser"
   primary_color_description: "Main color for buttons and links"
   projects: "Projects"
@@ -286,6 +289,28 @@ emails:
 mails:
   important: "IMPORTANT"
 
+# Report strings
+report:
+  budget_title: "BUDGET"
+  project_full_title: "PROJECT GENERAL BUDGET"
+  project_label: "Project:"
+  code_label: "Code:"
+  client_label: "Client:"
+  location_label: "Location:"
+  date_label: "Date:"
+  status_label: "Status:"
+  templates_label: "Templates:"
+  total_label: "TOTAL BUDGET"
+  total_general: "TOTAL GENERAL OF THE PROJECT"
+  generated_by: "Automatically generated — APU System"
+  table:
+    col_code: "Code"
+    col_description: "Description"
+    col_unit: "Unit"
+    col_quantity: "Quantity"
+    col_unit_price: "Unit Price USD"
+    col_total: "Total USD"
+
 preferences:
   auto: "Auto"
   dark: "Dark"
@@ -396,6 +421,10 @@ security_2fa:
   code_invalidated: "The code will be invalidated after use"
   codes_copied: "Codes copied to clipboard"
   configure_2fa: "Configure Two-Factor Authentication"
+
+project:
+  status:
+    active: "Active"
   continue_button: "Continue"
   copy_codes: "Copy Codes"
   download_codes: "Download Codes"
@@ -586,6 +615,7 @@ test:
   system_datetime: "System DateTime"
   test_email: "Test Email"
   timezone_info: "Timezone Information"
+  verify_email_and_link: "Verify email and link"
   current_time: "Current Time"
   current_timezone: "Current Timezone"
   debug_message: "Debug message"
@@ -864,6 +894,7 @@ common.view: "View"
 common.edit: "Edit"
 common.delete: "Delete"
 common.danger_zone: "Danger Zone"
+common.admin_only: "Only administrators can perform this action."
 common.created_at: "Created"
 common.user: "User"
 common.company: "Company"

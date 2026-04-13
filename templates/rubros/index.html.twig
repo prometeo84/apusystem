@@ -6,7 +6,9 @@
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-tags"></i> {{ 'rubro.title'|trans }}</h1>
+        {% if is_granted('ROLE_ADMIN') %}
         {{ btn.button('rubro.new'|trans, 'primary', 'bi-plus-circle', {'href': path('app_rubro_create')}) }}
+        {% endif %}
     </div>
 
     {% include 'partials/_flashes.html.twig' %}
@@ -40,12 +42,14 @@
                         </td>
                         <td>{{ rubro.createdAt|date('d/m/Y') }}</td>
                         <td class="text-center">
+                            {% if is_granted('ROLE_ADMIN') %}
                             {{ btn.button('', 'outline-secondary', 'bi-pencil', {'href': path('app_rubro_edit', {id: rubro.id}), 'class':'btn-sm', 'title': 'common.edit'|trans}) }}
                             <form method="POST" action="{{ path('app_rubro_delete', {id: rubro.id}) }}" class="d-inline"
                                   onsubmit="return confirm('{{ 'rubro.confirm_delete'|trans }}')">
                                 <input type="hidden" name="_token" value="{{ csrf_token('rubro_delete_' ~ rubro.id) }}">
                                 {{ btn.button('', 'outline-danger', 'bi-trash', {'type':'submit', 'class':'btn-sm', 'title': 'common.delete'|trans}) }}
                             </form>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
@@ -63,7 +67,9 @@
     <div class="text-center py-5">
         <i class="bi bi-tags display-1 text-muted"></i>
         <p class="text-muted mt-3 fs-5">{{ 'rubro.no_rubros'|trans }}</p>
+        {% if is_granted('ROLE_ADMIN') %}
         {{ btn.button('rubro.new'|trans, 'primary', 'bi-plus-circle', {'href': path('app_rubro_create')}) }}
+        {% endif %}
     </div>
     {% endif %}
 </div>

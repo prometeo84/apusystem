@@ -49,10 +49,11 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/create', name: 'app_project_create', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function create(Request $request): Response
     {
         if ($request->isMethod('POST')) {
-            $this->denyAccessUnlessGranted('ROLE_USER');
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
             if (!$this->isCsrfTokenValid('project_create', $request->request->get('_token'))) {
                 $this->addFlash('error', 'project.error_invalid_csrf');
@@ -113,6 +114,7 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_project_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(int $id, Request $request): Response
     {
         $tenant = $this->getUser()->getTenant();
@@ -159,6 +161,7 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'app_project_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(int $id, Request $request): Response
     {
         $tenant = $this->getUser()->getTenant();
@@ -185,6 +188,7 @@ class ProjectController extends AbstractController
 
     /** Duplicar proyecto (sin APUs, solo estructura) */
     #[Route('/{id}/duplicate', name: 'app_project_duplicate', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function duplicate(int $id, Request $request): Response
     {
         $tenant = $this->getUser()->getTenant();

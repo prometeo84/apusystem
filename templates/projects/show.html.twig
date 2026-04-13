@@ -16,13 +16,15 @@
             <h1 class="mb-0"><i class="bi bi-folder2-open"></i> {{ project.nombre }}</h1>
         </div>
         <div>
-            {{ btn.button('common.edit'|trans, 'primary', 'bi-pencil', {'href': path('app_project_edit', {id: project.id})}) }}
+            {% if is_granted('ROLE_ADMIN') %}
+            {{ btn.button('common.edit'|trans, 'primary', 'bi-pencil', {'href': path('app_project_edit', {id: project.id}), 'class':'btn-gradient'}) }}
             {{ btn.button('report.full_project'|trans, 'success', 'bi-file-earmark-bar-graph', {'href': path('app_report_project_full', {id: project.id}), 'title': 'report.full_project'|trans}) }}
             {# Duplicar proyecto #}
             <form method="POST" action="{{ path('app_project_duplicate', {id: project.id}) }}" class="d-inline">
                 <input type="hidden" name="_token" value="{{ csrf_token('project_dup_' ~ project.id) }}">
                 {{ btn.button('project.duplicate'|trans, 'outline-secondary', 'bi-copy', {'type':'submit'}) }}
             </form>
+            {% endif %}
             {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_project_index')}) }}
         </div>
     </div>
@@ -82,7 +84,6 @@
                 {% else %}
                 <div class="card-body text-center text-muted py-3">
                     <p class="mb-2">{{ 'project.no_apus_yet'|trans }}</p>
-                    {{ btn.button('plantilla.new'|trans, 'primary', 'bi-plus-circle', {'href': path('app_plantilla_create', {projectId: project.id})}) }}
                 </div>
                 {% endif %}
             </div>
@@ -132,11 +133,15 @@
                     <i class="bi bi-exclamation-triangle"></i> {{ 'common.danger_zone'|trans }}
                 </div>
                 <div class="card-body">
+                    {% if is_granted('ROLE_ADMIN') %}
                     <form method="POST" action="{{ path('app_project_delete', {id: project.id}) }}"
                           onsubmit="return confirm('{{ 'project.confirm_delete'|trans }}')">
                         <input type="hidden" name="_token" value="{{ csrf_token('project_delete_' ~ project.id) }}">
                         {{ btn.button('common.delete'|trans, 'danger', 'bi-trash', {'type':'submit', 'class':'w-100'}) }}
                     </form>
+                    {% else %}
+                    <p class="text-muted mb-0 small"><i class="bi bi-lock"></i> {{ 'common.admin_only'|trans }}</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
