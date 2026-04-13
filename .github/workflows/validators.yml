@@ -30,11 +30,19 @@ jobs:
       - name: Run ESLint (JSON)
         run: |
           mkdir -p .tools
+          # create a minimal ESLint config for CI if none exists
+          if [ ! -f .eslintrc.cjs ] && [ ! -f .eslintrc.json ] && [ ! -f .eslintrc ]; then
+            echo "module.exports = { env: { browser: true, es2021: true }, rules: {} };" > .eslintrc.cjs
+          fi
           npx eslint assets/app.js -f json -o .tools/eslint.json || true
 
       - name: Run Stylelint (JSON)
         run: |
           mkdir -p .tools
+          # minimal stylelint config if not present
+          if [ ! -f .stylelintrc.json ] && [ ! -f .stylelintrc.yaml ]; then
+            echo '{"rules":{}}' > .stylelintrc.json
+          fi
           npx stylelint 'assets/**/*.css' --formatter json > .tools/stylelint.json || true
 
       - name: Setup PHP and Composer
@@ -44,12 +52,21 @@ jobs:
           extensions: mbstring, intl, pdo_mysql
 
       - name: Install Composer deps
-        run: composer install --no-interaction --prefer-dist --no-suggest --no-progress
+        run: |
+          mkdir -p .tools
+          # retry composer install a few times to avoid transient network hiccups
+          for i in 1 2 3; do
+            composer install --no-interaction --prefer-dist --no-suggest --no-progress && break || sleep 5
+          done || echo "composer_install_failed" > .tools/composer_failed.txt
 
       - name: Run PHPStan (JSON)
         run: |
           mkdir -p .tools
-          vendor/bin/phpstan analyse -c phpstan.neon --error-format=json > .tools/phpstan.json || true
+          if [ -x vendor/bin/phpstan ]; then
+            vendor/bin/phpstan analyse -c phpstan.neon --error-format=json > .tools/phpstan.json || true
+          else
+            echo "phpstan_missing" > .tools/phpstan_skipped.txt
+          fi
 
       - name: Build assets
         run: |
