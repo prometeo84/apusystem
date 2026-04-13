@@ -73,6 +73,14 @@ services:
     # Recovery Code Hasher (OWASP A02:2026)
     App\Service\RecoveryCodeHasher: ~
 
+    # Error Notification Listener (envía email a superadmins en errores 500)
+    App\EventListener\ErrorNotificationListener:
+        arguments:
+            $appEnv: "%kernel.environment%"
+            $projectDir: "%kernel.project_dir%"
+        tags:
+            - { name: kernel.event_subscriber }
+
     # Event Listeners
     App\EventListener\RateLimitSubscriber:
         arguments:

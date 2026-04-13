@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    body { margin:0; background:#f3f4f6; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
+    .wrap { max-width:680px; margin:24px auto; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.1); }
+    .header { background:#dc2626; color:#fff; padding:18px 24px; }
+    .header h1 { margin:0; font-size:20px; }
+    .header small { opacity:.85; font-size:13px; }
+    .badge { display:inline-block; background:rgba(255,255,255,.2); border-radius:4px; padding:2px 8px; font-size:12px; margin-left:8px; }
+    .body { padding:24px; }
+    .greeting { color:#374151; margin-bottom:16px; }
+    .box { background:#fef2f2; border-left:4px solid #dc2626; border-radius:4px; padding:14px 16px; margin-bottom:16px; }
+    .box .label { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:#9ca3af; margin-bottom:4px; }
+    .box .value { color:#111827; font-size:14px; word-break:break-word; }
+    .meta-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+    .meta-item { background:#f9fafb; border:1px solid #e5e7eb; border-radius:6px; padding:10px 12px; }
+    .meta-item .label { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:#9ca3af; margin-bottom:2px; }
+    .meta-item .value { font-size:13px; color:#374151; word-break:break-all; }
+    .trace-wrap { margin-top:16px; }
+    .trace-label { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:#6b7280; margin-bottom:6px; }
+    pre { background:#111827; color:#d1fae5; font-size:11px; line-height:1.6; padding:14px; border-radius:6px; overflow-x:auto; white-space:pre-wrap; word-break:break-all; margin:0; }
+    .footer { background:#f9fafb; border-top:1px solid #e5e7eb; padding:14px 24px; font-size:12px; color:#9ca3af; text-align:center; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>⚠ Error en APU System <span class="badge">{{ env|upper }}</span></h1>
+    <small>{{ occurred_at|date('d/m/Y H:i:s') }} UTC</small>
+  </div>
+
+  <div class="body">
+    <p class="greeting">Hola <strong>{{ admin_name }}</strong>, se produjo un error no controlado en el sistema.</p>
+
+    <div class="box">
+      <div class="label">Excepción</div>
+      <div class="value"><strong>{{ exception_class }}</strong></div>
+    </div>
+
+    <div class="box">
+      <div class="label">Mensaje</div>
+      <div class="value">{{ message }}</div>
+    </div>
+
+    {% if previous is not null %}
+    <div class="box" style="background:#fff7ed; border-color:#f97316;">
+      <div class="label">Causa anterior (previous)</div>
+      <div class="value">{{ previous }}</div>
+    </div>
+    {% endif %}
+
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="label">Archivo</div>
+        <div class="value">{{ file }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Línea</div>
+        <div class="value">{{ line }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">URL</div>
+        <div class="value">{{ method }} {{ url }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">IP Cliente</div>
+        <div class="value">{{ ip }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Código de Error</div>
+        <div class="value">{{ code }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Fecha/Hora</div>
+        <div class="value">{{ occurred_at|date('d/m/Y H:i:s') }}</div>
+      </div>
+    </div>
+
+    <div class="meta-item" style="margin-bottom:16px;">
+      <div class="label">User-Agent</div>
+      <div class="value">{{ user_agent }}</div>
+    </div>
+
+    <div class="trace-wrap">
+      <div class="trace-label">Stack Trace</div>
+      <pre>{{ trace }}</pre>
+    </div>
+  </div>
+
+  <div class="footer">
+    APU System · Notificación automática de errores · No responder a este correo
+  </div>
+</div>
+</body>
+</html>
