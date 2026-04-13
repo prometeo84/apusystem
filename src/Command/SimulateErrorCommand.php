@@ -11,14 +11,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\Kernel\KernelInterface;
+use Symfony\Component\HttpKernel\HttpKernelInterface as HttpKernel;
 
 #[AsCommand(name: 'app:simulate-error', description: 'Simula una excepción y ejecuta ErrorNotificationListener')]
 class SimulateErrorCommand extends Command
 {
     public function __construct(
         private ErrorNotificationListener $listener,
-        private KernelInterface $kernel
+        private HttpKernel $kernel
     ) {
         parent::__construct();
     }
