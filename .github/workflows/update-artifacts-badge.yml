@@ -15,44 +15,47 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Get artifacts count for the run
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          run_id=${{ github.event.workflow_run.id }}
-          repo="${{ github.repository }}"
+          # Use the event JSON file to obtain the workflow_run id (avoids embedding ${{ }} inside the shell)
+          run_id=$(jq -r '.workflow_run.id' "$GITHUB_EVENT_PATH")
+          repo="$GITHUB_REPOSITORY"
           api_url="https://api.github.com/repos/${repo}/actions/runs/${run_id}/artifacts"
           echo "Querying: $api_url"
           resp=$(curl -sS -H "Authorization: Bearer $GITHUB_TOKEN" "$api_url")
           total=$(echo "$resp" | jq -r '.total_count // 0')
-          echo "ARTIFACTS_COUNT=$total" >> $GITHUB_OUTPUT
+          echo "ARTIFACTS_COUNT=$total" >> $GITHUB_ENV
+          # keep the raw response for fallback/debug
+          echo "ARTIFACTS_RESP=$(echo "$resp" | jq -c '.')" >> $GITHUB_ENV
 
       - name: Render SVG badge
         run: |
           mkdir -p assets/badges
-          count=${{ steps.get.outputs.ARTIFACTS_COUNT }}
-          # fallback using env if GITHUB_OUTPUT isn't available in this runner
-          if [ -z "$count" ]; then
-            count=$(jq -r '.total_count // 0' <<< "$resp") || count=0
+          count=${ARTIFACTS_COUNT:-0}
+          resp=${ARTIFACTS_RESP:-''}
+          # fallback parsing if ARTIFACTS_COUNT not set
+          if [ -z "$count" ] || [ "$count" = "null" ]; then
+            count=$(echo "$resp" | jq -r '.total_count // 0') || count=0
           fi
           label="artifacts"
           color="#007ec6"
-          cat > assets/badges/artifacts.svg <<'SVG'
-  <svg xmlns="http://www.w3.org/2000/svg" width="110" height="20">
-    <linearGradient id="s" x2="0" y2="100%">
-      <stop offset="0" stop-color="#fff" stop-opacity=".7"/>
-      <stop offset="1" stop-opacity=".7"/>
-    </linearGradient>
-    <rect rx="3" width="110" height="20" fill="#555"/>
-    <rect rx="3" x="60" width="50" height="20" fill="${color}"/>
-    <path fill="${color}" d="M60 0h4v20h-4z"/>
-    <rect rx="3" width="110" height="20" fill="url(#s)"/>
-    <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
-      <text x="30" y="14">${label}</text>
-      <text x="85" y="14">${count}</text>
-    </g>
-  </svg>
+          cat > assets/badges/artifacts.svg <<SVG
+<svg xmlns="http://www.w3.org/2000/svg" width="110" height="20">
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#fff" stop-opacity=".7"/>
+    <stop offset="1" stop-opacity=".7"/>
+  </linearGradient>
+  <rect rx="3" width="110" height="20" fill="#555"/>
+  <rect rx="3" x="60" width="50" height="20" fill="${color}"/>
+  <path fill="${color}" d="M60 0h4v20h-4z"/>
+  <rect rx="3" width="110" height="20" fill="url(#s)"/>
+  <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
+    <text x="30" y="14">${label}</text>
+    <text x="85" y="14">${count}</text>
+  </g>
+</svg>
 SVG
 
       - name: Commit badge
