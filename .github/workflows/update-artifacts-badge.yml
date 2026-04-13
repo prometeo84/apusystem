@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Get artifacts count for the run
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
           # Use the event JSON file to obtain the workflow_run id (avoids embedding ${{ }} inside the shell)
           run_id=$(jq -r '.workflow_run.id' "$GITHUB_EVENT_PATH")
@@ -61,7 +61,7 @@ SVG
       - name: Commit badge
         env:
           GITHUB_ACTOR: github-actions
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
