@@ -59,7 +59,7 @@ class WebAuthnServiceTest extends TestCase
     #[Test]
     public function base64UrlEncodeProducesUrlSafeString(): void
     {
-        $binary = random_bytes(32);
+        $binary = \random_bytes(32);
         $encoded = $this->service->base64UrlEncode($binary);
 
         $this->assertStringNotContainsString('+', $encoded);
@@ -70,7 +70,7 @@ class WebAuthnServiceTest extends TestCase
     #[Test]
     public function base64UrlEncodeDecodeRoundTrip(): void
     {
-        $binary  = random_bytes(64);
+        $binary  = \random_bytes(64);
         $encoded = $this->service->base64UrlEncode($binary);
         $decoded = $this->service->base64UrlDecodeBin($encoded);
         $this->assertSame($binary, $decoded);
@@ -130,7 +130,7 @@ class WebAuthnServiceTest extends TestCase
     {
         $clientData = json_encode([
             'type'      => 'webauthn.create',
-            'challenge' => $this->service->base64UrlEncode(random_bytes(32)),
+            'challenge' => $this->service->base64UrlEncode(\random_bytes(32)),
             'origin'    => 'https://example.com',
         ]);
         $b64 = $this->service->base64UrlEncode($clientData);
@@ -143,7 +143,7 @@ class WebAuthnServiceTest extends TestCase
     #[Test]
     public function validateClientDataReturnsTrueForCorrectData(): void
     {
-        $expectedChallenge = random_bytes(32);
+        $expectedChallenge = \random_bytes(32);
         $clientData = json_encode([
             'type'      => 'webauthn.create',
             'challenge' => $this->service->base64UrlEncode($expectedChallenge),
@@ -162,7 +162,7 @@ class WebAuthnServiceTest extends TestCase
     #[Test]
     public function validateClientDataReturnsFalseForWrongType(): void
     {
-        $challenge = random_bytes(32);
+        $challenge = \random_bytes(32);
         $clientData = json_encode([
             'type'      => 'webauthn.get', // wrong type for registration
             'challenge' => $this->service->base64UrlEncode($challenge),

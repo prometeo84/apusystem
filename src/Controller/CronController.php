@@ -22,7 +22,7 @@ class CronController extends AbstractController
     #[Route('/cron/run', name: 'cron_run', methods: ['POST'])]
     public function run(Request $request): JsonResponse
     {
-        $provided = $request->headers->get('X-Cron-Api-Key') ?? $request->get('api_key');
+        $provided = $request->headers->get('X-Cron-Api-Key') ?? $request->request->get('api_key') ?? $request->query->get('api_key');
 
         if (!$this->apiKey || $provided !== $this->apiKey) {
             return new JsonResponse(['status' => 'error', 'message' => 'invalid api key'], 403);

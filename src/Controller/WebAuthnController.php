@@ -47,7 +47,7 @@ class WebAuthnController extends AbstractController
     {
         $user = $this->getUser();
 
-        $challenge = random_bytes(32);
+        $challenge = \random_bytes(32);
         $encodedChallenge = $this->webauthnService->base64UrlEncode($challenge);
 
         $request->getSession()->set('webauthn_challenge', $encodedChallenge);
@@ -181,7 +181,7 @@ class WebAuthnController extends AbstractController
             return new JsonResponse(['error' => 'no_credentials'], 404);
         }
 
-        $challenge = random_bytes(32);
+        $challenge = \random_bytes(32);
         $encodedChallenge = $this->webauthnService->base64UrlEncode($challenge);
 
         $request->getSession()->set('webauthn_challenge', $encodedChallenge);

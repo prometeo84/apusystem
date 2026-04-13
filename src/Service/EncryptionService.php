@@ -48,7 +48,7 @@ class EncryptionService
         }
 
         // OpenSSL AES-256-GCM: store as base64(iv|tag|ciphertext)
-        $iv = random_bytes(12);
+        $iv = \random_bytes(12);
         $tag = '';
         $ciphertext = openssl_encrypt($plaintext, 'aes-256-gcm', $this->opensslKey, OPENSSL_RAW_DATA, $iv, $tag);
         if ($ciphertext === false) {
