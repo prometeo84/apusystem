@@ -58,9 +58,10 @@ class ErrorNotificationListener implements EventSubscriberInterface
             }
 
             // Validar que el mailer esté configurado mínimo
-            $mailerDsn = getenv('MAILER_DSN') ?: '';
+            // $_ENV cubre vars cargadas por Symfony DotEnv; getenv() cubre vars del SO en producción
+            $mailerDsn = $_ENV['MAILER_DSN'] ?? $_SERVER['MAILER_DSN'] ?? getenv('MAILER_DSN') ?: '';
             if (empty($mailerDsn)) {
-                $this->recordEmailFailure("mailer_not_configured", 'MAILER_DSN not set');
+                $this->recordEmailFailure('mailer_not_configured', 'MAILER_DSN not set');
                 return;
             }
 
