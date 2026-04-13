@@ -57,6 +57,13 @@ class ErrorNotificationListener implements EventSubscriberInterface
                 return;
             }
 
+            // Validar que el mailer esté configurado mínimo
+            $mailerDsn = getenv('MAILER_DSN') ?: '';
+            if (empty($mailerDsn)) {
+                $this->recordEmailFailure("mailer_not_configured", 'MAILER_DSN not set');
+                return;
+            }
+
             $request    = $event->getRequest();
             $occurredAt = new \DateTime();
             $fromAddr   = getenv('MAILER_FROM_ADDRESS') ?: 'noreply@apusystem.com';
@@ -71,32 +78,68 @@ class ErrorNotificationListener implements EventSubscriberInterface
             $trace = $this->sanitizeTrace($exception->getTraceAsString());
 
             foreach ($superAdmins as $admin) {
-                $email = (new TemplatedEmail())
-                    ->from(new Address($fromAddr, $fromName))
-                    ->to(new Address($admin['email'], trim($admin['first_name'] . ' ' . $admin['last_name'])))
-                    ->subject($subject)
-                    ->htmlTemplate('emails/error_notification.html.twig')
-                    ->context([
-                        'admin_name'      => trim($admin['first_name'] . ' ' . $admin['last_name']),
-                        'exception_class' => get_class($exception),
-                        'message'         => $exception->getMessage(),
-                        'code'            => $exception->getCode(),
-                        'file'            => str_replace($this->projectDir . '/', '', $exception->getFile()),
-                        'line'            => $exception->getLine(),
-                        'trace'           => $trace,
-                        'url'             => $request->getUri(),
-                        'method'          => $request->getMethod(),
-                        'ip'              => $request->getClientIp() ?? 'unknown',
-                        'user_agent'      => mb_substr($request->headers->get('User-Agent', 'unknown'), 0, 200),
-                        'occurred_at'     => $occurredAt,
-                        'env'             => $this->appEnv,
-                        'previous'        => $exception->getPrevious()?->getMessage(),
-                    ]);
+                $toEmail = $admin['email'] ?? null;
+                if (!$this->isValidEmail($toEmail)) {
+                    $this->recordEmailFailure('invalid_recipient', sprintf('Invalid email for user %s %s: %s', $admin['first_name'] ?? '', $admin['last_name'] ?? '', (string)$toEmail));
+                    continue;
+                }
 
-                $this->mailer->send($email);
+                try {
+                    $email = (new TemplatedEmail())
+                        ->from(new Address($fromAddr, $fromName))
+                        ->to(new Address($toEmail, trim(($admin['first_name'] ?? '') . ' ' . ($admin['last_name'] ?? ''))))
+                        ->subject($subject)
+                        ->htmlTemplate('emails/error_notification.html.twig')
+                        ->context([
+                            'admin_name'      => trim(($admin['first_name'] ?? '') . ' ' . ($admin['last_name'] ?? '')),
+                            'exception_class' => get_class($exception),
+                            'message'         => $exception->getMessage(),
+                            'code'            => $exception->getCode(),
+                            'file'            => str_replace($this->projectDir . '/', '', $exception->getFile()),
+                            'line'            => $exception->getLine(),
+                            'trace'           => $trace,
+                            'url'             => $request->getUri(),
+                            'method'          => $request->getMethod(),
+                            'ip'              => $request->getClientIp() ?? 'unknown',
+                            'user_agent'      => mb_substr($request->headers->get('User-Agent', 'unknown'), 0, 200),
+                            'occurred_at'     => $occurredAt,
+                            'env'             => $this->appEnv,
+                            'previous'        => $exception->getPrevious()?->getMessage(),
+                        ]);
+
+                    $this->mailer->send($email);
+                } catch (\Throwable $e) {
+                    $this->recordEmailFailure('send_failed', sprintf('Failed to send to %s: %s', $toEmail, $e->getMessage()));
+                }
             }
         } catch (\Throwable) {
             // No permitir que el listener cause una segunda excepción
+        }
+    }
+
+    private function isValidEmail(?string $email): bool
+    {
+        if (empty($email)) {
+            return false;
+        }
+        if (strlen($email) > 255) {
+            return false;
+        }
+        return (bool) filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
+
+    private function recordEmailFailure(string $type, string $message): void
+    {
+        try {
+            $dir = $this->projectDir . '/var/error_notifications';
+            if (!is_dir($dir)) {
+                mkdir($dir, 0750, true);
+            }
+            $logFile = $dir . '/failed_emails.log';
+            $line = sprintf("%s\t%s\t%s\n", (new \DateTime())->format('c'), $type, $message);
+            file_put_contents($logFile, $line, FILE_APPEND | LOCK_EX);
+        } catch (\Throwable) {
+            // silence
         }
     }
 
