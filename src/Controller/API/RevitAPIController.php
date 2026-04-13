@@ -227,6 +227,7 @@ class RevitAPIController extends AbstractController
         $tokenString = substr($authHeader, 7);
 
         try {
+            /** @var \Lcobucci\JWT\UnencryptedToken $token */
             $token = $this->jwtConfig->parser()->parse($tokenString);
 
             if (!$this->jwtConfig->validator()->validate($token, ...$this->jwtConfig->validationConstraints())) {
