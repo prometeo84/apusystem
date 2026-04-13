@@ -7,6 +7,9 @@ Sistema multi-tenant para análisis y gestión de APUs (Análisis de Precios Uni
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql)](https://mysql.com)
 [![License](https://img.shields.io/badge/License-Proprietary-red)]()
 
+[![W3C CI](https://github.com/prometeo84/apusystem/actions/workflows/css-validation.yml/badge.svg?branch=main)](https://github.com/prometeo84/apusystem/actions/workflows/css-validation.yml)
+[![W3C CI](https://img.shields.io/github/actions/workflow/status/prometeo84/apusystem/css-validation.yml?branch=main&label=W3C%20CI&style=flat-square)](https://github.com/prometeo84/apusystem/actions/workflows/css-validation.yml)
+
 ---
 
 ## 📋 Tabla de Contenidos
