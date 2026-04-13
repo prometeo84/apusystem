@@ -286,6 +286,22 @@ emails:
   automated_notice: "This is an automated message, please do not reply."
   rights_reserved: "All rights reserved."
 
+  error_notification:
+    header: "⚠ Error in APU System"
+    intro: "Hello %name%, an unhandled error occurred in the system."
+    exception_label: "Exception"
+    message_label: "Message"
+    previous_label: "Previous cause"
+    file_label: "File"
+    line_label: "Line"
+    url_label: "URL"
+    ip_label: "Client IP"
+    code_label: "Error Code"
+    datetime_label: "Date/Time"
+    user_agent_label: "User-Agent"
+    stack_label: "Stack Trace"
+    footer: "APU System · Automated error notification · Do not reply to this email"
+
 mails:
   important: "IMPORTANT"
 
