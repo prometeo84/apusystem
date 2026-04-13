@@ -404,9 +404,11 @@ vendor/bin/phpstan analyse
 
 ## 📚 Documentación
 
-- [Arquitectura de Roles](docs/ROLES_ARCHITECTURE.md) - Explicación detallada de SUPER_ADMIN, ADMIN y USER
-- [Sistema Multi-Tenant](docs/MULTI_TENANT.md) - Por qué NO usamos subdominios
-- [API REST](docs/API.md) - Documentación de endpoints
+- [Arquitectura](docs/01-ARQUITECTURA.md) - Diseño técnico y multi-tenant
+- [Guía de Usuario](docs/02-GUIA_USUARIO.md) - Uso y credenciales de prueba
+- [Seguridad (OWASP)](docs/03-SEGURIDAD_OWASP.md) - Prácticas y checklist
+- [API Revit](docs/04-API_REVIT.md) - Endpoints y ejemplos
+- [Desarrollo](docs/05-DESARROLLO.md) - Comandos y arquitectura para desarrolladores
 
 ## 🧾 Environment variables (ejemplo `.env.dist`)
 
@@ -446,20 +448,6 @@ php bin/phpunit --coverage-html coverage/
 ```
 
 ---
-
-## 🐛 Troubleshooting
-
-### Error: "Table recovery_codes doesn't exist"
-
-Este es un problema conocido. La funcionalidad de recovery codes está temporalmente deshabilitada. Los códigos de recuperación 2FA se implementarán en una futura versión.
-
-### Timezone no se guarda
-
-Asegúrate de que el formulario de preferencias NO envíe valores duplicados. El bug fue corregido en la versión actual.
-
-### Subdominios no funcionan
-
-El sistema NO usa subdominios. Todos los usuarios acceden a la misma URL (`apusystem.com`). La identificación de empresa se hace por sesión.
 
 ---
 
