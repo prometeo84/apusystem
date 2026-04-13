@@ -9,7 +9,6 @@ on:
 jobs:
     snyk-scan:
         name: Snyk scan
-        if: "${{ secrets.SNYK_TOKEN != '' }}"
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
@@ -31,14 +30,20 @@ jobs:
                   version: 'latest'
 
             - name: Snyk test (npm)
+              env:
+                  SNYK_TOKEN: "${{ secrets.SNYK_TOKEN }}"
               run: |
+                  if [ -z "$SNYK_TOKEN" ]; then echo "SNYK_TOKEN not set, skipping"; exit 0; fi
                   if [ -f package.json ]; then
                     npm ci
                     snyk test --all-projects || true
                   fi
 
             - name: Snyk test (composer)
+              env:
+                  SNYK_TOKEN: "${{ secrets.SNYK_TOKEN }}"
               run: |
+                  if [ -z "$SNYK_TOKEN" ]; then echo "SNYK_TOKEN not set, skipping"; exit 0; fi
                   if [ -f composer.json ]; then
                     composer install --no-interaction --prefer-dist --no-progress
                     snyk test --all-projects || true

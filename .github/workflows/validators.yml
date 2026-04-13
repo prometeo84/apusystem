@@ -41,8 +41,7 @@ jobs:
               with:
                   path: node_modules
                   key: "${{ runner.os }}-node20-${{ hashFiles('package-lock.json') }}"
-                  restore-keys:
-                      - '${{ runner.os }}-node20-'
+                  restore-keys: "${{ runner.os }}-node20-"
 
             - name: Cache vnu.jar
               id: cache-vnu
