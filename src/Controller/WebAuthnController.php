@@ -29,6 +29,7 @@ class WebAuthnController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function listCredentials(): Response
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         $creds = $this->em->getRepository(WebAuthnCredential::class)->findBy(['user' => $user]);
 
@@ -45,6 +46,7 @@ class WebAuthnController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function startRegistration(Request $request): JsonResponse
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         $challenge = \random_bytes(32);
@@ -82,6 +84,7 @@ class WebAuthnController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function finishRegistration(Request $request): JsonResponse
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         $data = json_decode($request->getContent(), true);
@@ -242,6 +245,9 @@ class WebAuthnController extends AbstractController
             return new JsonResponse(['error' => 'user_not_found'], 404);
         }
 
+        // Narrow type for static analyzers
+        assert($user instanceof \App\Entity\User);
+
         // Find matching credential
         $creds = $this->em->getRepository(WebAuthnCredential::class)->findBy(['user' => $user]);
         $normalizedGot = rtrim(strtr($credentialIdB64, '+/', '-_'), '=');
@@ -290,6 +296,7 @@ class WebAuthnController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function revoke(Request $request, int $id): JsonResponse
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         $repo = $this->em->getRepository(WebAuthnCredential::class);
         $cred = $repo->find($id);

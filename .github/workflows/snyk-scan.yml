@@ -8,8 +8,8 @@ on:
 
 jobs:
     snyk-scan:
-      name: Snyk scan
-      if: "${{ secrets.SNYK_TOKEN != '' }}"
+        name: Snyk scan
+        if: "${{ secrets.SNYK_TOKEN != '' }}"
         runs-on: ubuntu-latest
         steps:
             - name: Checkout

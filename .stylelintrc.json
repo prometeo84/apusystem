@@ -1,0 +1,4 @@
+{
+  "rules": {},
+  "ignoreFiles": ["public/build/**/*.css", "vendor/**"]
+}
