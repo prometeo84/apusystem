@@ -1,0 +1,45 @@
+name: Snyk Security Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  snyk-scan:
+    name: Snyk scan
+    if: ${{ secrets.SNYK_TOKEN != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Setup Snyk
+        uses: snyk/actions/setup@v2
+        with:
+          version: 'latest'
+
+      - name: Snyk test (npm)
+        run: |
+          if [ -f package.json ]; then
+            npm ci
+            snyk test --all-projects || true
+          fi
+
+      - name: Snyk test (composer)
+        run: |
+          if [ -f composer.json ]; then
+            composer install --no-interaction --prefer-dist --no-progress
+            snyk test --all-projects || true
+          fi
