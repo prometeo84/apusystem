@@ -24,10 +24,10 @@ jobs:
             - name: Cache Composer
               uses: actions/cache@v4
               with:
-                path: ~/.composer/cache
-                key: "${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}"
-                restore-keys:
-                  - "${{ runner.os }}-composer-"
+                  path: ~/.composer/cache
+                  key: "${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}"
+                  restore-keys:
+                      - '${{ runner.os }}-composer-'
 
             - name: Install Composer dependencies
               run: composer install --no-interaction --prefer-dist --no-progress

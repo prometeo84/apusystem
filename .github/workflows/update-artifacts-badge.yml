@@ -58,7 +58,7 @@ jobs:
 </svg>
 SVG
 
-      - name: Commit badge
+      - name: Commit or upload badge
         env:
           GITHUB_ACTOR: github-actions
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
@@ -66,5 +66,28 @@ SVG
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add assets/badges/artifacts.svg || true
-          git commit -m "ci: update artifacts badge (artifacts count)" || echo "No changes to commit"
-          git push origin HEAD:main || true
+          if [ -n "${{ secrets.BOT_PUSH_TOKEN }}" ]; then
+            echo "Using BOT_PUSH_TOKEN to push the badge file"
+            git commit -m "ci: update artifacts badge (artifacts count)" || echo "No changes to commit"
+            git remote set-url origin https://x-access-token:${{ secrets.BOT_PUSH_TOKEN }}@github.com/${{ github.repository }}.git
+            git push origin HEAD:main
+          else
+            echo "BOT_PUSH_TOKEN not set — uploading badge as workflow artifact instead of committing"
+            git commit -m "ci: update artifacts badge (artifacts count)" || echo "No changes to commit"
+            # if commit failed due to permissions, still upload the generated badge so the file is available for manual sync
+            mkdir -p /tmp/badge
+            cp assets/badges/artifacts.svg /tmp/badge/artifacts.svg || true
+            tar -czf /tmp/badge.tar.gz -C /tmp/badge .
+            echo "::notice::Badge generated and saved as artifact"
+            gh release create temp-badge-$(date +%s) /tmp/badge/artifacts.svg --repo "${{ github.repository }}" --title "temp-badge" --notes "Temporary badge artifact" || true
+            # fallback: upload via actions/upload-artifact if gh is not available
+            if command -v gh >/dev/null 2>&1; then
+              echo "Uploaded temp release"
+            else
+              echo "gh CLI not available; skipping release publish"
+            fi
+      - name: Upload badge artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-badge
+          path: assets/badges/artifacts.svg

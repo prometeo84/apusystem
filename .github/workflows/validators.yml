@@ -13,8 +13,8 @@ env:
     FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 concurrency:
-  group: "validators-${{ github.ref }}"
-  cancel-in-progress: true
+    group: 'validators-${{ github.ref }}'
+    cancel-in-progress: true
 
 jobs:
     lint-and-validate:
@@ -42,7 +42,7 @@ jobs:
                   path: node_modules
                   key: "${{ runner.os }}-node20-${{ hashFiles('package-lock.json') }}"
                   restore-keys:
-                    - "${{ runner.os }}-node20-"
+                      - '${{ runner.os }}-node20-'
 
             - name: Cache vnu.jar
               id: cache-vnu

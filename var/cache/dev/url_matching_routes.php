@@ -27,6 +27,7 @@ return [
         '/cron/run' => [[['_route' => 'cron_run', '_controller' => 'App\\Controller\\CronController::run'], null, ['POST' => 0], null, false, false, null]],
         '/' => [[['_route' => 'app_dashboard', '_controller' => 'App\\Controller\\DashboardController::index'], null, null, null, false, false, null]],
         '/dashboard' => [[['_route' => 'app_dashboard_alt', '_controller' => 'App\\Controller\\DashboardController::index'], null, null, null, false, false, null]],
+        '/__trigger_error_for_test' => [[['_route' => 'app_trigger_error_for_test', '_controller' => 'App\\Controller\\DevErrorController::trigger'], null, null, null, false, false, null]],
         '/favicon.ico' => [[['_route' => 'app_favicon', '_controller' => 'App\\Controller\\FaviconController::favicon'], null, null, null, false, false, null]],
         '/password/forgot' => [[['_route' => 'app_password_forgot', '_controller' => 'App\\Controller\\PasswordResetController::forgotPassword'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/profile' => [[['_route' => 'app_profile', '_controller' => 'App\\Controller\\ProfileController::index'], null, null, null, false, false, null]],
