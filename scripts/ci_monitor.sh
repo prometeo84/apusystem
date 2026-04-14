@@ -330,26 +330,40 @@ for round in $(seq 1 $MAX_FIX_ROUNDS); do
     }'
     echo ""
 
-    # Contar failures
-    fail_count=$(echo "$run_results" | awk -F'\t' '$4!="success" && $4!="null" && $4!="skipped"{count++}END{print count+0}')
+    # Contar por tipo de conclusión
+    # 'cancelled' = cancelado por concurrency (no es fallo real, solo se borra)
+    # 'failure'/'timed_out' = fallo real que necesita corrección
+    real_fail_count=$(echo "$run_results" | awk -F'\t' '$4=="failure" || $4=="timed_out"{count++}END{print count+0}')
+    cancelled_count=$(echo "$run_results" | awk -F'\t' '$4=="cancelled"{count++}END{print count+0}')
     skip_count=$(echo "$run_results" | awk -F'\t' '$4=="skipped"{count++}END{print count+0}')
     success_count=$(echo "$run_results" | awk -F'\t' '$4=="success"{count++}END{print count+0}')
 
-    if [ "$fail_count" -eq 0 ]; then
-        ok "¡Todos los workflows pasaron! ($success_count success, $skip_count skipped)"
+    # Borrar runs cancelados (artefactos de concurrency) sin análisis
+    if [ "$cancelled_count" -gt 0 ]; then
+        warn "$cancelled_count run(s) cancelados (concurrency) — borrando sin analizar..."
+        while IFS=$'\t' read -r run_id run_name run_status run_conclusion run_url; do
+            [ "$run_conclusion" = "cancelled" ] || continue
+            info "  Borrando run cancelado: $run_name ($run_id)"
+            delete_run "$run_id" || true
+        done <<< "$run_results"
+    fi
+
+    if [ "$real_fail_count" -eq 0 ]; then
+        ok "¡Todos los workflows pasaron! ($success_count success, $skip_count skipped, $cancelled_count cancelados limpiados)"
         # Purgar TODO el historial de runs no-exitosos → queda solo el último exitoso
         purge_failed_runs
         exit 0
     fi
 
-    warn "$fail_count workflow(s) fallados — descargando logs..."
+    warn "$real_fail_count workflow(s) con fallo real — descargando logs..."
 
-    # Analizar y corregir fallos
+    # Analizar y corregir fallos reales
     global_fixed=1
     while IFS=$'\t' read -r run_id run_name run_status run_conclusion run_url; do
-        [ "$run_conclusion" = "success" ] && continue
-        [ "$run_conclusion" = "skipped" ] && continue
-        [ "$run_conclusion" = "null" ] && continue
+        [ "$run_conclusion" = "success" ]   && continue
+        [ "$run_conclusion" = "skipped" ]   && continue
+        [ "$run_conclusion" = "null" ]      && continue
+        [ "$run_conclusion" = "cancelled" ] && continue  # ya borrado arriba
 
         fail "Run fallado: $run_name ($run_id)"
         info "  URL: $run_url"
