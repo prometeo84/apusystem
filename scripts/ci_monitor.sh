@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
 # =============================================================================
-# scripts/ci_monitor.sh — Monitor GitHub Actions, descarga logs y corrige fallos
+# scripts/ci_monitor.sh — Monitor GitHub Actions: descarga logs, borra runs
+#                          fallidos y corrige hasta que todo pase.
 # Uso:
 #   ./scripts/ci_monitor.sh [SHA]
 #   SHA: commit SHA a monitorizar (default: HEAD)
 #
-# El script:
+# Flujo:
 #   1. Espera a que todos los workflows para el SHA finalicen
-#   2. Para cualquier run fallido, descarga y analiza sus logs
-#   3. Intenta correcciones automáticas si reconoce el patrón
-#   4. Hace commit+push y repite hasta que todo pase (o alcanza max reintentos)
+#   2. Si hay fallos:
+#      a) Descarga logs del run fallido
+#      b) BORRA el run fallido en GitHub (limpia historial)
+#      c) Analiza logs y aplica corrección automática
+#      d) Commit + push → vuelve al paso 1
+#   3. Al finalizar OK, borra TODOS los runs no-exitosos del repositorio
+#      → En el historial queda solo el último run exitoso por workflow
 # =============================================================================
 set -euo pipefail
 
@@ -220,7 +225,68 @@ apply_auto_fixes() {
     return $fixed
 }
 
-# ── Commit y push de cambios ──────────────────────────────────────────────────
+# ── Borrar un run individual en GitHub ───────────────────────────────────────
+# Uso: delete_run <run_id>
+# Devuelve 0 si se borró (HTTP 204), 1 si falló
+delete_run() {
+    local run_id="$1"
+    local http_code
+    http_code=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE \
+        -H "Authorization: token $TOKEN" \
+        -H "Accept: application/vnd.github+json" \
+        "https://api.github.com/repos/$REPO/actions/runs/${run_id}" || true)
+    if [ "$http_code" = "204" ]; then
+        info "Run $run_id borrado del historial de GitHub"
+        return 0
+    else
+        warn "No se pudo borrar run $run_id (http=$http_code)"
+        return 1
+    fi
+}
+
+# ── Purgar TODOS los runs no-exitosos del repositorio ─────────────────────────
+# Deja únicamente runs con conclusion=success en el historial
+purge_failed_runs() {
+    info "Purgando runs fallidos/cancelados del historial de GitHub..."
+    local page=1
+    local deleted=0
+    while true; do
+        local runs_json
+        runs_json=$(curl -s \
+            -H "Authorization: token $TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$REPO/actions/runs?per_page=100&page=$page" || true)
+
+        local total
+        total=$(echo "$runs_json" | jq -r '.total_count // 0' 2>/dev/null || echo 0)
+        [ "$total" = "0" ] && break
+
+        local ids_to_delete
+        ids_to_delete=$(echo "$runs_json" | jq -r \
+            '.workflow_runs[]? | select(.conclusion != "success") | .id' 2>/dev/null || true)
+
+        if [ -z "$ids_to_delete" ]; then
+            # No quedan más runs no-exitosos en esta página
+            local page_count
+            page_count=$(echo "$runs_json" | jq -r '.workflow_runs | length' 2>/dev/null || echo 0)
+            [ "$page_count" -lt 100 ] && break
+            page=$((page + 1))
+            continue
+        fi
+
+        while IFS= read -r rid; do
+            [ -z "$rid" ] && continue
+            delete_run "$rid" && deleted=$((deleted + 1)) || true
+        done <<< "$ids_to_delete"
+
+        # Siguiente página (los índices cambian al borrar, así que releer página 1)
+        page=1
+        sleep 1
+    done
+    ok "Purga completada — $deleted runs no-exitosos eliminados del historial"
+}
+
+
 commit_and_push() {
     local msg="$1"
     local changed
@@ -271,6 +337,8 @@ for round in $(seq 1 $MAX_FIX_ROUNDS); do
 
     if [ "$fail_count" -eq 0 ]; then
         ok "¡Todos los workflows pasaron! ($success_count success, $skip_count skipped)"
+        # Purgar TODO el historial de runs no-exitosos → queda solo el último exitoso
+        purge_failed_runs
         exit 0
     fi
 
@@ -288,6 +356,9 @@ for round in $(seq 1 $MAX_FIX_ROUNDS); do
 
         logdir=$(download_logs "$run_id")
         analyze_logs "$logdir" "$run_name"
+
+        # Borrar el run fallido del historial ANTES de intentar corrección
+        delete_run "$run_id" || true
 
         if apply_auto_fixes "$logdir" "$run_name"; then
             global_fixed=0
@@ -314,4 +385,6 @@ done
 
 fail "Se alcanzó el máximo de rondas de corrección ($MAX_FIX_ROUNDS)"
 info "Revisa los logs en $LOG_DIR — puede ser necesaria intervención manual"
+# Aun así purgamos los runs fallidos para no saturar el historial
+purge_failed_runs
 exit 4
