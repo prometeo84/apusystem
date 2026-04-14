@@ -23,10 +23,10 @@ TOKEN=""
 REPO=""
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
-info()  { printf "\033[0;36m[ci_monitor]\033[0m %s\n" "$*"; }
-ok()    { printf "\033[0;32m[  OK  ]\033[0m %s\n" "$*"; }
-warn()  { printf "\033[0;33m[ WARN ]\033[0m %s\n" "$*"; }
-fail()  { printf "\033[0;31m[ FAIL ]\033[0m %s\n" "$*"; }
+info()  { printf "\033[0;36m[ci_monitor]\033[0m %s\n" "$*" >&2; }
+ok()    { printf "\033[0;32m[  OK  ]\033[0m %s\n" "$*" >&2; }
+warn()  { printf "\033[0;33m[ WARN ]\033[0m %s\n" "$*" >&2; }
+fail()  { printf "\033[0;31m[ FAIL ]\033[0m %s\n" "$*" >&2; }
 
 # ── Credenciales ──────────────────────────────────────────────────────────────
 setup_token() {
@@ -67,7 +67,7 @@ wait_for_runs() {
              [.id, .name, .status, (.conclusion // "null"), .html_url] | @tsv' 2>/dev/null || true)
 
         if [ -z "$matches" ]; then
-            printf "  [%02d/%d] Sin runs todavía, esperando...\n" "$i" "$MAX_POLL_ITERS"
+            printf "  [%02d/%d] Sin runs todavía, esperando...\n" "$i" "$MAX_POLL_ITERS" >&2
             sleep $POLL_INTERVAL
             continue
         fi
@@ -78,7 +78,7 @@ wait_for_runs() {
         printf "  [%02d/%d] %s runs completados / %s en progreso\n" \
             "$i" "$MAX_POLL_ITERS" \
             "$(echo "$matches" | awk -F'\t' '$3=="completed"{count++}END{print count+0}')" \
-            "$in_prog"
+            "$in_prog" >&2
 
         if [ "$in_prog" -gt 0 ]; then
             sleep $POLL_INTERVAL
@@ -90,7 +90,7 @@ wait_for_runs() {
         return 0
     done
 
-    warn "Timeout esperando workflows"
+    warn "Timeout esperando workflows" >&2
     return 1
 }
 

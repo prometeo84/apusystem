@@ -32,6 +32,21 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-composer-
 
+            - name: Create .env for CI
+              run: |
+                  # Symfony Dotenv requires .env to exist; create it from .env.test for CI
+                  if [ -f .env.test ]; then
+                    cp .env.test .env
+                  elif [ -f .env.dist ]; then
+                    cp .env.dist .env
+                    echo "APP_ENV=test" >> .env
+                    echo "APP_SECRET=ci_placeholder_secret_not_real" >> .env
+                  else
+                    echo "APP_ENV=test" > .env
+                    echo "APP_SECRET=ci_placeholder_secret_not_real" >> .env
+                    echo "DATABASE_URL=sqlite:///%kernel.cache_dir%/test.db" >> .env
+                  fi
+
             - name: Install Composer dependencies
               run: composer install --no-interaction --prefer-dist --no-progress
 
