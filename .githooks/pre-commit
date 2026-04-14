@@ -31,6 +31,8 @@ STAGED_PHP=$(git  diff --cached --name-only --diff-filter=ACM | grep -E '\.php$'
 STAGED_PY=$(git   diff --cached --name-only --diff-filter=ACM | grep -E '\.py$'   || true)
 STAGED_WF=$(git   diff --cached --name-only --diff-filter=ACM | grep -E '^\.github/workflows/.*\.ya?ml$' || true)
 STAGED_ALL=$(git  diff --cached --name-only --diff-filter=ACM || true)
+# Solo archivos de aplicación – excluye hooks/scripts/vendor para evitar falsos positivos OWASP
+STAGED_APP=$(echo "$STAGED_ALL" | grep -vE '^(\.githooks/|scripts/|\.tools/|vendor/|node_modules/)' || true)
 
 BLOCKING_ERRORS=0
 
@@ -147,7 +149,7 @@ echo ""
 echo -e "${BOLD}-- OWASP Top 10 (grep rápido) -------------------------------${NC}"
 echo ""
 OWASP_TOTAL=0
-if [ -n "$STAGED_ALL" ]; then
+if [ -n "$STAGED_APP" ]; then
     while IFS= read -r file; do
         [ -z "$file" ] && continue
         ABS="$GIT_ROOT/$file"
@@ -157,33 +159,33 @@ if [ -n "$STAGED_ALL" ]; then
         A03=$(grep -nP '(\$[a-zA-Z_]\w*\s*\.\s*["'"'"']|["'"'"']\s*\.\s*\$[a-zA-Z_]\w*)' "$ABS" 2>/dev/null \
             | grep -iE '(query|execute|SELECT|INSERT|UPDATE|DELETE|FROM|WHERE)' \
             | grep -vE '^\s*(//|#|\*)' || true)
-        [ -n "$A03" ] && echo -e "${YELLOW}   wc -l /var/www/html/proyecto/.githooks/pre-commit [A03-SQLi]  $file${NC}" && echo "$A03" | head -5 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
+        [ -n "$A03" ] && echo -e "${YELLOW}  !! [A03-SQLi]   $file${NC}" && echo "$A03" | head -5 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
 
         # A03 – eval
         A03E=$(grep -nE '\beval\s*\(' "$ABS" 2>/dev/null | grep -vE '^\s*(//|#|\*)' || true)
-        [ -n "$A03E" ] && echo -e "${YELLOW}   wc -l /var/www/html/proyecto/.githooks/pre-commit [A03-eval]  $file${NC}" && echo "$A03E" | head -3 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
+        [ -n "$A03E" ] && echo -e "${YELLOW}  !! [A03-eval]   $file${NC}" && echo "$A03E" | head -3 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
 
         # A05 – misconfig: error_reporting all
         A05=$(grep -nEi 'error_reporting\s*\(\s*-1\s*\)|error_reporting\s*\(\s*E_ALL\s*\)' "$ABS" 2>/dev/null \
             | grep -vE '^\s*(//|#|\*)' || true)
-        [ -n "$A05" ] && echo -e "${YELLOW}   wc -l /var/www/html/proyecto/.githooks/pre-commit [A05-ErrRep] $file${NC}" && echo "$A05" | head -3 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
+        [ -n "$A05" ] && echo -e "${YELLOW}  !! [A05-ErrRep]  $file${NC}" && echo "$A05" | head -3 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
 
         # A07 – hashes débiles en passwords
         A07=$(grep -nEi '\b(md5|sha1)\s*\(\s*\$?(password|pass|pwd)' "$ABS" 2>/dev/null \
             | grep -vE '^\s*(//|#|\*)' || true)
-        [ -n "$A07" ] && echo -e "${YELLOW}   wc -l /var/www/html/proyecto/.githooks/pre-commit [A07-Auth]  $file${NC}" && echo "$A07" | head -3 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
+        [ -n "$A07" ] && echo -e "${YELLOW}  !! [A07-Auth]   $file${NC}" && echo "$A07" | head -3 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
 
         # A07 – CSRF desactivado
         A07C=$(grep -nEi '(csrf_protection:\s*false|enableCsrfProtection\s*\(\s*false)' "$ABS" 2>/dev/null \
             | grep -vE '^\s*(//|#|\*)' || true)
-        [ -n "$A07C" ] && echo -e "${YELLOW}   wc -l /var/www/html/proyecto/.githooks/pre-commit [A07-CSRF]  $file${NC}" && echo "$A07C" | head -3 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
+        [ -n "$A07C" ] && echo -e "${YELLOW}  !! [A07-CSRF]   $file${NC}" && echo "$A07C" | head -3 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
 
         # A10 – SSRF
         A10=$(grep -nEi '(curl_setopt.*CURLOPT_URL.*\$|file_get_contents\s*\(\s*\$|HttpClient.*get\s*\(\s*\$)' "$ABS" 2>/dev/null \
             | grep -vE '^\s*(//|#|\*)' || true)
-        [ -n "$A10" ] && echo -e "${YELLOW}   wc -l /var/www/html/proyecto/.githooks/pre-commit [A10-SSRF]  $file${NC}" && echo "$A10" | head -3 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
+        [ -n "$A10" ] && echo -e "${YELLOW}  !! [A10-SSRF]   $file${NC}" && echo "$A10" | head -3 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
 
-    done <<< "$STAGED_ALL"
+    done <<< "$STAGED_APP"
 
     if [ "$OWASP_TOTAL" -eq 0 ]; then
         echo -e "${GREEN}  ok Sin patrones OWASP detectados${NC}"

@@ -1,15 +1,22 @@
 #!/usr/bin/env bash
 # =============================================================
 #  run-heavy-linters.sh  –  APU System
-#  Linters pesados ejecutados LOCALMENTE (sin contenedores).
+#  Linters pesados + comparativa local vs contenedor.
 #
 #  Uso:
 #    scripts/run-heavy-linters.sh          # analiza todo src/
 #    scripts/run-heavy-linters.sh --quick  # solo archivos en la rama actual vs main
 #
+#  Pasos:
+#    1. PHPStan          (local)
+#    2. Composer audit   (local)
+#    3. Snyk             (local)
+#    4. ESLint/Stylelint (local)
+#    5. compare_linters  (local vs docker run --rm)
+#
 #  Salida:
 #    0  –  todo OK (o solo advertencias)
-#    1  –  al menos un linter critico fallo
+#    1  –  al menos un linter critico fallo o resultados difieren
 # =============================================================
 set -uo pipefail
 IFS=$'\n\t'
@@ -145,7 +152,7 @@ echo ""
 
 # ─────────────────────────────────────────────────────────────
 sep
-echo -e "${CYAN}[4/4] ESLint + Stylelint – assets/JS y CSS${NC}"
+echo -e "${CYAN}[4/5] ESLint + Stylelint – assets/JS y CSS${NC}"
 sep
 
 ESLINT_BIN="$GIT_ROOT/node_modules/.bin/eslint"
@@ -185,8 +192,36 @@ else
 fi
 echo ""
 
-# ─────────────────────────────────────────────────────────────
-echo -e "${BOLD}============================================================${NC}"
+# ─────────────────────────────────────────────────────────────sep
+echo -e "${CYAN}[5/5] Comparativa local vs contenedor (compare_linters.sh)${NC}"
+sep
+
+CMP_SCRIPT="$GIT_ROOT/scripts/compare_linters.sh"
+if [ -f "$CMP_SCRIPT" ] && [ -x "$CMP_SCRIPT" ]; then
+    if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+        echo "  Ejecutando compare_linters.sh ..."
+        cmp_out=$("$CMP_SCRIPT" 2>&1) || CMP_EXIT=$?
+        CMP_EXIT=${CMP_EXIT:-0}
+        if [ "$CMP_EXIT" -ne 0 ]; then
+            fail "compare_linters: resultados locales y de contenedor difieren"
+            echo "$cmp_out" | tail -30 | sed 's/^/      /'
+        else
+            # Mostrar resumen de la última línea (match/mismatch)
+            echo "$cmp_out" | grep -E '(match|differ|Linters)' | sed 's/^/  /'
+            pass "Resultados local == contenedor"
+        fi
+    else
+        warn "Docker no disponible – comparativa local/contenedor omitida"
+    fi
+elif [ -f "$CMP_SCRIPT" ]; then
+    chmod +x "$CMP_SCRIPT"
+    warn "compare_linters.sh sin permiso de ejecución; se asignó +x. Vuelve a ejecutar."
+else
+    warn "scripts/compare_linters.sh no encontrado – comparativa omitida"
+fi
+echo ""
+
+# ────────────────────────────────────────────────────────────echo -e "${BOLD}============================================================${NC}"
 if [ "$CRITICAL" -gt 0 ]; then
     echo -e "${RED}  RESULTADO: ${CRITICAL} error(es) CRITICOS  |  ${WARNINGS} advertencia(s)${NC}"
     echo -e "${RED}  Corrige los errores antes de hacer push.${NC}"
