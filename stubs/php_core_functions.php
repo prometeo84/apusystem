@@ -1,5 +1,9 @@
 <?php
 // Minimal stubs for core functions used by static analysis
+// Provide RAND_MAX constant for static analysis when missing
+if (!defined('RAND_MAX')) {
+    define('RAND_MAX', 2147483647);
+}
 if (!function_exists('random_bytes')) {
     function random_bytes(int $length): string
     {

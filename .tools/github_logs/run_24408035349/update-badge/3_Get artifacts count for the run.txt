@@ -1,0 +1,9 @@
+﻿2026-04-14T15:32:35.0091350Z ##[group]Run run_id=$(python3 -c "import json,os; d=json.load(open(os.environ['GITHUB_EVENT_PATH'])); print(d['workflow_run']['id'])")
+2026-04-14T15:32:35.0092445Z [36;1mrun_id=$(python3 -c "import json,os; d=json.load(open(os.environ['GITHUB_EVENT_PATH'])); print(d['workflow_run']['id'])")[0m
+2026-04-14T15:32:35.0093768Z [36;1mresp=$(curl -sS -H "Authorization: ***" "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/${run_id}/artifacts")[0m
+2026-04-14T15:32:35.0094588Z [36;1mtotal=$(echo "$resp" | python3 -c "import sys,json; print(json.load(sys.stdin).get('total_count',0))")[0m
+2026-04-14T15:32:35.0095150Z [36;1mecho "ARTIFACTS_COUNT=$total" >> "$GITHUB_ENV"[0m
+2026-04-14T15:32:35.0120244Z shell: /usr/bin/bash -e {0}
+2026-04-14T15:32:35.0120580Z env:
+2026-04-14T15:32:35.0121001Z   GITHUB_TOKEN: ***
+2026-04-14T15:32:35.0121240Z ##[endgroup]

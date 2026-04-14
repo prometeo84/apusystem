@@ -1,0 +1,8 @@
+﻿2026-04-14T15:32:35.3365156Z ##[group]Run python3 scripts/generate_badge.py "${ARTIFACTS_COUNT:-0}"
+2026-04-14T15:32:35.3365765Z [36;1mpython3 scripts/generate_badge.py "${ARTIFACTS_COUNT:-0}"[0m
+2026-04-14T15:32:35.3387100Z shell: /usr/bin/bash -e {0}
+2026-04-14T15:32:35.3387405Z env:
+2026-04-14T15:32:35.3387605Z   ARTIFACTS_COUNT: 0
+2026-04-14T15:32:35.3387844Z ##[endgroup]
+2026-04-14T15:32:35.3569691Z python3: can't open file '/home/runner/work/apusystem/apusystem/scripts/generate_badge.py': [Errno 2] No such file or directory
+2026-04-14T15:32:35.3612251Z ##[error]Process completed with exit code 2.
