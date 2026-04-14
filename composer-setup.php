@@ -945,7 +945,7 @@ class Installer
 
         $this->errHandler->start();
 
-        if ($this->downloadVersionData($data, $error)) {
+        if ($this->downloadVersionData($data, $error) && is_array($data)) {
             $this->parseVersionData($data, $channel, $version, $url);
         }
 
@@ -1326,7 +1326,7 @@ class NoProxyPattern
 
     public function __construct($pattern)
     {
-        $rules = preg_split('{[\s,]+}', $pattern, null, PREG_SPLIT_NO_EMPTY);
+        $rules = preg_split('{[\s,]+}', $pattern, -1, PREG_SPLIT_NO_EMPTY);
 
         if ($matches = preg_grep('{getcomposer\.org(?::\d+)?}i', $rules)) {
             $this->composerInNoProxy = true;
