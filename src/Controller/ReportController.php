@@ -8,7 +8,7 @@ use App\Service\BudgetReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/reports')]
@@ -22,9 +22,11 @@ class ReportController extends AbstractController
 
     private function getPlantilla(int $projectId, int $id): Plantilla
     {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
         $project = $this->em->getRepository(Projects::class)->findOneBy([
             'id' => $projectId,
-            'tenant' => $this->getUser()->getTenant(),
+            'tenant' => $user->getTenant(),
         ]);
         if (!$project) {
             throw $this->createNotFoundException();
@@ -92,9 +94,11 @@ class ReportController extends AbstractController
 
     private function getProject(int $id): Projects
     {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
         $project = $this->em->getRepository(Projects::class)->findOneBy([
             'id'     => $id,
-            'tenant' => $this->getUser()->getTenant(),
+            'tenant' => $user->getTenant(),
         ]);
         if (!$project) {
             throw $this->createNotFoundException();

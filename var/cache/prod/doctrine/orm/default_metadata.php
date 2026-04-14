@@ -4,20 +4,27 @@
 
 return [[
 
-'App__Entity__Tenant__CLASSMETADATA__' => 0,
-'App__Entity__User__CLASSMETADATA__' => 1,
-'App__Entity__SecurityEvent__CLASSMETADATA__' => 2,
-'App__Entity__LoginSession__CLASSMETADATA__' => 3,
-'App__Entity__BlockedIp__CLASSMETADATA__' => 4,
-'App__Entity__Proyecto__CLASSMETADATA__' => 5,
-'App__Entity__Apu__CLASSMETADATA__' => 6,
-'App__Entity__PasswordResetToken__CLASSMETADATA__' => 7,
-'App__Entity__APUItem__CLASSMETADATA__' => 8,
-'App__Entity__APUEquipment__CLASSMETADATA__' => 9,
-'App__Entity__APULabor__CLASSMETADATA__' => 10,
-'App__Entity__APUMaterial__CLASSMETADATA__' => 11,
-'App__Entity__APUTransport__CLASSMETADATA__' => 12,
-'App__Entity__RevitFile__CLASSMETADATA__' => 13,
+'App__Entity__APUEquipment__CLASSMETADATA__' => 0,
+'App__Entity__APUItem__CLASSMETADATA__' => 1,
+'App__Entity__APULabor__CLASSMETADATA__' => 2,
+'App__Entity__APUMaterial__CLASSMETADATA__' => 3,
+'App__Entity__APUTransport__CLASSMETADATA__' => 4,
+'App__Entity__Apu__CLASSMETADATA__' => 5,
+'App__Entity__BlockedIp__CLASSMETADATA__' => 6,
+'App__Entity__LoginSession__CLASSMETADATA__' => 7,
+'App__Entity__PasswordResetToken__CLASSMETADATA__' => 8,
+'App__Entity__RecoveryCode__CLASSMETADATA__' => 9,
+'App__Entity__RevitFile__CLASSMETADATA__' => 10,
+'App__Entity__SecurityEvent__CLASSMETADATA__' => 11,
+'App__Entity__Tenant__CLASSMETADATA__' => 12,
+'App__Entity__User__CLASSMETADATA__' => 13,
+'App__Entity__User2faSettings__CLASSMETADATA__' => 14,
+'App__Entity__WebAuthnCredential__CLASSMETADATA__' => 15,
+'App__Entity__Projects__CLASSMETADATA__' => 16,
+'App__Entity__RateLimitLog__CLASSMETADATA__' => 17,
+'App__Entity__Rubro__CLASSMETADATA__' => 18,
+'App__Entity__Plantilla__CLASSMETADATA__' => 19,
+'App__Entity__PlantillaRubro__CLASSMETADATA__' => 20,
 
 ], [
 
@@ -31,17 +38,8 @@ return [[
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone ($p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
             clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
         ],
         null,
@@ -51,7 +49,7 @@ return [[
                     'App\\Entity',
                 ],
                 'rootEntityName' => [
-                    'App\\Entity\\Tenant',
+                    'App\\Entity\\APUEquipment',
                 ],
                 'identifier' => [
                     [
@@ -64,78 +62,49 @@ return [[
                 'fieldMappings' => [
                     [
                         'id' => $o[1],
-                        'uuid' => $o[2],
-                        'name' => $o[3],
-                        'slug' => $o[4],
-                        'domain' => $o[5],
-                        'logoUrl' => $o[6],
-                        'timezone' => $o[7],
-                        'currency' => $o[8],
-                        'isActive' => $o[9],
-                        'plan' => $o[10],
-                        'maxUsers' => $o[11],
-                        'maxProjects' => $o[12],
-                        'planExpiresAt' => $o[13],
-                        'planAutoRenew' => $o[14],
-                        'createdAt' => $o[15],
-                        'updatedAt' => $o[16],
+                        'descripcion' => $o[2],
+                        'numero' => $o[3],
+                        'tarifa' => $o[4],
+                        'cHora' => $o[5],
+                        'createdAt' => $o[6],
                     ],
                 ],
                 'fieldNames' => [
                     [
                         'id' => 'id',
-                        'uuid' => 'uuid',
-                        'name' => 'name',
-                        'slug' => 'slug',
-                        'domain' => 'domain',
-                        'logo_url' => 'logoUrl',
-                        'timezone' => 'timezone',
-                        'currency' => 'currency',
-                        'is_active' => 'isActive',
-                        'plan' => 'plan',
-                        'max_users' => 'maxUsers',
-                        'max_projects' => 'maxProjects',
-                        'plan_expires_at' => 'planExpiresAt',
-                        'plan_auto_renew' => 'planAutoRenew',
+                        'descripcion' => 'descripcion',
+                        'numero' => 'numero',
+                        'tarifa' => 'tarifa',
+                        'c_hora' => 'cHora',
                         'created_at' => 'createdAt',
-                        'updated_at' => 'updatedAt',
                     ],
                 ],
                 'columnNames' => [
                     [
                         'id' => 'id',
-                        'uuid' => 'uuid',
-                        'name' => 'name',
-                        'slug' => 'slug',
-                        'domain' => 'domain',
-                        'logoUrl' => 'logo_url',
-                        'timezone' => 'timezone',
-                        'currency' => 'currency',
-                        'isActive' => 'is_active',
-                        'plan' => 'plan',
-                        'maxUsers' => 'max_users',
-                        'maxProjects' => 'max_projects',
-                        'planExpiresAt' => 'plan_expires_at',
-                        'planAutoRenew' => 'plan_auto_renew',
+                        'descripcion' => 'descripcion',
+                        'numero' => 'numero',
+                        'tarifa' => 'tarifa',
+                        'cHora' => 'c_hora',
                         'createdAt' => 'created_at',
-                        'updatedAt' => 'updated_at',
                     ],
                 ],
                 'table' => [
                     [
-                        'name' => 'tenants',
+                        'name' => 'apu_equipment',
                     ],
                 ],
                 'associationMappings' => [
                     [
-                        'users' => $o[17],
+                        'apuItem' => $o[7],
                     ],
                 ],
                 'idGenerator' => [
-                    $o[18],
+                    $o[9],
                 ],
                 'name' => [
-                    'App\\Entity\\Tenant',
+                    'App\\Entity\\APUEquipment',
+                    8 => 'apu_item_id',
                 ],
                 'id' => [
                     1 => true,
@@ -148,92 +117,89 @@ return [[
                 'type' => [
                     1 => 'bigint',
                     'string',
-                    'string',
-                    'string',
-                    'string',
-                    'string',
-                    'string',
-                    'string',
-                    'boolean',
-                    'string',
                     'integer',
-                    'integer',
-                    'datetime',
-                    'boolean',
-                    'datetime',
+                    'decimal',
+                    'decimal',
                     'datetime',
                 ],
                 'fieldName' => [
                     1 => 'id',
-                    'uuid',
-                    'name',
-                    'slug',
-                    'domain',
-                    'logoUrl',
-                    'timezone',
-                    'currency',
-                    'isActive',
-                    'plan',
-                    'maxUsers',
-                    'maxProjects',
-                    'planExpiresAt',
-                    'planAutoRenew',
+                    'descripcion',
+                    'numero',
+                    'tarifa',
+                    'cHora',
                     'createdAt',
-                    'updatedAt',
                 ],
                 'columnName' => [
                     1 => 'id',
-                    'uuid',
-                    'name',
-                    'slug',
-                    'domain',
-                    'logo_url',
-                    'timezone',
-                    'currency',
-                    'is_active',
-                    'plan',
-                    'max_users',
-                    'max_projects',
-                    'plan_expires_at',
-                    'plan_auto_renew',
+                    'descripcion',
+                    'numero',
+                    'tarifa',
+                    'c_hora',
                     'created_at',
-                    'updated_at',
                 ],
                 'length' => [
-                    2 => 36,
-                    255,
-                    100,
-                    255,
-                    500,
-                    50,
-                    3,
-                    10 => 50,
+                    2 => 255,
                 ],
-                'unique' => [
-                    2 => true,
-                    4 => true,
+                'precision' => [
+                    4 => 10,
+                    10,
                 ],
-                'nullable' => [
-                    5 => true,
-                    true,
-                    13 => true,
+                'scale' => [
+                    4 => 2,
+                    4,
                 ],
                 'fetch' => [
-                    17 => 2,
+                    7 => 2,
                 ],
                 'sourceEntity' => [
-                    17 => 'App\\Entity\\Tenant',
+                    7 => 'App\\Entity\\APUEquipment',
                 ],
-                'mappedBy' => [
-                    17 => 'tenant',
+                'inversedBy' => [
+                    7 => 'equipment',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    7 => [
+                        'apu_item_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    7 => [
+                        'id' => 'apu_item_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    7 => [
+                        $o[8],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    7 => [
+                        'apu_item_id' => 'apu_item_id',
+                    ],
+                ],
+                'deferrable' => [
+                    8 => false,
+                ],
+                'unique' => [
+                    8 => false,
+                ],
+                'onDelete' => [
+                    8 => 'CASCADE',
+                ],
+                'nullable' => [
+                    8 => false,
+                ],
+                'referencedColumnName' => [
+                    8 => 'id',
                 ],
             ],
             'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
                 'fieldName' => [
-                    17 => 'users',
+                    7 => 'apuItem',
                 ],
                 'targetEntity' => [
-                    17 => 'App\\Entity\\User',
+                    7 => 'App\\Entity\\APUItem',
                 ],
             ],
         ],
@@ -260,17 +226,12 @@ return [[
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
             clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'],
             clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
         ],
         null,
@@ -280,7 +241,7 @@ return [[
                     'App\\Entity',
                 ],
                 'rootEntityName' => [
-                    'App\\Entity\\User',
+                    'App\\Entity\\APUItem',
                 ],
                 'identifier' => [
                     [
@@ -294,102 +255,79 @@ return [[
                     [
                         'id' => $o[1],
                         'uuid' => $o[2],
-                        'email' => $o[3],
-                        'username' => $o[4],
-                        'password' => $o[5],
-                        'firstName' => $o[6],
-                        'lastName' => $o[7],
-                        'phone' => $o[8],
-                        'role' => $o[9],
-                        'isActive' => $o[10],
-                        'emailVerifiedAt' => $o[11],
-                        'lastLoginAt' => $o[12],
-                        'lastLoginIp' => $o[13],
-                        'failedLoginAttempts' => $o[14],
-                        'lockedUntil' => $o[15],
-                        'passwordChangedAt' => $o[16],
-                        'requirePasswordChange' => $o[17],
-                        'createdAt' => $o[18],
-                        'updatedAt' => $o[19],
-                        'locale' => $o[20],
-                        'timezone' => $o[21],
-                        'themePrimaryColor' => $o[22],
-                        'themeSecondaryColor' => $o[23],
-                        'themeMode' => $o[24],
+                        'description' => $o[3],
+                        'unit' => $o[4],
+                        'khu' => $o[5],
+                        'rendimientoUh' => $o[6],
+                        'totalCost' => $o[7],
+                        'equipmentCost' => $o[8],
+                        'laborCost' => $o[9],
+                        'materialCost' => $o[10],
+                        'transportCost' => $o[11],
+                        'utilidadPct' => $o[12],
+                        'precioOfertado' => $o[13],
+                        'createdAt' => $o[14],
+                        'updatedAt' => $o[15],
                     ],
                 ],
                 'fieldNames' => [
                     [
                         'id' => 'id',
                         'uuid' => 'uuid',
-                        'email' => 'email',
-                        'username' => 'username',
-                        'password' => 'password',
-                        'first_name' => 'firstName',
-                        'last_name' => 'lastName',
-                        'phone' => 'phone',
-                        'role' => 'role',
-                        'is_active' => 'isActive',
-                        'email_verified_at' => 'emailVerifiedAt',
-                        'last_login_at' => 'lastLoginAt',
-                        'last_login_ip' => 'lastLoginIp',
-                        'failed_login_attempts' => 'failedLoginAttempts',
-                        'locked_until' => 'lockedUntil',
-                        'password_changed_at' => 'passwordChangedAt',
-                        'require_password_change' => 'requirePasswordChange',
+                        'description' => 'description',
+                        'unit' => 'unit',
+                        'khu' => 'khu',
+                        'rendimiento_uh' => 'rendimientoUh',
+                        'total_cost' => 'totalCost',
+                        'equipment_cost' => 'equipmentCost',
+                        'labor_cost' => 'laborCost',
+                        'material_cost' => 'materialCost',
+                        'transport_cost' => 'transportCost',
+                        'utilidad_pct' => 'utilidadPct',
+                        'precio_ofertado' => 'precioOfertado',
                         'created_at' => 'createdAt',
                         'updated_at' => 'updatedAt',
-                        'locale' => 'locale',
-                        'timezone' => 'timezone',
-                        'theme_primary_color' => 'themePrimaryColor',
-                        'theme_secondary_color' => 'themeSecondaryColor',
-                        'theme_mode' => 'themeMode',
                     ],
                 ],
                 'columnNames' => [
                     [
                         'id' => 'id',
                         'uuid' => 'uuid',
-                        'email' => 'email',
-                        'username' => 'username',
-                        'password' => 'password',
-                        'firstName' => 'first_name',
-                        'lastName' => 'last_name',
-                        'phone' => 'phone',
-                        'role' => 'role',
-                        'isActive' => 'is_active',
-                        'emailVerifiedAt' => 'email_verified_at',
-                        'lastLoginAt' => 'last_login_at',
-                        'lastLoginIp' => 'last_login_ip',
-                        'failedLoginAttempts' => 'failed_login_attempts',
-                        'lockedUntil' => 'locked_until',
-                        'passwordChangedAt' => 'password_changed_at',
-                        'requirePasswordChange' => 'require_password_change',
+                        'description' => 'description',
+                        'unit' => 'unit',
+                        'khu' => 'khu',
+                        'rendimientoUh' => 'rendimiento_uh',
+                        'totalCost' => 'total_cost',
+                        'equipmentCost' => 'equipment_cost',
+                        'laborCost' => 'labor_cost',
+                        'materialCost' => 'material_cost',
+                        'transportCost' => 'transport_cost',
+                        'utilidadPct' => 'utilidad_pct',
+                        'precioOfertado' => 'precio_ofertado',
                         'createdAt' => 'created_at',
                         'updatedAt' => 'updated_at',
-                        'locale' => 'locale',
-                        'timezone' => 'timezone',
-                        'themePrimaryColor' => 'theme_primary_color',
-                        'themeSecondaryColor' => 'theme_secondary_color',
-                        'themeMode' => 'theme_mode',
                     ],
                 ],
                 'table' => [
                     [
-                        'name' => 'users',
+                        'name' => 'apu_items',
                     ],
                 ],
                 'associationMappings' => [
                     [
-                        'tenant' => $o[25],
+                        'tenant' => $o[16],
+                        'equipment' => $o[18],
+                        'labor' => $o[19],
+                        'materials' => $o[20],
+                        'transport' => $o[21],
                     ],
                 ],
                 'idGenerator' => [
-                    $o[27],
+                    $o[22],
                 ],
                 'name' => [
-                    'App\\Entity\\User',
-                    26 => 'tenant_id',
+                    'App\\Entity\\APUItem',
+                    17 => 'tenant_id',
                 ],
                 'id' => [
                     1 => true,
@@ -404,155 +342,181 @@ return [[
                     'string',
                     'string',
                     'string',
-                    'string',
-                    'string',
-                    'string',
-                    'string',
-                    'string',
-                    'boolean',
+                    'decimal',
+                    'decimal',
+                    'decimal',
+                    'decimal',
+                    'decimal',
+                    'decimal',
+                    'decimal',
+                    'decimal',
+                    'decimal',
                     'datetime',
                     'datetime',
-                    'string',
-                    'integer',
-                    'datetime',
-                    'datetime',
-                    'boolean',
-                    'datetime',
-                    'datetime',
-                    'string',
-                    'string',
-                    'string',
-                    'string',
-                    'string',
                 ],
                 'fieldName' => [
                     1 => 'id',
                     'uuid',
-                    'email',
-                    'username',
-                    'password',
-                    'firstName',
-                    'lastName',
-                    'phone',
-                    'role',
-                    'isActive',
-                    'emailVerifiedAt',
-                    'lastLoginAt',
-                    'lastLoginIp',
-                    'failedLoginAttempts',
-                    'lockedUntil',
-                    'passwordChangedAt',
-                    'requirePasswordChange',
+                    'description',
+                    'unit',
+                    'khu',
+                    'rendimientoUh',
+                    'totalCost',
+                    'equipmentCost',
+                    'laborCost',
+                    'materialCost',
+                    'transportCost',
+                    'utilidadPct',
+                    'precioOfertado',
                     'createdAt',
                     'updatedAt',
-                    'locale',
-                    'timezone',
-                    'themePrimaryColor',
-                    'themeSecondaryColor',
-                    'themeMode',
                 ],
                 'columnName' => [
                     1 => 'id',
                     'uuid',
-                    'email',
-                    'username',
-                    'password',
-                    'first_name',
-                    'last_name',
-                    'phone',
-                    'role',
-                    'is_active',
-                    'email_verified_at',
-                    'last_login_at',
-                    'last_login_ip',
-                    'failed_login_attempts',
-                    'locked_until',
-                    'password_changed_at',
-                    'require_password_change',
+                    'description',
+                    'unit',
+                    'khu',
+                    'rendimiento_uh',
+                    'total_cost',
+                    'equipment_cost',
+                    'labor_cost',
+                    'material_cost',
+                    'transport_cost',
+                    'utilidad_pct',
+                    'precio_ofertado',
                     'created_at',
                     'updated_at',
-                    'locale',
-                    'timezone',
-                    'theme_primary_color',
-                    'theme_secondary_color',
-                    'theme_mode',
                 ],
                 'length' => [
                     2 => 36,
                     255,
-                    100,
-                    255,
-                    100,
-                    100,
-                    20,
-                    20,
-                    13 => 45,
-                    20 => 5,
                     50,
-                    7,
-                    7,
-                    10,
                 ],
                 'unique' => [
                     2 => true,
-                    26 => false,
+                    17 => false,
+                ],
+                'precision' => [
+                    5 => 10,
+                    10,
+                    15,
+                    15,
+                    15,
+                    15,
+                    15,
+                    5,
+                    15,
+                ],
+                'scale' => [
+                    5 => 4,
+                    4,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
                 ],
                 'nullable' => [
-                    8 => true,
-                    11 => true,
+                    7 => true,
                     true,
                     true,
-                    15 => true,
                     true,
-                    22 => true,
                     true,
-                    26 => false,
+                    true,
+                    true,
+                    17 => false,
                 ],
                 'fetch' => [
-                    25 => 2,
+                    16 => 2,
+                    18 => 2,
+                    2,
+                    2,
+                    2,
                 ],
                 'sourceEntity' => [
-                    25 => 'App\\Entity\\User',
-                ],
-                'inversedBy' => [
-                    25 => 'users',
+                    16 => 'App\\Entity\\APUItem',
+                    18 => 'App\\Entity\\APUItem',
+                    'App\\Entity\\APUItem',
+                    'App\\Entity\\APUItem',
+                    'App\\Entity\\APUItem',
                 ],
                 'sourceToTargetKeyColumns' => [
-                    25 => [
+                    16 => [
                         'tenant_id' => 'id',
                     ],
                 ],
                 'targetToSourceKeyColumns' => [
-                    25 => [
+                    16 => [
                         'id' => 'tenant_id',
                     ],
                 ],
                 'joinColumns' => [
-                    25 => [
-                        $o[26],
+                    16 => [
+                        $o[17],
                     ],
                 ],
                 'joinColumnFieldNames' => [
-                    25 => [
+                    16 => [
                         'tenant_id' => 'tenant_id',
                     ],
                 ],
                 'deferrable' => [
-                    26 => false,
+                    17 => false,
                 ],
                 'onDelete' => [
-                    26 => 'CASCADE',
+                    17 => 'CASCADE',
                 ],
                 'referencedColumnName' => [
-                    26 => 'id',
+                    17 => 'id',
+                ],
+                'cascade' => [
+                    18 => [
+                        'persist',
+                        'remove',
+                    ],
+                    [
+                        'persist',
+                        'remove',
+                    ],
+                    [
+                        'persist',
+                        'remove',
+                    ],
+                    [
+                        'persist',
+                        'remove',
+                    ],
+                ],
+                'orphanRemoval' => [
+                    18 => true,
+                    true,
+                    true,
+                    true,
+                ],
+                'mappedBy' => [
+                    18 => 'apuItem',
+                    'apuItem',
+                    'apuItem',
+                    'apuItem',
                 ],
             ],
             'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
                 'fieldName' => [
-                    25 => 'tenant',
+                    16 => 'tenant',
+                    18 => 'equipment',
+                    'labor',
+                    'materials',
+                    'transport',
                 ],
                 'targetEntity' => [
-                    25 => 'App\\Entity\\Tenant',
+                    16 => 'App\\Entity\\Tenant',
+                    18 => 'App\\Entity\\APUEquipment',
+                    'App\\Entity\\APULabor',
+                    'App\\Entity\\APUMaterial',
+                    'App\\Entity\\APUTransport',
                 ],
             ],
         ],
@@ -570,11 +534,8 @@ return [[
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
             clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
-            clone $p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'],
             clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
         ],
         null,
@@ -584,7 +545,7 @@ return [[
                     'App\\Entity',
                 ],
                 'rootEntityName' => [
-                    'App\\Entity\\SecurityEvent',
+                    'App\\Entity\\APULabor',
                 ],
                 'identifier' => [
                     [
@@ -597,71 +558,49 @@ return [[
                 'fieldMappings' => [
                     [
                         'id' => $o[1],
-                        'eventType' => $o[2],
-                        'severity' => $o[3],
-                        'ipAddress' => $o[4],
-                        'userAgent' => $o[5],
-                        'eventData' => $o[6],
-                        'createdAt' => $o[7],
+                        'descripcion' => $o[2],
+                        'numero' => $o[3],
+                        'jorHora' => $o[4],
+                        'cHora' => $o[5],
+                        'createdAt' => $o[6],
                     ],
                 ],
                 'fieldNames' => [
                     [
                         'id' => 'id',
-                        'event_type' => 'eventType',
-                        'severity' => 'severity',
-                        'ip_address' => 'ipAddress',
-                        'user_agent' => 'userAgent',
-                        'event_data' => 'eventData',
+                        'descripcion' => 'descripcion',
+                        'numero' => 'numero',
+                        'jor_hora' => 'jorHora',
+                        'c_hora' => 'cHora',
                         'created_at' => 'createdAt',
                     ],
                 ],
                 'columnNames' => [
                     [
                         'id' => 'id',
-                        'eventType' => 'event_type',
-                        'severity' => 'severity',
-                        'ipAddress' => 'ip_address',
-                        'userAgent' => 'user_agent',
-                        'eventData' => 'event_data',
+                        'descripcion' => 'descripcion',
+                        'numero' => 'numero',
+                        'jorHora' => 'jor_hora',
+                        'cHora' => 'c_hora',
                         'createdAt' => 'created_at',
                     ],
                 ],
                 'table' => [
                     [
-                        'name' => 'security_events',
-                        'indexes' => [
-                            'idx_event_type' => [
-                                'columns' => [
-                                    'event_type',
-                                ],
-                            ],
-                            'idx_user_id' => [
-                                'columns' => [
-                                    'user_id',
-                                ],
-                            ],
-                            'idx_created_at' => [
-                                'columns' => [
-                                    'created_at',
-                                ],
-                            ],
-                        ],
+                        'name' => 'apu_labor',
                     ],
                 ],
                 'associationMappings' => [
                     [
-                        'tenant' => $o[8],
-                        'user' => $o[10],
+                        'apuItem' => $o[7],
                     ],
                 ],
                 'idGenerator' => [
-                    $o[12],
+                    $o[9],
                 ],
                 'name' => [
-                    'App\\Entity\\SecurityEvent',
-                    9 => 'tenant_id',
-                    11 => 'user_id',
+                    'App\\Entity\\APULabor',
+                    8 => 'apu_item_id',
                 ],
                 'id' => [
                     1 => true,
@@ -674,106 +613,89 @@ return [[
                 'type' => [
                     1 => 'bigint',
                     'string',
-                    'string',
-                    'string',
-                    'text',
-                    'json',
+                    'integer',
+                    'decimal',
+                    'decimal',
                     'datetime',
                 ],
                 'fieldName' => [
                     1 => 'id',
-                    'eventType',
-                    'severity',
-                    'ipAddress',
-                    'userAgent',
-                    'eventData',
+                    'descripcion',
+                    'numero',
+                    'jorHora',
+                    'cHora',
                     'createdAt',
                 ],
                 'columnName' => [
                     1 => 'id',
-                    'event_type',
-                    'severity',
-                    'ip_address',
-                    'user_agent',
-                    'event_data',
+                    'descripcion',
+                    'numero',
+                    'jor_hora',
+                    'c_hora',
                     'created_at',
                 ],
                 'length' => [
-                    2 => 100,
-                    20,
-                    45,
+                    2 => 255,
                 ],
-                'nullable' => [
-                    5 => true,
-                    true,
-                    9 => true,
-                    11 => true,
+                'precision' => [
+                    4 => 10,
+                    10,
+                ],
+                'scale' => [
+                    4 => 4,
+                    2,
                 ],
                 'fetch' => [
-                    8 => 2,
-                    10 => 2,
+                    7 => 2,
                 ],
                 'sourceEntity' => [
-                    8 => 'App\\Entity\\SecurityEvent',
-                    10 => 'App\\Entity\\SecurityEvent',
+                    7 => 'App\\Entity\\APULabor',
+                ],
+                'inversedBy' => [
+                    7 => 'labor',
                 ],
                 'sourceToTargetKeyColumns' => [
-                    8 => [
-                        'tenant_id' => 'id',
-                    ],
-                    10 => [
-                        'user_id' => 'id',
+                    7 => [
+                        'apu_item_id' => 'id',
                     ],
                 ],
                 'targetToSourceKeyColumns' => [
-                    8 => [
-                        'id' => 'tenant_id',
-                    ],
-                    10 => [
-                        'id' => 'user_id',
+                    7 => [
+                        'id' => 'apu_item_id',
                     ],
                 ],
                 'joinColumns' => [
-                    8 => [
-                        $o[9],
-                    ],
-                    10 => [
-                        $o[11],
+                    7 => [
+                        $o[8],
                     ],
                 ],
                 'joinColumnFieldNames' => [
-                    8 => [
-                        'tenant_id' => 'tenant_id',
-                    ],
-                    10 => [
-                        'user_id' => 'user_id',
+                    7 => [
+                        'apu_item_id' => 'apu_item_id',
                     ],
                 ],
                 'deferrable' => [
-                    9 => false,
-                    11 => false,
+                    8 => false,
                 ],
                 'unique' => [
-                    9 => false,
-                    11 => false,
+                    8 => false,
                 ],
                 'onDelete' => [
-                    9 => 'CASCADE',
-                    11 => 'SET NULL',
+                    8 => 'CASCADE',
+                ],
+                'nullable' => [
+                    8 => false,
                 ],
                 'referencedColumnName' => [
-                    9 => 'id',
-                    11 => 'id',
+                    8 => 'id',
                 ],
             ],
             'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
                 'fieldName' => [
-                    8 => 'tenant',
-                    10 => 'user',
+                    7 => 'apuItem',
                 ],
                 'targetEntity' => [
-                    8 => 'App\\Entity\\Tenant',
-                    10 => 'App\\Entity\\User',
+                    7 => 'App\\Entity\\APUItem',
                 ],
             ],
         ],
@@ -791,9 +713,6 @@ return [[
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
             clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
             clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
@@ -805,7 +724,7 @@ return [[
                     'App\\Entity',
                 ],
                 'rootEntityName' => [
-                    'App\\Entity\\LoginSession',
+                    'App\\Entity\\APUMaterial',
                 ],
                 'identifier' => [
                     [
@@ -818,71 +737,49 @@ return [[
                 'fieldMappings' => [
                     [
                         'id' => $o[1],
-                        'sessionId' => $o[2],
-                        'ipAddress' => $o[3],
-                        'userAgent' => $o[4],
-                        'fingerprint' => $o[5],
-                        'lastActivityAt' => $o[6],
-                        'expiresAt' => $o[7],
-                        'isActive' => $o[8],
-                        'createdAt' => $o[9],
+                        'descripcion' => $o[2],
+                        'unidad' => $o[3],
+                        'cantidad' => $o[4],
+                        'precioUnitario' => $o[5],
+                        'createdAt' => $o[6],
                     ],
                 ],
                 'fieldNames' => [
                     [
                         'id' => 'id',
-                        'session_id' => 'sessionId',
-                        'ip_address' => 'ipAddress',
-                        'user_agent' => 'userAgent',
-                        'fingerprint' => 'fingerprint',
-                        'last_activity_at' => 'lastActivityAt',
-                        'expires_at' => 'expiresAt',
-                        'is_active' => 'isActive',
+                        'descripcion' => 'descripcion',
+                        'unidad' => 'unidad',
+                        'cantidad' => 'cantidad',
+                        'precio_unitario' => 'precioUnitario',
                         'created_at' => 'createdAt',
                     ],
                 ],
                 'columnNames' => [
                     [
                         'id' => 'id',
-                        'sessionId' => 'session_id',
-                        'ipAddress' => 'ip_address',
-                        'userAgent' => 'user_agent',
-                        'fingerprint' => 'fingerprint',
-                        'lastActivityAt' => 'last_activity_at',
-                        'expiresAt' => 'expires_at',
-                        'isActive' => 'is_active',
+                        'descripcion' => 'descripcion',
+                        'unidad' => 'unidad',
+                        'cantidad' => 'cantidad',
+                        'precioUnitario' => 'precio_unitario',
                         'createdAt' => 'created_at',
                     ],
                 ],
                 'table' => [
                     [
-                        'name' => 'login_sessions',
-                        'indexes' => [
-                            'idx_session_id' => [
-                                'columns' => [
-                                    'session_id',
-                                ],
-                            ],
-                            'idx_user_active' => [
-                                'columns' => [
-                                    'user_id',
-                                    'is_active',
-                                ],
-                            ],
-                        ],
+                        'name' => 'apu_materials',
                     ],
                 ],
                 'associationMappings' => [
                     [
-                        'user' => $o[10],
+                        'apuItem' => $o[7],
                     ],
                 ],
                 'idGenerator' => [
-                    $o[12],
+                    $o[9],
                 ],
                 'name' => [
-                    'App\\Entity\\LoginSession',
-                    11 => 'user_id',
+                    'App\\Entity\\APUMaterial',
+                    8 => 'apu_item_id',
                 ],
                 'id' => [
                     1 => true,
@@ -896,89 +793,89 @@ return [[
                     1 => 'bigint',
                     'string',
                     'string',
-                    'text',
-                    'string',
-                    'datetime',
-                    'datetime',
-                    'boolean',
+                    'decimal',
+                    'decimal',
                     'datetime',
                 ],
                 'fieldName' => [
                     1 => 'id',
-                    'sessionId',
-                    'ipAddress',
-                    'userAgent',
-                    'fingerprint',
-                    'lastActivityAt',
-                    'expiresAt',
-                    'isActive',
+                    'descripcion',
+                    'unidad',
+                    'cantidad',
+                    'precioUnitario',
                     'createdAt',
                 ],
                 'columnName' => [
                     1 => 'id',
-                    'session_id',
-                    'ip_address',
-                    'user_agent',
-                    'fingerprint',
-                    'last_activity_at',
-                    'expires_at',
-                    'is_active',
+                    'descripcion',
+                    'unidad',
+                    'cantidad',
+                    'precio_unitario',
                     'created_at',
                 ],
                 'length' => [
-                    2 => 128,
-                    45,
-                    5 => 64,
+                    2 => 255,
+                    50,
                 ],
-                'unique' => [
-                    2 => true,
-                    11 => false,
+                'precision' => [
+                    4 => 15,
+                    15,
+                ],
+                'scale' => [
+                    4 => 4,
+                    2,
                 ],
                 'fetch' => [
-                    10 => 2,
+                    7 => 2,
                 ],
                 'sourceEntity' => [
-                    10 => 'App\\Entity\\LoginSession',
+                    7 => 'App\\Entity\\APUMaterial',
+                ],
+                'inversedBy' => [
+                    7 => 'materials',
                 ],
                 'sourceToTargetKeyColumns' => [
-                    10 => [
-                        'user_id' => 'id',
+                    7 => [
+                        'apu_item_id' => 'id',
                     ],
                 ],
                 'targetToSourceKeyColumns' => [
-                    10 => [
-                        'id' => 'user_id',
+                    7 => [
+                        'id' => 'apu_item_id',
                     ],
                 ],
                 'joinColumns' => [
-                    10 => [
-                        $o[11],
+                    7 => [
+                        $o[8],
                     ],
                 ],
                 'joinColumnFieldNames' => [
-                    10 => [
-                        'user_id' => 'user_id',
+                    7 => [
+                        'apu_item_id' => 'apu_item_id',
                     ],
                 ],
                 'deferrable' => [
-                    11 => false,
+                    8 => false,
+                ],
+                'unique' => [
+                    8 => false,
                 ],
                 'onDelete' => [
-                    11 => 'CASCADE',
+                    8 => 'CASCADE',
                 ],
                 'nullable' => [
-                    11 => false,
+                    8 => false,
                 ],
                 'referencedColumnName' => [
-                    11 => 'id',
+                    8 => 'id',
                 ],
             ],
             'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
                 'fieldName' => [
-                    10 => 'user',
+                    7 => 'apuItem',
                 ],
                 'targetEntity' => [
-                    10 => 'App\\Entity\\User',
+                    7 => 'App\\Entity\\APUItem',
                 ],
             ],
         ],
@@ -997,7 +894,8 @@ return [[
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
             clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
         ],
         null,
@@ -1007,7 +905,7 @@ return [[
                     'App\\Entity',
                 ],
                 'rootEntityName' => [
-                    'App\\Entity\\BlockedIp',
+                    'App\\Entity\\APUTransport',
                 ],
                 'identifier' => [
                     [
@@ -1020,56 +918,52 @@ return [[
                 'fieldMappings' => [
                     [
                         'id' => $o[1],
-                        'ipAddress' => $o[2],
-                        'riskScore' => $o[3],
-                        'reason' => $o[4],
-                        'blockedUntil' => $o[5],
-                        'blockedBy' => $o[6],
+                        'descripcion' => $o[2],
+                        'unidad' => $o[3],
+                        'cantidad' => $o[4],
+                        'dmt' => $o[5],
+                        'tarifaKm' => $o[6],
                         'createdAt' => $o[7],
-                        'updatedAt' => $o[8],
                     ],
                 ],
                 'fieldNames' => [
                     [
                         'id' => 'id',
-                        'ip_address' => 'ipAddress',
-                        'risk_score' => 'riskScore',
-                        'reason' => 'reason',
-                        'blocked_until' => 'blockedUntil',
-                        'blocked_by' => 'blockedBy',
+                        'descripcion' => 'descripcion',
+                        'unidad' => 'unidad',
+                        'cantidad' => 'cantidad',
+                        'dmt' => 'dmt',
+                        'tarifa_km' => 'tarifaKm',
                         'created_at' => 'createdAt',
-                        'updated_at' => 'updatedAt',
                     ],
                 ],
                 'columnNames' => [
                     [
                         'id' => 'id',
-                        'ipAddress' => 'ip_address',
-                        'riskScore' => 'risk_score',
-                        'reason' => 'reason',
-                        'blockedUntil' => 'blocked_until',
-                        'blockedBy' => 'blocked_by',
+                        'descripcion' => 'descripcion',
+                        'unidad' => 'unidad',
+                        'cantidad' => 'cantidad',
+                        'dmt' => 'dmt',
+                        'tarifaKm' => 'tarifa_km',
                         'createdAt' => 'created_at',
-                        'updatedAt' => 'updated_at',
                     ],
                 ],
                 'table' => [
                     [
-                        'name' => 'blocked_ips',
-                        'indexes' => [
-                            'idx_ip' => [
-                                'columns' => [
-                                    'ip_address',
-                                ],
-                            ],
-                        ],
+                        'name' => 'apu_transport',
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'apuItem' => $o[8],
                     ],
                 ],
                 'idGenerator' => [
-                    $o[9],
+                    $o[10],
                 ],
                 'name' => [
-                    'App\\Entity\\BlockedIp',
+                    'App\\Entity\\APUTransport',
+                    9 => 'apu_item_id',
                 ],
                 'id' => [
                     1 => true,
@@ -1082,43 +976,95 @@ return [[
                 'type' => [
                     1 => 'bigint',
                     'string',
-                    'integer',
                     'string',
-                    'datetime',
-                    'string',
-                    'datetime',
+                    'decimal',
+                    'decimal',
+                    'decimal',
                     'datetime',
                 ],
                 'fieldName' => [
                     1 => 'id',
-                    'ipAddress',
-                    'riskScore',
-                    'reason',
-                    'blockedUntil',
-                    'blockedBy',
+                    'descripcion',
+                    'unidad',
+                    'cantidad',
+                    'dmt',
+                    'tarifaKm',
                     'createdAt',
-                    'updatedAt',
                 ],
                 'columnName' => [
                     1 => 'id',
-                    'ip_address',
-                    'risk_score',
-                    'reason',
-                    'blocked_until',
-                    'blocked_by',
+                    'descripcion',
+                    'unidad',
+                    'cantidad',
+                    'dmt',
+                    'tarifa_km',
                     'created_at',
-                    'updated_at',
                 ],
                 'length' => [
-                    2 => 45,
-                    4 => 500,
-                    6 => 50,
+                    2 => 255,
+                    50,
+                ],
+                'precision' => [
+                    4 => 15,
+                    10,
+                    10,
+                ],
+                'scale' => [
+                    4 => 4,
+                    2,
+                    2,
+                ],
+                'fetch' => [
+                    8 => 2,
+                ],
+                'sourceEntity' => [
+                    8 => 'App\\Entity\\APUTransport',
+                ],
+                'inversedBy' => [
+                    8 => 'transport',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    8 => [
+                        'apu_item_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    8 => [
+                        'id' => 'apu_item_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    8 => [
+                        $o[9],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    8 => [
+                        'apu_item_id' => 'apu_item_id',
+                    ],
+                ],
+                'deferrable' => [
+                    9 => false,
                 ],
                 'unique' => [
-                    2 => true,
+                    9 => false,
+                ],
+                'onDelete' => [
+                    9 => 'CASCADE',
                 ],
                 'nullable' => [
-                    5 => true,
+                    9 => false,
+                ],
+                'referencedColumnName' => [
+                    9 => 'id',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    8 => 'apuItem',
+                ],
+                'targetEntity' => [
+                    8 => 'App\\Entity\\APUItem',
                 ],
             ],
         ],
@@ -1127,224 +1073,6 @@ return [[
     );
 },
 5 => static function () {
-    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
-        $o = [
-            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
-            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
-            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
-            clone ($p['Doctrine\\ORM\\Id\\IdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\IdentityGenerator')),
-        ],
-        null,
-        [
-            'stdClass' => [
-                'namespace' => [
-                    'App\\Entity',
-                ],
-                'rootEntityName' => [
-                    'App\\Entity\\Proyecto',
-                ],
-                'identifier' => [
-                    [
-                        'id',
-                    ],
-                ],
-                'generatorType' => [
-                    4,
-                ],
-                'fieldMappings' => [
-                    [
-                        'id' => $o[1],
-                        'nombre' => $o[2],
-                        'codigo' => $o[3],
-                        'descripcion' => $o[4],
-                        'cliente' => $o[5],
-                        'ubicacion' => $o[6],
-                        'fechaInicio' => $o[7],
-                        'fechaFin' => $o[8],
-                        'estado' => $o[9],
-                        'presupuestoTotal' => $o[10],
-                        'createdAt' => $o[11],
-                        'updatedAt' => $o[12],
-                    ],
-                ],
-                'fieldNames' => [
-                    [
-                        'id' => 'id',
-                        'nombre' => 'nombre',
-                        'codigo' => 'codigo',
-                        'descripcion' => 'descripcion',
-                        'cliente' => 'cliente',
-                        'ubicacion' => 'ubicacion',
-                        'fecha_inicio' => 'fechaInicio',
-                        'fecha_fin' => 'fechaFin',
-                        'estado' => 'estado',
-                        'presupuesto_total' => 'presupuestoTotal',
-                        'created_at' => 'createdAt',
-                        'updated_at' => 'updatedAt',
-                    ],
-                ],
-                'columnNames' => [
-                    [
-                        'id' => 'id',
-                        'nombre' => 'nombre',
-                        'codigo' => 'codigo',
-                        'descripcion' => 'descripcion',
-                        'cliente' => 'cliente',
-                        'ubicacion' => 'ubicacion',
-                        'fechaInicio' => 'fecha_inicio',
-                        'fechaFin' => 'fecha_fin',
-                        'estado' => 'estado',
-                        'presupuestoTotal' => 'presupuesto_total',
-                        'createdAt' => 'created_at',
-                        'updatedAt' => 'updated_at',
-                    ],
-                ],
-                'table' => [
-                    [
-                        'name' => 'proyectos',
-                    ],
-                ],
-                'associationMappings' => [
-                    [
-                        'tenant' => $o[13],
-                    ],
-                ],
-                'idGenerator' => [
-                    $o[15],
-                ],
-                'name' => [
-                    'App\\Entity\\Proyecto',
-                    14 => 'tenant_id',
-                ],
-                'id' => [
-                    1 => true,
-                ],
-                'type' => [
-                    1 => 'integer',
-                    'string',
-                    'string',
-                    'text',
-                    'string',
-                    'string',
-                    'date',
-                    'date',
-                    'string',
-                    'decimal',
-                    'datetime',
-                    'datetime',
-                ],
-                'fieldName' => [
-                    1 => 'id',
-                    'nombre',
-                    'codigo',
-                    'descripcion',
-                    'cliente',
-                    'ubicacion',
-                    'fechaInicio',
-                    'fechaFin',
-                    'estado',
-                    'presupuestoTotal',
-                    'createdAt',
-                    'updatedAt',
-                ],
-                'columnName' => [
-                    1 => 'id',
-                    'nombre',
-                    'codigo',
-                    'descripcion',
-                    'cliente',
-                    'ubicacion',
-                    'fecha_inicio',
-                    'fecha_fin',
-                    'estado',
-                    'presupuesto_total',
-                    'created_at',
-                    'updated_at',
-                ],
-                'length' => [
-                    2 => 255,
-                    100,
-                    5 => 255,
-                    255,
-                    9 => 50,
-                ],
-                'nullable' => [
-                    4 => true,
-                    true,
-                    true,
-                    true,
-                    true,
-                    10 => true,
-                    14 => false,
-                ],
-                'precision' => [
-                    10 => 15,
-                ],
-                'scale' => [
-                    10 => 2,
-                ],
-                'fetch' => [
-                    13 => 2,
-                ],
-                'sourceEntity' => [
-                    13 => 'App\\Entity\\Proyecto',
-                ],
-                'sourceToTargetKeyColumns' => [
-                    13 => [
-                        'tenant_id' => 'id',
-                    ],
-                ],
-                'targetToSourceKeyColumns' => [
-                    13 => [
-                        'id' => 'tenant_id',
-                    ],
-                ],
-                'joinColumns' => [
-                    13 => [
-                        $o[14],
-                    ],
-                ],
-                'joinColumnFieldNames' => [
-                    13 => [
-                        'tenant_id' => 'tenant_id',
-                    ],
-                ],
-                'deferrable' => [
-                    14 => false,
-                ],
-                'unique' => [
-                    14 => false,
-                ],
-                'referencedColumnName' => [
-                    14 => 'id',
-                ],
-            ],
-            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
-                'fieldName' => [
-                    13 => 'tenant',
-                ],
-                'targetEntity' => [
-                    13 => 'App\\Entity\\Tenant',
-                ],
-            ],
-        ],
-        $o[0],
-        []
-    );
-},
-6 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -1566,7 +1294,147 @@ return [[
                 ],
                 'targetEntity' => [
                     11 => 'App\\Entity\\Tenant',
-                    13 => 'App\\Entity\\Proyecto',
+                    13 => 'App\\Entity\\Projects',
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+6 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\BlockedIp',
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    4,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'ipAddress' => $o[2],
+                        'riskScore' => $o[3],
+                        'reason' => $o[4],
+                        'blockedUntil' => $o[5],
+                        'blockedBy' => $o[6],
+                        'createdAt' => $o[7],
+                        'updatedAt' => $o[8],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'ip_address' => 'ipAddress',
+                        'risk_score' => 'riskScore',
+                        'reason' => 'reason',
+                        'blocked_until' => 'blockedUntil',
+                        'blocked_by' => 'blockedBy',
+                        'created_at' => 'createdAt',
+                        'updated_at' => 'updatedAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'ipAddress' => 'ip_address',
+                        'riskScore' => 'risk_score',
+                        'reason' => 'reason',
+                        'blockedUntil' => 'blocked_until',
+                        'blockedBy' => 'blocked_by',
+                        'createdAt' => 'created_at',
+                        'updatedAt' => 'updated_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'blocked_ips',
+                        'indexes' => [
+                            'idx_ip' => [
+                                'columns' => [
+                                    'ip_address',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[9],
+                ],
+                'name' => [
+                    'App\\Entity\\BlockedIp',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'options' => [
+                    1 => [
+                        'unsigned' => true,
+                    ],
+                ],
+                'type' => [
+                    1 => 'bigint',
+                    'string',
+                    'integer',
+                    'string',
+                    'datetime',
+                    'string',
+                    'datetime',
+                    'datetime',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'ipAddress',
+                    'riskScore',
+                    'reason',
+                    'blockedUntil',
+                    'blockedBy',
+                    'createdAt',
+                    'updatedAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'ip_address',
+                    'risk_score',
+                    'reason',
+                    'blocked_until',
+                    'blocked_by',
+                    'created_at',
+                    'updated_at',
+                ],
+                'length' => [
+                    2 => 45,
+                    4 => 500,
+                    6 => 50,
+                ],
+                'unique' => [
+                    2 => true,
+                ],
+                'nullable' => [
+                    5 => true,
                 ],
             ],
         ],
@@ -1575,6 +1443,211 @@ return [[
     );
 },
 7 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\LoginSession',
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    4,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'sessionId' => $o[2],
+                        'ipAddress' => $o[3],
+                        'userAgent' => $o[4],
+                        'fingerprint' => $o[5],
+                        'lastActivityAt' => $o[6],
+                        'expiresAt' => $o[7],
+                        'isActive' => $o[8],
+                        'createdAt' => $o[9],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'session_id' => 'sessionId',
+                        'ip_address' => 'ipAddress',
+                        'user_agent' => 'userAgent',
+                        'fingerprint' => 'fingerprint',
+                        'last_activity_at' => 'lastActivityAt',
+                        'expires_at' => 'expiresAt',
+                        'is_active' => 'isActive',
+                        'created_at' => 'createdAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'sessionId' => 'session_id',
+                        'ipAddress' => 'ip_address',
+                        'userAgent' => 'user_agent',
+                        'fingerprint' => 'fingerprint',
+                        'lastActivityAt' => 'last_activity_at',
+                        'expiresAt' => 'expires_at',
+                        'isActive' => 'is_active',
+                        'createdAt' => 'created_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'login_sessions',
+                        'indexes' => [
+                            'idx_session_id' => [
+                                'columns' => [
+                                    'session_id',
+                                ],
+                            ],
+                            'idx_user_active' => [
+                                'columns' => [
+                                    'user_id',
+                                    'is_active',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'user' => $o[10],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[12],
+                ],
+                'name' => [
+                    'App\\Entity\\LoginSession',
+                    11 => 'user_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'options' => [
+                    1 => [
+                        'unsigned' => true,
+                    ],
+                ],
+                'type' => [
+                    1 => 'bigint',
+                    'string',
+                    'string',
+                    'text',
+                    'string',
+                    'datetime',
+                    'datetime',
+                    'boolean',
+                    'datetime',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'sessionId',
+                    'ipAddress',
+                    'userAgent',
+                    'fingerprint',
+                    'lastActivityAt',
+                    'expiresAt',
+                    'isActive',
+                    'createdAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'session_id',
+                    'ip_address',
+                    'user_agent',
+                    'fingerprint',
+                    'last_activity_at',
+                    'expires_at',
+                    'is_active',
+                    'created_at',
+                ],
+                'length' => [
+                    2 => 128,
+                    45,
+                    5 => 64,
+                ],
+                'unique' => [
+                    2 => true,
+                    11 => false,
+                ],
+                'fetch' => [
+                    10 => 2,
+                ],
+                'sourceEntity' => [
+                    10 => 'App\\Entity\\LoginSession',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    10 => [
+                        'user_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    10 => [
+                        'id' => 'user_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    10 => [
+                        $o[11],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    10 => [
+                        'user_id' => 'user_id',
+                    ],
+                ],
+                'deferrable' => [
+                    11 => false,
+                ],
+                'onDelete' => [
+                    11 => 'CASCADE',
+                ],
+                'nullable' => [
+                    11 => false,
+                ],
+                'referencedColumnName' => [
+                    11 => 'id',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    10 => 'user',
+                ],
+                'targetEntity' => [
+                    10 => 'App\\Entity\\User',
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+8 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -1731,303 +1804,6 @@ return [[
         []
     );
 },
-8 => static function () {
-    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
-        $o = [
-            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
-            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
-            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
-            clone ($p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping')),
-            clone $p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'],
-            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
-        ],
-        null,
-        [
-            'stdClass' => [
-                'namespace' => [
-                    'App\\Entity',
-                ],
-                'rootEntityName' => [
-                    'App\\Entity\\APUItem',
-                ],
-                'identifier' => [
-                    [
-                        'id',
-                    ],
-                ],
-                'generatorType' => [
-                    4,
-                ],
-                'fieldMappings' => [
-                    [
-                        'id' => $o[1],
-                        'uuid' => $o[2],
-                        'description' => $o[3],
-                        'unit' => $o[4],
-                        'khu' => $o[5],
-                        'rendimientoUh' => $o[6],
-                        'totalCost' => $o[7],
-                        'equipmentCost' => $o[8],
-                        'laborCost' => $o[9],
-                        'materialCost' => $o[10],
-                        'transportCost' => $o[11],
-                        'createdAt' => $o[12],
-                        'updatedAt' => $o[13],
-                    ],
-                ],
-                'fieldNames' => [
-                    [
-                        'id' => 'id',
-                        'uuid' => 'uuid',
-                        'description' => 'description',
-                        'unit' => 'unit',
-                        'khu' => 'khu',
-                        'rendimiento_uh' => 'rendimientoUh',
-                        'total_cost' => 'totalCost',
-                        'equipment_cost' => 'equipmentCost',
-                        'labor_cost' => 'laborCost',
-                        'material_cost' => 'materialCost',
-                        'transport_cost' => 'transportCost',
-                        'created_at' => 'createdAt',
-                        'updated_at' => 'updatedAt',
-                    ],
-                ],
-                'columnNames' => [
-                    [
-                        'id' => 'id',
-                        'uuid' => 'uuid',
-                        'description' => 'description',
-                        'unit' => 'unit',
-                        'khu' => 'khu',
-                        'rendimientoUh' => 'rendimiento_uh',
-                        'totalCost' => 'total_cost',
-                        'equipmentCost' => 'equipment_cost',
-                        'laborCost' => 'labor_cost',
-                        'materialCost' => 'material_cost',
-                        'transportCost' => 'transport_cost',
-                        'createdAt' => 'created_at',
-                        'updatedAt' => 'updated_at',
-                    ],
-                ],
-                'table' => [
-                    [
-                        'name' => 'apu_items',
-                    ],
-                ],
-                'associationMappings' => [
-                    [
-                        'tenant' => $o[14],
-                        'equipment' => $o[16],
-                        'labor' => $o[17],
-                        'materials' => $o[18],
-                        'transport' => $o[19],
-                    ],
-                ],
-                'idGenerator' => [
-                    $o[20],
-                ],
-                'name' => [
-                    'App\\Entity\\APUItem',
-                    15 => 'tenant_id',
-                ],
-                'id' => [
-                    1 => true,
-                ],
-                'options' => [
-                    1 => [
-                        'unsigned' => true,
-                    ],
-                ],
-                'type' => [
-                    1 => 'bigint',
-                    'string',
-                    'string',
-                    'string',
-                    'decimal',
-                    'decimal',
-                    'decimal',
-                    'decimal',
-                    'decimal',
-                    'decimal',
-                    'decimal',
-                    'datetime',
-                    'datetime',
-                ],
-                'fieldName' => [
-                    1 => 'id',
-                    'uuid',
-                    'description',
-                    'unit',
-                    'khu',
-                    'rendimientoUh',
-                    'totalCost',
-                    'equipmentCost',
-                    'laborCost',
-                    'materialCost',
-                    'transportCost',
-                    'createdAt',
-                    'updatedAt',
-                ],
-                'columnName' => [
-                    1 => 'id',
-                    'uuid',
-                    'description',
-                    'unit',
-                    'khu',
-                    'rendimiento_uh',
-                    'total_cost',
-                    'equipment_cost',
-                    'labor_cost',
-                    'material_cost',
-                    'transport_cost',
-                    'created_at',
-                    'updated_at',
-                ],
-                'length' => [
-                    2 => 36,
-                    255,
-                    50,
-                ],
-                'unique' => [
-                    2 => true,
-                    15 => false,
-                ],
-                'precision' => [
-                    5 => 10,
-                    10,
-                    15,
-                    15,
-                    15,
-                    15,
-                    15,
-                ],
-                'scale' => [
-                    5 => 4,
-                    4,
-                    2,
-                    2,
-                    2,
-                    2,
-                    2,
-                ],
-                'nullable' => [
-                    7 => true,
-                    true,
-                    true,
-                    true,
-                    true,
-                    15 => false,
-                ],
-                'fetch' => [
-                    14 => 2,
-                    16 => 2,
-                    2,
-                    2,
-                    2,
-                ],
-                'sourceEntity' => [
-                    14 => 'App\\Entity\\APUItem',
-                    16 => 'App\\Entity\\APUItem',
-                    'App\\Entity\\APUItem',
-                    'App\\Entity\\APUItem',
-                    'App\\Entity\\APUItem',
-                ],
-                'sourceToTargetKeyColumns' => [
-                    14 => [
-                        'tenant_id' => 'id',
-                    ],
-                ],
-                'targetToSourceKeyColumns' => [
-                    14 => [
-                        'id' => 'tenant_id',
-                    ],
-                ],
-                'joinColumns' => [
-                    14 => [
-                        $o[15],
-                    ],
-                ],
-                'joinColumnFieldNames' => [
-                    14 => [
-                        'tenant_id' => 'tenant_id',
-                    ],
-                ],
-                'deferrable' => [
-                    15 => false,
-                ],
-                'onDelete' => [
-                    15 => 'CASCADE',
-                ],
-                'referencedColumnName' => [
-                    15 => 'id',
-                ],
-                'cascade' => [
-                    16 => [
-                        'persist',
-                        'remove',
-                    ],
-                    [
-                        'persist',
-                        'remove',
-                    ],
-                    [
-                        'persist',
-                        'remove',
-                    ],
-                    [
-                        'persist',
-                        'remove',
-                    ],
-                ],
-                'orphanRemoval' => [
-                    16 => true,
-                    true,
-                    true,
-                    true,
-                ],
-                'mappedBy' => [
-                    16 => 'apuItem',
-                    'apuItem',
-                    'apuItem',
-                    'apuItem',
-                ],
-            ],
-            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
-                'fieldName' => [
-                    14 => 'tenant',
-                    16 => 'equipment',
-                    'labor',
-                    'materials',
-                    'transport',
-                ],
-                'targetEntity' => [
-                    14 => 'App\\Entity\\Tenant',
-                    16 => 'App\\Entity\\APUEquipment',
-                    'App\\Entity\\APULabor',
-                    'App\\Entity\\APUMaterial',
-                    'App\\Entity\\APUTransport',
-                ],
-            ],
-        ],
-        $o[0],
-        []
-    );
-},
 9 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
@@ -2036,8 +1812,6 @@ return [[
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
             clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
             clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
             clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
@@ -2049,7 +1823,7 @@ return [[
                     'App\\Entity',
                 ],
                 'rootEntityName' => [
-                    'App\\Entity\\APUEquipment',
+                    'App\\Entity\\RecoveryCode',
                 ],
                 'identifier' => [
                     [
@@ -2062,49 +1836,51 @@ return [[
                 'fieldMappings' => [
                     [
                         'id' => $o[1],
-                        'descripcion' => $o[2],
-                        'numero' => $o[3],
-                        'tarifa' => $o[4],
-                        'cHora' => $o[5],
-                        'createdAt' => $o[6],
+                        'codeHash' => $o[2],
+                        'usedAt' => $o[3],
+                        'createdAt' => $o[4],
                     ],
                 ],
                 'fieldNames' => [
                     [
                         'id' => 'id',
-                        'descripcion' => 'descripcion',
-                        'numero' => 'numero',
-                        'tarifa' => 'tarifa',
-                        'c_hora' => 'cHora',
+                        'code_hash' => 'codeHash',
+                        'used_at' => 'usedAt',
                         'created_at' => 'createdAt',
                     ],
                 ],
                 'columnNames' => [
                     [
                         'id' => 'id',
-                        'descripcion' => 'descripcion',
-                        'numero' => 'numero',
-                        'tarifa' => 'tarifa',
-                        'cHora' => 'c_hora',
+                        'codeHash' => 'code_hash',
+                        'usedAt' => 'used_at',
                         'createdAt' => 'created_at',
                     ],
                 ],
                 'table' => [
                     [
-                        'name' => 'apu_equipment',
+                        'name' => 'recovery_codes',
+                        'indexes' => [
+                            'idx_user_unused' => [
+                                'columns' => [
+                                    'user_id',
+                                    'used_at',
+                                ],
+                            ],
+                        ],
                     ],
                 ],
                 'associationMappings' => [
                     [
-                        'apuItem' => $o[7],
+                        'user' => $o[5],
                     ],
                 ],
                 'idGenerator' => [
-                    $o[9],
+                    $o[7],
                 ],
                 'name' => [
-                    'App\\Entity\\APUEquipment',
-                    8 => 'apu_item_id',
+                    'App\\Entity\\RecoveryCode',
+                    6 => 'user_id',
                 ],
                 'id' => [
                     1 => true,
@@ -2117,89 +1893,73 @@ return [[
                 'type' => [
                     1 => 'bigint',
                     'string',
-                    'integer',
-                    'decimal',
-                    'decimal',
+                    'datetime',
                     'datetime',
                 ],
                 'fieldName' => [
                     1 => 'id',
-                    'descripcion',
-                    'numero',
-                    'tarifa',
-                    'cHora',
+                    'codeHash',
+                    'usedAt',
                     'createdAt',
                 ],
                 'columnName' => [
                     1 => 'id',
-                    'descripcion',
-                    'numero',
-                    'tarifa',
-                    'c_hora',
+                    'code_hash',
+                    'used_at',
                     'created_at',
                 ],
                 'length' => [
                     2 => 255,
                 ],
-                'precision' => [
-                    4 => 10,
-                    10,
-                ],
-                'scale' => [
-                    4 => 2,
-                    4,
+                'nullable' => [
+                    3 => true,
+                    6 => false,
                 ],
                 'fetch' => [
-                    7 => 2,
+                    5 => 2,
                 ],
                 'sourceEntity' => [
-                    7 => 'App\\Entity\\APUEquipment',
-                ],
-                'inversedBy' => [
-                    7 => 'equipment',
+                    5 => 'App\\Entity\\RecoveryCode',
                 ],
                 'sourceToTargetKeyColumns' => [
-                    7 => [
-                        'apu_item_id' => 'id',
+                    5 => [
+                        'user_id' => 'id',
                     ],
                 ],
                 'targetToSourceKeyColumns' => [
-                    7 => [
-                        'id' => 'apu_item_id',
+                    5 => [
+                        'id' => 'user_id',
                     ],
                 ],
                 'joinColumns' => [
-                    7 => [
-                        $o[8],
+                    5 => [
+                        $o[6],
                     ],
                 ],
                 'joinColumnFieldNames' => [
-                    7 => [
-                        'apu_item_id' => 'apu_item_id',
+                    5 => [
+                        'user_id' => 'user_id',
                     ],
                 ],
                 'deferrable' => [
-                    8 => false,
+                    6 => false,
                 ],
                 'unique' => [
-                    8 => false,
+                    6 => false,
                 ],
                 'onDelete' => [
-                    8 => 'CASCADE',
-                ],
-                'nullable' => [
-                    8 => false,
+                    6 => 'CASCADE',
                 ],
                 'referencedColumnName' => [
-                    8 => 'id',
+                    6 => 'id',
                 ],
             ],
             'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
                 'fieldName' => [
-                    7 => 'apuItem',
+                    5 => 'user',
                 ],
                 'targetEntity' => [
-                    7 => 'App\\Entity\\APUItem',
+                    5 => 'App\\Entity\\User',
                 ],
             ],
         ],
@@ -2208,554 +1968,6 @@ return [[
     );
 },
 10 => static function () {
-    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
-        $o = [
-            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
-            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
-            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
-            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
-        ],
-        null,
-        [
-            'stdClass' => [
-                'namespace' => [
-                    'App\\Entity',
-                ],
-                'rootEntityName' => [
-                    'App\\Entity\\APULabor',
-                ],
-                'identifier' => [
-                    [
-                        'id',
-                    ],
-                ],
-                'generatorType' => [
-                    4,
-                ],
-                'fieldMappings' => [
-                    [
-                        'id' => $o[1],
-                        'descripcion' => $o[2],
-                        'numero' => $o[3],
-                        'jorHora' => $o[4],
-                        'cHora' => $o[5],
-                        'createdAt' => $o[6],
-                    ],
-                ],
-                'fieldNames' => [
-                    [
-                        'id' => 'id',
-                        'descripcion' => 'descripcion',
-                        'numero' => 'numero',
-                        'jor_hora' => 'jorHora',
-                        'c_hora' => 'cHora',
-                        'created_at' => 'createdAt',
-                    ],
-                ],
-                'columnNames' => [
-                    [
-                        'id' => 'id',
-                        'descripcion' => 'descripcion',
-                        'numero' => 'numero',
-                        'jorHora' => 'jor_hora',
-                        'cHora' => 'c_hora',
-                        'createdAt' => 'created_at',
-                    ],
-                ],
-                'table' => [
-                    [
-                        'name' => 'apu_labor',
-                    ],
-                ],
-                'associationMappings' => [
-                    [
-                        'apuItem' => $o[7],
-                    ],
-                ],
-                'idGenerator' => [
-                    $o[9],
-                ],
-                'name' => [
-                    'App\\Entity\\APULabor',
-                    8 => 'apu_item_id',
-                ],
-                'id' => [
-                    1 => true,
-                ],
-                'options' => [
-                    1 => [
-                        'unsigned' => true,
-                    ],
-                ],
-                'type' => [
-                    1 => 'bigint',
-                    'string',
-                    'integer',
-                    'decimal',
-                    'decimal',
-                    'datetime',
-                ],
-                'fieldName' => [
-                    1 => 'id',
-                    'descripcion',
-                    'numero',
-                    'jorHora',
-                    'cHora',
-                    'createdAt',
-                ],
-                'columnName' => [
-                    1 => 'id',
-                    'descripcion',
-                    'numero',
-                    'jor_hora',
-                    'c_hora',
-                    'created_at',
-                ],
-                'length' => [
-                    2 => 255,
-                ],
-                'precision' => [
-                    4 => 10,
-                    10,
-                ],
-                'scale' => [
-                    4 => 4,
-                    2,
-                ],
-                'fetch' => [
-                    7 => 2,
-                ],
-                'sourceEntity' => [
-                    7 => 'App\\Entity\\APULabor',
-                ],
-                'inversedBy' => [
-                    7 => 'labor',
-                ],
-                'sourceToTargetKeyColumns' => [
-                    7 => [
-                        'apu_item_id' => 'id',
-                    ],
-                ],
-                'targetToSourceKeyColumns' => [
-                    7 => [
-                        'id' => 'apu_item_id',
-                    ],
-                ],
-                'joinColumns' => [
-                    7 => [
-                        $o[8],
-                    ],
-                ],
-                'joinColumnFieldNames' => [
-                    7 => [
-                        'apu_item_id' => 'apu_item_id',
-                    ],
-                ],
-                'deferrable' => [
-                    8 => false,
-                ],
-                'unique' => [
-                    8 => false,
-                ],
-                'onDelete' => [
-                    8 => 'CASCADE',
-                ],
-                'nullable' => [
-                    8 => false,
-                ],
-                'referencedColumnName' => [
-                    8 => 'id',
-                ],
-            ],
-            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
-                'fieldName' => [
-                    7 => 'apuItem',
-                ],
-                'targetEntity' => [
-                    7 => 'App\\Entity\\APUItem',
-                ],
-            ],
-        ],
-        $o[0],
-        []
-    );
-},
-11 => static function () {
-    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
-        $o = [
-            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
-            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
-            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
-            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
-        ],
-        null,
-        [
-            'stdClass' => [
-                'namespace' => [
-                    'App\\Entity',
-                ],
-                'rootEntityName' => [
-                    'App\\Entity\\APUMaterial',
-                ],
-                'identifier' => [
-                    [
-                        'id',
-                    ],
-                ],
-                'generatorType' => [
-                    4,
-                ],
-                'fieldMappings' => [
-                    [
-                        'id' => $o[1],
-                        'descripcion' => $o[2],
-                        'unidad' => $o[3],
-                        'cantidad' => $o[4],
-                        'precioUnitario' => $o[5],
-                        'createdAt' => $o[6],
-                    ],
-                ],
-                'fieldNames' => [
-                    [
-                        'id' => 'id',
-                        'descripcion' => 'descripcion',
-                        'unidad' => 'unidad',
-                        'cantidad' => 'cantidad',
-                        'precio_unitario' => 'precioUnitario',
-                        'created_at' => 'createdAt',
-                    ],
-                ],
-                'columnNames' => [
-                    [
-                        'id' => 'id',
-                        'descripcion' => 'descripcion',
-                        'unidad' => 'unidad',
-                        'cantidad' => 'cantidad',
-                        'precioUnitario' => 'precio_unitario',
-                        'createdAt' => 'created_at',
-                    ],
-                ],
-                'table' => [
-                    [
-                        'name' => 'apu_materials',
-                    ],
-                ],
-                'associationMappings' => [
-                    [
-                        'apuItem' => $o[7],
-                    ],
-                ],
-                'idGenerator' => [
-                    $o[9],
-                ],
-                'name' => [
-                    'App\\Entity\\APUMaterial',
-                    8 => 'apu_item_id',
-                ],
-                'id' => [
-                    1 => true,
-                ],
-                'options' => [
-                    1 => [
-                        'unsigned' => true,
-                    ],
-                ],
-                'type' => [
-                    1 => 'bigint',
-                    'string',
-                    'string',
-                    'decimal',
-                    'decimal',
-                    'datetime',
-                ],
-                'fieldName' => [
-                    1 => 'id',
-                    'descripcion',
-                    'unidad',
-                    'cantidad',
-                    'precioUnitario',
-                    'createdAt',
-                ],
-                'columnName' => [
-                    1 => 'id',
-                    'descripcion',
-                    'unidad',
-                    'cantidad',
-                    'precio_unitario',
-                    'created_at',
-                ],
-                'length' => [
-                    2 => 255,
-                    50,
-                ],
-                'precision' => [
-                    4 => 15,
-                    15,
-                ],
-                'scale' => [
-                    4 => 4,
-                    2,
-                ],
-                'fetch' => [
-                    7 => 2,
-                ],
-                'sourceEntity' => [
-                    7 => 'App\\Entity\\APUMaterial',
-                ],
-                'inversedBy' => [
-                    7 => 'materials',
-                ],
-                'sourceToTargetKeyColumns' => [
-                    7 => [
-                        'apu_item_id' => 'id',
-                    ],
-                ],
-                'targetToSourceKeyColumns' => [
-                    7 => [
-                        'id' => 'apu_item_id',
-                    ],
-                ],
-                'joinColumns' => [
-                    7 => [
-                        $o[8],
-                    ],
-                ],
-                'joinColumnFieldNames' => [
-                    7 => [
-                        'apu_item_id' => 'apu_item_id',
-                    ],
-                ],
-                'deferrable' => [
-                    8 => false,
-                ],
-                'unique' => [
-                    8 => false,
-                ],
-                'onDelete' => [
-                    8 => 'CASCADE',
-                ],
-                'nullable' => [
-                    8 => false,
-                ],
-                'referencedColumnName' => [
-                    8 => 'id',
-                ],
-            ],
-            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
-                'fieldName' => [
-                    7 => 'apuItem',
-                ],
-                'targetEntity' => [
-                    7 => 'App\\Entity\\APUItem',
-                ],
-            ],
-        ],
-        $o[0],
-        []
-    );
-},
-12 => static function () {
-    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
-        $o = [
-            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
-            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
-            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
-            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
-            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
-        ],
-        null,
-        [
-            'stdClass' => [
-                'namespace' => [
-                    'App\\Entity',
-                ],
-                'rootEntityName' => [
-                    'App\\Entity\\APUTransport',
-                ],
-                'identifier' => [
-                    [
-                        'id',
-                    ],
-                ],
-                'generatorType' => [
-                    4,
-                ],
-                'fieldMappings' => [
-                    [
-                        'id' => $o[1],
-                        'descripcion' => $o[2],
-                        'unidad' => $o[3],
-                        'cantidad' => $o[4],
-                        'dmt' => $o[5],
-                        'tarifaKm' => $o[6],
-                        'createdAt' => $o[7],
-                    ],
-                ],
-                'fieldNames' => [
-                    [
-                        'id' => 'id',
-                        'descripcion' => 'descripcion',
-                        'unidad' => 'unidad',
-                        'cantidad' => 'cantidad',
-                        'dmt' => 'dmt',
-                        'tarifa_km' => 'tarifaKm',
-                        'created_at' => 'createdAt',
-                    ],
-                ],
-                'columnNames' => [
-                    [
-                        'id' => 'id',
-                        'descripcion' => 'descripcion',
-                        'unidad' => 'unidad',
-                        'cantidad' => 'cantidad',
-                        'dmt' => 'dmt',
-                        'tarifaKm' => 'tarifa_km',
-                        'createdAt' => 'created_at',
-                    ],
-                ],
-                'table' => [
-                    [
-                        'name' => 'apu_transport',
-                    ],
-                ],
-                'associationMappings' => [
-                    [
-                        'apuItem' => $o[8],
-                    ],
-                ],
-                'idGenerator' => [
-                    $o[10],
-                ],
-                'name' => [
-                    'App\\Entity\\APUTransport',
-                    9 => 'apu_item_id',
-                ],
-                'id' => [
-                    1 => true,
-                ],
-                'options' => [
-                    1 => [
-                        'unsigned' => true,
-                    ],
-                ],
-                'type' => [
-                    1 => 'bigint',
-                    'string',
-                    'string',
-                    'decimal',
-                    'decimal',
-                    'decimal',
-                    'datetime',
-                ],
-                'fieldName' => [
-                    1 => 'id',
-                    'descripcion',
-                    'unidad',
-                    'cantidad',
-                    'dmt',
-                    'tarifaKm',
-                    'createdAt',
-                ],
-                'columnName' => [
-                    1 => 'id',
-                    'descripcion',
-                    'unidad',
-                    'cantidad',
-                    'dmt',
-                    'tarifa_km',
-                    'created_at',
-                ],
-                'length' => [
-                    2 => 255,
-                    50,
-                ],
-                'precision' => [
-                    4 => 15,
-                    10,
-                    10,
-                ],
-                'scale' => [
-                    4 => 4,
-                    2,
-                    2,
-                ],
-                'fetch' => [
-                    8 => 2,
-                ],
-                'sourceEntity' => [
-                    8 => 'App\\Entity\\APUTransport',
-                ],
-                'inversedBy' => [
-                    8 => 'transport',
-                ],
-                'sourceToTargetKeyColumns' => [
-                    8 => [
-                        'apu_item_id' => 'id',
-                    ],
-                ],
-                'targetToSourceKeyColumns' => [
-                    8 => [
-                        'id' => 'apu_item_id',
-                    ],
-                ],
-                'joinColumns' => [
-                    8 => [
-                        $o[9],
-                    ],
-                ],
-                'joinColumnFieldNames' => [
-                    8 => [
-                        'apu_item_id' => 'apu_item_id',
-                    ],
-                ],
-                'deferrable' => [
-                    9 => false,
-                ],
-                'unique' => [
-                    9 => false,
-                ],
-                'onDelete' => [
-                    9 => 'CASCADE',
-                ],
-                'nullable' => [
-                    9 => false,
-                ],
-                'referencedColumnName' => [
-                    9 => 'id',
-                ],
-            ],
-            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
-                'fieldName' => [
-                    8 => 'apuItem',
-                ],
-                'targetEntity' => [
-                    8 => 'App\\Entity\\APUItem',
-                ],
-            ],
-        ],
-        $o[0],
-        []
-    );
-},
-13 => static function () {
     return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
         $o = [
             clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
@@ -3015,6 +2227,2208 @@ return [[
                 'targetEntity' => [
                     16 => 'App\\Entity\\Tenant',
                     18 => 'App\\Entity\\User',
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+11 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'],
+            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\SecurityEvent',
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    4,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'eventType' => $o[2],
+                        'severity' => $o[3],
+                        'ipAddress' => $o[4],
+                        'userAgent' => $o[5],
+                        'eventData' => $o[6],
+                        'createdAt' => $o[7],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'event_type' => 'eventType',
+                        'severity' => 'severity',
+                        'ip_address' => 'ipAddress',
+                        'user_agent' => 'userAgent',
+                        'event_data' => 'eventData',
+                        'created_at' => 'createdAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'eventType' => 'event_type',
+                        'severity' => 'severity',
+                        'ipAddress' => 'ip_address',
+                        'userAgent' => 'user_agent',
+                        'eventData' => 'event_data',
+                        'createdAt' => 'created_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'security_events',
+                        'indexes' => [
+                            'idx_event_type' => [
+                                'columns' => [
+                                    'event_type',
+                                ],
+                            ],
+                            'idx_user_id' => [
+                                'columns' => [
+                                    'user_id',
+                                ],
+                            ],
+                            'idx_created_at' => [
+                                'columns' => [
+                                    'created_at',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'tenant' => $o[8],
+                        'user' => $o[10],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[12],
+                ],
+                'name' => [
+                    'App\\Entity\\SecurityEvent',
+                    9 => 'tenant_id',
+                    11 => 'user_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'options' => [
+                    1 => [
+                        'unsigned' => true,
+                    ],
+                ],
+                'type' => [
+                    1 => 'bigint',
+                    'string',
+                    'string',
+                    'string',
+                    'text',
+                    'json',
+                    'datetime',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'eventType',
+                    'severity',
+                    'ipAddress',
+                    'userAgent',
+                    'eventData',
+                    'createdAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'event_type',
+                    'severity',
+                    'ip_address',
+                    'user_agent',
+                    'event_data',
+                    'created_at',
+                ],
+                'length' => [
+                    2 => 100,
+                    20,
+                    45,
+                ],
+                'nullable' => [
+                    5 => true,
+                    true,
+                    9 => true,
+                    11 => true,
+                ],
+                'fetch' => [
+                    8 => 2,
+                    10 => 2,
+                ],
+                'sourceEntity' => [
+                    8 => 'App\\Entity\\SecurityEvent',
+                    10 => 'App\\Entity\\SecurityEvent',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    8 => [
+                        'tenant_id' => 'id',
+                    ],
+                    10 => [
+                        'user_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    8 => [
+                        'id' => 'tenant_id',
+                    ],
+                    10 => [
+                        'id' => 'user_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    8 => [
+                        $o[9],
+                    ],
+                    10 => [
+                        $o[11],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    8 => [
+                        'tenant_id' => 'tenant_id',
+                    ],
+                    10 => [
+                        'user_id' => 'user_id',
+                    ],
+                ],
+                'deferrable' => [
+                    9 => false,
+                    11 => false,
+                ],
+                'unique' => [
+                    9 => false,
+                    11 => false,
+                ],
+                'onDelete' => [
+                    9 => 'CASCADE',
+                    11 => 'SET NULL',
+                ],
+                'referencedColumnName' => [
+                    9 => 'id',
+                    11 => 'id',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    8 => 'tenant',
+                    10 => 'user',
+                ],
+                'targetEntity' => [
+                    8 => 'App\\Entity\\Tenant',
+                    10 => 'App\\Entity\\User',
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+12 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\Tenant',
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    4,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'uuid' => $o[2],
+                        'name' => $o[3],
+                        'slug' => $o[4],
+                        'domain' => $o[5],
+                        'logoUrl' => $o[6],
+                        'timezone' => $o[7],
+                        'currency' => $o[8],
+                        'isActive' => $o[9],
+                        'plan' => $o[10],
+                        'maxUsers' => $o[11],
+                        'maxProjects' => $o[12],
+                        'planExpiresAt' => $o[13],
+                        'planAutoRenew' => $o[14],
+                        'createdAt' => $o[15],
+                        'updatedAt' => $o[16],
+                        'themePrimaryColor' => $o[17],
+                        'themeSecondaryColor' => $o[18],
+                        'themeMode' => $o[19],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'uuid' => 'uuid',
+                        'name' => 'name',
+                        'slug' => 'slug',
+                        'domain' => 'domain',
+                        'logo_url' => 'logoUrl',
+                        'timezone' => 'timezone',
+                        'currency' => 'currency',
+                        'is_active' => 'isActive',
+                        'plan' => 'plan',
+                        'max_users' => 'maxUsers',
+                        'max_projects' => 'maxProjects',
+                        'plan_expires_at' => 'planExpiresAt',
+                        'plan_auto_renew' => 'planAutoRenew',
+                        'created_at' => 'createdAt',
+                        'updated_at' => 'updatedAt',
+                        'theme_primary_color' => 'themePrimaryColor',
+                        'theme_secondary_color' => 'themeSecondaryColor',
+                        'theme_mode' => 'themeMode',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'uuid' => 'uuid',
+                        'name' => 'name',
+                        'slug' => 'slug',
+                        'domain' => 'domain',
+                        'logoUrl' => 'logo_url',
+                        'timezone' => 'timezone',
+                        'currency' => 'currency',
+                        'isActive' => 'is_active',
+                        'plan' => 'plan',
+                        'maxUsers' => 'max_users',
+                        'maxProjects' => 'max_projects',
+                        'planExpiresAt' => 'plan_expires_at',
+                        'planAutoRenew' => 'plan_auto_renew',
+                        'createdAt' => 'created_at',
+                        'updatedAt' => 'updated_at',
+                        'themePrimaryColor' => 'theme_primary_color',
+                        'themeSecondaryColor' => 'theme_secondary_color',
+                        'themeMode' => 'theme_mode',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'tenants',
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'users' => $o[20],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[21],
+                ],
+                'name' => [
+                    'App\\Entity\\Tenant',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'options' => [
+                    1 => [
+                        'unsigned' => true,
+                    ],
+                ],
+                'type' => [
+                    1 => 'bigint',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                    'boolean',
+                    'string',
+                    'integer',
+                    'integer',
+                    'datetime',
+                    'boolean',
+                    'datetime',
+                    'datetime',
+                    'string',
+                    'string',
+                    'string',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'uuid',
+                    'name',
+                    'slug',
+                    'domain',
+                    'logoUrl',
+                    'timezone',
+                    'currency',
+                    'isActive',
+                    'plan',
+                    'maxUsers',
+                    'maxProjects',
+                    'planExpiresAt',
+                    'planAutoRenew',
+                    'createdAt',
+                    'updatedAt',
+                    'themePrimaryColor',
+                    'themeSecondaryColor',
+                    'themeMode',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'uuid',
+                    'name',
+                    'slug',
+                    'domain',
+                    'logo_url',
+                    'timezone',
+                    'currency',
+                    'is_active',
+                    'plan',
+                    'max_users',
+                    'max_projects',
+                    'plan_expires_at',
+                    'plan_auto_renew',
+                    'created_at',
+                    'updated_at',
+                    'theme_primary_color',
+                    'theme_secondary_color',
+                    'theme_mode',
+                ],
+                'length' => [
+                    2 => 36,
+                    255,
+                    100,
+                    255,
+                    500,
+                    50,
+                    3,
+                    10 => 50,
+                    17 => 7,
+                    7,
+                    10,
+                ],
+                'unique' => [
+                    2 => true,
+                    4 => true,
+                ],
+                'nullable' => [
+                    5 => true,
+                    true,
+                    true,
+                    13 => true,
+                    17 => true,
+                    true,
+                    true,
+                ],
+                'fetch' => [
+                    20 => 2,
+                ],
+                'sourceEntity' => [
+                    20 => 'App\\Entity\\Tenant',
+                ],
+                'mappedBy' => [
+                    20 => 'tenant',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    20 => 'users',
+                ],
+                'targetEntity' => [
+                    20 => 'App\\Entity\\User',
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+13 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\User',
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    4,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'uuid' => $o[2],
+                        'email' => $o[3],
+                        'username' => $o[4],
+                        'password' => $o[5],
+                        'firstName' => $o[6],
+                        'lastName' => $o[7],
+                        'phone' => $o[8],
+                        'role' => $o[9],
+                        'isActive' => $o[10],
+                        'emailVerifiedAt' => $o[11],
+                        'lastLoginAt' => $o[12],
+                        'lastLoginIp' => $o[13],
+                        'failedLoginAttempts' => $o[14],
+                        'lockedUntil' => $o[15],
+                        'passwordChangedAt' => $o[16],
+                        'requirePasswordChange' => $o[17],
+                        'createdAt' => $o[18],
+                        'updatedAt' => $o[19],
+                        'totpSecret' => $o[20],
+                        'totpEnabled' => $o[21],
+                        'webauthnEnabled' => $o[22],
+                        'locale' => $o[23],
+                        'timezone' => $o[24],
+                        'avatar' => $o[25],
+                        'themePrimaryColor' => $o[26],
+                        'themeSecondaryColor' => $o[27],
+                        'themeMode' => $o[28],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'uuid' => 'uuid',
+                        'email' => 'email',
+                        'username' => 'username',
+                        'password' => 'password',
+                        'first_name' => 'firstName',
+                        'last_name' => 'lastName',
+                        'phone' => 'phone',
+                        'role' => 'role',
+                        'is_active' => 'isActive',
+                        'email_verified_at' => 'emailVerifiedAt',
+                        'last_login_at' => 'lastLoginAt',
+                        'last_login_ip' => 'lastLoginIp',
+                        'failed_login_attempts' => 'failedLoginAttempts',
+                        'locked_until' => 'lockedUntil',
+                        'password_changed_at' => 'passwordChangedAt',
+                        'require_password_change' => 'requirePasswordChange',
+                        'created_at' => 'createdAt',
+                        'updated_at' => 'updatedAt',
+                        'totp_secret' => 'totpSecret',
+                        'totp_enabled' => 'totpEnabled',
+                        'webauthn_enabled' => 'webauthnEnabled',
+                        'locale' => 'locale',
+                        'timezone' => 'timezone',
+                        'avatar' => 'avatar',
+                        'theme_primary_color' => 'themePrimaryColor',
+                        'theme_secondary_color' => 'themeSecondaryColor',
+                        'theme_mode' => 'themeMode',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'uuid' => 'uuid',
+                        'email' => 'email',
+                        'username' => 'username',
+                        'password' => 'password',
+                        'firstName' => 'first_name',
+                        'lastName' => 'last_name',
+                        'phone' => 'phone',
+                        'role' => 'role',
+                        'isActive' => 'is_active',
+                        'emailVerifiedAt' => 'email_verified_at',
+                        'lastLoginAt' => 'last_login_at',
+                        'lastLoginIp' => 'last_login_ip',
+                        'failedLoginAttempts' => 'failed_login_attempts',
+                        'lockedUntil' => 'locked_until',
+                        'passwordChangedAt' => 'password_changed_at',
+                        'requirePasswordChange' => 'require_password_change',
+                        'createdAt' => 'created_at',
+                        'updatedAt' => 'updated_at',
+                        'totpSecret' => 'totp_secret',
+                        'totpEnabled' => 'totp_enabled',
+                        'webauthnEnabled' => 'webauthn_enabled',
+                        'locale' => 'locale',
+                        'timezone' => 'timezone',
+                        'avatar' => 'avatar',
+                        'themePrimaryColor' => 'theme_primary_color',
+                        'themeSecondaryColor' => 'theme_secondary_color',
+                        'themeMode' => 'theme_mode',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'users',
+                        'indexes' => [
+                            'unique_username_per_tenant' => [
+                                'columns' => [
+                                    'tenant_id',
+                                    'username',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'tenant' => $o[29],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[31],
+                ],
+                'name' => [
+                    'App\\Entity\\User',
+                    30 => 'tenant_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'options' => [
+                    1 => [
+                        'unsigned' => true,
+                    ],
+                ],
+                'type' => [
+                    1 => 'bigint',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                    'boolean',
+                    'datetime',
+                    'datetime',
+                    'string',
+                    'integer',
+                    'datetime',
+                    'datetime',
+                    'boolean',
+                    'datetime',
+                    'datetime',
+                    'string',
+                    'boolean',
+                    'boolean',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                    'string',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'uuid',
+                    'email',
+                    'username',
+                    'password',
+                    'firstName',
+                    'lastName',
+                    'phone',
+                    'role',
+                    'isActive',
+                    'emailVerifiedAt',
+                    'lastLoginAt',
+                    'lastLoginIp',
+                    'failedLoginAttempts',
+                    'lockedUntil',
+                    'passwordChangedAt',
+                    'requirePasswordChange',
+                    'createdAt',
+                    'updatedAt',
+                    'totpSecret',
+                    'totpEnabled',
+                    'webauthnEnabled',
+                    'locale',
+                    'timezone',
+                    'avatar',
+                    'themePrimaryColor',
+                    'themeSecondaryColor',
+                    'themeMode',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'uuid',
+                    'email',
+                    'username',
+                    'password',
+                    'first_name',
+                    'last_name',
+                    'phone',
+                    'role',
+                    'is_active',
+                    'email_verified_at',
+                    'last_login_at',
+                    'last_login_ip',
+                    'failed_login_attempts',
+                    'locked_until',
+                    'password_changed_at',
+                    'require_password_change',
+                    'created_at',
+                    'updated_at',
+                    'totp_secret',
+                    'totp_enabled',
+                    'webauthn_enabled',
+                    'locale',
+                    'timezone',
+                    'avatar',
+                    'theme_primary_color',
+                    'theme_secondary_color',
+                    'theme_mode',
+                ],
+                'length' => [
+                    2 => 36,
+                    255,
+                    100,
+                    255,
+                    100,
+                    100,
+                    20,
+                    20,
+                    13 => 45,
+                    20 => 255,
+                    23 => 5,
+                    50,
+                    255,
+                    7,
+                    7,
+                    10,
+                ],
+                'unique' => [
+                    2 => true,
+                    30 => false,
+                ],
+                'nullable' => [
+                    8 => true,
+                    11 => true,
+                    true,
+                    true,
+                    15 => true,
+                    true,
+                    18 => true,
+                    true,
+                    true,
+                    24 => true,
+                    true,
+                    true,
+                    true,
+                    30 => false,
+                ],
+                'fetch' => [
+                    29 => 2,
+                ],
+                'sourceEntity' => [
+                    29 => 'App\\Entity\\User',
+                ],
+                'inversedBy' => [
+                    29 => 'users',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    29 => [
+                        'tenant_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    29 => [
+                        'id' => 'tenant_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    29 => [
+                        $o[30],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    29 => [
+                        'tenant_id' => 'tenant_id',
+                    ],
+                ],
+                'deferrable' => [
+                    30 => false,
+                ],
+                'onDelete' => [
+                    30 => 'CASCADE',
+                ],
+                'referencedColumnName' => [
+                    30 => 'id',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    29 => 'tenant',
+                ],
+                'targetEntity' => [
+                    29 => 'App\\Entity\\Tenant',
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+14 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\OneToOneOwningSideMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\OneToOneOwningSideMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\User2faSettings',
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    4,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'backupCodesCount' => $o[2],
+                        'recoveryCodesLastGenerated' => $o[3],
+                        'createdAt' => $o[4],
+                        'updatedAt' => $o[5],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'backup_codes_count' => 'backupCodesCount',
+                        'recovery_codes_last_generated' => 'recoveryCodesLastGenerated',
+                        'created_at' => 'createdAt',
+                        'updated_at' => 'updatedAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'backupCodesCount' => 'backup_codes_count',
+                        'recoveryCodesLastGenerated' => 'recovery_codes_last_generated',
+                        'createdAt' => 'created_at',
+                        'updatedAt' => 'updated_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'user_2fa_settings',
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'user' => $o[6],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[8],
+                ],
+                'name' => [
+                    'App\\Entity\\User2faSettings',
+                    7 => 'user_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'options' => [
+                    1 => [
+                        'unsigned' => true,
+                    ],
+                    [
+                        'default' => 0,
+                    ],
+                ],
+                'type' => [
+                    1 => 'bigint',
+                    'integer',
+                    'datetime',
+                    'datetime',
+                    'datetime',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'backupCodesCount',
+                    'recoveryCodesLastGenerated',
+                    'createdAt',
+                    'updatedAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'backup_codes_count',
+                    'recovery_codes_last_generated',
+                    'created_at',
+                    'updated_at',
+                ],
+                'nullable' => [
+                    3 => true,
+                    7 => false,
+                ],
+                'fetch' => [
+                    6 => 2,
+                ],
+                'sourceEntity' => [
+                    6 => 'App\\Entity\\User2faSettings',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    6 => [
+                        'user_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    6 => [
+                        'id' => 'user_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    6 => [
+                        $o[7],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    6 => [
+                        'user_id' => 'user_id',
+                    ],
+                ],
+                'deferrable' => [
+                    7 => false,
+                ],
+                'unique' => [
+                    7 => true,
+                ],
+                'onDelete' => [
+                    7 => 'CASCADE',
+                ],
+                'referencedColumnName' => [
+                    7 => 'id',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    6 => 'user',
+                ],
+                'targetEntity' => [
+                    6 => 'App\\Entity\\User',
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+15 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\WebAuthnCredential',
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    4,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'credentialId' => $o[2],
+                        'publicKey' => $o[3],
+                        'fmt' => $o[4],
+                        'aaguid' => $o[5],
+                        'transports' => $o[6],
+                        'attestation' => $o[7],
+                        'createdAt' => $o[8],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'credential_id' => 'credentialId',
+                        'public_key' => 'publicKey',
+                        'fmt' => 'fmt',
+                        'aaguid' => 'aaguid',
+                        'transports' => 'transports',
+                        'attestation' => 'attestation',
+                        'created_at' => 'createdAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'credentialId' => 'credential_id',
+                        'publicKey' => 'public_key',
+                        'fmt' => 'fmt',
+                        'aaguid' => 'aaguid',
+                        'transports' => 'transports',
+                        'attestation' => 'attestation',
+                        'createdAt' => 'created_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'webauthn_credentials',
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'user' => $o[9],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[11],
+                ],
+                'name' => [
+                    'App\\Entity\\WebAuthnCredential',
+                    10 => 'user_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'options' => [
+                    1 => [
+                        'unsigned' => true,
+                    ],
+                ],
+                'type' => [
+                    1 => 'bigint',
+                    'string',
+                    'text',
+                    'string',
+                    'string',
+                    'text',
+                    'text',
+                    'datetime',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'credentialId',
+                    'publicKey',
+                    'fmt',
+                    'aaguid',
+                    'transports',
+                    'attestation',
+                    'createdAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'credential_id',
+                    'public_key',
+                    'fmt',
+                    'aaguid',
+                    'transports',
+                    'attestation',
+                    'created_at',
+                ],
+                'length' => [
+                    2 => 255,
+                    4 => 50,
+                    64,
+                ],
+                'nullable' => [
+                    4 => true,
+                    true,
+                    true,
+                    true,
+                    10 => false,
+                ],
+                'fetch' => [
+                    9 => 2,
+                ],
+                'sourceEntity' => [
+                    9 => 'App\\Entity\\WebAuthnCredential',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    9 => [
+                        'user_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    9 => [
+                        'id' => 'user_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    9 => [
+                        $o[10],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    9 => [
+                        'user_id' => 'user_id',
+                    ],
+                ],
+                'deferrable' => [
+                    10 => false,
+                ],
+                'unique' => [
+                    10 => false,
+                ],
+                'onDelete' => [
+                    10 => 'CASCADE',
+                ],
+                'referencedColumnName' => [
+                    10 => 'id',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    9 => 'user',
+                ],
+                'targetEntity' => [
+                    9 => 'App\\Entity\\User',
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+16 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\Projects',
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    4,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'nombre' => $o[2],
+                        'codigo' => $o[3],
+                        'descripcion' => $o[4],
+                        'cliente' => $o[5],
+                        'ubicacion' => $o[6],
+                        'fechaInicio' => $o[7],
+                        'fechaFin' => $o[8],
+                        'estado' => $o[9],
+                        'presupuestoTotal' => $o[10],
+                        'createdAt' => $o[11],
+                        'updatedAt' => $o[12],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'name' => 'nombre',
+                        'code' => 'codigo',
+                        'description' => 'descripcion',
+                        'client_name' => 'cliente',
+                        'location' => 'ubicacion',
+                        'start_date' => 'fechaInicio',
+                        'end_date' => 'fechaFin',
+                        'status' => 'estado',
+                        'total_budget' => 'presupuestoTotal',
+                        'created_at' => 'createdAt',
+                        'updated_at' => 'updatedAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'nombre' => 'name',
+                        'codigo' => 'code',
+                        'descripcion' => 'description',
+                        'cliente' => 'client_name',
+                        'ubicacion' => 'location',
+                        'fechaInicio' => 'start_date',
+                        'fechaFin' => 'end_date',
+                        'estado' => 'status',
+                        'presupuestoTotal' => 'total_budget',
+                        'createdAt' => 'created_at',
+                        'updatedAt' => 'updated_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'projects',
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'tenant' => $o[13],
+                        'plantillas' => $o[15],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[16],
+                ],
+                'name' => [
+                    'App\\Entity\\Projects',
+                    14 => 'tenant_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'options' => [
+                    1 => [
+                        'unsigned' => true,
+                    ],
+                ],
+                'type' => [
+                    1 => 'bigint',
+                    'string',
+                    'string',
+                    'text',
+                    'string',
+                    'string',
+                    'date',
+                    'date',
+                    'string',
+                    'decimal',
+                    'datetime',
+                    'datetime',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'nombre',
+                    'codigo',
+                    'descripcion',
+                    'cliente',
+                    'ubicacion',
+                    'fechaInicio',
+                    'fechaFin',
+                    'estado',
+                    'presupuestoTotal',
+                    'createdAt',
+                    'updatedAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'name',
+                    'code',
+                    'description',
+                    'client_name',
+                    'location',
+                    'start_date',
+                    'end_date',
+                    'status',
+                    'total_budget',
+                    'created_at',
+                    'updated_at',
+                ],
+                'length' => [
+                    2 => 255,
+                    100,
+                    5 => 255,
+                    255,
+                    9 => 50,
+                ],
+                'nullable' => [
+                    4 => true,
+                    true,
+                    true,
+                    true,
+                    true,
+                    10 => true,
+                    14 => false,
+                ],
+                'precision' => [
+                    10 => 15,
+                ],
+                'scale' => [
+                    10 => 2,
+                ],
+                'fetch' => [
+                    13 => 2,
+                    15 => 2,
+                ],
+                'sourceEntity' => [
+                    13 => 'App\\Entity\\Projects',
+                    15 => 'App\\Entity\\Projects',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    13 => [
+                        'tenant_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    13 => [
+                        'id' => 'tenant_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    13 => [
+                        $o[14],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    13 => [
+                        'tenant_id' => 'tenant_id',
+                    ],
+                ],
+                'deferrable' => [
+                    14 => false,
+                ],
+                'unique' => [
+                    14 => false,
+                ],
+                'referencedColumnName' => [
+                    14 => 'id',
+                ],
+                'cascade' => [
+                    15 => [
+                        'remove',
+                    ],
+                ],
+                'mappedBy' => [
+                    15 => 'proyecto',
+                ],
+                'orderBy' => [
+                    15 => [
+                        'createdAt' => 'ASC',
+                    ],
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    13 => 'tenant',
+                    15 => 'plantillas',
+                ],
+                'targetEntity' => [
+                    13 => 'App\\Entity\\Tenant',
+                    15 => 'App\\Entity\\Plantilla',
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+17 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\RateLimitLog',
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    4,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'identifier' => $o[2],
+                        'endpoint' => $o[3],
+                        'attempts' => $o[4],
+                        'window_start' => $o[5],
+                        'window_end' => $o[6],
+                        'exceeded_at' => $o[7],
+                        'created_at' => $o[8],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'identifier' => 'identifier',
+                        'endpoint' => 'endpoint',
+                        'attempts' => 'attempts',
+                        'window_start' => 'window_start',
+                        'window_end' => 'window_end',
+                        'exceeded_at' => 'exceeded_at',
+                        'created_at' => 'created_at',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'identifier' => 'identifier',
+                        'endpoint' => 'endpoint',
+                        'attempts' => 'attempts',
+                        'window_start' => 'window_start',
+                        'window_end' => 'window_end',
+                        'exceeded_at' => 'exceeded_at',
+                        'created_at' => 'created_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'rate_limit_logs',
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[9],
+                ],
+                'name' => [
+                    'App\\Entity\\RateLimitLog',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'options' => [
+                    1 => [
+                        'unsigned' => true,
+                    ],
+                ],
+                'type' => [
+                    1 => 'bigint',
+                    'string',
+                    'string',
+                    'integer',
+                    'datetime',
+                    'datetime',
+                    'datetime',
+                    'datetime',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'identifier',
+                    'endpoint',
+                    'attempts',
+                    'window_start',
+                    'window_end',
+                    'exceeded_at',
+                    'created_at',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'identifier',
+                    'endpoint',
+                    'attempts',
+                    'window_start',
+                    'window_end',
+                    'exceeded_at',
+                    'created_at',
+                ],
+                'length' => [
+                    2 => 255,
+                    255,
+                ],
+                'nullable' => [
+                    4 => true,
+                    true,
+                    7 => true,
+                    true,
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+18 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\Rubro',
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    4,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'codigo' => $o[2],
+                        'nombre' => $o[3],
+                        'descripcion' => $o[4],
+                        'unidad' => $o[5],
+                        'tipo' => $o[6],
+                        'activo' => $o[7],
+                        'createdAt' => $o[8],
+                        'updatedAt' => $o[9],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'codigo' => 'codigo',
+                        'nombre' => 'nombre',
+                        'descripcion' => 'descripcion',
+                        'unidad' => 'unidad',
+                        'tipo' => 'tipo',
+                        'activo' => 'activo',
+                        'created_at' => 'createdAt',
+                        'updated_at' => 'updatedAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'codigo' => 'codigo',
+                        'nombre' => 'nombre',
+                        'descripcion' => 'descripcion',
+                        'unidad' => 'unidad',
+                        'tipo' => 'tipo',
+                        'activo' => 'activo',
+                        'createdAt' => 'created_at',
+                        'updatedAt' => 'updated_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'rubros',
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'tenant' => $o[10],
+                        'plantillaRubros' => $o[12],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[13],
+                ],
+                'name' => [
+                    'App\\Entity\\Rubro',
+                    11 => 'tenant_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'options' => [
+                    1 => [
+                        'unsigned' => true,
+                    ],
+                ],
+                'type' => [
+                    1 => 'bigint',
+                    'string',
+                    'string',
+                    'text',
+                    'string',
+                    'string',
+                    'boolean',
+                    'datetime',
+                    'datetime',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'codigo',
+                    'nombre',
+                    'descripcion',
+                    'unidad',
+                    'tipo',
+                    'activo',
+                    'createdAt',
+                    'updatedAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'codigo',
+                    'nombre',
+                    'descripcion',
+                    'unidad',
+                    'tipo',
+                    'activo',
+                    'created_at',
+                    'updated_at',
+                ],
+                'length' => [
+                    2 => 100,
+                    255,
+                    5 => 50,
+                    20,
+                ],
+                'nullable' => [
+                    4 => true,
+                    11 => false,
+                ],
+                'fetch' => [
+                    10 => 2,
+                    12 => 2,
+                ],
+                'sourceEntity' => [
+                    10 => 'App\\Entity\\Rubro',
+                    12 => 'App\\Entity\\Rubro',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    10 => [
+                        'tenant_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    10 => [
+                        'id' => 'tenant_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    10 => [
+                        $o[11],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    10 => [
+                        'tenant_id' => 'tenant_id',
+                    ],
+                ],
+                'deferrable' => [
+                    11 => false,
+                ],
+                'unique' => [
+                    11 => false,
+                ],
+                'onDelete' => [
+                    11 => 'CASCADE',
+                ],
+                'referencedColumnName' => [
+                    11 => 'id',
+                ],
+                'cascade' => [
+                    12 => [
+                        'remove',
+                    ],
+                ],
+                'mappedBy' => [
+                    12 => 'rubro',
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    10 => 'tenant',
+                    12 => 'plantillaRubros',
+                ],
+                'targetEntity' => [
+                    10 => 'App\\Entity\\Tenant',
+                    12 => 'App\\Entity\\PlantillaRubro',
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+19 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\OneToManyAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\Plantilla',
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    4,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'nombre' => $o[2],
+                        'descripcion' => $o[3],
+                        'activa' => $o[4],
+                        'createdAt' => $o[5],
+                        'updatedAt' => $o[6],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'nombre' => 'nombre',
+                        'descripcion' => 'descripcion',
+                        'activa' => 'activa',
+                        'created_at' => 'createdAt',
+                        'updated_at' => 'updatedAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'nombre' => 'nombre',
+                        'descripcion' => 'descripcion',
+                        'activa' => 'activa',
+                        'createdAt' => 'created_at',
+                        'updatedAt' => 'updated_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'plantillas',
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'tenant' => $o[7],
+                        'proyecto' => $o[9],
+                        'plantillaRubros' => $o[11],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[12],
+                ],
+                'name' => [
+                    'App\\Entity\\Plantilla',
+                    8 => 'tenant_id',
+                    10 => 'proyecto_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'options' => [
+                    1 => [
+                        'unsigned' => true,
+                    ],
+                ],
+                'type' => [
+                    1 => 'bigint',
+                    'string',
+                    'text',
+                    'boolean',
+                    'datetime',
+                    'datetime',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'nombre',
+                    'descripcion',
+                    'activa',
+                    'createdAt',
+                    'updatedAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'nombre',
+                    'descripcion',
+                    'activa',
+                    'created_at',
+                    'updated_at',
+                ],
+                'length' => [
+                    2 => 255,
+                ],
+                'nullable' => [
+                    3 => true,
+                    8 => false,
+                    10 => false,
+                ],
+                'fetch' => [
+                    7 => 2,
+                    9 => 2,
+                    11 => 2,
+                ],
+                'sourceEntity' => [
+                    7 => 'App\\Entity\\Plantilla',
+                    9 => 'App\\Entity\\Plantilla',
+                    11 => 'App\\Entity\\Plantilla',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    7 => [
+                        'tenant_id' => 'id',
+                    ],
+                    9 => [
+                        'proyecto_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    7 => [
+                        'id' => 'tenant_id',
+                    ],
+                    9 => [
+                        'id' => 'proyecto_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    7 => [
+                        $o[8],
+                    ],
+                    9 => [
+                        $o[10],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    7 => [
+                        'tenant_id' => 'tenant_id',
+                    ],
+                    9 => [
+                        'proyecto_id' => 'proyecto_id',
+                    ],
+                ],
+                'deferrable' => [
+                    8 => false,
+                    10 => false,
+                ],
+                'unique' => [
+                    8 => false,
+                    10 => false,
+                ],
+                'onDelete' => [
+                    8 => 'CASCADE',
+                    10 => 'CASCADE',
+                ],
+                'referencedColumnName' => [
+                    8 => 'id',
+                    10 => 'id',
+                ],
+                'inversedBy' => [
+                    9 => 'plantillas',
+                ],
+                'cascade' => [
+                    11 => [
+                        'persist',
+                        'remove',
+                    ],
+                ],
+                'orphanRemoval' => [
+                    11 => true,
+                ],
+                'mappedBy' => [
+                    11 => 'plantilla',
+                ],
+                'orderBy' => [
+                    11 => [
+                        'orden' => 'ASC',
+                    ],
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    7 => 'tenant',
+                    9 => 'proyecto',
+                    11 => 'plantillaRubros',
+                ],
+                'targetEntity' => [
+                    7 => 'App\\Entity\\Tenant',
+                    9 => 'App\\Entity\\Projects',
+                    11 => 'App\\Entity\\PlantillaRubro',
+                ],
+            ],
+        ],
+        $o[0],
+        []
+    );
+},
+20 => static function () {
+    return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+        $o = [
+            clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Doctrine\\ORM\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ClassMetadata')),
+            clone ($p['Doctrine\\ORM\\Mapping\\FieldMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\FieldMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\FieldMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping')),
+            clone ($p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\JoinColumnMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\ManyToOneAssociationMapping'],
+            clone $p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'],
+            clone ($p['Doctrine\\ORM\\Mapping\\OneToOneOwningSideMapping'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Mapping\\OneToOneOwningSideMapping')),
+            clone $p['Doctrine\\ORM\\Mapping\\JoinColumnMapping'],
+            clone ($p['Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Doctrine\\ORM\\Id\\BigIntegerIdentityGenerator')),
+        ],
+        null,
+        [
+            'stdClass' => [
+                'namespace' => [
+                    'App\\Entity',
+                ],
+                'rootEntityName' => [
+                    'App\\Entity\\PlantillaRubro',
+                ],
+                'identifier' => [
+                    [
+                        'id',
+                    ],
+                ],
+                'generatorType' => [
+                    4,
+                ],
+                'fieldMappings' => [
+                    [
+                        'id' => $o[1],
+                        'cantidad' => $o[2],
+                        'orden' => $o[3],
+                        'createdAt' => $o[4],
+                    ],
+                ],
+                'fieldNames' => [
+                    [
+                        'id' => 'id',
+                        'cantidad' => 'cantidad',
+                        'orden' => 'orden',
+                        'created_at' => 'createdAt',
+                    ],
+                ],
+                'columnNames' => [
+                    [
+                        'id' => 'id',
+                        'cantidad' => 'cantidad',
+                        'orden' => 'orden',
+                        'createdAt' => 'created_at',
+                    ],
+                ],
+                'table' => [
+                    [
+                        'name' => 'plantilla_rubros',
+                    ],
+                ],
+                'associationMappings' => [
+                    [
+                        'plantilla' => $o[5],
+                        'rubro' => $o[7],
+                        'apuItem' => $o[9],
+                    ],
+                ],
+                'idGenerator' => [
+                    $o[11],
+                ],
+                'name' => [
+                    'App\\Entity\\PlantillaRubro',
+                    6 => 'plantilla_id',
+                    8 => 'rubro_id',
+                    10 => 'apu_item_id',
+                ],
+                'id' => [
+                    1 => true,
+                ],
+                'options' => [
+                    1 => [
+                        'unsigned' => true,
+                    ],
+                ],
+                'type' => [
+                    1 => 'bigint',
+                    'decimal',
+                    'integer',
+                    'datetime',
+                ],
+                'fieldName' => [
+                    1 => 'id',
+                    'cantidad',
+                    'orden',
+                    'createdAt',
+                ],
+                'columnName' => [
+                    1 => 'id',
+                    'cantidad',
+                    'orden',
+                    'created_at',
+                ],
+                'precision' => [
+                    2 => 15,
+                ],
+                'scale' => [
+                    2 => 4,
+                ],
+                'fetch' => [
+                    5 => 2,
+                    7 => 2,
+                    9 => 2,
+                ],
+                'sourceEntity' => [
+                    5 => 'App\\Entity\\PlantillaRubro',
+                    7 => 'App\\Entity\\PlantillaRubro',
+                    9 => 'App\\Entity\\PlantillaRubro',
+                ],
+                'inversedBy' => [
+                    5 => 'plantillaRubros',
+                    7 => 'plantillaRubros',
+                ],
+                'sourceToTargetKeyColumns' => [
+                    5 => [
+                        'plantilla_id' => 'id',
+                    ],
+                    7 => [
+                        'rubro_id' => 'id',
+                    ],
+                    9 => [
+                        'apu_item_id' => 'id',
+                    ],
+                ],
+                'targetToSourceKeyColumns' => [
+                    5 => [
+                        'id' => 'plantilla_id',
+                    ],
+                    7 => [
+                        'id' => 'rubro_id',
+                    ],
+                    9 => [
+                        'id' => 'apu_item_id',
+                    ],
+                ],
+                'joinColumns' => [
+                    5 => [
+                        $o[6],
+                    ],
+                    7 => [
+                        $o[8],
+                    ],
+                    9 => [
+                        $o[10],
+                    ],
+                ],
+                'joinColumnFieldNames' => [
+                    5 => [
+                        'plantilla_id' => 'plantilla_id',
+                    ],
+                    7 => [
+                        'rubro_id' => 'rubro_id',
+                    ],
+                    9 => [
+                        'apu_item_id' => 'apu_item_id',
+                    ],
+                ],
+                'deferrable' => [
+                    6 => false,
+                    8 => false,
+                    10 => false,
+                ],
+                'unique' => [
+                    6 => false,
+                    8 => false,
+                    10 => true,
+                ],
+                'onDelete' => [
+                    6 => 'CASCADE',
+                    8 => 'RESTRICT',
+                    10 => 'SET NULL',
+                ],
+                'nullable' => [
+                    6 => false,
+                    8 => false,
+                    10 => true,
+                ],
+                'referencedColumnName' => [
+                    6 => 'id',
+                    8 => 'id',
+                    10 => 'id',
+                ],
+                'cascade' => [
+                    9 => [
+                        'persist',
+                        'remove',
+                    ],
+                ],
+                'orphanRemoval' => [
+                    9 => true,
+                ],
+            ],
+            'Doctrine\\ORM\\Mapping\\AssociationMapping' => [
+                'fieldName' => [
+                    5 => 'plantilla',
+                    7 => 'rubro',
+                    9 => 'apuItem',
+                ],
+                'targetEntity' => [
+                    5 => 'App\\Entity\\Plantilla',
+                    7 => 'App\\Entity\\Rubro',
+                    9 => 'App\\Entity\\APUItem',
                 ],
             ],
         ],

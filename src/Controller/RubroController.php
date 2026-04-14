@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/rubros')]
@@ -21,7 +21,9 @@ class RubroController extends AbstractController
     #[Route('/', name: 'app_rubro_index')]
     public function index(Request $request): Response
     {
-        $tenant = $this->getUser()->getTenant();
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $tenant = $user->getTenant();
         $perPage = 20;
         $currentPage = max(1, (int) $request->query->get('page', 1));
 
@@ -57,7 +59,9 @@ class RubroController extends AbstractController
             }
 
             $rubro = new Rubro();
-            $rubro->setTenant($this->getUser()->getTenant());
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+            $rubro->setTenant($user->getTenant());
             $rubro->setCodigo(trim($request->request->get('codigo', '')));
             $rubro->setNombre(trim($request->request->get('nombre', '')));
             $rubro->setDescripcion(trim($request->request->get('descripcion', '')) ?: null);
@@ -78,9 +82,11 @@ class RubroController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function edit(int $id, Request $request): Response
     {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
         $rubro = $this->em->getRepository(Rubro::class)->findOneBy([
             'id' => $id,
-            'tenant' => $this->getUser()->getTenant(),
+            'tenant' => $user->getTenant(),
         ]);
 
         if (!$rubro) {
@@ -112,9 +118,11 @@ class RubroController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function delete(int $id, Request $request): Response
     {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
         $rubro = $this->em->getRepository(Rubro::class)->findOneBy([
             'id' => $id,
-            'tenant' => $this->getUser()->getTenant(),
+            'tenant' => $user->getTenant(),
         ]);
 
         if (!$rubro) {

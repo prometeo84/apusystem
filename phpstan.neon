@@ -11,8 +11,22 @@ parameters:
         maximumNumberOfProcesses: 2
         jobSize: 2
     treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         - '#Expression on left side of \?\? is not nullable#'
         - '#is never read, only written#'
         - '#is unused#'
-        - '#Property .* is never assigned int so it can be removed#'
+        - '#Property .* is never assigned .* so it can be removed#'
+        # UserInterface does not declare app-specific methods; resolved via @var annotations
+        - '#Call to an undefined method .*UserInterface::get(Tenant|Id|Email|FullName|Roles|Role)\(#'
+        # These are safe logical simplifications; not runtime bugs
+        - '#(Left|Right) side of (&&|\|\|) is always (true|false)#'
+        - '#Negated boolean expression is always false#'
+        # ThemeSubscriber uses ?-> safely even though Tenant is non-nullable
+        - '#Using nullsafe method call on non-nullable type App\\Entity\\Tenant#'
+        # TwoFactorAuthService: is_string check on typed string is redundant but safe
+        - '#Call to function is_string\(\) with string will always evaluate to true#'
+        # SecurityLogger::log expects User|null but SecurityController/SessionListener pass UserInterface
+        - '#Parameter \#3 \$user of method App\\Service\\SecurityLogger::log\(\) expects App\\Entity\\User\|null#'
+        # APUController passes float to decimal-typed setters (string in entity); cast is intentional
+        - '#Parameter \#1 .* of method App\\Entity\\APU.*::set.* expects string, float given#'

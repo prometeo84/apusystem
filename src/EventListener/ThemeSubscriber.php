@@ -37,6 +37,7 @@ class ThemeSubscriber implements EventSubscriberInterface
         $mode = 'light';
 
         if ($token && $token->getUser() instanceof User) {
+            /** @var \App\Entity\User $user */
             $user = $token->getUser();
 
             // Prefer user settings; fallback to tenant; then system defaults

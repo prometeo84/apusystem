@@ -1,45 +1,46 @@
 name: Snyk Security Scan
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
 
 jobs:
-  snyk-scan:
-    name: Snyk scan
-    if: ${{ secrets.SNYK_TOKEN != '' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    snyk-scan:
+        name: Snyk scan
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '18'
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.3'
 
-      - name: Setup Snyk
-        uses: snyk/actions/setup@v2
-        with:
-          version: 'latest'
+            - name: Install npm deps
+              run: npm ci
 
-      - name: Snyk test (npm)
-        run: |
-          if [ -f package.json ]; then
-            npm ci
-            snyk test --all-projects || true
-          fi
+            - name: Install Snyk CLI
+              run: npm install -g snyk
 
-      - name: Snyk test (composer)
-        run: |
-          if [ -f composer.json ]; then
-            composer install --no-interaction --prefer-dist --no-progress
-            snyk test --all-projects || true
-          fi
+            - name: Snyk test (npm)
+              env:
+                  SNYK_TOKEN: "${{ secrets.SNYK_TOKEN }}"
+              run: |
+                  if [ -z "$SNYK_TOKEN" ]; then echo "SNYK_TOKEN not set, skipping"; exit 0; fi
+                  snyk test --all-projects || true
+
+            - name: Snyk test (composer)
+              env:
+                  SNYK_TOKEN: "${{ secrets.SNYK_TOKEN }}"
+              run: |
+                  if [ -z "$SNYK_TOKEN" ]; then echo "SNYK_TOKEN not set, skipping"; exit 0; fi
+                  composer install --no-interaction --prefer-dist --no-progress
+                  snyk test --all-projects || true

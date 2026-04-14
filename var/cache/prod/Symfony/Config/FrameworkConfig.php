@@ -986,7 +986,7 @@ class FrameworkConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
      * @template TValue of mixed
      * @param TValue $value
      * Lock configuration
-     * @default {"enabled":true,"resources":{"default":["semaphore"]}}
+     * @default {"enabled":true,"resources":{"default":["flock"]}}
      * @return \Symfony\Config\Framework\LockConfig|$this
      * @psalm-return (TValue is array ? \Symfony\Config\Framework\LockConfig : static)
      * @deprecated since Symfony 7.4
@@ -1118,7 +1118,7 @@ class FrameworkConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
      * @template TValue of mixed
      * @param TValue $value
      * HTTP Client configuration
-     * @default {"enabled":false,"scoped_clients":[]}
+     * @default {"enabled":true,"scoped_clients":[]}
      * @return \Symfony\Config\Framework\HttpClientConfig|$this
      * @psalm-return (TValue is array ? \Symfony\Config\Framework\HttpClientConfig : static)
      * @deprecated since Symfony 7.4

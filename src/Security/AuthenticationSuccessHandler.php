@@ -70,7 +70,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         if ($isSuper) {
             // Generar un único código, enviar por email y guardar hash en sesión
-            $code = random_int(100000, 999999);
+            $code = \random_int(100000, 999999);
 
             $hash = password_hash((string)$code, PASSWORD_DEFAULT);
 

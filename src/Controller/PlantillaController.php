@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/projects/{projectId}/plantillas')]
@@ -21,11 +21,20 @@ class PlantillaController extends AbstractController
         private EntityManagerInterface $em
     ) {}
 
+    private function getCurrentTenant(): \App\Entity\Tenant
+    {
+        $user = $this->getUser();
+        if (!$user instanceof \App\Entity\User) {
+            throw $this->createAccessDeniedException();
+        }
+        return $user->getTenant();
+    }
+
     private function getProject(int $projectId): Projects
     {
         $project = $this->em->getRepository(Projects::class)->findOneBy([
             'id' => $projectId,
-            'tenant' => $this->getUser()->getTenant(),
+            'tenant' => $this->getCurrentTenant(),
         ]);
         if (!$project) {
             throw $this->createNotFoundException('project.not_found');
@@ -61,7 +70,7 @@ class PlantillaController extends AbstractController
             }
 
             $plantilla = new Plantilla();
-            $plantilla->setTenant($this->getUser()->getTenant());
+            $plantilla->setTenant($this->getCurrentTenant());
             $plantilla->setProyecto($project);
             $plantilla->setNombre(trim($request->request->get('nombre', '')));
             $plantilla->setDescripcion(trim($request->request->get('descripcion', '')) ?: null);
@@ -92,7 +101,7 @@ class PlantillaController extends AbstractController
         }
 
         $rubrosDisponibles = $this->em->getRepository(Rubro::class)->findBy(
-            ['tenant' => $this->getUser()->getTenant(), 'activo' => true],
+            ['tenant' => $this->getCurrentTenant(), 'activo' => true],
             ['codigo' => 'ASC']
         );
 
@@ -164,7 +173,7 @@ class PlantillaController extends AbstractController
         $rubroId = (int) $request->request->get('rubro_id');
         $rubro = $this->em->getRepository(Rubro::class)->findOneBy([
             'id' => $rubroId,
-            'tenant' => $this->getUser()->getTenant(),
+            'tenant' => $this->getCurrentTenant(),
         ]);
 
         if (!$rubro) {

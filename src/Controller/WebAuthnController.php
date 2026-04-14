@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class WebAuthnController extends AbstractController
@@ -29,6 +29,7 @@ class WebAuthnController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function listCredentials(): Response
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         $creds = $this->em->getRepository(WebAuthnCredential::class)->findBy(['user' => $user]);
 
@@ -45,9 +46,10 @@ class WebAuthnController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function startRegistration(Request $request): JsonResponse
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
-        $challenge = random_bytes(32);
+        $challenge = \random_bytes(32);
         $encodedChallenge = $this->webauthnService->base64UrlEncode($challenge);
 
         $request->getSession()->set('webauthn_challenge', $encodedChallenge);
@@ -82,6 +84,7 @@ class WebAuthnController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function finishRegistration(Request $request): JsonResponse
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         $data = json_decode($request->getContent(), true);
@@ -181,7 +184,7 @@ class WebAuthnController extends AbstractController
             return new JsonResponse(['error' => 'no_credentials'], 404);
         }
 
-        $challenge = random_bytes(32);
+        $challenge = \random_bytes(32);
         $encodedChallenge = $this->webauthnService->base64UrlEncode($challenge);
 
         $request->getSession()->set('webauthn_challenge', $encodedChallenge);
@@ -242,6 +245,9 @@ class WebAuthnController extends AbstractController
             return new JsonResponse(['error' => 'user_not_found'], 404);
         }
 
+        // Narrow type for static analyzers
+        assert($user instanceof \App\Entity\User);
+
         // Find matching credential
         $creds = $this->em->getRepository(WebAuthnCredential::class)->findBy(['user' => $user]);
         $normalizedGot = rtrim(strtr($credentialIdB64, '+/', '-_'), '=');
@@ -290,6 +296,7 @@ class WebAuthnController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function revoke(Request $request, int $id): JsonResponse
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         $repo = $this->em->getRepository(WebAuthnCredential::class);
         $cred = $repo->find($id);

@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/apu')]
@@ -26,10 +26,19 @@ class APUController extends AbstractController
         private ExcelReportService $excelReportService
     ) {}
 
+    private function getCurrentTenant(): \App\Entity\Tenant
+    {
+        $user = $this->getUser();
+        if (!$user instanceof \App\Entity\User) {
+            throw $this->createAccessDeniedException();
+        }
+        return $user->getTenant();
+    }
+
     #[Route('/', name: 'app_apu_index')]
     public function index(Request $request): Response
     {
-        $tenant = $this->getUser()->getTenant();
+        $tenant = $this->getCurrentTenant();
         $perPage = 20;
         $currentPage = max(1, (int) $request->query->get('page', 1));
 
@@ -69,7 +78,7 @@ class APUController extends AbstractController
     {
         $apuItem = $this->em->getRepository(APUItem::class)->find($id);
 
-        if (!$apuItem || $apuItem->getTenant() !== $this->getUser()->getTenant()) {
+        if (!$apuItem || $apuItem->getTenant() !== $this->getCurrentTenant()) {
             throw $this->createNotFoundException('APU Item not found');
         }
 
@@ -91,7 +100,7 @@ class APUController extends AbstractController
     {
         $apuItem = $this->em->getRepository(APUItem::class)->find($id);
 
-        if (!$apuItem || $apuItem->getTenant() !== $this->getUser()->getTenant()) {
+        if (!$apuItem || $apuItem->getTenant() !== $this->getCurrentTenant()) {
             throw $this->createNotFoundException();
         }
 
@@ -111,7 +120,7 @@ class APUController extends AbstractController
     {
         $pr = $this->em->getRepository(PlantillaRubro::class)->find($plantillaRubroId);
 
-        if (!$pr || $pr->getPlantilla()->getTenant()->getId() !== $this->getUser()->getTenant()->getId()) {
+        if (!$pr || $pr->getPlantilla()->getTenant()->getId() !== $this->getCurrentTenant()->getId()) {
             throw $this->createNotFoundException();
         }
 
@@ -158,7 +167,7 @@ class APUController extends AbstractController
         $data = $request->request->all();
 
         $apuItem = new APUItem();
-        $apuItem->setTenant($this->getUser()->getTenant());
+        $apuItem->setTenant($this->getCurrentTenant());
         $apuItem->setDescription($data['description']);
         $apuItem->setUnit($data['unit']);
         $apuItem->setKhu((float)$data['khu']);

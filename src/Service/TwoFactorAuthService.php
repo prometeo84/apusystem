@@ -303,7 +303,7 @@ class TwoFactorAuthService
      */
     private function generateRandomCode(): string
     {
-        return bin2hex(random_bytes(self::RECOVERY_CODE_LENGTH / 2));
+        return bin2hex(\random_bytes(self::RECOVERY_CODE_LENGTH / 2));
     }
 
     /**

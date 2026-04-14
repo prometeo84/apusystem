@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
@@ -227,6 +227,7 @@ class RevitAPIController extends AbstractController
         $tokenString = substr($authHeader, 7);
 
         try {
+            /** @var \Lcobucci\JWT\UnencryptedToken $token */
             $token = $this->jwtConfig->parser()->parse($tokenString);
 
             if (!$this->jwtConfig->validator()->validate($token, ...$this->jwtConfig->validationConstraints())) {

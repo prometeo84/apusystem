@@ -1,26 +1,30 @@
-name: "CodeQL"
+name: 'CodeQL'
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+permissions:
+    contents: read
+    security-events: write
 
 jobs:
-  analyze:
-    name: Analyze
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    analyze:
+        name: Analyze
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
-        with:
-          languages: javascript, php
+            - name: Initialize CodeQL
+              uses: github/codeql-action/init@v4
+              with:
+                  languages: javascript-typescript
 
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v2
+            - name: Autobuild
+              uses: github/codeql-action/autobuild@v4
 
-      - name: Run CodeQL analysis
-        uses: github/codeql-action/analyze@v2
+            - name: Run CodeQL analysis
+              uses: github/codeql-action/analyze@v4

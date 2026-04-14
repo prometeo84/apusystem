@@ -1,4 +1,11 @@
 {
+    // Evita que extensiones YAML (yaml-language-server) apliquen esquemas
+    // y validación sobre los workflows de GitHub.
+    "files.associations": {
+        "**/.github/workflows/*.yml": "plaintext",
+        "**/.github/workflows/*.yaml": "plaintext"
+    },
+
     "snyk.advanced.organization": "3c055f63-8789-4e17-9d6a-513375f892c2",
     "snyk.advanced.autoSelectOrganization": true,
     "chat.tools.terminal.autoApprove": {
@@ -20,7 +27,16 @@
         "pre-commit": true,
         "getfacl": true,
         "getent": true,
-        "egrep": true
+        "egrep": true,
+        "setopt": true,
+        "test": true,
+        "set": true,
+        "continue": true,
+        "break": true,
+        "---": true,
+        "escuchando": true,
+        "gh": true,
+        "seq": true
     },
     "intelephense.environment.includePaths": ["vendor", "."],
     "intelephense.stubs": [

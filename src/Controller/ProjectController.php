@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/projects')]
@@ -23,7 +23,9 @@ class ProjectController extends AbstractController
     #[Route('/', name: 'app_project_index')]
     public function index(Request $request): Response
     {
-        $tenant = $this->getUser()->getTenant();
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $tenant = $user->getTenant();
         $perPage = 20;
         $currentPage = max(1, (int) $request->query->get('page', 1));
 
@@ -60,6 +62,7 @@ class ProjectController extends AbstractController
                 return $this->redirectToRoute('app_project_create');
             }
 
+            /** @var \App\Entity\User $user */
             $user = $this->getUser();
             $tenant = $user->getTenant();
 
@@ -98,7 +101,9 @@ class ProjectController extends AbstractController
     #[Route('/{id}', name: 'app_project_show', requirements: ['id' => '\d+'])]
     public function show(int $id): Response
     {
-        $tenant = $this->getUser()->getTenant();
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $tenant = $user->getTenant();
         $project = $this->em->getRepository(Projects::class)->findOneBy([
             'id' => $id,
             'tenant' => $tenant,
@@ -117,7 +122,9 @@ class ProjectController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function edit(int $id, Request $request): Response
     {
-        $tenant = $this->getUser()->getTenant();
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $tenant = $user->getTenant();
         $project = $this->em->getRepository(Projects::class)->findOneBy([
             'id' => $id,
             'tenant' => $tenant,
@@ -164,7 +171,9 @@ class ProjectController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function delete(int $id, Request $request): Response
     {
-        $tenant = $this->getUser()->getTenant();
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $tenant = $user->getTenant();
         $project = $this->em->getRepository(Projects::class)->findOneBy([
             'id' => $id,
             'tenant' => $tenant,
@@ -191,7 +200,9 @@ class ProjectController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function duplicate(int $id, Request $request): Response
     {
-        $tenant = $this->getUser()->getTenant();
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $tenant = $user->getTenant();
         $original = $this->em->getRepository(Projects::class)->findOneBy([
             'id' => $id,
             'tenant' => $tenant,

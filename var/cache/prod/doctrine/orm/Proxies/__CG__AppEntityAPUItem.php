@@ -32,6 +32,7 @@ class APUItem extends \App\Entity\APUItem implements \Doctrine\ORM\Proxy\Interna
         "\0".parent::class."\0".'laborCost' => [parent::class, 'laborCost', null, 16],
         "\0".parent::class."\0".'materialCost' => [parent::class, 'materialCost', null, 16],
         "\0".parent::class."\0".'materials' => [parent::class, 'materials', null, 16],
+        "\0".parent::class."\0".'precioOfertado' => [parent::class, 'precioOfertado', null, 16],
         "\0".parent::class."\0".'rendimientoUh' => [parent::class, 'rendimientoUh', null, 16],
         "\0".parent::class."\0".'tenant' => [parent::class, 'tenant', null, 16],
         "\0".parent::class."\0".'totalCost' => [parent::class, 'totalCost', null, 16],
@@ -39,6 +40,7 @@ class APUItem extends \App\Entity\APUItem implements \Doctrine\ORM\Proxy\Interna
         "\0".parent::class."\0".'transportCost' => [parent::class, 'transportCost', null, 16],
         "\0".parent::class."\0".'unit' => [parent::class, 'unit', null, 16],
         "\0".parent::class."\0".'updatedAt' => [parent::class, 'updatedAt', null, 16],
+        "\0".parent::class."\0".'utilidadPct' => [parent::class, 'utilidadPct', null, 16],
         "\0".parent::class."\0".'uuid' => [parent::class, 'uuid', null, 16],
         'createdAt' => [parent::class, 'createdAt', null, 16],
         'description' => [parent::class, 'description', null, 16],
@@ -50,6 +52,7 @@ class APUItem extends \App\Entity\APUItem implements \Doctrine\ORM\Proxy\Interna
         'laborCost' => [parent::class, 'laborCost', null, 16],
         'materialCost' => [parent::class, 'materialCost', null, 16],
         'materials' => [parent::class, 'materials', null, 16],
+        'precioOfertado' => [parent::class, 'precioOfertado', null, 16],
         'rendimientoUh' => [parent::class, 'rendimientoUh', null, 16],
         'tenant' => [parent::class, 'tenant', null, 16],
         'totalCost' => [parent::class, 'totalCost', null, 16],
@@ -57,6 +60,7 @@ class APUItem extends \App\Entity\APUItem implements \Doctrine\ORM\Proxy\Interna
         'transportCost' => [parent::class, 'transportCost', null, 16],
         'unit' => [parent::class, 'unit', null, 16],
         'updatedAt' => [parent::class, 'updatedAt', null, 16],
+        'utilidadPct' => [parent::class, 'utilidadPct', null, 16],
         'uuid' => [parent::class, 'uuid', null, 16],
     ];
 
