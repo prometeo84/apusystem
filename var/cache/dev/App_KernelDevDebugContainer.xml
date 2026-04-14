@@ -415,6 +415,18 @@
         <argument>app:purge-expired-sessions</argument>
       </call>
     </service>
+    <service id="App\Command\SimulateErrorCommand" class="App\Command\SimulateErrorCommand" autowire="true" autoconfigure="true">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="App\EventListener\ErrorNotificationListener"/>
+      <argument type="service" id="http_kernel"/>
+      <call method="setName">
+        <argument>app:simulate-error</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Simula una excepción y ejecuta ErrorNotificationListener</argument>
+      </call>
+    </service>
     <service id="App\Command\TestEmailCommand" class="App\Command\TestEmailCommand" autowire="true" autoconfigure="true">
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
@@ -477,6 +489,9 @@
       <call method="setContainer">
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\DashboardController"/>
       </call>
+    </service>
+    <service id="App\Controller\DevErrorController" class="App\Controller\DevErrorController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
     </service>
     <service id="App\Controller\FaviconController" class="App\Controller\FaviconController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
@@ -608,6 +623,13 @@
       <tag name="container.hot_path"/>
       <argument type="service" id="security.csrf.same_origin_token_manager"/>
     </service>
+    <service id="App\EventListener\ErrorNotificationListener" class="App\EventListener\ErrorNotificationListener" autowire="true" autoconfigure="true">
+      <tag name="kernel.event_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="mailer.mailer"/>
+      <argument>dev</argument>
+      <argument>/var/www/html/proyecto</argument>
+    </service>
     <service id="App\EventListener\LocaleSubscriber" class="App\EventListener\LocaleSubscriber" autowire="true" autoconfigure="true">
       <tag name="kernel.event_subscriber"/>
       <tag name="container.hot_path"/>
@@ -645,7 +667,9 @@
     <service id="App\Security\UserProvider" class="App\Security\UserProvider" autowire="true" autoconfigure="true">
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
     </service>
-    <service id="App\Service\BudgetReportService" class="App\Service\BudgetReportService" autowire="true" autoconfigure="true"/>
+    <service id="App\Service\BudgetReportService" class="App\Service\BudgetReportService" autowire="true" autoconfigure="true">
+      <argument type="service" id="translator.data_collector"/>
+    </service>
     <service id="App\Service\EncryptionService" class="App\Service\EncryptionService" autowire="true" autoconfigure="true">
       <argument>%env(APP_SECRET)%</argument>
     </service>
@@ -2691,6 +2715,14 @@
           <argument>onRequest</argument>
         </argument>
         <argument>10</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.exception</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="App\EventListener\ErrorNotificationListener"/>
+          <argument>onKernelException</argument>
+        </argument>
+        <argument>-100</argument>
       </call>
       <call method="addListener">
         <argument>kernel.request</argument>
@@ -7186,6 +7218,8 @@
     <service id=".abstract.instanceof.App\Command\HashRecoveryCodesCommand" class="App\Command\HashRecoveryCodesCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\PurgeExpiredSessionsCommand" class="App\Command\PurgeExpiredSessionsCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\PurgeExpiredSessionsCommand" class="App\Command\PurgeExpiredSessionsCommand" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\SimulateErrorCommand" class="App\Command\SimulateErrorCommand" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Command\SimulateErrorCommand" class="App\Command\SimulateErrorCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Console\Command\Command.0.App\Command\TestEmailCommand" class="App\Command\TestEmailCommand" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Command\TestEmailCommand" class="App\Command\TestEmailCommand" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\API\RevitAPIController" class="App\Controller\API\RevitAPIController" autowire="true" abstract="true"/>
@@ -7247,6 +7281,8 @@
     <service id=".abstract.instanceof.App\Controller\WebAuthnController" class="App\Controller\WebAuthnController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\CsrfProtectionSubscriber" class="App\EventListener\CsrfProtectionSubscriber" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\EventListener\CsrfProtectionSubscriber" class="App\EventListener\CsrfProtectionSubscriber" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\ErrorNotificationListener" class="App\EventListener\ErrorNotificationListener" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\EventListener\ErrorNotificationListener" class="App\EventListener\ErrorNotificationListener" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\LocaleSubscriber" class="App\EventListener\LocaleSubscriber" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\EventListener\LocaleSubscriber" class="App\EventListener\LocaleSubscriber" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\RateLimitSubscriber" class="App\EventListener\RateLimitSubscriber" autowire="true" abstract="true"/>
@@ -8707,6 +8743,7 @@
           <argument>App\Controller\AvatarController</argument>
           <argument>App\Controller\CronController</argument>
           <argument>App\Controller\DashboardController</argument>
+          <argument>App\Controller\DevErrorController</argument>
           <argument>App\Controller\FaviconController</argument>
           <argument>App\Controller\LocaleController</argument>
           <argument>App\Controller\PasswordResetController</argument>
@@ -8936,6 +8973,13 @@
       <argument>Migra los recovery codes existentes a formato hasheado con Argon2ID</argument>
       <argument>false</argument>
       <argument type="service_closure" id="App\Command\HashRecoveryCodesCommand"/>
+    </service>
+    <service id=".App\Command\SimulateErrorCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>app:simulate-error</argument>
+      <argument type="collection"/>
+      <argument>Simula una excepción y ejecuta ErrorNotificationListener</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="App\Command\SimulateErrorCommand"/>
     </service>
     <service id=".App\Command\TestEmailCommand.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>app:test-email</argument>
@@ -9525,11 +9569,12 @@
     </service>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.koN3.pK"/>
+      <argument type="service" id=".service_locator.DhpR1xC"/>
       <argument type="collection">
         <argument key="app:migrate:encrypt-totp">App\Command\EncryptTotpSecretsCommand</argument>
         <argument key="app:migrate:hash-recovery-codes">App\Command\HashRecoveryCodesCommand</argument>
         <argument key="app:purge-expired-sessions">App\Command\PurgeExpiredSessionsCommand</argument>
+        <argument key="app:simulate-error">App\Command\SimulateErrorCommand</argument>
         <argument key="app:test-email">App\Command\TestEmailCommand</argument>
         <argument key="about">console.command.about</argument>
         <argument key="assets:install">console.command.assets_install</argument>
@@ -9635,12 +9680,13 @@
         <argument key="make:webhook">maker.auto_command.make_webhook</argument>
       </argument>
     </service>
-    <service id=".service_locator.koN3.pK" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.DhpR1xC" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Command\EncryptTotpSecretsCommand" type="service_closure" id=".App\Command\EncryptTotpSecretsCommand.lazy"/>
         <argument key="App\Command\HashRecoveryCodesCommand" type="service_closure" id=".App\Command\HashRecoveryCodesCommand.lazy"/>
         <argument key="App\Command\PurgeExpiredSessionsCommand" type="service_closure" id="App\Command\PurgeExpiredSessionsCommand"/>
+        <argument key="App\Command\SimulateErrorCommand" type="service_closure" id=".App\Command\SimulateErrorCommand.lazy"/>
         <argument key="App\Command\TestEmailCommand" type="service_closure" id=".App\Command\TestEmailCommand.lazy"/>
         <argument key="console.command.about" type="service_closure" id=".console.command.about.lazy"/>
         <argument key="console.command.assets_install" type="service_closure" id=".console.command.assets_install.lazy"/>

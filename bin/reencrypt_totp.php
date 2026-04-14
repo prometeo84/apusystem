@@ -11,7 +11,9 @@ $appSecret = 'de80feace879d6e1456993b68cccf4c1a7510d98af99c5591da02071b548892e';
 try {
     $enc = new EncryptionService($appSecret);
 } catch (Throwable $e) {
-    echo "EncryptionService init failed: " . $e->getMessage() . PHP_EOL;
+    // Avoid exposing internal error messages; log them instead
+    error_log('EncryptionService init failed: ' . $e->getMessage());
+    echo "EncryptionService init failed" . PHP_EOL;
     exit(2);
 }
 
@@ -30,7 +32,8 @@ echo "Current totp_secret (raw): " . $row['totp_secret'] . "\n";
 try {
     $cipher = $enc->encrypt($row['totp_secret']);
 } catch (Throwable $e) {
-    echo "Encryption failed: " . $e->getMessage() . PHP_EOL;
+    error_log('Encryption failed: ' . $e->getMessage());
+    echo "Encryption failed" . PHP_EOL;
     exit(3);
 }
 

@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+set -euo pipefail
+
+# Run linters comparison before committing
+echo "Running linters comparison before commit..."
+scripts/compare_linters.sh
+#!/usr/bin/env bash
 # =============================================================
 #  Pre-commit hook - APU System
 #  Fuente versionada: .githooks/pre-commit

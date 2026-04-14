@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-import socket, ssl, threading
-LISTEN_ADDR = '0.0.0.0'
-LISTEN_PORT = 8443
+import os
+import socket
+import ssl
+import threading
+LISTEN_ADDR = os.environ.get('LISTEN_ADDR', '127.0.0.1')
+LISTEN_PORT = int(os.environ.get('LISTEN_PORT', '8443'))
 BACKEND_HOST = '127.0.0.1'
 BACKEND_PORT = 8080
 CERTFILE = 'cert.crt'

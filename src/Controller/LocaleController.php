@@ -23,7 +23,16 @@ class LocaleController extends AbstractController
 
         $referer = $request->headers->get('referer');
         if ($referer) {
-            return $this->redirect($referer);
+            // Only allow redirects to the same host or relative paths to avoid open redirect
+            $parsed = parse_url($referer);
+            if (isset($parsed['host'])) {
+                if ($parsed['host'] === $request->getHost()) {
+                    return $this->redirect($referer);
+                }
+            } else {
+                // relative path
+                return $this->redirect($referer);
+            }
         }
 
         return $this->redirectToRoute('app_login');

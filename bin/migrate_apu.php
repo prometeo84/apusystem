@@ -151,6 +151,8 @@ try {
     echo "   - apu_materials (materiales)\n";
     echo "   - apu_transport (transporte)\n";
 } catch (\Exception $e) {
-    echo "❌ Error: " . $e->getMessage() . "\n";
+    // Log the real exception server-side, but avoid echoing sensitive details
+    error_log('Migration error: ' . $e->getMessage());
+    echo "❌ Error: migration failed (see logs)\n";
     exit(1);
 }

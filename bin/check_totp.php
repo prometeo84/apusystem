@@ -8,7 +8,9 @@ $appSecret = getenv('APP_SECRET') ?: 'de80feace879d6e1456993b68cccf4c1a7510d98af
 try {
     $pdo = new PDO('mysql:host=mysql;dbname=apu_system', 'root', 'root');
 } catch (Throwable $e) {
-    echo "DB_CONNECT_ERROR: " . $e->getMessage() . PHP_EOL;
+    // Don't expose internal exception messages to stdout
+    error_log("DB_CONNECT_ERROR: " . $e->getMessage());
+    echo "DB_CONNECT_ERROR" . PHP_EOL;
     exit(1);
 }
 
