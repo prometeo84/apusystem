@@ -746,17 +746,20 @@ class Installer
             }
         } catch (Exception $e) {
             $result = false;
+            $caughtException = $e;
         }
 
         // Always clean up
         $this->cleanUp($result);
 
-        if (isset($e)) {
+        if (isset($caughtException)) {
             // Rethrow anything that is not a RuntimeException
-            if (!$e instanceof RuntimeException) {
-                throw $e;
+            if (!$caughtException instanceof RuntimeException) {
+                throw $caughtException;
             }
-            out($e->getMessage(), 'error');
+            // Log internal exception details to the error log, but present a generic message to the user
+            error_log('Composer installer internal exception: '. $caughtException->getMessage());
+            out('An internal error occurred while running the installer. Run with --verbose for details.', 'error');
         }
         return $result;
     }

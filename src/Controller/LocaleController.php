@@ -23,16 +23,29 @@ class LocaleController extends AbstractController
 
         $referer = $request->headers->get('referer');
         if ($referer) {
-            // Only allow redirects to the same host or relative paths to avoid open redirect
+            // Parse referer and only redirect to safe internal locations.
             $parsed = parse_url($referer);
+
+            // If referer contains a host, ensure it matches current host and scheme is http/https
             if (isset($parsed['host'])) {
-                if ($parsed['host'] === $request->getHost()) {
-                    return $this->redirect($referer);
+                $scheme = isset($parsed['scheme']) ? strtolower($parsed['scheme']) : 'http';
+                if ($parsed['host'] === $request->getHost() && in_array($scheme, ['http', 'https'], true)) {
+                    // Build safe path from parsed components (avoid redirecting to an absolute URL)
+                    $path = isset($parsed['path']) ? $parsed['path'] : '/';
+                    if (isset($parsed['query'])) {
+                        $path .= '?'.$parsed['query'];
+                    }
+                    return $this->redirect($path);
                 }
-            } else {
-                // relative path
-                return $this->redirect($referer);
+            } elseif (isset($parsed['path']) && strpos($parsed['path'], '/') === 0) {
+                // Relative path starting with / is safe
+                $path = $parsed['path'];
+                if (isset($parsed['query'])) {
+                    $path .= '?'.$parsed['query'];
+                }
+                return $this->redirect($path);
             }
+            // Otherwise ignore referer to avoid open redirect
         }
 
         return $this->redirectToRoute('app_login');
