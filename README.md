@@ -453,14 +453,14 @@ docker exec apache php vendor/bin/phpunit --coverage-html coverage/
 
 **Suite actual:** 174 tests · 270 assertions · 0 fallos
 
-| Grupo | Tests |
-|---|---|
-| Seguridad (RBAC + sanitización) | 21 |
-| Timezone / L10n | 12 |
-| CRUD + lógica APU | 18 |
-| WebAuthn / 2FA / Encryption | 30 |
-| APU, Plantilla, Rubro | 15 |
-| Otros (UserTest, TenantTest…) | 78 |
+| Grupo                           | Tests |
+| ------------------------------- | ----- |
+| Seguridad (RBAC + sanitización) | 21    |
+| Timezone / L10n                 | 12    |
+| CRUD + lógica APU               | 18    |
+| WebAuthn / 2FA / Encryption     | 30    |
+| APU, Plantilla, Rubro           | 15    |
+| Otros (UserTest, TenantTest…)   | 78    |
 
 ```bash
 # E2E Playwright (requiere app corriendo en localhost:8080)
