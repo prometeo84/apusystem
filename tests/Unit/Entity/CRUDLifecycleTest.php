@@ -228,11 +228,10 @@ class CRUDLifecycleTest extends TestCase
 
         $pr = new PlantillaRubro();
         
-        $pr->setPlantilla($plantilla);
         $pr->setRubro($rubro);
         $pr->setApuItem($apuItem);
         $pr->setCantidad('10.0');
-        $plantilla->getPlantillaRubros()->add($pr);
+        $plantilla->addPlantillaRubro($pr);
 
         $this->assertCount(1, $plantilla->getPlantillaRubros());
         $this->assertSame($rubro, $plantilla->getPlantillaRubros()->first()->getRubro());
@@ -253,21 +252,19 @@ class CRUDLifecycleTest extends TestCase
 
         $pr1 = new PlantillaRubro();
         
-        $pr1->setPlantilla($plantilla);
         $pr1->setRubro($rubro1);
         $pr1->setCantidad('1.0');
 
         $pr2 = new PlantillaRubro();
         
-        $pr2->setPlantilla($plantilla);
         $pr2->setRubro($rubro2);
         $pr2->setCantidad('2.0');
 
-        $plantilla->getPlantillaRubros()->add($pr1);
-        $plantilla->getPlantillaRubros()->add($pr2);
+        $plantilla->addPlantillaRubro($pr1);
+        $plantilla->addPlantillaRubro($pr2);
         $this->assertCount(2, $plantilla->getPlantillaRubros());
 
-        $plantilla->getPlantillaRubros()->removeElement($pr1);
+        $plantilla->removePlantillaRubro($pr1);
         $this->assertCount(1, $plantilla->getPlantillaRubros());
     }
 
@@ -289,11 +286,10 @@ class CRUDLifecycleTest extends TestCase
 
         $prOrig = new PlantillaRubro();
         
-        $prOrig->setPlantilla($original);
         $prOrig->setRubro($rubro);
         $prOrig->setApuItem($apuItem);
         $prOrig->setCantidad('5.0');
-        $original->getPlantillaRubros()->add($prOrig);
+        $original->addPlantillaRubro($prOrig);
 
         // Simular clonación: nuevo proyecto + nueva plantilla con mismos rubros
         $projectClone = $this->buildProject($tenant, 'P-CLONE');
@@ -304,11 +300,10 @@ class CRUDLifecycleTest extends TestCase
 
         $prClone = new PlantillaRubro();
         
-        $prClone->setPlantilla($clone);
         $prClone->setRubro($rubro);
         $prClone->setApuItem($apuItem);
         $prClone->setCantidad('5.0');
-        $clone->getPlantillaRubros()->add($prClone);
+        $clone->addPlantillaRubro($prClone);
 
         // Usuario B modifica su clon: cambia cantidad
         $prClone->setCantidad('20.0');
@@ -359,22 +354,20 @@ class CRUDLifecycleTest extends TestCase
         $apu1    = $this->buildAPUItem($tenant, 100.0);
         $pr1     = new PlantillaRubro();
         
-        $pr1->setPlantilla($plantilla);
         $pr1->setRubro($rubro1);
         $pr1->setApuItem($apu1);
         $pr1->setCantidad('5.0');
-        $plantilla->getPlantillaRubros()->add($pr1);
+        $plantilla->addPlantillaRubro($pr1);
 
         // Rubro 2: APU costo unitario = $200, cantidad = 3 → subtotal = $600
         $rubro2  = $this->buildRubro($tenant, 'R-B');
         $apu2    = $this->buildAPUItem($tenant, 200.0);
         $pr2     = new PlantillaRubro();
         
-        $pr2->setPlantilla($plantilla);
         $pr2->setRubro($rubro2);
         $pr2->setApuItem($apu2);
         $pr2->setCantidad('3.0');
-        $plantilla->getPlantillaRubros()->add($pr2);
+        $plantilla->addPlantillaRubro($pr2);
 
         $total = $plantilla->getTotalPresupuesto();
         // Total esperado = 500 + 600 = 1100

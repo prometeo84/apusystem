@@ -173,17 +173,15 @@ class RBACTest extends TestCase
     // ── Cuenta bloqueada no puede actuar ───────────────────────────────────
 
     #[Test]
-    public function cuentaBloqueadaBloqueoEsDetectable(): void
+    public function cuentaBloqueadaNoEsCredentialsNonExpired(): void
     {
         $user = $this->makeUser('ROLE_USER');
         for ($i = 0; $i < 5; $i++) {
             $user->incrementFailedLoginAttempts();
         }
 
-        // Tras 5 intentos fallidos la cuenta queda bloqueada
         $this->assertTrue($user->isAccountLocked());
-        // Un usuario bloqueado NO debe poder operar — isActive sigue verdadero
-        // pero el listener de seguridad chequea isAccountLocked()
-        $this->assertFalse($user->isActive() && $user->isAccountLocked() === false);
+        // isCredentialsNonExpired() debe devolver false si la cuenta está bloqueada
+        $this->assertFalse($user->isCredentialsNonExpired());
     }
 }

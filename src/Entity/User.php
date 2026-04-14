@@ -151,6 +151,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // Nothing to erase
     }
 
+    public function isCredentialsNonExpired(): bool
+    {
+        return !$this->isAccountLocked();
+    }
+
     // PasswordAuthenticatedUserInterface
     public function getPassword(): string
     {

@@ -109,6 +109,21 @@ class Plantilla
         return $this->plantillaRubros;
     }
 
+    public function addPlantillaRubro(PlantillaRubro $plantillaRubro): self
+    {
+        if (!$this->plantillaRubros->contains($plantillaRubro)) {
+            $this->plantillaRubros->add($plantillaRubro);
+            $plantillaRubro->setPlantilla($this);
+        }
+        return $this;
+    }
+
+    public function removePlantillaRubro(PlantillaRubro $plantillaRubro): self
+    {
+        $this->plantillaRubros->removeElement($plantillaRubro);
+        return $this;
+    }
+
     /** Total presupuesto = suma de todos los costos de los rubros */
     public function getTotalPresupuesto(): float
     {
