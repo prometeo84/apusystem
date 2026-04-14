@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# =============================================================
+#  Pre-push hook – APU System
+#  Fuente versionada: .githooks/pre-push
+#
+#  Ejecuta linters pesados ANTES de enviar al remoto.
+#  Usa --quick para analizar solo los archivos de la rama actual.
+#
+#  Para omitir en emergencias:
+#    git push --no-verify
+# =============================================================
+set -uo pipefail
+
+GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+cd "$GIT_ROOT"
+
+BOLD='\033[1m'
+CYAN='\033[0;36m'
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+echo ""
+echo -e "${BOLD}============================================================${NC}"
+echo -e "${BOLD}  Pre-push hook – APU System${NC}"
+echo -e "${CYAN}  Ejecutando linters pesados en modo rápido ...${NC}"
+echo -e "${BOLD}  (omitir con: git push --no-verify)${NC}"
+echo -e "${BOLD}============================================================${NC}"
+echo ""
+
+SCRIPT="$GIT_ROOT/scripts/run-heavy-linters.sh"
+
+if [ ! -f "$SCRIPT" ]; then
+    echo -e "${RED}  Error: scripts/run-heavy-linters.sh no encontrado${NC}"
+    exit 1
+fi
+
+if [ ! -x "$SCRIPT" ]; then
+    chmod +x "$SCRIPT"
+fi
+
+# Modo --quick: solo archivos que cambian en esta rama vs. main
+"$SCRIPT" --quick
+EXIT_CODE=$?
+
+if [ "$EXIT_CODE" -ne 0 ]; then
+    echo ""
+    echo -e "${RED}============================================================${NC}"
+    echo -e "${RED}  PUSH ABORTADO – revisa los errores anteriores.${NC}"
+    echo -e "${RED}  Para omitir (emergencias): git push --no-verify${NC}"
+    echo -e "${RED}============================================================${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}  Pre-push OK – push autorizado.${NC}"
+echo ""
+exit 0

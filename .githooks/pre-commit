@@ -1,31 +1,20 @@
 #!/usr/bin/env bash
-set -euo pipefail
-
-# Run linters comparison before committing
-echo "Running linters comparison before commit..."
-scripts/compare_linters.sh
-#!/usr/bin/env bash
 # =============================================================
-#  Pre-commit hook - APU System
+#  Pre-commit hook – APU System
 #  Fuente versionada: .githooks/pre-commit
 #
-#  BLOQUEANTES (exit 1, jamas modifican archivos):
-#    1. PHP syntax    -- php -l
-#    2. Python syntax -- python3 -m py_compile
+#  BLOQUEANTES (exit 1 – nunca modifican archivos):
+#    1. PHP syntax     – php -l                (staged .php)
+#    2. Python syntax  – python3 -m py_compile (staged .py)
+#    3. actionlint     – workflows staged      (staged .yml/.yaml en .github/)
 #
-#  NO BLOQUEANTES (advertencias, commit continua):
-#    3. Twig lint     -- bin/console lint:twig
-#    4. PHPCS
-#    5. PHPStan       -- nivel 5 (staged src/)
-#    6. ESLint
-#    7. Stylelint
-#    8. OWASP Top 10  -- patrones en archivos staged
-#    9. W3C HTML      -- Nu Checker API (archivos .html staged)
-#   10. Snyk          -- solo si instalado y autenticado
-#   11. Composer Audit
+#  NO BLOQUEANTES (advertencias, commit continúa):
+#    4. OWASP Top 10   – grep de patrones      (todos los staged)
+#
+#  Linters pesados (PHPStan, PHPCS, Snyk, ESLint, Stylelint,
+#  Composer audit) → scripts/run-heavy-linters.sh (pre-push)
 # =============================================================
-
-set -euo pipefail
+set -uo pipefail
 IFS=$'\n\t'
 
 RED='\033[0;31m'
@@ -38,39 +27,37 @@ NC='\033[0m'
 GIT_ROOT=$(git rev-parse --show-toplevel)
 cd "$GIT_ROOT"
 
-STAGED_PHP=$(git  diff --cached --name-only --diff-filter=ACM | grep -E '\.php$'             || true)
-STAGED_PY=$(git   diff --cached --name-only --diff-filter=ACM | grep -E '\.py$'              || true)
-STAGED_TWIG=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.twig$'            || true)
-STAGED_HTML=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.html$'            || true)
-STAGED_JS=$(git   diff --cached --name-only --diff-filter=ACM | grep -E '\.js$'   | grep '^assets/' || true)
-STAGED_CSS=$(git  diff --cached --name-only --diff-filter=ACM | grep -E '\.(css|scss|sass)$' | grep '^assets/' || true)
-STAGED_ALL=$(git  diff --cached --name-only --diff-filter=ACM                                || true)
+STAGED_PHP=$(git  diff --cached --name-only --diff-filter=ACM | grep -E '\.php$'  || true)
+STAGED_PY=$(git   diff --cached --name-only --diff-filter=ACM | grep -E '\.py$'   || true)
+STAGED_WF=$(git   diff --cached --name-only --diff-filter=ACM | grep -E '^\.github/workflows/.*\.ya?ml$' || true)
+STAGED_ALL=$(git  diff --cached --name-only --diff-filter=ACM || true)
 
 BLOCKING_ERRORS=0
 
 echo ""
-echo -e "${BOLD}===========================================================  ${NC}"
-echo -e "${BOLD}  Pre-commit hook - APU System${NC}"
-echo -e "${BOLD}===========================================================  ${NC}"
+echo -e "${BOLD}============================================================${NC}"
+echo -e "${BOLD}  Pre-commit hook – APU System${NC}"
+echo -e "${BOLD}  (linters pesados corren al hacer push)${NC}"
+echo -e "${BOLD}============================================================${NC}"
 
 # =============================================================
 #  BLOQUE 1: BLOQUEANTES
 # =============================================================
 echo ""
-echo -e "${BOLD}-- VALIDACIONES BLOQUEANTES ---------------------------------${NC}"
+echo -e "${BOLD}-- VALIDACIONES BLOQUEANTES --------------------------------${NC}"
 
-# -- 1. PHP Syntax --------------------------------------------
+# -- 1. PHP Syntax -------------------------------------------
 echo ""
-echo -e "${CYAN}[1/2] PHP Syntax (php -l)${NC}"
+echo -e "${CYAN}[1/3] PHP Syntax (php -l)${NC}"
 if [ -n "$STAGED_PHP" ]; then
-    PHP_OK=0
-    PHP_FAIL=0
+    PHP_OK=0; PHP_FAIL=0
     while IFS= read -r file; do
         [ -z "$file" ] && continue
         ABS="$GIT_ROOT/$file"
         [ -f "$ABS" ] || continue
         result=$(php -l "$ABS" 2>&1)
-        if [ $? -ne 0 ]; then
+        rc=$?
+        if [ "$rc" -ne 0 ]; then
             echo -e "${RED}  x ERROR: $file${NC}"
             echo "$result" | sed 's/^/      /'
             PHP_FAIL=$((PHP_FAIL+1))
@@ -85,18 +72,18 @@ else
     echo "  Sin archivos .php staged"
 fi
 
-# -- 2. Python Syntax -----------------------------------------
+# -- 2. Python Syntax ----------------------------------------
 echo ""
-echo -e "${CYAN}[2/2] Python Syntax (python3 -m py_compile)${NC}"
+echo -e "${CYAN}[2/3] Python Syntax (python3 -m py_compile)${NC}"
 if [ -n "$STAGED_PY" ]; then
-    PY_OK=0
-    PY_FAIL=0
+    PY_OK=0; PY_FAIL=0
     while IFS= read -r file; do
         [ -z "$file" ] && continue
         ABS="$GIT_ROOT/$file"
         [ -f "$ABS" ] || continue
         result=$(python3 -m py_compile "$ABS" 2>&1)
-        if [ $? -ne 0 ]; then
+        rc=$?
+        if [ "$rc" -ne 0 ]; then
             echo -e "${RED}  x ERROR: $file${NC}"
             echo "$result" | sed 's/^/      /'
             PY_FAIL=$((PY_FAIL+1))
@@ -111,170 +98,53 @@ else
     echo "  Sin archivos .py staged"
 fi
 
+# -- 3. actionlint (workflows staged) -------------------------
+echo ""
+echo -e "${CYAN}[3/3] actionlint – GitHub workflows${NC}"
+if [ -n "$STAGED_WF" ]; then
+    ACTIONLINT="$GIT_ROOT/.tools/actionlint"
+    if [ ! -x "$ACTIONLINT" ]; then
+        ACTIONLINT=$(command -v actionlint 2>/dev/null || true)
+    fi
+    if [ -n "$ACTIONLINT" ] && [ -x "$ACTIONLINT" ]; then
+        WF_FILES=()
+        while IFS= read -r f; do
+            [ -n "$f" ] && [ -f "$GIT_ROOT/$f" ] && WF_FILES+=("$GIT_ROOT/$f")
+        done <<< "$STAGED_WF"
+        if [ "${#WF_FILES[@]}" -gt 0 ]; then
+            result=$("$ACTIONLINT" "${WF_FILES[@]}" 2>&1) || AL_EXIT=$?
+            AL_EXIT=${AL_EXIT:-0}
+            if [ "$AL_EXIT" -ne 0 ]; then
+                echo -e "${RED}  x actionlint encontró errores en workflows:${NC}"
+                echo "$result" | sed 's/^/      /'
+                BLOCKING_ERRORS=$((BLOCKING_ERRORS+1))
+            else
+                echo -e "${GREEN}  ok Workflows válidos${NC}"
+            fi
+        fi
+    else
+        echo -e "${YELLOW}  actionlint no disponible – omitido (scripts/install_actionlint.sh)${NC}"
+    fi
+else
+    echo "  Sin workflows staged"
+fi
+
 # -- Abortar si hay errores bloqueantes -----------------------
 if [ "$BLOCKING_ERRORS" -gt 0 ]; then
     echo ""
-    echo -e "${RED}===========================================================  ${NC}"
-    echo -e "${RED}  COMMIT ABORTADO -- ${BLOCKING_ERRORS} error(es) de sintaxis bloqueante(s)${NC}"
+    echo -e "${RED}============================================================${NC}"
+    echo -e "${RED}  COMMIT ABORTADO – ${BLOCKING_ERRORS} error(es) bloqueante(s)${NC}"
     echo -e "${RED}  Los archivos NO han sido modificados.${NC}"
-    echo -e "${RED}  Corrige los errores de sintaxis e intenta el commit de nuevo.${NC}"
-    echo -e "${RED}===========================================================  ${NC}"
+    echo -e "${RED}  Corrige los errores e intenta el commit de nuevo.${NC}"
+    echo -e "${RED}============================================================${NC}"
     exit 1
 fi
 
 # =============================================================
-#  BLOQUE 2: NO BLOQUEANTES
+#  BLOQUE 2: OWASP Top 10 – patrones (no bloqueante)
 # =============================================================
 echo ""
-echo -e "${BOLD}-- VALIDACIONES NO BLOQUEANTES (advertencias) ---------------${NC}"
-
-# -- 3. Twig lint ---------------------------------------------
-echo ""
-echo -e "${YELLOW}[3/9] Twig lint (bin/console lint:twig)${NC}"
-if [ -n "$STAGED_TWIG" ]; then
-    TWIG_FAIL=0
-    while IFS= read -r file; do
-        [ -z "$file" ] && continue
-        ABS="$GIT_ROOT/$file"
-        [ -f "$ABS" ] || continue
-        result=$(php "$GIT_ROOT/bin/console" lint:twig "$ABS" 2>&1) || true
-        if [ $? -ne 0 ]; then
-            echo -e "${YELLOW}  !! Twig issue: $file${NC}"
-            echo "$result" | sed 's/^/      /'
-            TWIG_FAIL=$((TWIG_FAIL+1))
-        fi
-    done <<< "$STAGED_TWIG"
-    [ "$TWIG_FAIL" -eq 0 ] && echo -e "${GREEN}  ok Twig sintaxis OK${NC}"
-else
-    echo "  Sin archivos .twig staged"
-fi
-
-# -- 4. PHPCS -------------------------------------------------
-echo ""
-echo -e "${YELLOW}[4/9] PHPCS -- estilo PHP${NC}"
-if [ -n "$STAGED_PHP" ]; then
-    PHPCS_BIN="$GIT_ROOT/vendor/bin/phpcs"
-    [ -f "$PHPCS_BIN" ] || PHPCS_BIN=$(command -v phpcs 2>/dev/null || true)
-    if [ -n "$PHPCS_BIN" ] && [ -f "$PHPCS_BIN" ]; then
-        PHPCS_STD=""
-        [ -f "$GIT_ROOT/phpcs.xml" ] && PHPCS_STD="--standard=$GIT_ROOT/phpcs.xml"
-        FILES=()
-        while IFS= read -r file; do
-            [ -z "$file" ] && continue
-            ABS="$GIT_ROOT/$file"
-            [ -f "$ABS" ] && FILES+=("$ABS")
-        done <<< "$STAGED_PHP"
-        if [ ${#FILES[@]} -gt 0 ]; then
-            result=$("$PHPCS_BIN" $PHPCS_STD "${FILES[@]}" 2>&1) || true
-            if [ $? -ne 0 ]; then
-                echo -e "${YELLOW}  !! PHPCS encontro problemas:${NC}"
-                echo "$result" | sed 's/^/      /'
-            else
-                echo -e "${GREEN}  ok Sin problemas de estilo${NC}"
-            fi
-        fi
-    else
-        echo "  phpcs no encontrado -- omitido"
-    fi
-else
-    echo "  Sin archivos .php staged"
-fi
-
-# -- 5. PHPStan nivel 5 ---------------------------------------
-echo ""
-echo -e "${YELLOW}[5/9] PHPStan nivel 5 (src/ staged)${NC}"
-if [ -n "$STAGED_PHP" ]; then
-    PHPSTAN_BIN="$GIT_ROOT/vendor/bin/phpstan"
-    [ -f "$PHPSTAN_BIN" ] || PHPSTAN_BIN=$(command -v phpstan 2>/dev/null || true)
-    if [ -n "$PHPSTAN_BIN" ] && [ -f "$PHPSTAN_BIN" ]; then
-        FILES=()
-        while IFS= read -r file; do
-            [ -z "$file" ] && continue
-            [[ "$file" == src/* ]] || continue
-            ABS="$GIT_ROOT/$file"
-            [ -f "$ABS" ] && FILES+=("$ABS")
-        done <<< "$STAGED_PHP"
-        if [ ${#FILES[@]} -gt 0 ]; then
-            CFG_ARG=""
-            [ -f "$GIT_ROOT/phpstan.neon" ] && CFG_ARG="--configuration=$GIT_ROOT/phpstan.neon"
-            result=$("$PHPSTAN_BIN" analyse --level=5 --no-progress $CFG_ARG "${FILES[@]}" 2>&1) || true
-            if [ $? -ne 0 ]; then
-                echo -e "${YELLOW}  !! PHPStan encontro problemas:${NC}"
-                echo "$result" | sed 's/^/      /'
-            else
-                echo -e "${GREEN}  ok Sin errores PHPStan${NC}"
-            fi
-        else
-            echo "  Sin archivos .php staged en src/"
-        fi
-    else
-        echo "  phpstan no instalado -- omitido"
-    fi
-else
-    echo "  Sin archivos .php staged"
-fi
-
-# -- 6. ESLint ------------------------------------------------
-echo ""
-echo -e "${YELLOW}[6/9] ESLint (assets/ JS staged)${NC}"
-if [ -n "$STAGED_JS" ]; then
-    ESLINT_BIN="$GIT_ROOT/node_modules/.bin/eslint"
-    [ -f "$ESLINT_BIN" ] || ESLINT_BIN=$(command -v eslint 2>/dev/null || true)
-    if [ -n "$ESLINT_BIN" ] && [ -f "$ESLINT_BIN" ]; then
-        FILES=()
-        while IFS= read -r file; do
-            [ -z "$file" ] && continue
-            ABS="$GIT_ROOT/$file"
-            [ -f "$ABS" ] && FILES+=("$ABS")
-        done <<< "$STAGED_JS"
-        if [ ${#FILES[@]} -gt 0 ]; then
-            result=$("$ESLINT_BIN" "${FILES[@]}" 2>&1) || true
-            if [ $? -ne 0 ]; then
-                echo -e "${YELLOW}  !! ESLint encontro problemas:${NC}"
-                echo "$result" | sed 's/^/      /'
-            else
-                echo -e "${GREEN}  ok Sin problemas ESLint${NC}"
-            fi
-        fi
-    else
-        echo "  eslint no instalado -- omitido"
-    fi
-else
-    echo "  Sin archivos .js staged en assets/"
-fi
-
-# -- 7. Stylelint ---------------------------------------------
-echo ""
-echo -e "${YELLOW}[7/9] Stylelint (assets/ CSS staged)${NC}"
-if [ -n "$STAGED_CSS" ]; then
-    STYLELINT_BIN="$GIT_ROOT/node_modules/.bin/stylelint"
-    [ -f "$STYLELINT_BIN" ] || STYLELINT_BIN=$(command -v stylelint 2>/dev/null || true)
-    if [ -n "$STYLELINT_BIN" ] && [ -f "$STYLELINT_BIN" ]; then
-        FILES=()
-        while IFS= read -r file; do
-            [ -z "$file" ] && continue
-            ABS="$GIT_ROOT/$file"
-            [ -f "$ABS" ] && FILES+=("$ABS")
-        done <<< "$STAGED_CSS"
-        if [ ${#FILES[@]} -gt 0 ]; then
-            result=$("$STYLELINT_BIN" "${FILES[@]}" 2>&1) || true
-            if [ $? -ne 0 ]; then
-                echo -e "${YELLOW}  !! Stylelint encontro problemas:${NC}"
-                echo "$result" | sed 's/^/      /'
-            else
-                echo -e "${GREEN}  ok Sin problemas Stylelint${NC}"
-            fi
-        fi
-    else
-        echo "  stylelint no instalado -- omitido"
-    fi
-else
-    echo "  Sin archivos CSS/SCSS staged en assets/"
-fi
-
-# -- 8. OWASP Top 10 ------------------------------------------
-echo ""
-echo -e "${BOLD}-- OWASP Top 10 -- Patrones (staged) ------------------------${NC}"
+echo -e "${BOLD}-- OWASP Top 10 (grep rápido) -------------------------------${NC}"
 echo ""
 OWASP_TOTAL=0
 if [ -n "$STAGED_ALL" ]; then
@@ -283,136 +153,45 @@ if [ -n "$STAGED_ALL" ]; then
         ABS="$GIT_ROOT/$file"
         [ -f "$ABS" ] || continue
 
+        # A03 – SQLi: concatenación en queries
         A03=$(grep -nP '(\$[a-zA-Z_]\w*\s*\.\s*["'"'"']|["'"'"']\s*\.\s*\$[a-zA-Z_]\w*)' "$ABS" 2>/dev/null \
             | grep -iE '(query|execute|SELECT|INSERT|UPDATE|DELETE|FROM|WHERE)' \
             | grep -vE '^\s*(//|#|\*)' || true)
-        if [ -n "$A03" ]; then
-            echo -e "${YELLOW}  !! [A03-SQLi] $file${NC}"
-            echo "$A03" | head -5 | sed 's/^/      /'
-            OWASP_TOTAL=$((OWASP_TOTAL+1))
-        fi
+        [ -n "$A03" ] && echo -e "${YELLOW}   wc -l /var/www/html/proyecto/.githooks/pre-commit [A03-SQLi]  $file${NC}" && echo "$A03" | head -5 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
 
+        # A03 – eval
         A03E=$(grep -nE '\beval\s*\(' "$ABS" 2>/dev/null | grep -vE '^\s*(//|#|\*)' || true)
-        if [ -n "$A03E" ]; then
-            echo -e "${YELLOW}  !! [A03-eval] $file${NC}"
-            echo "$A03E" | head -3 | sed 's/^/      /'
-            OWASP_TOTAL=$((OWASP_TOTAL+1))
-        fi
+        [ -n "$A03E" ] && echo -e "${YELLOW}   wc -l /var/www/html/proyecto/.githooks/pre-commit [A03-eval]  $file${NC}" && echo "$A03E" | head -3 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
 
+        # A05 – misconfig: error_reporting all
+        A05=$(grep -nEi 'error_reporting\s*\(\s*-1\s*\)|error_reporting\s*\(\s*E_ALL\s*\)' "$ABS" 2>/dev/null \
+            | grep -vE '^\s*(//|#|\*)' || true)
+        [ -n "$A05" ] && echo -e "${YELLOW}   wc -l /var/www/html/proyecto/.githooks/pre-commit [A05-ErrRep] $file${NC}" && echo "$A05" | head -3 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
+
+        # A07 – hashes débiles en passwords
         A07=$(grep -nEi '\b(md5|sha1)\s*\(\s*\$?(password|pass|pwd)' "$ABS" 2>/dev/null \
             | grep -vE '^\s*(//|#|\*)' || true)
-        if [ -n "$A07" ]; then
-            echo -e "${YELLOW}  !! [A07-Auth] $file${NC}"
-            echo "$A07" | head -3 | sed 's/^/      /'
-            OWASP_TOTAL=$((OWASP_TOTAL+1))
-        fi
+        [ -n "$A07" ] && echo -e "${YELLOW}   wc -l /var/www/html/proyecto/.githooks/pre-commit [A07-Auth]  $file${NC}" && echo "$A07" | head -3 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
 
+        # A07 – CSRF desactivado
         A07C=$(grep -nEi '(csrf_protection:\s*false|enableCsrfProtection\s*\(\s*false)' "$ABS" 2>/dev/null \
             | grep -vE '^\s*(//|#|\*)' || true)
-        if [ -n "$A07C" ]; then
-            echo -e "${YELLOW}  !! [A07-CSRF] $file${NC}"
-            echo "$A07C" | head -3 | sed 's/^/      /'
-            OWASP_TOTAL=$((OWASP_TOTAL+1))
-        fi
+        [ -n "$A07C" ] && echo -e "${YELLOW}   wc -l /var/www/html/proyecto/.githooks/pre-commit [A07-CSRF]  $file${NC}" && echo "$A07C" | head -3 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
 
+        # A10 – SSRF
         A10=$(grep -nEi '(curl_setopt.*CURLOPT_URL.*\$|file_get_contents\s*\(\s*\$|HttpClient.*get\s*\(\s*\$)' "$ABS" 2>/dev/null \
             | grep -vE '^\s*(//|#|\*)' || true)
-        if [ -n "$A10" ]; then
-            echo -e "${YELLOW}  !! [A10-SSRF] $file${NC}"
-            echo "$A10" | head -3 | sed 's/^/      /'
-            OWASP_TOTAL=$((OWASP_TOTAL+1))
-        fi
+        [ -n "$A10" ] && echo -e "${YELLOW}   wc -l /var/www/html/proyecto/.githooks/pre-commit [A10-SSRF]  $file${NC}" && echo "$A10" | head -3 | sed 's/^/      /' && OWASP_TOTAL=$((OWASP_TOTAL+1))
 
     done <<< "$STAGED_ALL"
 
     if [ "$OWASP_TOTAL" -eq 0 ]; then
         echo -e "${GREEN}  ok Sin patrones OWASP detectados${NC}"
     else
-        echo -e "${YELLOW}  !! Total patrones OWASP: ${OWASP_TOTAL} (advertencias -- commit continua)${NC}"
+        echo -e "${YELLOW}  !! ${OWASP_TOTAL} patrón(es) OWASP – advertencias (commit continúa)${NC}"
     fi
 else
     echo "  Sin archivos staged"
-fi
-
-# -- 9. W3C HTML Validation (Nu Checker API) ------------------
-echo ""
-echo -e "${YELLOW}[8/9] W3C Nu HTML Checker (archivos .html staged)${NC}"
-if [ -n "$STAGED_HTML" ]; then
-    CURL_BIN=$(command -v curl 2>/dev/null || true)
-    if [ -n "$CURL_BIN" ]; then
-        W3C_FAIL=0
-        while IFS= read -r file; do
-            [ -z "$file" ] && continue
-            ABS="$GIT_ROOT/$file"
-            [ -f "$ABS" ] || continue
-            response=$("$CURL_BIN" -s --max-time 10 \
-                -H "Content-Type: text/html; charset=utf-8" \
-                --data-binary @"$ABS" \
-                "https://validator.w3.org/nu/?out=json" 2>&1) || response=""
-            if [ -z "$response" ]; then
-                echo "  W3C: sin respuesta (timeout o sin conexion) -- omitido para $file"
-                continue
-            fi
-            errors=$(echo "$response" | grep -o '"type":"error"' | wc -l | tr -d ' ')
-            warnings=$(echo "$response" | grep -o '"type":"info"' | wc -l | tr -d ' ')
-            if [ "$errors" -gt 0 ]; then
-                echo -e "${YELLOW}  !! W3C errors=$errors warnings=$warnings -- $file${NC}"
-                echo "$response" | grep -o '"message":"[^"]*"' | head -5 \
-                    | sed 's/"message":"/ -> /;s/"$//' | sed 's/^/      /'
-                W3C_FAIL=$((W3C_FAIL+1))
-            else
-                echo -e "${GREEN}  ok W3C OK (warnings=$warnings) -- $file${NC}"
-            fi
-        done <<< "$STAGED_HTML"
-        if [ "$W3C_FAIL" -gt 0 ]; then
-            echo -e "${YELLOW}  !! W3C: $W3C_FAIL archivo(s) con errores (advertencias -- commit continua)${NC}"
-        fi
-    else
-        echo "  curl no disponible -- W3C omitido"
-    fi
-else
-    echo "  Sin archivos .html staged (los .twig se validan con Twig lint)"
-fi
-
-# -- 10. Snyk -------------------------------------------------
-echo ""
-echo -e "${BOLD}-- Snyk -- dependencias -------------------------------------${NC}"
-echo ""
-SNYK_BIN=$(command -v snyk 2>/dev/null || true)
-if [ -n "$SNYK_BIN" ]; then
-    SNYK_TOKEN=$(snyk config get api 2>/dev/null | grep -v '^undefined$' | grep -v '^$' || true)
-    if [ -n "$SNYK_TOKEN" ]; then
-        echo -e "${YELLOW}  Ejecutando Snyk test...${NC}"
-            result=$(snyk test "$GIT_ROOT" --severity-threshold=high 2>&1) || true
-        if [ $? -ne 0 ]; then
-            echo -e "${YELLOW}  !! Snyk -- vulnerabilidades HIGH/CRITICAL:${NC}"
-            echo "$result" | head -40 | sed 's/^/      /'
-        else
-            echo -e "${GREEN}  ok Snyk: sin vulnerabilidades HIGH/CRITICAL${NC}"
-        fi
-    else
-        echo "  Snyk instalado pero no autenticado -- omitido (snyk auth)"
-    fi
-else
-    echo "  Snyk no instalado -- omitido (npm install -g snyk)"
-fi
-
-# -- 11. Composer Audit ---------------------------------------
-echo ""
-echo -e "${BOLD}-- Composer Audit -------------------------------------------${NC}"
-echo ""
-COMPOSER_BIN=$(command -v composer 2>/dev/null || true)
-if [ -n "$COMPOSER_BIN" ]; then
-    echo -e "${YELLOW}  Ejecutando composer audit...${NC}"
-    result=$("$COMPOSER_BIN" audit --no-interaction 2>&1) || true
-    if [ $? -ne 0 ]; then
-        echo -e "${YELLOW}  !! Composer audit encontro vulnerabilidades:${NC}"
-        echo "$result" | sed 's/^/      /'
-    else
-        echo -e "${GREEN}  ok Composer audit: sin vulnerabilidades conocidas${NC}"
-    fi
-else
-    echo "  composer no disponible -- omitido"
 fi
 
 # =============================================================
@@ -420,13 +199,6 @@ fi
 # =============================================================
 echo ""
 echo -e "${GREEN}  COMMIT PERMITIDO${NC}"
+echo -e "  Los linters pesados correrán al hacer ${BOLD}git push${NC}"
 echo ""
-echo -e "${BOLD}  Auto-fix rapido:${NC}"
-echo "  php -l <archivo>                               # PHP syntax"
-echo "  vendor/bin/phpcbf --standard=phpcs.xml src/   # PHPCS fix"
-echo "  vendor/bin/phpstan analyse --level=5 src/     # PHPStan"
-echo "  npx eslint --fix assets/                       # ESLint"
-echo "  npx stylelint --fix 'assets/**/*.css'           # Stylelint"
-echo ""
-
 exit 0
