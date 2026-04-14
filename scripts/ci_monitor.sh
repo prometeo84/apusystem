@@ -244,12 +244,20 @@ delete_run() {
     fi
 }
 
-# ── Purgar TODOS los runs no-exitosos del repositorio ─────────────────────────
-# Deja únicamente runs con conclusion=success en el historial
+# ── Purgar historial: dejar solo el último run exitoso por workflow ────────────
+# Estrategia:
+#   1. Recopilar TODOS los runs del repo (paginando)
+#   2. Agrupar por nombre de workflow
+#   3. Por cada workflow: conservar el run exitoso más reciente (mayor id)
+#   4. Borrar todos los demás (exitosos viejos + fallidos + cancelados)
 purge_failed_runs() {
-    info "Purgando runs fallidos/cancelados del historial de GitHub..."
-    local page=1
+    info "Limpiando historial: conservando solo el último exitoso por workflow..."
     local deleted=0
+
+    # Recopilar todos los runs en un archivo temporal (tsv: id, workflow_name, conclusion)
+    local tmpfile
+    tmpfile=$(mktemp /tmp/ci_all_runs_XXXXXX.tsv)
+    local page=1
     while true; do
         local runs_json
         runs_json=$(curl -s \
@@ -257,33 +265,62 @@ purge_failed_runs() {
             -H "Accept: application/vnd.github+json" \
             "https://api.github.com/repos/$REPO/actions/runs?per_page=100&page=$page" || true)
 
-        local total
-        total=$(echo "$runs_json" | jq -r '.total_count // 0' 2>/dev/null || echo 0)
-        [ "$total" = "0" ] && break
+        local page_count
+        page_count=$(echo "$runs_json" | jq -r '.workflow_runs | length' 2>/dev/null || echo 0)
+        [ "$page_count" = "0" ] && break
 
-        local ids_to_delete
-        ids_to_delete=$(echo "$runs_json" | jq -r \
-            '.workflow_runs[]? | select(.conclusion != "success") | .id' 2>/dev/null || true)
+        # Acumular: id TAB workflow_name TAB conclusion
+        echo "$runs_json" | jq -r \
+            '.workflow_runs[]? | [(.id|tostring), .name, (.conclusion // "null")] | @tsv' \
+            2>/dev/null >> "$tmpfile" || true
 
-        if [ -z "$ids_to_delete" ]; then
-            # No quedan más runs no-exitosos en esta página
-            local page_count
-            page_count=$(echo "$runs_json" | jq -r '.workflow_runs | length' 2>/dev/null || echo 0)
-            [ "$page_count" -lt 100 ] && break
-            page=$((page + 1))
-            continue
-        fi
-
-        while IFS= read -r rid; do
-            [ -z "$rid" ] && continue
-            delete_run "$rid" && deleted=$((deleted + 1)) || true
-        done <<< "$ids_to_delete"
-
-        # Siguiente página (los índices cambian al borrar, así que releer página 1)
-        page=1
-        sleep 1
+        [ "$page_count" -lt 100 ] && break
+        page=$((page + 1))
+        sleep 0.5
     done
-    ok "Purga completada — $deleted runs no-exitosos eliminados del historial"
+
+    local total_found
+    total_found=$(wc -l < "$tmpfile" | tr -d ' ')
+    info "Total de runs encontrados: $total_found"
+
+    if [ "$total_found" = "0" ]; then
+        rm -f "$tmpfile"
+        ok "No hay runs que limpiar"
+        return 0
+    fi
+
+    # Por cada workflow, encontrar el id más alto con conclusion=success (el más reciente)
+    # Los ids son numéricos crecientes → el mayor es el más reciente
+    declare -A keep_id   # workflow_name → id a conservar
+
+    while IFS=$'\t' read -r run_id wf_name conclusion; do
+        [ "$conclusion" != "success" ] && continue
+        # Guardar si es mayor que el que teníamos
+        local current_keep="${keep_id[$wf_name]:-0}"
+        if [ "$run_id" -gt "$current_keep" ] 2>/dev/null; then
+            keep_id["$wf_name"]="$run_id"
+        fi
+    done < "$tmpfile"
+
+    if [ "${#keep_id[@]}" -gt 0 ]; then
+        info "Workflows con al menos un exitoso:"
+        for wf in "${!keep_id[@]}"; do
+            info "  ✅ Conservar run ${keep_id[$wf]} ← '$wf'"
+        done
+    fi
+
+    # Borrar todo lo que NO esté en keep_id
+    while IFS=$'\t' read -r run_id wf_name conclusion; do
+        [ -z "$run_id" ] && continue
+        local keep="${keep_id[$wf_name]:-0}"
+        if [ "$run_id" = "$keep" ]; then
+            continue  # este es el que conservamos
+        fi
+        delete_run "$run_id" && deleted=$((deleted + 1)) || true
+    done < "$tmpfile"
+
+    rm -f "$tmpfile"
+    ok "Limpieza completada — $deleted runs eliminados; queda 1 exitoso por workflow"
 }
 
 
@@ -305,6 +342,13 @@ commit_and_push() {
 # ── Ciclo principal ────────────────────────────────────────────────────────────
 cd "$REPO_ROOT"
 setup_token
+
+# Modo especial: solo purgar el historial sin monitorizar workflows
+if [ "${1:-}" = "--purge-only" ]; then
+    info "Modo --purge-only: limpiando historial de GitHub Actions"
+    purge_failed_runs
+    exit 0
+fi
 
 SHA="${1:-$(git rev-parse HEAD)}"
 info "SHA inicial a monitorizar: $SHA"
