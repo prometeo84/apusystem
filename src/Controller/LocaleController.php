@@ -30,18 +30,18 @@ class LocaleController extends AbstractController
             if (isset($parsed['host'])) {
                 $scheme = isset($parsed['scheme']) ? strtolower($parsed['scheme']) : 'http';
                 if ($parsed['host'] === $request->getHost() && in_array($scheme, ['http', 'https'], true)) {
-                    // Build safe path from parsed components (avoid redirecting to an absolute URL)
-                    $path = isset($parsed['path']) ? $parsed['path'] : '/';
+                    // Build safe path: normalize to prevent protocol-relative redirects (// attack)
+                    $path = '/' . ltrim(isset($parsed['path']) ? $parsed['path'] : '/', '/');
                     if (isset($parsed['query'])) {
-                        $path .= '?'.$parsed['query'];
+                        $path .= '?' . $parsed['query'];
                     }
                     return $this->redirect($path);
                 }
             } elseif (isset($parsed['path']) && strpos($parsed['path'], '/') === 0) {
-                // Relative path starting with / is safe
-                $path = $parsed['path'];
+                // Relative path: normalize to prevent // protocol-relative trick
+                $path = '/' . ltrim($parsed['path'], '/');
                 if (isset($parsed['query'])) {
-                    $path .= '?'.$parsed['query'];
+                    $path .= '?' . $parsed['query'];
                 }
                 return $this->redirect($path);
             }

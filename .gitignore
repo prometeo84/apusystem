@@ -52,3 +52,7 @@ yarn-error.log
 
 # Backup files created by scripts
 *.bak
+
+# Local tools and caches
+.tools/
+__pycache__/
