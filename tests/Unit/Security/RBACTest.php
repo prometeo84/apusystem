@@ -107,7 +107,7 @@ class RBACTest extends TestCase
     {
         $user = $this->makeUser('ROLE_USER');
         $canEdit = in_array('ROLE_ADMIN', $user->getRoles(), true)
-                || in_array('ROLE_SUPER_ADMIN', $user->getRoles(), true);
+            || in_array('ROLE_SUPER_ADMIN', $user->getRoles(), true);
 
         $this->assertFalse($canEdit, 'ROLE_USER no debe poder editar empresas');
     }

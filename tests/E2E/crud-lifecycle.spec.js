@@ -16,8 +16,8 @@ const { test, expect } = require('@playwright/test');
 
 const ADMIN = { email: 'admin@abc.com', password: 'Admin123!' };
 
-const RUBRO_CODE  = `QA-R-${Date.now()}`;
-const RUBRO_NAME  = `Rubro E2E ${Date.now()}`;
+const RUBRO_CODE = `QA-R-${Date.now()}`;
+const RUBRO_NAME = `Rubro E2E ${Date.now()}`;
 const PROJECT_CODE = `QA-P-${Date.now()}`;
 const PROJECT_NAME = `Proyecto E2E ${Date.now()}`;
 
@@ -56,8 +56,8 @@ test.describe('UC-CRUD-01: Crear Rubro', () => {
 
         // Seleccionar unidad si existe
         const unidadInput = page.locator('input[name="unidad"], select[name="unidad"]').first();
-        if (await unidadInput.count() > 0) {
-            const tag = await unidadInput.evaluate(el => el.tagName.toLowerCase());
+        if ((await unidadInput.count()) > 0) {
+            const tag = await unidadInput.evaluate((el) => el.tagName.toLowerCase());
             if (tag === 'select') {
                 await unidadInput.selectOption({ index: 1 });
             } else {
@@ -71,7 +71,8 @@ test.describe('UC-CRUD-01: Crear Rubro', () => {
         // Verificar que redirige al listado o muestra éxito
         const url = page.url();
         const onList = url.includes('/rubros') && !url.includes('/create');
-        const hasFlash = (await page.locator('.alert-success, .flash-success, [class*="success"]').count()) > 0;
+        const hasFlash =
+            (await page.locator('.alert-success, .flash-success, [class*="success"]').count()) > 0;
         expect(onList || hasFlash || !url.includes('/create')).toBeTruthy();
     });
 });
@@ -99,8 +100,8 @@ test.describe('UC-CRUD-03: Crear Proyecto', () => {
         const nombreInput = page.locator('input[name="nombre"]').first();
         const codigoInput = page.locator('input[name="codigo"]').first();
 
-        if (await nombreInput.count() > 0) await nombreInput.fill(PROJECT_NAME);
-        if (await codigoInput.count() > 0) await codigoInput.fill(PROJECT_CODE);
+        if ((await nombreInput.count()) > 0) await nombreInput.fill(PROJECT_NAME);
+        if ((await codigoInput.count()) > 0) await codigoInput.fill(PROJECT_CODE);
 
         await page.locator('button[type="submit"]').first().click();
         await page.waitForLoadState('networkidle');
@@ -119,25 +120,31 @@ test.describe('UC-CRUD-04: Duplicar proyecto', () => {
         await loginAsAdmin(page);
     });
 
-    test('Existe un botón o enlace para duplicar/clonar desde el listado o detalle', async ({ page }) => {
+    test('Existe un botón o enlace para duplicar/clonar desde el listado o detalle', async ({
+        page,
+    }) => {
         await page.goto('/projects/');
         await page.waitForLoadState('networkidle');
 
         // Buscar enlace de duplicar (puede variar en texto)
-        const cloneLink = page.locator(
-            'a[href*="duplic"], a[href*="clone"], a[href*="copy"], button:has-text("Duplicar"), button:has-text("Clonar")'
-        ).first();
+        const cloneLink = page
+            .locator(
+                'a[href*="duplic"], a[href*="clone"], a[href*="copy"], button:has-text("Duplicar"), button:has-text("Clonar")'
+            )
+            .first();
 
         const cloneCount = await cloneLink.count();
         if (cloneCount === 0) {
             // Puede estar dentro del detalle del proyecto
             const firstProject = page.locator('a[href*="/projects/"]').first();
-            if (await firstProject.count() > 0) {
+            if ((await firstProject.count()) > 0) {
                 await firstProject.click();
                 await page.waitForLoadState('networkidle');
-                const innerClone = page.locator(
-                    'a[href*="duplic"], a[href*="clone"], a[href*="copy"], button:has-text("Duplicar"), button:has-text("Clonar")'
-                ).first();
+                const innerClone = page
+                    .locator(
+                        'a[href*="duplic"], a[href*="clone"], a[href*="copy"], button:has-text("Duplicar"), button:has-text("Clonar")'
+                    )
+                    .first();
                 expect(await innerClone.count()).toBeGreaterThan(0);
             } else {
                 test.skip(true, 'No hay proyectos con los que probar la clonación');
@@ -152,14 +159,16 @@ test.describe('UC-CRUD-04: Duplicar proyecto', () => {
         await page.waitForLoadState('networkidle');
 
         // Contar proyectos antes
-        const countBefore = await page.locator('table tbody tr, [class*="project-item"], [class*="card"]').count();
+        const countBefore = await page
+            .locator('table tbody tr, [class*="project-item"], [class*="card"]')
+            .count();
 
         // Intentar clonar el primer proyecto disponible
-        const cloneBtn = page.locator(
-            'a[href*="duplic"], a[href*="clone"], a[href*="copy"]'
-        ).first();
+        const cloneBtn = page
+            .locator('a[href*="duplic"], a[href*="clone"], a[href*="copy"]')
+            .first();
 
-        if (await cloneBtn.count() === 0) {
+        if ((await cloneBtn.count()) === 0) {
             test.skip(true, 'Sin botón de clonación visible en listado');
             return;
         }
@@ -170,7 +179,9 @@ test.describe('UC-CRUD-04: Duplicar proyecto', () => {
         // Volver al listado
         await page.goto('/projects/');
         await page.waitForLoadState('networkidle');
-        const countAfter = await page.locator('table tbody tr, [class*="project-item"], [class*="card"]').count();
+        const countAfter = await page
+            .locator('table tbody tr, [class*="project-item"], [class*="card"]')
+            .count();
 
         // Debe haber al menos uno más
         expect(countAfter).toBeGreaterThanOrEqual(countBefore);
@@ -185,13 +196,15 @@ test.describe('UC-CRUD-06: Crear Plantilla dentro de Proyecto', () => {
         await loginAsAdmin(page);
     });
 
-    test('Listado de proyectos permite navegar a plantillas del primer proyecto', async ({ page }) => {
+    test('Listado de proyectos permite navegar a plantillas del primer proyecto', async ({
+        page,
+    }) => {
         await page.goto('/projects/');
         await page.waitForLoadState('networkidle');
 
         // Encontrar el primer proyecto y navegar a sus plantillas
         const projectLink = page.locator('a[href*="/projects/"]').first();
-        if (await projectLink.count() === 0) {
+        if ((await projectLink.count()) === 0) {
             test.skip(true, 'No hay proyectos disponibles');
             return;
         }
@@ -222,7 +235,7 @@ test.describe('UC-CRUD-06: Crear Plantilla dentro de Proyecto', () => {
         await page.waitForLoadState('networkidle');
 
         const projectLink = page.locator('a[href*="/projects/"]').first();
-        if (await projectLink.count() === 0) {
+        if ((await projectLink.count()) === 0) {
             test.skip(true, 'No hay proyectos disponibles');
             return;
         }
@@ -244,7 +257,7 @@ test.describe('UC-CRUD-06: Crear Plantilla dentro de Proyecto', () => {
         }
 
         const nombreInput = page.locator('input[name="nombre"]').first();
-        if (await nombreInput.count() > 0) {
+        if ((await nombreInput.count()) > 0) {
             await expect(nombreInput).toBeVisible();
         } else {
             // Puede tener otro name

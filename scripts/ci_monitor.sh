@@ -19,9 +19,9 @@
 set -euo pipefail
 
 # ── Configuración ─────────────────────────────────────────────────────────────
-MAX_FIX_ROUNDS=5          # máximo de rondas de corrección automática
+MAX_FIX_ROUNDS=4          # máximo de rondas de corrección automática
 POLL_INTERVAL=8           # segundos entre polls
-MAX_POLL_ITERS=90         # máximo de iters por ronda (~12min)
+MAX_POLL_ITERS=30         # máximo de iters por ronda (~4min)
 LOG_DIR=".tools/github_logs"
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 TOKEN=""

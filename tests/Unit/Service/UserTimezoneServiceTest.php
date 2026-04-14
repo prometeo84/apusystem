@@ -199,7 +199,10 @@ class UserTimezoneServiceTest extends TestCase
 
         // Guayaquil = UTC-5 → debe mostrar 13:00:00
         $this->assertSame('13:00:00', $converted->format('H:i:s'));
-        $this->assertNotSame('18:00:00', $converted->format('H:i:s'),
-            'El reporte no debe mostrar UTC crudo cuando el usuario tiene timezone configurado');
+        $this->assertNotSame(
+            '18:00:00',
+            $converted->format('H:i:s'),
+            'El reporte no debe mostrar UTC crudo cuando el usuario tiene timezone configurado'
+        );
     }
 }

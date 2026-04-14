@@ -41,18 +41,18 @@ test.describe('UC-TZ-01: Configuración de timezone del usuario', () => {
         }
 
         // Buscar select o input de timezone
-        const tzControl = page.locator(
-            'select[name*="timezone"], select[name*="tz"], input[name*="timezone"]'
-        ).first();
+        const tzControl = page
+            .locator('select[name*="timezone"], select[name*="tz"], input[name*="timezone"]')
+            .first();
         const tzCount = await tzControl.count();
 
         if (tzCount === 0) {
             // Puede estar en /profile/edit
             await page.goto('/profile/edit');
             await page.waitForLoadState('networkidle');
-            const tzAlt = page.locator(
-                'select[name*="timezone"], select[name*="tz"], input[name*="timezone"]'
-            ).first();
+            const tzAlt = page
+                .locator('select[name*="timezone"], select[name*="tz"], input[name*="timezone"]')
+                .first();
             expect(await tzAlt.count()).toBeGreaterThan(0);
         } else {
             await expect(tzControl).toBeVisible();
@@ -66,13 +66,13 @@ test.describe('UC-TZ-01: Configuración de timezone del usuario', () => {
 
         // Buscar el select de timezone
         let tzSelect = page.locator('select[name*="timezone"]').first();
-        if (await tzSelect.count() === 0) {
+        if ((await tzSelect.count()) === 0) {
             await page.goto('/profile/edit');
             await page.waitForLoadState('networkidle');
             tzSelect = page.locator('select[name*="timezone"]').first();
         }
 
-        if (await tzSelect.count() === 0) {
+        if ((await tzSelect.count()) === 0) {
             test.skip(true, 'No se encontró selector de timezone');
             return;
         }
@@ -105,7 +105,7 @@ test.describe('UC-TZ-02: Timestamps en reportes con timezone', () => {
         await page.waitForLoadState('networkidle');
 
         const projectLink = page.locator('a[href*="/projects/"]').first();
-        if (await projectLink.count() === 0) {
+        if ((await projectLink.count()) === 0) {
             test.skip(true, 'No hay proyectos disponibles');
             return;
         }
@@ -123,7 +123,9 @@ test.describe('UC-TZ-02: Timestamps en reportes con timezone', () => {
 
         // No debe ser error 500 ni redirigir a login
         expect(page.url()).not.toContain('/login');
-        const errorMsg = page.locator('body :text("500"), body :text("Internal Server Error")').first();
+        const errorMsg = page
+            .locator('body :text("500"), body :text("Internal Server Error")')
+            .first();
         expect(await errorMsg.count()).toBe(0);
     });
 
@@ -132,7 +134,7 @@ test.describe('UC-TZ-02: Timestamps en reportes con timezone', () => {
         await page.waitForLoadState('networkidle');
 
         const projectLink = page.locator('a[href*="/projects/"]').first();
-        if (await projectLink.count() === 0) {
+        if ((await projectLink.count()) === 0) {
             test.skip(true, 'No hay proyectos disponibles');
             return;
         }
@@ -178,7 +180,10 @@ test.describe('UC-TZ-03: Locale persiste entre páginas', () => {
         }
 
         // Verificar que hay algo de texto en español (menú, botones, etc.)
-        const spanishText = page.locator('body').getByText(/Proyectos|Inicio|Configuración|Perfil|Salir/i).first();
+        const spanishText = page
+            .locator('body')
+            .getByText(/Proyectos|Inicio|Configuración|Perfil|Salir/i)
+            .first();
         const count = await spanishText.count();
         // Si no encuentra, puede estar en inglés — solo comprobamos que carga
         expect(count >= 0).toBeTruthy(); // Solo verifica que la página carga
@@ -217,12 +222,14 @@ test.describe('UC-TZ-04: Exportación de reportes', () => {
         await loginAsAdmin(page);
     });
 
-    test('El endpoint de plantilla PDF responde sin error 500 (primer proyecto/plantilla)', async ({ page }) => {
+    test('El endpoint de plantilla PDF responde sin error 500 (primer proyecto/plantilla)', async ({
+        page,
+    }) => {
         await page.goto('/projects/');
         await page.waitForLoadState('networkidle');
 
         const projectLink = page.locator('a[href*="/projects/"]').first();
-        if (await projectLink.count() === 0) {
+        if ((await projectLink.count()) === 0) {
             test.skip(true, 'No hay proyectos');
             return;
         }
@@ -244,8 +251,10 @@ test.describe('UC-TZ-04: Exportación de reportes', () => {
             return;
         }
 
-        const reportLink = page.locator('a[href*="/report"], a[href*="pdf"], a[href*="excel"]').first();
-        if (await reportLink.count() === 0) {
+        const reportLink = page
+            .locator('a[href*="/report"], a[href*="pdf"], a[href*="excel"]')
+            .first();
+        if ((await reportLink.count()) === 0) {
             // No hay reportes disponibles — OK mientras no haya error 500
             const bodyText = await page.locator('body').innerText();
             expect(bodyText).not.toContain('500');

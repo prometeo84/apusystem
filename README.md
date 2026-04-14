@@ -3,7 +3,7 @@
 Sistema multi-tenant para análisis y gestión de APUs (Análisis de Precios Unitarios) en proyectos de construcción.
 
 [![Symfony](https://img.shields.io/badge/Symfony-7.2-000000?logo=symfony)](https://symfony.com)
-[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?logo=php)](https://php.net)
+[![PHP](https://img.shields.io/badge/PHP-8.3+-777BB4?logo=php)](https://php.net)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql)](https://mysql.com)
 [![License](https://img.shields.io/badge/License-Proprietary-red)]()
 
@@ -127,7 +127,7 @@ Ver [docs/ROLES_ARCHITECTURE.md](docs/ROLES_ARCHITECTURE.md) para más detalles.
 
 ## 📦 Requisitos
 
-- **PHP** 8.2 o superior
+- **PHP** 8.3 o superior
 - **Composer** 2.x
 - **MySQL** 8.0 o superior
 - **Node.js** 18+ y npm (para assets)
@@ -407,6 +407,7 @@ vendor/bin/phpstan analyse
 
 ## 📚 Documentación
 
+- [Auditoría QA](docs/QA_AUDIT_REPORT.md) - Resumen ejecutivo de la validación integral
 - [Arquitectura](docs/01-ARQUITECTURA.md) - Diseño técnico y multi-tenant
 - [Guía de Usuario](docs/02-GUIA_USUARIO.md) - Uso y credenciales de prueba
 - [Seguridad (OWASP)](docs/03-SEGURIDAD_OWASP.md) - Prácticas y checklist
@@ -440,14 +441,30 @@ Para producción, provee valores desde el entorno del host o el gestor de secret
 ## 🧪 Testing
 
 ```bash
-# Ejecutar todos los tests
-php bin/phpunit
+# Ejecutar todos los tests (dentro del contenedor)
+docker exec apache php vendor/bin/phpunit --configuration phpunit.dist.xml
 
 # Tests específicos
-php bin/phpunit tests/Controller/SecurityControllerTest.php
+docker exec apache php vendor/bin/phpunit tests/Unit/Security/RBACTest.php
 
 # Con cobertura
-php bin/phpunit --coverage-html coverage/
+docker exec apache php vendor/bin/phpunit --coverage-html coverage/
+```
+
+**Suite actual:** 174 tests · 270 assertions · 0 fallos
+
+| Grupo | Tests |
+|---|---|
+| Seguridad (RBAC + sanitización) | 21 |
+| Timezone / L10n | 12 |
+| CRUD + lógica APU | 18 |
+| WebAuthn / 2FA / Encryption | 30 |
+| APU, Plantilla, Rubro | 15 |
+| Otros (UserTest, TenantTest…) | 78 |
+
+```bash
+# E2E Playwright (requiere app corriendo en localhost:8080)
+npm run test:e2e
 ```
 
 ---

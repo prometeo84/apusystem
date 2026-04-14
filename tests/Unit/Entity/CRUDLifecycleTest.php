@@ -227,7 +227,7 @@ class CRUDLifecycleTest extends TestCase
         $plantilla->setNombre('Presupuesto Final');
 
         $pr = new PlantillaRubro();
-        
+
         $pr->setRubro($rubro);
         $pr->setApuItem($apuItem);
         $pr->setCantidad('10.0');
@@ -251,12 +251,12 @@ class CRUDLifecycleTest extends TestCase
         $rubro2 = $this->buildRubro($tenant, 'R-002');
 
         $pr1 = new PlantillaRubro();
-        
+
         $pr1->setRubro($rubro1);
         $pr1->setCantidad('1.0');
 
         $pr2 = new PlantillaRubro();
-        
+
         $pr2->setRubro($rubro2);
         $pr2->setCantidad('2.0');
 
@@ -285,7 +285,7 @@ class CRUDLifecycleTest extends TestCase
         $original->setNombre('Presupuesto Original');
 
         $prOrig = new PlantillaRubro();
-        
+
         $prOrig->setRubro($rubro);
         $prOrig->setApuItem($apuItem);
         $prOrig->setCantidad('5.0');
@@ -299,7 +299,7 @@ class CRUDLifecycleTest extends TestCase
         $clone->setNombre('Presupuesto Clonado (Usuario B)');
 
         $prClone = new PlantillaRubro();
-        
+
         $prClone->setRubro($rubro);
         $prClone->setApuItem($apuItem);
         $prClone->setCantidad('5.0');
@@ -309,8 +309,11 @@ class CRUDLifecycleTest extends TestCase
         $prClone->setCantidad('20.0');
 
         // Proyecto A permanece intacto
-        $this->assertSame('5.0', $prOrig->getCantidad(),
-            'Proyecto A no debe cambiar al modificar el clon');
+        $this->assertSame(
+            '5.0',
+            $prOrig->getCantidad(),
+            'Proyecto A no debe cambiar al modificar el clon'
+        );
 
         // Clon tiene la cantidad modificada
         $this->assertSame('20.0', $prClone->getCantidad());
@@ -353,7 +356,7 @@ class CRUDLifecycleTest extends TestCase
         $rubro1  = $this->buildRubro($tenant, 'R-A');
         $apu1    = $this->buildAPUItem($tenant, 100.0);
         $pr1     = new PlantillaRubro();
-        
+
         $pr1->setRubro($rubro1);
         $pr1->setApuItem($apu1);
         $pr1->setCantidad('5.0');
@@ -363,7 +366,7 @@ class CRUDLifecycleTest extends TestCase
         $rubro2  = $this->buildRubro($tenant, 'R-B');
         $apu2    = $this->buildAPUItem($tenant, 200.0);
         $pr2     = new PlantillaRubro();
-        
+
         $pr2->setRubro($rubro2);
         $pr2->setApuItem($apu2);
         $pr2->setCantidad('3.0');
@@ -371,7 +374,11 @@ class CRUDLifecycleTest extends TestCase
 
         $total = $plantilla->getTotalPresupuesto();
         // Total esperado = 500 + 600 = 1100
-        $this->assertEqualsWithDelta(1100.0, $total, 0.01,
-            'Total presupuesto debe ser suma de subtotales de rubros');
+        $this->assertEqualsWithDelta(
+            1100.0,
+            $total,
+            0.01,
+            'Total presupuesto debe ser suma de subtotales de rubros'
+        );
     }
 }

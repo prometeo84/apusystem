@@ -24,9 +24,13 @@ Integración BIM con Autodesk Revit via API REST.
 
 Guía para desarrolladores, comandos útiles y configuración.
 
-### 6. [🧪 Casos de Uso & QA](casos_de_uso.md) ← **NUEVO**
+### 6. [🧪 Casos de Uso & QA](casos_de_uso.md)
 
 Tabla completa de casos de uso UC-01..UC-H09, resultados de pruebas PHPUnit/Playwright.
+
+### 7. [📋 Informe de Auditoría QA](QA_AUDIT_REPORT.md) ← **NUEVO**
+
+Resumen ejecutivo de la validación integral: 174 tests, 8 defectos corregidos, recomendaciones.
 
 ---
 
@@ -47,7 +51,7 @@ docker compose up -d
 ## 🗓️ Versión
 
 **Stack:** Symfony 7 / PHP 8.3 / MySQL 8 / Bootstrap 5
-**Tests:** 113 PHPUnit + 39 Playwright E2E
+**Tests:** 174 PHPUnit (270 assertions) + 6 specs Playwright E2E
 
 ## 🚀 Quick Start
 
@@ -66,10 +70,10 @@ Ver detalles completos en [Guía de Usuario](02-GUIA_USUARIO.md).
 ## 📦 Información del Sistema
 
 - **Framework:** Symfony 7.2
-- **PHP:** 8.2+
+- **PHP:** 8.3+
 - **Base de Datos:** MySQL 8.0
 - **Estado:** Production Ready ✅
-- **Última Actualización:** 19 de marzo de 2026
+- **Última Actualización:** 14 de abril de 2026
 
 ---
 
@@ -96,4 +100,4 @@ proyecto/
 
 ---
 
-**Documentación generada:** 19/03/2026
+**Documentación generada:** 14/04/2026
