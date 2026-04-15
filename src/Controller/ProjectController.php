@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Plantilla;
-use App\Entity\PlantillaRubro;
+use App\Entity\Template;
+use App\Entity\TemplateItem;
 use App\Entity\Projects;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -222,14 +222,14 @@ class ProjectController extends AbstractController
 
         // Duplicar plantillas (sin APUs)
         foreach ($original->getPlantillas() as $plantilla) {
-            $newPlantilla = new Plantilla();
+            $newPlantilla = new Template();
             $newPlantilla->setTenant($tenant);
             $newPlantilla->setProyecto($copy);
             $newPlantilla->setNombre($plantilla->getNombre());
             $newPlantilla->setDescripcion($plantilla->getDescripcion());
 
             foreach ($plantilla->getPlantillaRubros() as $pr) {
-                $newPr = new PlantillaRubro();
+                $newPr = new TemplateItem();
                 $newPr->setPlantilla($newPlantilla);
                 $newPr->setRubro($pr->getRubro());
                 $newPr->setCantidad($pr->getCantidad());

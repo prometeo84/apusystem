@@ -9,8 +9,8 @@
                 <ol class="breadcrumb mb-1">
                     <li class="breadcrumb-item"><a href="{{ path('app_project_index') }}">{{ 'project.title'|trans }}</a></li>
                     <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.nombre }}</a></li>
-                    <li class="breadcrumb-item"><a href="{{ path('app_plantilla_index', {projectId: project.id}) }}">{{ 'plantilla.title'|trans }}</a></li>
-                    <li class="breadcrumb-item"><a href="{{ path('app_plantilla_show', {projectId: project.id, id: plantilla.id}) }}">{{ plantilla.nombre }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_template_index', {projectId: project.id}) }}">{{ 'plantilla.title'|trans }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_template_show', {projectId: project.id, id: plantilla.id}) }}">{{ plantilla.nombre }}</a></li>
                     <li class="breadcrumb-item active">{{ 'report.preview_title'|trans }}</li>
                 </ol>
             </nav>
@@ -19,7 +19,7 @@
         <div class="d-flex gap-2">
             {{ btn.button('report.download_pdf'|trans, 'danger', 'bi-file-earmark-pdf', {'href': path('app_report_plantilla_pdf', {projectId: project.id, id: plantilla.id})}) }}
             {{ btn.button('report.download_excel'|trans, 'success', 'bi-file-earmark-excel', {'href': path('app_report_plantilla_excel', {projectId: project.id, id: plantilla.id})}) }}
-            {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_plantilla_show', {projectId: project.id, id: plantilla.id})}) }}
+            {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_template_show', {projectId: project.id, id: plantilla.id})}) }}
         </div>
     </div>
 

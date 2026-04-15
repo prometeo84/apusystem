@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Entity\Plantilla;
+use App\Entity\Template;
 use App\Entity\Projects;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -36,7 +36,7 @@ class BudgetReportService
      * Genera HTML del reporte de presupuesto de una plantilla.
      * Usado tanto para PDF como para visualización web.
      */
-    public function buildHtml(Plantilla $plantilla): string
+    public function buildHtml(Template $plantilla): string
     {
         $proyecto = $plantilla->getProyecto();
         $rubros   = $plantilla->getPlantillaRubros();
@@ -140,7 +140,7 @@ HTML;
     /**
      * Genera PDF binario de la plantilla.
      */
-    public function generatePdf(Plantilla $plantilla): string
+    public function generatePdf(Template $plantilla): string
     {
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
@@ -160,7 +160,7 @@ HTML;
     /**
      * Genera Excel (.xlsx) del presupuesto de la plantilla.
      */
-    public function generateExcel(Plantilla $plantilla): string
+    public function generateExcel(Template $plantilla): string
     {
         $proyecto = $plantilla->getProyecto();
         $spreadsheet = new Spreadsheet();

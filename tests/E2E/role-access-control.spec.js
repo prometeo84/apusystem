@@ -28,8 +28,8 @@ test.describe('ROLE_ADMIN — rutas de escritura accesibles', () => {
         await login(page, ADMIN);
     });
 
-    test('Admin puede ver formulario de nuevo rubro', async ({ page }) => {
-        await page.goto('/rubros/create');
+    test('Admin puede ver formulario de nuevo item', async ({ page }) => {
+        await page.goto('/items/create');
         await expect(page).not.toHaveURL(/login/);
         await expect(page.locator('input[name="codigo"]').first()).toBeVisible();
     });
@@ -45,9 +45,9 @@ test.describe('ROLE_ADMIN — rutas de escritura accesibles', () => {
         await expect(page.locator('a[href*="/projects/create"]').first()).toBeVisible();
     });
 
-    test('Admin ve botón Nuevo Rubro en listado', async ({ page }) => {
-        await page.goto('/rubros/');
-        await expect(page.locator('a[href*="/rubros/create"]').first()).toBeVisible();
+    test('Admin ve botón Nuevo Item en listado', async ({ page }) => {
+        await page.goto('/items/');
+        await expect(page.locator('a[href*="/items/create"]').first()).toBeVisible();
     });
 
     test('Admin puede acceder a reporte macro del proyecto (primero que encuentre)', async ({
@@ -79,8 +79,8 @@ test.describe('ROLE_USER — rutas de escritura bloqueadas', () => {
         await login(page, USER);
     });
 
-    test('Usuario ROLE_USER no puede acceder a crear rubro (403 o redirect)', async ({ page }) => {
-        const response = await page.goto('/rubros/create');
+    test('Usuario ROLE_USER no puede acceder a crear item (403 o redirect)', async ({ page }) => {
+        const response = await page.goto('/items/create');
         // Debe retornar 403 o redirigir fuera
         const isBlocked =
             (response && response.status() === 403) ||
@@ -120,10 +120,10 @@ test.describe('ROLE_USER — rutas de escritura bloqueadas', () => {
         await expect(createBtn).toHaveCount(0);
     });
 
-    test('Usuario ROLE_USER no ve botón Nuevo Rubro en listado', async ({ page }) => {
-        await page.goto('/rubros/');
+    test('Usuario ROLE_USER no ve botón Nuevo Item en listado', async ({ page }) => {
+        await page.goto('/items/');
         await expect(page).not.toHaveURL(/login/);
-        const createBtn = page.locator('a[href="/rubros/create"]');
+        const createBtn = page.locator('a[href="/items/create"]');
         await expect(createBtn).toHaveCount(0);
     });
 
@@ -135,8 +135,8 @@ test.describe('ROLE_USER — rutas de escritura bloqueadas', () => {
         expect(hasList).toBeTruthy();
     });
 
-    test('Usuario ROLE_USER puede ver listado de rubros (read-only)', async ({ page }) => {
-        await page.goto('/rubros/');
+    test('Usuario ROLE_USER puede ver listado de items (read-only)', async ({ page }) => {
+        await page.goto('/items/');
         await expect(page).not.toHaveURL(/login/);
         const hasList = (await page.locator('table, .text-center').count()) > 0;
         expect(hasList).toBeTruthy();
@@ -147,8 +147,8 @@ test.describe('ROLE_USER — rutas de escritura bloqueadas', () => {
 // HTTP — test de script shell (rutas directas con curl)
 // ─────────────────────────────────────────────────────────────────────────────
 test.describe('Control de acceso sin sesión', () => {
-    test('GET /rubros/create sin sesión redirige a /login', async ({ page }) => {
-        await page.goto('/rubros/create');
+    test('GET /items/create sin sesión redirige a /login', async ({ page }) => {
+        await page.goto('/items/create');
         await expect(page).toHaveURL(/\/login/);
     });
 

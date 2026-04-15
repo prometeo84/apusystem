@@ -288,13 +288,13 @@ class __TwigTemplate_ae2cd9a870eb744671283ebcf0b1c3e1 extends Template
                 </a>
                 <a class=\"nav-link ";
             // line 83
-            if ((is_string($_v12 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 83, $this->source); })()), "request", [], "any", false, false, false, 83), "get", ["_route"], "method", false, false, false, 83)) && is_string($_v13 = "app_rubro") && str_starts_with($_v12, $_v13))) {
+            if ((is_string($_v12 = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 83, $this->source); })()), "request", [], "any", false, false, false, 83), "get", ["_route"], "method", false, false, false, 83)) && is_string($_v13 = "app_item") && str_starts_with($_v12, $_v13))) {
                 yield "active";
             }
             yield "\"
                    href=\"";
             // line 84
-            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_rubro_index");
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_item_index");
             yield "\">
                     <i class=\"bi bi-tags\"></i> ";
             // line 85
@@ -506,8 +506,8 @@ class __TwigTemplate_ae2cd9a870eb744671283ebcf0b1c3e1 extends Template
                    href=\"{{ path('app_apu_index') }}\">
                     <i class=\"bi bi-file-earmark-bar-graph\"></i> {{ 'dashboard.apus'|trans }}
                 </a>
-                <a class=\"nav-link {% if app.request.get('_route') starts with 'app_rubro' %}active{% endif %}\"
-                   href=\"{{ path('app_rubro_index') }}\">
+                <a class=\"nav-link {% if app.request.get('_route') starts with 'app_item' %}active{% endif %}\"
+                   href=\"{{ path('app_item_index') }}\">
                     <i class=\"bi bi-tags\"></i> {{ 'dashboard.rubros'|trans }}
                 </a>
 

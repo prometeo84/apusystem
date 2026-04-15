@@ -29,6 +29,8 @@ return [
         '/dashboard' => [[['_route' => 'app_dashboard_alt', '_controller' => 'App\\Controller\\DashboardController::index'], null, null, null, false, false, null]],
         '/__trigger_error_for_test' => [[['_route' => 'app_trigger_error_for_test', '_controller' => 'App\\Controller\\DevErrorController::trigger'], null, null, null, false, false, null]],
         '/favicon.ico' => [[['_route' => 'app_favicon', '_controller' => 'App\\Controller\\FaviconController::favicon'], null, null, null, false, false, null]],
+        '/items' => [[['_route' => 'app_item_index', '_controller' => 'App\\Controller\\ItemController::index'], null, null, null, true, false, null]],
+        '/items/create' => [[['_route' => 'app_item_create', '_controller' => 'App\\Controller\\ItemController::create'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/password/forgot' => [[['_route' => 'app_password_forgot', '_controller' => 'App\\Controller\\PasswordResetController::forgotPassword'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/profile' => [[['_route' => 'app_profile', '_controller' => 'App\\Controller\\ProfileController::index'], null, null, null, false, false, null]],
         '/profile/edit' => [[['_route' => 'app_profile_edit', '_controller' => 'App\\Controller\\ProfileController::edit'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
@@ -39,8 +41,6 @@ return [
         '/projects/create' => [[['_route' => 'app_project_create', '_controller' => 'App\\Controller\\ProjectController::create'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/revit/upload' => [[['_route' => 'app_revit_upload', '_controller' => 'App\\Controller\\RevitUploadController::upload'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/revit/files' => [[['_route' => 'app_revit_files', '_controller' => 'App\\Controller\\RevitUploadController::listFiles'], null, ['GET' => 0], null, false, false, null]],
-        '/rubros' => [[['_route' => 'app_rubro_index', '_controller' => 'App\\Controller\\RubroController::index'], null, null, null, true, false, null]],
-        '/rubros/create' => [[['_route' => 'app_rubro_create', '_controller' => 'App\\Controller\\RubroController::create'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/login' => [[['_route' => 'app_login', '_controller' => 'App\\Controller\\SecurityController::login'], null, null, null, false, false, null]],
         '/logout' => [[['_route' => 'app_logout', '_controller' => 'App\\Controller\\SecurityController::logout'], null, null, null, false, false, null]],
         '/2fa/verify' => [[['_route' => 'app_2fa_verify', '_controller' => 'App\\Controller\\SecurityController::verify2FA'], null, null, null, false, false, null]],
@@ -106,58 +106,56 @@ return [
                     .')'
                 .')'
                 .'|/uploads/avatars/([^/]++)(*:433)'
+                .'|/items/(?'
+                    .'|(\\d+)/edit(*:461)'
+                    .'|(\\d+)/delete(*:481)'
+                .')'
                 .'|/s(?'
                     .'|e(?'
-                        .'|t\\-locale/([^/]++)(*:468)'
-                        .'|curity/sessions/([^/]++)/revoke(*:507)'
+                        .'|t\\-locale/([^/]++)(*:517)'
+                        .'|curity/sessions/([^/]++)/revoke(*:556)'
                     .')'
-                    .'|ystem/tenants/([^/]++)/edit(*:543)'
+                    .'|ystem/tenants/([^/]++)/edit(*:592)'
                 .')'
                 .'|/p(?'
-                    .'|assword/reset/([^/]++)(*:579)'
+                    .'|assword/reset/([^/]++)(*:628)'
                     .'|rojects/(?'
-                        .'|([^/]++)/plantillas(?'
-                            .'|(*:620)'
+                        .'|(\\d+)(*:652)'
+                        .'|(\\d+)/edit(*:670)'
+                        .'|(\\d+)/delete(*:690)'
+                        .'|(\\d+)/duplicate(*:713)'
+                        .'|([^/]++)/templates(?'
+                            .'|(*:742)'
                             .'|/(?'
-                                .'|create(*:638)'
-                                .'|(\\d+)(*:651)'
-                                .'|(\\d+)/edit(*:669)'
-                                .'|(\\d+)/add\\-rubro(*:693)'
-                                .'|(\\d+)/remove\\-rubro/(\\d+)(*:726)'
-                                .'|(\\d+)/duplicate(*:749)'
-                                .'|(\\d+)/delete(*:769)'
-                            .')'
-                        .')'
-                        .'|(\\d+)(*:784)'
-                        .'|(\\d+)/edit(*:802)'
-                        .'|(\\d+)/delete(*:822)'
-                        .'|(\\d+)/duplicate(*:845)'
-                    .')'
-                .')'
-                .'|/r(?'
-                    .'|e(?'
-                        .'|ports/project/(?'
-                            .'|(\\d+)/plantilla/(\\d+)(*:902)'
-                            .'|(\\d+)/plantilla/(\\d+)/pdf(*:935)'
-                            .'|(\\d+)/plantilla/(\\d+)/excel(*:970)'
-                            .'|(\\d+)/full(*:988)'
-                            .'|(\\d+)/full/pdf(*:1010)'
-                            .'|(\\d+)/full/excel(*:1035)'
-                        .')'
-                        .'|vit/file/([^/]++)(?'
-                            .'|(*:1065)'
-                            .'|/(?'
-                                .'|delete(*:1084)'
-                                .'|reprocess(*:1102)'
+                                .'|create(*:760)'
+                                .'|(\\d+)(*:773)'
+                                .'|(\\d+)/edit(*:791)'
+                                .'|(\\d+)/add\\-item(*:814)'
+                                .'|(\\d+)/remove\\-item/(\\d+)(*:846)'
+                                .'|(\\d+)/duplicate(*:869)'
+                                .'|(\\d+)/delete(*:889)'
                             .')'
                         .')'
                     .')'
-                    .'|ubros/(?'
-                        .'|(\\d+)/edit(*:1133)'
-                        .'|(\\d+)/delete(*:1154)'
+                .')'
+                .'|/re(?'
+                    .'|ports/project/(?'
+                        .'|(\\d+)/plantilla/(\\d+)(*:945)'
+                        .'|(\\d+)/plantilla/(\\d+)/pdf(*:978)'
+                        .'|(\\d+)/plantilla/(\\d+)/excel(*:1013)'
+                        .'|(\\d+)/full(*:1032)'
+                        .'|(\\d+)/full/pdf(*:1055)'
+                        .'|(\\d+)/full/excel(*:1080)'
+                    .')'
+                    .'|vit/file/([^/]++)(?'
+                        .'|(*:1110)'
+                        .'|/(?'
+                            .'|delete(*:1129)'
+                            .'|reprocess(*:1147)'
+                        .')'
                     .')'
                 .')'
-                .'|/webauthn/revoke/([^/]++)(*:1190)'
+                .'|/webauthn/revoke/([^/]++)(*:1184)'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
@@ -177,34 +175,34 @@ return [
         384 => [[['_route' => 'app_admin_users_edit', '_controller' => 'App\\Controller\\AdminController::editUser'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
         398 => [[['_route' => 'app_admin_users_toggle', '_controller' => 'App\\Controller\\AdminController::toggleUser'], ['id'], ['POST' => 0], null, false, false, null]],
         433 => [[['_route' => 'avatar_serve', '_controller' => 'App\\Controller\\AvatarController::serve'], ['filename'], ['GET' => 0], null, false, true, null]],
-        468 => [[['_route' => 'app_set_locale', '_controller' => 'App\\Controller\\LocaleController::setLocale'], ['locale'], null, null, false, true, null]],
-        507 => [[['_route' => 'app_security_session_revoke', '_controller' => 'App\\Controller\\SecuritySettingsController::revokeSession'], ['id'], ['POST' => 0], null, false, false, null]],
-        543 => [[['_route' => 'app_system_tenants_edit', '_controller' => 'App\\Controller\\SystemController::editTenant'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        579 => [[['_route' => 'app_password_reset', '_controller' => 'App\\Controller\\PasswordResetController::resetPassword'], ['token'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
-        620 => [[['_route' => 'app_plantilla_index', '_controller' => 'App\\Controller\\PlantillaController::index'], ['projectId'], null, null, true, false, null]],
-        638 => [[['_route' => 'app_plantilla_create', '_controller' => 'App\\Controller\\PlantillaController::create'], ['projectId'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        651 => [[['_route' => 'app_plantilla_show', '_controller' => 'App\\Controller\\PlantillaController::show'], ['projectId', 'id'], null, null, false, true, null]],
-        669 => [[['_route' => 'app_plantilla_edit', '_controller' => 'App\\Controller\\PlantillaController::edit'], ['projectId', 'id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        693 => [[['_route' => 'app_plantilla_add_rubro', '_controller' => 'App\\Controller\\PlantillaController::addRubro'], ['projectId', 'id'], ['POST' => 0], null, false, false, null]],
-        726 => [[['_route' => 'app_plantilla_remove_rubro', '_controller' => 'App\\Controller\\PlantillaController::removeRubro'], ['projectId', 'id', 'prId'], ['POST' => 0], null, false, true, null]],
-        749 => [[['_route' => 'app_plantilla_duplicate', '_controller' => 'App\\Controller\\PlantillaController::duplicate'], ['projectId', 'id'], ['POST' => 0], null, false, false, null]],
-        769 => [[['_route' => 'app_plantilla_delete', '_controller' => 'App\\Controller\\PlantillaController::delete'], ['projectId', 'id'], ['POST' => 0], null, false, false, null]],
-        784 => [[['_route' => 'app_project_show', '_controller' => 'App\\Controller\\ProjectController::show'], ['id'], null, null, false, true, null]],
-        802 => [[['_route' => 'app_project_edit', '_controller' => 'App\\Controller\\ProjectController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        822 => [[['_route' => 'app_project_delete', '_controller' => 'App\\Controller\\ProjectController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
-        845 => [[['_route' => 'app_project_duplicate', '_controller' => 'App\\Controller\\ProjectController::duplicate'], ['id'], ['POST' => 0], null, false, false, null]],
-        902 => [[['_route' => 'app_report_plantilla', '_controller' => 'App\\Controller\\ReportController::preview'], ['projectId', 'id'], null, null, false, true, null]],
-        935 => [[['_route' => 'app_report_plantilla_pdf', '_controller' => 'App\\Controller\\ReportController::pdf'], ['projectId', 'id'], null, null, false, false, null]],
-        970 => [[['_route' => 'app_report_plantilla_excel', '_controller' => 'App\\Controller\\ReportController::excel'], ['projectId', 'id'], null, null, false, false, null]],
-        988 => [[['_route' => 'app_report_project_full', '_controller' => 'App\\Controller\\ReportController::projectFull'], ['id'], null, null, false, false, null]],
-        1010 => [[['_route' => 'app_report_project_full_pdf', '_controller' => 'App\\Controller\\ReportController::projectFullPdf'], ['id'], null, null, false, false, null]],
-        1035 => [[['_route' => 'app_report_project_full_excel', '_controller' => 'App\\Controller\\ReportController::projectFullExcel'], ['id'], null, null, false, false, null]],
-        1065 => [[['_route' => 'app_revit_file_detail', '_controller' => 'App\\Controller\\RevitUploadController::fileDetail'], ['id'], ['GET' => 0], null, false, true, null]],
-        1084 => [[['_route' => 'app_revit_file_delete', '_controller' => 'App\\Controller\\RevitUploadController::deleteFile'], ['id'], ['POST' => 0], null, false, false, null]],
-        1102 => [[['_route' => 'app_revit_file_reprocess', '_controller' => 'App\\Controller\\RevitUploadController::reprocessFile'], ['id'], ['POST' => 0], null, false, false, null]],
-        1133 => [[['_route' => 'app_rubro_edit', '_controller' => 'App\\Controller\\RubroController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1154 => [[['_route' => 'app_rubro_delete', '_controller' => 'App\\Controller\\RubroController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
-        1190 => [
+        461 => [[['_route' => 'app_item_edit', '_controller' => 'App\\Controller\\ItemController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        481 => [[['_route' => 'app_item_delete', '_controller' => 'App\\Controller\\ItemController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        517 => [[['_route' => 'app_set_locale', '_controller' => 'App\\Controller\\LocaleController::setLocale'], ['locale'], null, null, false, true, null]],
+        556 => [[['_route' => 'app_security_session_revoke', '_controller' => 'App\\Controller\\SecuritySettingsController::revokeSession'], ['id'], ['POST' => 0], null, false, false, null]],
+        592 => [[['_route' => 'app_system_tenants_edit', '_controller' => 'App\\Controller\\SystemController::editTenant'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        628 => [[['_route' => 'app_password_reset', '_controller' => 'App\\Controller\\PasswordResetController::resetPassword'], ['token'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        652 => [[['_route' => 'app_project_show', '_controller' => 'App\\Controller\\ProjectController::show'], ['id'], null, null, false, true, null]],
+        670 => [[['_route' => 'app_project_edit', '_controller' => 'App\\Controller\\ProjectController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        690 => [[['_route' => 'app_project_delete', '_controller' => 'App\\Controller\\ProjectController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        713 => [[['_route' => 'app_project_duplicate', '_controller' => 'App\\Controller\\ProjectController::duplicate'], ['id'], ['POST' => 0], null, false, false, null]],
+        742 => [[['_route' => 'app_template_index', '_controller' => 'App\\Controller\\TemplateController::index'], ['projectId'], null, null, true, false, null]],
+        760 => [[['_route' => 'app_template_create', '_controller' => 'App\\Controller\\TemplateController::create'], ['projectId'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        773 => [[['_route' => 'app_template_show', '_controller' => 'App\\Controller\\TemplateController::show'], ['projectId', 'id'], null, null, false, true, null]],
+        791 => [[['_route' => 'app_template_edit', '_controller' => 'App\\Controller\\TemplateController::edit'], ['projectId', 'id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        814 => [[['_route' => 'app_template_add_item', '_controller' => 'App\\Controller\\TemplateController::addRubro'], ['projectId', 'id'], ['POST' => 0], null, false, false, null]],
+        846 => [[['_route' => 'app_template_remove_item', '_controller' => 'App\\Controller\\TemplateController::removeRubro'], ['projectId', 'id', 'prId'], ['POST' => 0], null, false, true, null]],
+        869 => [[['_route' => 'app_template_duplicate', '_controller' => 'App\\Controller\\TemplateController::duplicate'], ['projectId', 'id'], ['POST' => 0], null, false, false, null]],
+        889 => [[['_route' => 'app_template_delete', '_controller' => 'App\\Controller\\TemplateController::delete'], ['projectId', 'id'], ['POST' => 0], null, false, false, null]],
+        945 => [[['_route' => 'app_report_plantilla', '_controller' => 'App\\Controller\\ReportController::preview'], ['projectId', 'id'], null, null, false, true, null]],
+        978 => [[['_route' => 'app_report_plantilla_pdf', '_controller' => 'App\\Controller\\ReportController::pdf'], ['projectId', 'id'], null, null, false, false, null]],
+        1013 => [[['_route' => 'app_report_plantilla_excel', '_controller' => 'App\\Controller\\ReportController::excel'], ['projectId', 'id'], null, null, false, false, null]],
+        1032 => [[['_route' => 'app_report_project_full', '_controller' => 'App\\Controller\\ReportController::projectFull'], ['id'], null, null, false, false, null]],
+        1055 => [[['_route' => 'app_report_project_full_pdf', '_controller' => 'App\\Controller\\ReportController::projectFullPdf'], ['id'], null, null, false, false, null]],
+        1080 => [[['_route' => 'app_report_project_full_excel', '_controller' => 'App\\Controller\\ReportController::projectFullExcel'], ['id'], null, null, false, false, null]],
+        1110 => [[['_route' => 'app_revit_file_detail', '_controller' => 'App\\Controller\\RevitUploadController::fileDetail'], ['id'], ['GET' => 0], null, false, true, null]],
+        1129 => [[['_route' => 'app_revit_file_delete', '_controller' => 'App\\Controller\\RevitUploadController::deleteFile'], ['id'], ['POST' => 0], null, false, false, null]],
+        1147 => [[['_route' => 'app_revit_file_reprocess', '_controller' => 'App\\Controller\\RevitUploadController::reprocessFile'], ['id'], ['POST' => 0], null, false, false, null]],
+        1184 => [
             [['_route' => 'webauthn_revoke', '_controller' => 'App\\Controller\\WebAuthnController::revoke'], ['id'], ['POST' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

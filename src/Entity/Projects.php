@@ -52,7 +52,7 @@ class Projects
     #[ORM\Column(name: 'updated_at', type: 'datetime')]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\OneToMany(targetEntity: Plantilla::class, mappedBy: 'proyecto', cascade: ['remove'])]
+    #[ORM\OneToMany(targetEntity: Template::class, mappedBy: 'proyecto', cascade: ['remove'])]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $plantillas;
 

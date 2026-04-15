@@ -24,17 +24,26 @@ async function loginAsUser(page) {
     await page.waitForURL(/\/(dashboard|2fa|$)/, { timeout: 10000 });
 }
 
+async function loginAsAdmin(page) {
+    await page.goto('/login');
+    await page.waitForSelector('input[name="_username"]', { timeout: 8000 });
+    await page.fill('input[name="_username"]', 'admin@abc.com');
+    await page.fill('input[name="_password"]', 'Admin123!');
+    await page.click('button[type="submit"]');
+    await page.waitForURL(/\/(dashboard|2fa|$)/, { timeout: 10000 });
+}
+
 // ============================================================
 // UC-H01: Rutas nuevas protegidas → redirigen a /login
 // ============================================================
 test.describe('UC-H01: Rutas del nuevo flujo requieren autenticación', () => {
-    test('GET /rubros sin sesión redirige a /login', async ({ page }) => {
-        await page.goto('/rubros');
+    test('GET /items sin sesión redirige a /login', async ({ page }) => {
+        await page.goto('/items');
         await expect(page).toHaveURL(/\/login/);
     });
 
-    test('GET /projects/1/plantillas sin sesión redirige a /login', async ({ page }) => {
-        await page.goto('/projects/1/plantillas');
+    test('GET /projects/1/templates sin sesión redirige a /login', async ({ page }) => {
+        await page.goto('/projects/1/templates');
         await expect(page).toHaveURL(/\/login/);
     });
 
@@ -57,8 +66,8 @@ test.describe('UC-H02: Módulo Rubros', () => {
         await loginAsUser(page);
     });
 
-    test('GET /rubros carga la lista de rubros', async ({ page }) => {
-        await page.goto('/rubros');
+    test('GET /items carga la lista de items', async ({ page }) => {
+        await page.goto('/items');
         const status = page.url();
         // No debe redirigir a login ni 403
         expect(status).not.toContain('/login');
@@ -66,17 +75,24 @@ test.describe('UC-H02: Módulo Rubros', () => {
         const heading = page.locator('h1, .page-title, [class*="title"]').first();
         await expect(heading).toBeVisible({ timeout: 5000 });
     });
+});
 
-    test('GET /rubros/create renderiza formulario de creación', async ({ page }) => {
-        await page.goto('/rubros/create');
+// UC-H02 (admin): el formulario de creación de item requiere ROLE_ADMIN
+test.describe('UC-H02: Módulo Rubros — creación (solo admin)', () => {
+    test.beforeEach(async ({ page }) => {
+        await loginAsAdmin(page);
+    });
+
+    test('GET /items/create renderiza formulario de creación', async ({ page }) => {
+        await page.goto('/items/create');
         expect(page.url()).not.toContain('/login');
         await expect(
             page.locator('input[name="codigo"], input[name="nombre"]').first()
         ).toBeVisible({ timeout: 5000 });
     });
 
-    test('Formulario de rubro tiene campos código, nombre, unidad', async ({ page }) => {
-        await page.goto('/rubros/create');
+    test('Formulario de item tiene campos código, nombre, unidad', async ({ page }) => {
+        await page.goto('/items/create');
         await expect(page.locator('input[name="codigo"]')).toBeVisible();
         await expect(page.locator('input[name="nombre"]')).toBeVisible();
         await expect(
@@ -100,11 +116,10 @@ test.describe('UC-H03: Módulo Proyectos — acceso', () => {
         await expect(heading).toBeVisible({ timeout: 5000 });
     });
 
-    test('GET /projects/create renderiza formulario con campos requeridos', async ({ page }) => {
+    test('GET /projects/create requiere admin — usuario normal denegado', async ({ page }) => {
         await page.goto('/projects/create');
-        await expect(page.locator('input[name="nombre"], input[name="name"]').first()).toBeVisible({
-            timeout: 5000,
-        });
+        // Un usuario normal no debe poder crear proyectos: esperar Access Denied (403)
+        await expect(page.locator('text=Access Denied').first()).toBeVisible({ timeout: 5000 });
     });
 });
 
@@ -326,10 +341,10 @@ test.describe('UC-H09: Aislamiento de datos (IDOR)', () => {
         expect(status === 404 || status === 403 || page.url().includes('/login')).toBeTruthy();
     });
 
-    test('GET /projects/99999/plantillas retorna 404 para proyecto inexistente', async ({
+    test('GET /projects/99999/templates retorna 404 para proyecto inexistente', async ({
         page,
     }) => {
-        const response = await page.goto('/projects/99999/plantillas');
+        const response = await page.goto('/projects/99999/templates');
         const status = response?.status();
         expect(status === 404 || status === 403 || page.url().includes('/login')).toBeTruthy();
     });

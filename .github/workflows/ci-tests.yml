@@ -9,6 +9,10 @@ on:
     push:
         branches: [main]
 
+concurrency:
+    group: ci-tests-${{ github.ref }}
+    cancel-in-progress: true
+
 jobs:
     phpunit:
         name: PHP Unit Tests

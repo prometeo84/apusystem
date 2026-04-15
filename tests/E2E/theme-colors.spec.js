@@ -238,23 +238,25 @@ test.describe('UC-T4: Restablecer tema', () => {
         await page.goto('/profile/preferences');
         await page.waitForLoadState('networkidle');
 
-        // Click en el botón de restablecimiento (que llama a resetTheme() via JS)
-        await page.evaluate(() => {
-            // Simular directamente el POST de reset-theme sin el confirm()
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/profile/reset-theme';
-            const t = document.createElement('input');
-            t.type = 'hidden';
-            t.name = '_token';
-            // Obtener el token actual del formulario
-            const existingToken = document.querySelector('input[name="_token"]');
-            t.value = existingToken ? existingToken.value : '';
-            form.appendChild(t);
-            document.body.appendChild(form);
-            form.submit();
-        });
-        await page.waitForLoadState('networkidle');
+        // Enviar POST directo a reset-theme y esperar navegación resultante
+        await Promise.all([
+            page.waitForNavigation({ waitUntil: 'networkidle', timeout: 10000 }),
+            page.evaluate(() => {
+                // Simular directamente el POST de reset-theme sin el confirm()
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/profile/reset-theme';
+                const t = document.createElement('input');
+                t.type = 'hidden';
+                t.name = '_token';
+                // Obtener el token actual del formulario
+                const existingToken = document.querySelector('input[name="_token"]');
+                t.value = existingToken ? existingToken.value : '';
+                form.appendChild(t);
+                document.body.appendChild(form);
+                form.submit();
+            }),
+        ]);
 
         // Ahora los colores deben ser los por defecto
         await page.goto('/dashboard');
@@ -305,8 +307,8 @@ test.describe('UC-T5: Verificar que app.css no sobreescribe CSS variables', () =
         primaryVar = await getCssVar(page, '--primary-color');
         expect(primaryVar.toLowerCase()).toBe('#38a169');
 
-        // Verificar en /rubros (otra página más)
-        await page.goto('/rubros');
+        // Verificar en /items (otra página más)
+        await page.goto('/items');
         await page.waitForLoadState('networkidle');
         primaryVar = await getCssVar(page, '--primary-color');
         expect(primaryVar.toLowerCase()).toBe('#38a169');

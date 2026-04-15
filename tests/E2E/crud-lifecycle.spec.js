@@ -30,6 +30,23 @@ async function loginAsAdmin(page) {
     await page.waitForURL(/\/(dashboard|2fa|admin|projects|$)/, { timeout: 12000 });
 }
 
+/**
+ * Devuelve el ID numérico del primer proyecto disponible en /projects/,
+ * o null si no existe ninguno. Evita capturar /projects/create.
+ */
+async function getFirstProjectId(page) {
+    await page.goto('/projects/');
+    await page.waitForLoadState('networkidle');
+    const links = page.locator('a[href*="/projects/"]');
+    const count = await links.count();
+    for (let i = 0; i < count; i++) {
+        const href = await links.nth(i).getAttribute('href');
+        const match = href?.match(/\/projects\/(\d+)/);
+        if (match) return match[1];
+    }
+    return null;
+}
+
 // ────────────────────────────────────────────────────────────
 // UC-CRUD-01: Crear Rubro
 // ────────────────────────────────────────────────────────────
@@ -39,14 +56,14 @@ test.describe('UC-CRUD-01: Crear Rubro', () => {
     });
 
     test('Formulario de nuevo rubro está accesible', async ({ page }) => {
-        await page.goto('/rubros/create');
+        await page.goto('/items/create');
         await expect(page).not.toHaveURL(/login/);
         await expect(page.locator('input[name="codigo"]').first()).toBeVisible();
         await expect(page.locator('input[name="nombre"]').first()).toBeVisible();
     });
 
-    test('Crear rubro con código y nombre — aparece en listado', async ({ page }) => {
-        await page.goto('/rubros/create');
+    test('Crear item con código y nombre — aparece en listado', async ({ page }) => {
+        await page.goto('/items/create');
         await page.waitForLoadState('networkidle');
 
         const codigoInput = page.locator('input[name="codigo"]').first();
@@ -70,7 +87,7 @@ test.describe('UC-CRUD-01: Crear Rubro', () => {
 
         // Verificar que redirige al listado o muestra éxito
         const url = page.url();
-        const onList = url.includes('/rubros') && !url.includes('/create');
+        const onList = url.includes('/items') && !url.includes('/create');
         const hasFlash =
             (await page.locator('.alert-success, .flash-success, [class*="success"]').count()) > 0;
         expect(onList || hasFlash || !url.includes('/create')).toBeTruthy();
@@ -126,23 +143,34 @@ test.describe('UC-CRUD-04: Duplicar proyecto', () => {
         await page.goto('/projects/');
         await page.waitForLoadState('networkidle');
 
-        // Buscar enlace de duplicar (puede variar en texto)
+        // Buscar enlace de duplicar (puede variar en texto e idioma)
         const cloneLink = page
             .locator(
-                'a[href*="duplic"], a[href*="clone"], a[href*="copy"], button:has-text("Duplicar"), button:has-text("Clonar")'
+                'a[href*="duplic"], a[href*="clone"], a[href*="copy"], form[action*="duplicate"], button:has-text("Duplicar"), button:has-text("Clonar"), button:has-text("Duplicate"), button:has-text("Clone")'
             )
             .first();
 
         const cloneCount = await cloneLink.count();
         if (cloneCount === 0) {
             // Puede estar dentro del detalle del proyecto
-            const firstProject = page.locator('a[href*="/projects/"]').first();
-            if ((await firstProject.count()) > 0) {
+            // Buscar el primer link de un proyecto específico (URL con ID numérico)
+            // Excluir /create y la URL raíz de la lista
+            const allLinks = page.locator('a[href*="/projects/"]');
+            const count = await allLinks.count();
+            let firstProject = null;
+            for (let i = 0; i < count; i++) {
+                const href = await allLinks.nth(i).getAttribute('href');
+                if (href && /\/projects\/\d+/.test(href)) {
+                    firstProject = allLinks.nth(i);
+                    break;
+                }
+            }
+            if (firstProject) {
                 await firstProject.click();
                 await page.waitForLoadState('networkidle');
                 const innerClone = page
                     .locator(
-                        'a[href*="duplic"], a[href*="clone"], a[href*="copy"], button:has-text("Duplicar"), button:has-text("Clonar")'
+                        'a[href*="duplic"], a[href*="clone"], a[href*="copy"], form[action*="duplicate"], button:has-text("Duplicar"), button:has-text("Clonar"), button:has-text("Duplicate"), button:has-text("Clone")'
                     )
                     .first();
                 expect(await innerClone.count()).toBeGreaterThan(0);
@@ -155,36 +183,38 @@ test.describe('UC-CRUD-04: Duplicar proyecto', () => {
     });
 
     test('Clonar proyecto crea entrada independiente en listado', async ({ page }) => {
-        await page.goto('/projects/');
-        await page.waitForLoadState('networkidle');
-
-        // Contar proyectos antes
-        const countBefore = await page
-            .locator('table tbody tr, [class*="project-item"], [class*="card"]')
-            .count();
-
-        // Intentar clonar el primer proyecto disponible
-        const cloneBtn = page
-            .locator('a[href*="duplic"], a[href*="clone"], a[href*="copy"]')
-            .first();
-
-        if ((await cloneBtn.count()) === 0) {
-            test.skip(true, 'Sin botón de clonación visible en listado');
+        // Contar proyectos antes (navegar a la show page donde está el botón duplicar)
+        const projectId = await getFirstProjectId(page);
+        if (!projectId) {
+            test.skip(true, 'No hay proyectos disponibles para clonar');
             return;
         }
 
-        await cloneBtn.click();
+        // Contar proyectos antes
+        await page.goto('/projects/');
+        await page.waitForLoadState('networkidle');
+        const countBefore = await page.locator('table tbody tr').count();
+
+        // Ir a la show page del proyecto y ejecutar duplicar desde ahí
+        await page.goto(`/projects/${projectId}`);
+        await page.waitForLoadState('networkidle');
+
+        const dupForm = page.locator('form[action*="duplicate"]');
+        if ((await dupForm.count()) === 0) {
+            test.skip(true, 'Sin formulario de duplicado en show del proyecto');
+            return;
+        }
+
+        await dupForm.locator('button[type="submit"]').click();
         await page.waitForLoadState('networkidle');
 
         // Volver al listado
         await page.goto('/projects/');
         await page.waitForLoadState('networkidle');
-        const countAfter = await page
-            .locator('table tbody tr, [class*="project-item"], [class*="card"]')
-            .count();
+        const countAfter = await page.locator('table tbody tr').count();
 
         // Debe haber al menos uno más
-        expect(countAfter).toBeGreaterThanOrEqual(countBefore);
+        expect(countAfter).toBeGreaterThan(countBefore);
     });
 });
 
@@ -199,31 +229,13 @@ test.describe('UC-CRUD-06: Crear Plantilla dentro de Proyecto', () => {
     test('Listado de proyectos permite navegar a plantillas del primer proyecto', async ({
         page,
     }) => {
-        await page.goto('/projects/');
-        await page.waitForLoadState('networkidle');
-
-        // Encontrar el primer proyecto y navegar a sus plantillas
-        const projectLink = page.locator('a[href*="/projects/"]').first();
-        if ((await projectLink.count()) === 0) {
+        const projectId = await getFirstProjectId(page);
+        if (!projectId) {
             test.skip(true, 'No hay proyectos disponibles');
             return;
         }
 
-        const href = await projectLink.getAttribute('href');
-        if (!href) {
-            test.skip(true, 'Enlace de proyecto sin href');
-            return;
-        }
-
-        // Extraer ID del proyecto del href
-        const match = href.match(/\/projects\/(\d+)/);
-        if (!match) {
-            test.skip(true, 'No se pudo extraer ID del proyecto');
-            return;
-        }
-
-        const projectId = match[1];
-        await page.goto(`/projects/${projectId}/plantillas`);
+        await page.goto(`/projects/${projectId}/templates`);
         await page.waitForLoadState('networkidle');
 
         // No debe redirigir a login
@@ -231,24 +243,13 @@ test.describe('UC-CRUD-06: Crear Plantilla dentro de Proyecto', () => {
     });
 
     test('Formulario de nueva plantilla tiene campo nombre', async ({ page }) => {
-        await page.goto('/projects/');
-        await page.waitForLoadState('networkidle');
-
-        const projectLink = page.locator('a[href*="/projects/"]').first();
-        if ((await projectLink.count()) === 0) {
+        const projectId = await getFirstProjectId(page);
+        if (!projectId) {
             test.skip(true, 'No hay proyectos disponibles');
             return;
         }
 
-        const href = await projectLink.getAttribute('href');
-        const match = href?.match(/\/projects\/(\d+)/);
-        if (!match) {
-            test.skip(true, 'No se pudo extraer ID de proyecto');
-            return;
-        }
-
-        const projectId = match[1];
-        await page.goto(`/projects/${projectId}/plantillas/create`);
+        await page.goto(`/projects/${projectId}/templates/create`);
         await page.waitForLoadState('networkidle');
 
         if (page.url().includes('/login')) {

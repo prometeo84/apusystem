@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\Entity;
 
-use App\Entity\Rubro;
+use App\Entity\Item;
 use App\Entity\Tenant;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
@@ -20,9 +20,9 @@ class RubroTest extends TestCase
         return $tenant;
     }
 
-    private function buildRubro(string $tipo = 'personalizado'): Rubro
+    private function buildRubro(string $tipo = 'personalizado'): Item
     {
-        $rubro = new Rubro();
+        $rubro = new Item();
         $rubro->setTenant($this->buildTenant());
         $rubro->setCodigo('R-001');
         $rubro->setNombre('Excavación manual');

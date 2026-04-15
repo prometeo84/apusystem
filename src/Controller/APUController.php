@@ -7,7 +7,7 @@ use App\Entity\APUEquipment;
 use App\Entity\APULabor;
 use App\Entity\APUMaterial;
 use App\Entity\APUTransport;
-use App\Entity\PlantillaRubro;
+use App\Entity\TemplateItem;
 use App\Service\ExcelReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -73,8 +73,8 @@ class APUController extends AbstractController
             throw $this->createNotFoundException('APU Item not found');
         }
 
-        // Detectar si este APU está vinculado a un PlantillaRubro (para saber a dónde redirigir)
-        $plantillaRubro = $this->em->getRepository(PlantillaRubro::class)->findOneBy(['apuItem' => $apuItem]);
+        // Detectar si este APU está vinculado a un TemplateItem (para saber a dónde redirigir)
+        $plantillaRubro = $this->em->getRepository(TemplateItem::class)->findOneBy(['apuItem' => $apuItem]);
 
         if ($request->isMethod('POST')) {
             return $this->handleUpdate($request, $apuItem, $plantillaRubro);
@@ -109,7 +109,7 @@ class APUController extends AbstractController
     #[Route('/create-for-rubro/{plantillaRubroId}', name: 'app_apu_create_for_rubro', requirements: ['plantillaRubroId' => '\d+'], methods: ['GET', 'POST'])]
     public function createForRubro(int $plantillaRubroId, Request $request): Response
     {
-        $pr = $this->em->getRepository(PlantillaRubro::class)->find($plantillaRubroId);
+        $pr = $this->em->getRepository(TemplateItem::class)->find($plantillaRubroId);
 
         if (!$pr || $pr->getPlantilla()->getTenant()->getId() !== $this->getUser()->getTenant()->getId()) {
             throw $this->createNotFoundException();
@@ -128,7 +128,7 @@ class APUController extends AbstractController
             $this->addFlash('success', 'flash.apu_created');
 
             $plantilla = $pr->getPlantilla();
-            return $this->redirectToRoute('app_plantilla_show', [
+            return $this->redirectToRoute('app_template_show', [
                 'projectId' => $plantilla->getProyecto()->getId(),
                 'id' => $plantilla->getId(),
             ]);
@@ -216,7 +216,7 @@ class APUController extends AbstractController
         return $apuItem;
     }
 
-    private function handleUpdate(Request $request, APUItem $apuItem, ?PlantillaRubro $plantillaRubro = null): Response
+    private function handleUpdate(Request $request, APUItem $apuItem, ?TemplateItem $plantillaRubro = null): Response
     {
         $data = $request->request->all();
 
@@ -295,7 +295,7 @@ class APUController extends AbstractController
 
         if ($plantillaRubro) {
             $plantilla = $plantillaRubro->getPlantilla();
-            return $this->redirectToRoute('app_plantilla_show', [
+            return $this->redirectToRoute('app_template_show', [
                 'projectId' => $plantilla->getProyecto()->getId(),
                 'id'        => $plantilla->getId(),
             ]);

@@ -42,9 +42,10 @@ class ThemeSubscriber implements EventSubscriberInterface
             // Prefer user settings; fallback to tenant; then system defaults
             $tenant = $user->getTenant();
 
-            $primaryHex = $user->getThemePrimaryColor() ?? ($tenant?->getThemePrimaryColor() ?? $primaryHex);
-            $secondaryHex = $user->getThemeSecondaryColor() ?? ($tenant?->getThemeSecondaryColor() ?? $secondaryHex);
-            $mode = $user->getThemeMode() ?? ($tenant?->getThemeMode() ?? $mode);
+            // Use non-empty values only; treat empty strings as unset.
+            $primaryHex = $user->getThemePrimaryColor() ?: ($tenant?->getThemePrimaryColor() ?: $primaryHex);
+            $secondaryHex = $user->getThemeSecondaryColor() ?: ($tenant?->getThemeSecondaryColor() ?: $secondaryHex);
+            $mode = $user->getThemeMode() ?: ($tenant?->getThemeMode() ?: $mode);
         }
 
         // Compute RGB values for darker overlays

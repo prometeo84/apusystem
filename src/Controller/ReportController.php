@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Plantilla;
+use App\Entity\Template;
 use App\Entity\Projects;
 use App\Service\BudgetReportService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,7 +20,7 @@ class ReportController extends AbstractController
         private BudgetReportService $reportService
     ) {}
 
-    private function getPlantilla(int $projectId, int $id): Plantilla
+    private function getPlantilla(int $projectId, int $id): Template
     {
         $project = $this->em->getRepository(Projects::class)->findOneBy([
             'id' => $projectId,
@@ -30,7 +30,7 @@ class ReportController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $plantilla = $this->em->getRepository(Plantilla::class)->findOneBy([
+        $plantilla = $this->em->getRepository(Template::class)->findOneBy([
             'id' => $id,
             'proyecto' => $project,
         ]);

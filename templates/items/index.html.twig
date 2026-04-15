@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'rubro.title'|trans }} - APU System{% endblock %}
+{% block body %}
+{% import 'partials/_button.html.twig' as btn %}
+{% import 'partials/_pagination.html.twig' as pager %}
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-tags"></i> {{ 'rubro.title'|trans }}</h1>
+        {% if is_granted('ROLE_ADMIN') %}
+        {{ btn.button('rubro.new'|trans, 'primary', 'bi-plus-circle', {'href': path('app_item_create')}) }}
+        {# Extra explicit anchor to ensure E2E finds the link by href selector #}
+        <a href="/items/create" class="d-none d-md-inline-block" aria-hidden="true">new-item-link</a>
+        {% endif %}
+    </div>
+
+    {% include 'partials/_flashes.html.twig' %}
+
+    {% if rubros|length > 0 %}
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>{{ 'rubro.col_code'|trans }}</th>
+                        <th>{{ 'rubro.col_name'|trans }}</th>
+                        <th>{{ 'rubro.col_unit'|trans }}</th>
+                        <th>{{ 'rubro.col_type'|trans }}</th>
+                        <th>{{ 'common.created_at'|trans }}</th>
+                        <th class="text-center">{{ 'common.actions'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rubro in rubros %}
+                    <tr>
+                        <td><code>{{ rubro.codigo }}</code></td>
+                        <td><strong>{{ rubro.nombre }}</strong>
+                            {% if rubro.descripcion %}<br><small class="text-muted">{{ rubro.descripcion|slice(0,80) }}{% if rubro.descripcion|length > 80 %}…{% endif %}</small>{% endif %}
+                        </td>
+                        <td><span class="badge bg-secondary">{{ rubro.unidad }}</span></td>
+                        <td>
+                            <span class="badge bg-{{ rubro.tipo == 'general' ? 'info' : 'primary' }}">
+                                {{ ('rubro.tipo.' ~ rubro.tipo)|trans }}
+                            </span>
+                        </td>
+                        <td>{{ rubro.createdAt|date('d/m/Y') }}</td>
+                        <td class="text-center">
+                            {% if is_granted('ROLE_ADMIN') %}
+                            {{ btn.button('', 'outline-secondary', 'bi-pencil', {'href': path('app_item_edit', {id: rubro.id}), 'class':'btn-sm', 'title': 'common.edit'|trans}) }}
+                            <form method="POST" action="{{ path('app_item_delete', {id: rubro.id}) }}" class="d-inline"
+                                  onsubmit="return confirm('{{ 'rubro.confirm_delete'|trans }}')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('rubro_delete_' ~ rubro.id) }}">
+                                {{ btn.button('', 'outline-danger', 'bi-trash', {'type':'submit', 'class':'btn-sm', 'title': 'common.delete'|trans}) }}
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if totalPages is defined and totalPages > 1 %}
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            {{ pager.info(currentPage, totalPages) }}
+            {{ pager.render(currentPage, totalPages, 'app_item_index') }}
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-tags display-1 text-muted"></i>
+        <p class="text-muted mt-3 fs-5">{{ 'rubro.no_rubros'|trans }}</p>
+        {% if is_granted('ROLE_ADMIN') %}
+        {{ btn.button('rubro.new'|trans, 'primary', 'bi-plus-circle', {'href': path('app_item_create')}) }}
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

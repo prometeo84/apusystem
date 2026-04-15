@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'plantilla.title'|trans }} - {{ project.nombre }}{% endblock %}
+{% block body %}
+{% import 'partials/_button.html.twig' as btn %}
+<div class="container-fluid mt-4">
+    <nav aria-label="breadcrumb" class="mb-2">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_project_index') }}">{{ 'project.title'|trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.nombre }}</a></li>
+            <li class="breadcrumb-item active">{{ 'plantilla.title'|trans }}</li>
+        </ol>
+    </nav>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-layout-text-sidebar"></i> {{ 'plantilla.title'|trans }}</h1>
+        <div class="d-flex gap-2">
+            {{ btn.button('plantilla.new'|trans, 'primary', 'bi-plus-circle', {'href': path('app_template_create', {projectId: project.id}), 'class':'btn-gradient'}) }}
+            {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_project_show', {id: project.id})}) }}
+        </div>
+    </div>
+    {% include 'partials/_flashes.html.twig' %}
+
+    {% if plantillas|length > 0 %}
+    <div class="row g-3">
+        {% for plantilla in plantillas %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-layout-text-sidebar"></i> {{ plantilla.nombre }}</span>
+                    <span class="badge bg-white text-primary">{{ plantilla.plantillaRubros|length }} {{ 'plantilla.rubros'|trans }}</span>
+                </div>
+                <div class="card-body">
+                    {% if plantilla.descripcion %}<p class="text-muted small">{{ plantilla.descripcion }}</p>{% endif %}
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <span class="text-muted small">{{ 'plantilla.total_presupuesto'|trans }}</span>
+                        <strong class="text-primary">${{ plantilla.totalPresupuesto|number_format(2, '.', ',') }}</strong>
+                    </div>
+                    <div class="text-muted small mt-1">{{ plantilla.createdAt|date('d/m/Y') }}</div>
+                </div>
+                <div class="card-footer d-flex gap-2">
+                    {{ btn.button('common.view'|trans, 'primary', 'bi-eye', {'href': path('app_template_show', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm flex-fill'}) }}
+                    {{ btn.button('report.generate'|trans, 'success', 'bi-file-earmark-bar-graph', {'href': path('app_report_plantilla', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm'}) }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-layout-text-sidebar display-1 text-muted"></i>
+        <p class="text-muted mt-3 fs-5">{{ 'plantilla.no_plantillas'|trans }}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -496,6 +496,14 @@
     <service id="App\Controller\FaviconController" class="App\Controller\FaviconController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
     </service>
+    <service id="App\Controller\ItemController" class="App\Controller\ItemController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\ItemController"/>
+      </call>
+    </service>
     <service id="App\Controller\LocaleController" class="App\Controller\LocaleController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -514,14 +522,6 @@
       <argument type="service" id="App\Service\PasswordPolicyService"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\PasswordResetController"/>
-      </call>
-    </service>
-    <service id="App\Controller\PlantillaController" class="App\Controller\PlantillaController" public="true" autowire="true" autoconfigure="true">
-      <tag name="controller.service_arguments"/>
-      <tag name="container.service_subscriber"/>
-      <argument type="service" id="doctrine.orm.default_entity_manager"/>
-      <call method="setContainer">
-        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\PlantillaController"/>
       </call>
     </service>
     <service id="App\Controller\ProfileController" class="App\Controller\ProfileController" public="true" autowire="true" autoconfigure="true">
@@ -561,14 +561,6 @@
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\RevitUploadController"/>
       </call>
     </service>
-    <service id="App\Controller\RubroController" class="App\Controller\RubroController" public="true" autowire="true" autoconfigure="true">
-      <tag name="controller.service_arguments"/>
-      <tag name="container.service_subscriber"/>
-      <argument type="service" id="doctrine.orm.default_entity_manager"/>
-      <call method="setContainer">
-        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\RubroController"/>
-      </call>
-    </service>
     <service id="App\Controller\SecurityController" class="App\Controller\SecurityController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -598,6 +590,14 @@
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\SystemController"/>
+      </call>
+    </service>
+    <service id="App\Controller\TemplateController" class="App\Controller\TemplateController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\TemplateController"/>
       </call>
     </service>
     <service id="App\Controller\TestController" class="App\Controller\TestController" public="true" autowire="true" autoconfigure="true">
@@ -7240,15 +7240,15 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\DashboardController" class="App\Controller\DashboardController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\DashboardController" class="App\Controller\DashboardController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\DashboardController" class="App\Controller\DashboardController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ItemController" class="App\Controller\ItemController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ItemController" class="App\Controller\ItemController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\ItemController" class="App\Controller\ItemController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\LocaleController" class="App\Controller\LocaleController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\LocaleController" class="App\Controller\LocaleController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\LocaleController" class="App\Controller\LocaleController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\PasswordResetController" class="App\Controller\PasswordResetController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\PasswordResetController" class="App\Controller\PasswordResetController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\PasswordResetController" class="App\Controller\PasswordResetController" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\PlantillaController" class="App\Controller\PlantillaController" autowire="true" abstract="true"/>
-    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\PlantillaController" class="App\Controller\PlantillaController" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Controller\PlantillaController" class="App\Controller\PlantillaController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ProfileController" class="App\Controller\ProfileController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ProfileController" class="App\Controller\ProfileController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\ProfileController" class="App\Controller\ProfileController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -7261,9 +7261,6 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\RevitUploadController" class="App\Controller\RevitUploadController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\RevitUploadController" class="App\Controller\RevitUploadController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\RevitUploadController" class="App\Controller\RevitUploadController" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\RubroController" class="App\Controller\RubroController" autowire="true" abstract="true"/>
-    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\RubroController" class="App\Controller\RubroController" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Controller\RubroController" class="App\Controller\RubroController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -7273,6 +7270,9 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SystemController" class="App\Controller\SystemController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SystemController" class="App\Controller\SystemController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SystemController" class="App\Controller\SystemController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\TemplateController" class="App\Controller\TemplateController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\TemplateController" class="App\Controller\TemplateController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\TemplateController" class="App\Controller\TemplateController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\TestController" class="App\Controller\TestController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\TestController" class="App\Controller\TestController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\TestController" class="App\Controller\TestController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -8499,6 +8499,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\ItemController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ItemController"/>
+      <argument>App\Controller\ItemController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\LocaleController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\LocaleController"/>
       <argument>App\Controller\LocaleController</argument>
@@ -8508,12 +8514,6 @@
     <service id=".service_locator.TJNRSaV.App\Controller\PasswordResetController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\PasswordResetController"/>
       <argument>App\Controller\PasswordResetController</argument>
-      <argument type="service" id="service_container"/>
-      <factory service=".service_locator.TJNRSaV" method="withContext"/>
-    </service>
-    <service id=".service_locator.TJNRSaV.App\Controller\PlantillaController" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator_context" id="App\Controller\PlantillaController"/>
-      <argument>App\Controller\PlantillaController</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
@@ -8541,12 +8541,6 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
-    <service id=".service_locator.TJNRSaV.App\Controller\RubroController" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator_context" id="App\Controller\RubroController"/>
-      <argument>App\Controller\RubroController</argument>
-      <argument type="service" id="service_container"/>
-      <factory service=".service_locator.TJNRSaV" method="withContext"/>
-    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\SecurityController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SecurityController"/>
       <argument>App\Controller\SecurityController</argument>
@@ -8562,6 +8556,12 @@
     <service id=".service_locator.TJNRSaV.App\Controller\SystemController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SystemController"/>
       <argument>App\Controller\SystemController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\TemplateController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\TemplateController"/>
+      <argument>App\Controller\TemplateController</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
@@ -8745,17 +8745,17 @@
           <argument>App\Controller\DashboardController</argument>
           <argument>App\Controller\DevErrorController</argument>
           <argument>App\Controller\FaviconController</argument>
+          <argument>App\Controller\ItemController</argument>
           <argument>App\Controller\LocaleController</argument>
           <argument>App\Controller\PasswordResetController</argument>
-          <argument>App\Controller\PlantillaController</argument>
           <argument>App\Controller\ProfileController</argument>
           <argument>App\Controller\ProjectController</argument>
           <argument>App\Controller\ReportController</argument>
           <argument>App\Controller\RevitUploadController</argument>
-          <argument>App\Controller\RubroController</argument>
           <argument>App\Controller\SecurityController</argument>
           <argument>App\Controller\SecuritySettingsController</argument>
           <argument>App\Controller\SystemController</argument>
+          <argument>App\Controller\TemplateController</argument>
           <argument>App\Controller\TestController</argument>
           <argument>App\Controller\WebAuthnController</argument>
           <argument>Doctrine\Bundle\DoctrineBundle\Controller\ProfilerController</argument>

@@ -9,6 +9,10 @@ on:
     pull_request:
         branches: [main]
 
+concurrency:
+    group: snyk-${{ github.ref }}
+    cancel-in-progress: true
+
 jobs:
     snyk-scan:
         name: Snyk scan

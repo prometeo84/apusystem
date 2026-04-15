@@ -5,10 +5,10 @@ namespace App\Tests\Unit\Entity;
 use App\Entity\APUItem;
 use App\Entity\APUMaterial;
 use App\Entity\Apu;
-use App\Entity\PlantillaRubro;
-use App\Entity\Plantilla;
+use App\Entity\TemplateItem;
+use App\Entity\Template;
 use App\Entity\Projects;
-use App\Entity\Rubro;
+use App\Entity\Item;
 use App\Entity\Tenant;
 use App\Entity\User;
 use PHPUnit\Framework\TestCase;
@@ -55,9 +55,9 @@ class CRUDLifecycleTest extends TestCase
         return $p;
     }
 
-    private function buildRubro(Tenant $tenant, string $code = 'R-001'): Rubro
+    private function buildRubro(Tenant $tenant, string $code = 'R-001'): Item
     {
-        $r = new Rubro();
+        $r = new Item();
         $r->setTenant($tenant);
         $r->setCodigo($code);
         $r->setNombre('Excavación manual');
@@ -221,12 +221,12 @@ class CRUDLifecycleTest extends TestCase
         $rubro    = $this->buildRubro($tenant);
         $apuItem  = $this->buildAPUItem($tenant, 100.0);
 
-        $plantilla = new Plantilla();
+        $plantilla = new Template();
         $plantilla->setTenant($tenant);
         $plantilla->setProyecto($project);
         $plantilla->setNombre('Presupuesto Final');
 
-        $pr = new PlantillaRubro();
+        $pr = new TemplateItem();
 
         $pr->setRubro($rubro);
         $pr->setApuItem($apuItem);
@@ -242,7 +242,7 @@ class CRUDLifecycleTest extends TestCase
     {
         $tenant   = $this->buildTenant();
         $project  = $this->buildProject($tenant);
-        $plantilla = new Plantilla();
+        $plantilla = new Template();
         $plantilla->setTenant($tenant);
         $plantilla->setProyecto($project);
         $plantilla->setNombre('Presupuesto Test');
@@ -250,12 +250,12 @@ class CRUDLifecycleTest extends TestCase
         $rubro1 = $this->buildRubro($tenant, 'R-001');
         $rubro2 = $this->buildRubro($tenant, 'R-002');
 
-        $pr1 = new PlantillaRubro();
+        $pr1 = new TemplateItem();
 
         $pr1->setRubro($rubro1);
         $pr1->setCantidad('1.0');
 
-        $pr2 = new PlantillaRubro();
+        $pr2 = new TemplateItem();
 
         $pr2->setRubro($rubro2);
         $pr2->setCantidad('2.0');
@@ -279,12 +279,12 @@ class CRUDLifecycleTest extends TestCase
         $apuItem  = $this->buildAPUItem($tenant, 50.0);
 
         // Plantilla original (Usuario A / Admin)
-        $original = new Plantilla();
+        $original = new Template();
         $original->setTenant($tenant);
         $original->setProyecto($project);
         $original->setNombre('Presupuesto Original');
 
-        $prOrig = new PlantillaRubro();
+        $prOrig = new TemplateItem();
 
         $prOrig->setRubro($rubro);
         $prOrig->setApuItem($apuItem);
@@ -293,12 +293,12 @@ class CRUDLifecycleTest extends TestCase
 
         // Simular clonación: nuevo proyecto + nueva plantilla con mismos rubros
         $projectClone = $this->buildProject($tenant, 'P-CLONE');
-        $clone = new Plantilla();
+        $clone = new Template();
         $clone->setTenant($tenant);
         $clone->setProyecto($projectClone);
         $clone->setNombre('Presupuesto Clonado (Usuario B)');
 
-        $prClone = new PlantillaRubro();
+        $prClone = new TemplateItem();
 
         $prClone->setRubro($rubro);
         $prClone->setApuItem($apuItem);
@@ -347,7 +347,7 @@ class CRUDLifecycleTest extends TestCase
     {
         $tenant   = $this->buildTenant();
         $project  = $this->buildProject($tenant);
-        $plantilla = new Plantilla();
+        $plantilla = new Template();
         $plantilla->setTenant($tenant);
         $plantilla->setProyecto($project);
         $plantilla->setNombre('Presupuesto Calc');
@@ -355,7 +355,7 @@ class CRUDLifecycleTest extends TestCase
         // Rubro 1: APU costo unitario = $100, cantidad = 5 → subtotal = $500
         $rubro1  = $this->buildRubro($tenant, 'R-A');
         $apu1    = $this->buildAPUItem($tenant, 100.0);
-        $pr1     = new PlantillaRubro();
+        $pr1     = new TemplateItem();
 
         $pr1->setRubro($rubro1);
         $pr1->setApuItem($apu1);
@@ -365,7 +365,7 @@ class CRUDLifecycleTest extends TestCase
         // Rubro 2: APU costo unitario = $200, cantidad = 3 → subtotal = $600
         $rubro2  = $this->buildRubro($tenant, 'R-B');
         $apu2    = $this->buildAPUItem($tenant, 200.0);
-        $pr2     = new PlantillaRubro();
+        $pr2     = new TemplateItem();
 
         $pr2->setRubro($rubro2);
         $pr2->setApuItem($apu2);

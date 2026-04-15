@@ -4,10 +4,10 @@ namespace App\Tests\Unit\Entity;
 
 use App\Entity\APUItem;
 use App\Entity\APUMaterial;
-use App\Entity\Plantilla;
-use App\Entity\PlantillaRubro;
+use App\Entity\Template;
+use App\Entity\TemplateItem;
 use App\Entity\Projects;
-use App\Entity\Rubro;
+use App\Entity\Item;
 use App\Entity\Tenant;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
@@ -35,9 +35,9 @@ class PlantillaTest extends TestCase
         return $project;
     }
 
-    private function buildRubro(Tenant $tenant): Rubro
+    private function buildRubro(Tenant $tenant): Item
     {
-        $rubro = new Rubro();
+        $rubro = new Item();
         $rubro->setTenant($tenant);
         $rubro->setCodigo('R-001');
         $rubro->setNombre('Excavación');
@@ -74,7 +74,7 @@ class PlantillaTest extends TestCase
         $tenant  = $this->buildTenant();
         $project = $this->buildProject($tenant);
 
-        $plantilla = new Plantilla();
+        $plantilla = new Template();
         $plantilla->setTenant($tenant);
         $plantilla->setProyecto($project);
         $plantilla->setNombre('Presupuesto Fondaciones');
@@ -89,7 +89,7 @@ class PlantillaTest extends TestCase
         $tenant  = $this->buildTenant();
         $project = $this->buildProject($tenant);
 
-        $plantilla = new Plantilla();
+        $plantilla = new Template();
         $plantilla->setTenant($tenant);
         $plantilla->setProyecto($project);
         $plantilla->setNombre('Vacía');
@@ -100,14 +100,14 @@ class PlantillaTest extends TestCase
     #[Test]
     public function activaEsTruePorDefecto(): void
     {
-        $plantilla = new Plantilla();
+        $plantilla = new Template();
         $this->assertTrue($plantilla->isActiva());
     }
 
     #[Test]
     public function createdAtSeInicializaEnConstructor(): void
     {
-        $plantilla = new Plantilla();
+        $plantilla = new Template();
         $this->assertInstanceOf(\DateTimeInterface::class, $plantilla->getCreatedAt());
     }
 
@@ -120,7 +120,7 @@ class PlantillaTest extends TestCase
         $rubro   = $this->buildRubro($tenant);
         $apu     = $this->buildAPUWithMaterialCost($tenant, 50.0); // costo unitario = 50
 
-        $pr = new PlantillaRubro();
+        $pr = new TemplateItem();
         $pr->setRubro($rubro);
         $pr->setApuItem($apu);
         $pr->setCantidad('3.0'); // 3 unidades
@@ -135,7 +135,7 @@ class PlantillaTest extends TestCase
         $tenant = $this->buildTenant();
         $rubro  = $this->buildRubro($tenant);
 
-        $pr = new PlantillaRubro();
+        $pr = new TemplateItem();
         $pr->setRubro($rubro);
         $pr->setCantidad('5.0');
         // Sin APU
@@ -146,14 +146,14 @@ class PlantillaTest extends TestCase
     #[Test]
     public function plantillaRubroCantidadDefaultEsUno(): void
     {
-        $pr = new PlantillaRubro();
+        $pr = new TemplateItem();
         $this->assertSame('1.0000', $pr->getCantidad());
     }
 
     #[Test]
     public function plantillaRubroOrdenDefaultEsCero(): void
     {
-        $pr = new PlantillaRubro();
+        $pr = new TemplateItem();
         $this->assertSame(0, $pr->getOrden());
     }
 
@@ -164,7 +164,7 @@ class PlantillaTest extends TestCase
         $rubro  = $this->buildRubro($tenant);
         $apu    = $this->buildAPUWithMaterialCost($tenant, 75.0);
 
-        $pr = new PlantillaRubro();
+        $pr = new TemplateItem();
         $pr->setRubro($rubro);
         $pr->setApuItem($apu);
         $pr->setCantidad('2.0');
@@ -182,7 +182,7 @@ class PlantillaTest extends TestCase
         // Dos PlantillaRubros independientes sumando sus costos
         $total = 0.0;
         for ($i = 1; $i <= 2; $i++) {
-            $rubro = new Rubro();
+            $rubro = new Item();
             $rubro->setTenant($tenant);
             $rubro->setCodigo('R-00' . $i);
             $rubro->setNombre('Rubro ' . $i);
@@ -191,7 +191,7 @@ class PlantillaTest extends TestCase
 
             $apu = $this->buildAPUWithMaterialCost($tenant, 100.0); // 100 por unidad
 
-            $pr = new PlantillaRubro();
+            $pr = new TemplateItem();
             $pr->setRubro($rubro);
             $pr->setApuItem($apu);
             $pr->setCantidad('5.0'); // 5 unidades => 500 cada uno

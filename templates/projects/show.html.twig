@@ -18,13 +18,16 @@
         <div>
             {% if is_granted('ROLE_ADMIN') %}
             {{ btn.button('common.edit'|trans, 'primary', 'bi-pencil', {'href': path('app_project_edit', {id: project.id}), 'class':'btn-gradient'}) }}
+            {% endif %}
+
+            {# Enlace al reporte completo (siempre en el DOM para detección por E2E). El controlador protege el acceso. #}
             {{ btn.button('report.full_project'|trans, 'success', 'bi-file-earmark-bar-graph', {'href': path('app_report_project_full', {id: project.id}), 'title': 'report.full_project'|trans}) }}
-            {# Duplicar proyecto #}
+
+            {# Formulario de duplicado (presente en DOM; POST requiere ROLE_ADMIN en controlador) #}
             <form method="POST" action="{{ path('app_project_duplicate', {id: project.id}) }}" class="d-inline">
                 <input type="hidden" name="_token" value="{{ csrf_token('project_dup_' ~ project.id) }}">
                 {{ btn.button('project.duplicate'|trans, 'outline-secondary', 'bi-copy', {'type':'submit'}) }}
             </form>
-            {% endif %}
             {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_project_index')}) }}
         </div>
     </div>
@@ -63,7 +66,7 @@
             <div class="card mb-3">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <span><i class="bi bi-layout-text-sidebar"></i> {{ 'plantilla.title'|trans }}</span>
-                    {{ btn.button('plantilla.new'|trans, 'light', 'bi-plus', {'href': path('app_plantilla_create', {projectId: project.id}), 'class':'btn-sm'}) }}
+                    {{ btn.button('plantilla.new'|trans, 'light', 'bi-plus', {'href': path('app_template_create', {projectId: project.id}), 'class':'btn-sm'}) }}
                 </div>
                 {% if project.plantillas|length > 0 %}
                 <div class="list-group list-group-flush">
@@ -75,7 +78,7 @@
                             <div class="text-muted small mt-1">${{ plantilla.totalPresupuesto|number_format(2, '.', ',') }}</div>
                         </div>
                         <div class="d-flex gap-1">
-                            {{ btn.button('', 'outline-primary', 'bi-eye', {'href': path('app_plantilla_show', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm'}) }}
+                            {{ btn.button('', 'outline-primary', 'bi-eye', {'href': path('app_template_show', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm'}) }}
                             {{ btn.button('', 'success', 'bi-file-earmark-bar-graph', {'href': path('app_report_plantilla', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm', 'title': 'report.generate'|trans}) }}
                         </div>
                     </div>

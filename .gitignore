@@ -56,3 +56,11 @@ yarn-error.log
 # Local tools and caches
 .tools/
 __pycache__/
+
+# Playwright artifacts
+test-results/
+tests/playwright-report/
+
+# Backups locales
+src.backup_*/
+templates.backup_*/

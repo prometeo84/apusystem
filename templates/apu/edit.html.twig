@@ -14,12 +14,12 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ path('app_project_index') }}">{{ 'nav.projects'|trans }}</a></li>
             <li class="breadcrumb-item">
-                <a href="{{ path('app_plantilla_index', {'projectId': plantillaRubro.plantilla.proyecto.id}) }}">
+                <a href="{{ path('app_template_index', {'projectId': plantillaRubro.plantilla.proyecto.id}) }}">
                     {{ plantillaRubro.plantilla.proyecto.nombre }}
                 </a>
             </li>
             <li class="breadcrumb-item">
-                <a href="{{ path('app_plantilla_show', {'projectId': plantillaRubro.plantilla.proyecto.id, 'id': plantillaRubro.plantilla.id}) }}">
+                <a href="{{ path('app_template_show', {'projectId': plantillaRubro.plantilla.proyecto.id, 'id': plantillaRubro.plantilla.id}) }}">
                     {{ plantillaRubro.plantilla.nombre }}
                 </a>
             </li>
@@ -255,7 +255,7 @@
         <div class="d-flex justify-content-between">
             {% if plantillaRubro %}
                 {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left',
-                    {'href': path('app_plantilla_show', {'projectId': plantillaRubro.plantilla.proyecto.id, 'id': plantillaRubro.plantilla.id})}) }}
+                    {'href': path('app_template_show', {'projectId': plantillaRubro.plantilla.proyecto.id, 'id': plantillaRubro.plantilla.id})}) }}
             {% else %}
                 {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_apu_index')}) }}
             {% endif %}

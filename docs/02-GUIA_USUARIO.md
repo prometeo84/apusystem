@@ -135,7 +135,7 @@ URL: http://localhost/rubros
 ### Prueba 6: Crear Plantilla y Asignar Rubros
 
 ```
-URL: http://localhost/projects/{id}/plantillas/new
+URL: http://localhost/projects/{id}/templates/create
 ```
 
 **Pasos:**
