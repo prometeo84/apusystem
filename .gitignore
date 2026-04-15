@@ -64,3 +64,7 @@ tests/playwright-report/
 # Backups locales
 src.backup_*/
 templates.backup_*/
+
+# Symfony var/
+var/log/
+var/cache/

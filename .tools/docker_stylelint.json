@@ -1,1 +1,2 @@
-[{"source":"/work/assets/styles/app.css","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":false,"warnings":[]},{"source":"/work/assets/styles/app.prefixed.css","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":false,"warnings":[]}]
+[{"deprecations":[],"errored":false,"invalidOptionWarnings":[],"parseErrors":[],"source":"./assets/styles/app.css","warnings":[]},{"deprecations":[],"errored":false,"invalidOptionWarnings":[],"parseErrors":[],"source":"./assets/styles/app.prefixed.css","warnings":[]}]
+
