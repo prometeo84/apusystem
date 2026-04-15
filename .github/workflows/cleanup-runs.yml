@@ -3,7 +3,7 @@ name: Cleanup Old Workflow Runs
 on:
     schedule:
         - cron: '0 3 * * 0' # Cada domingo a las 03:00 UTC
-    workflow_dispatch:      # Permite ejecución manual desde la UI de GitHub
+    workflow_dispatch: # Permite ejecución manual desde la UI de GitHub
 
 permissions:
     actions: write
@@ -14,31 +14,42 @@ concurrency:
 
 jobs:
     cleanup:
-        name: Delete runs older than 30 days
+        name: Keep only latest run per workflow
         runs-on: ubuntu-latest
         steps:
-            - name: Delete completed runs older than 30 days
+            - name: Delete all runs except the most recent per workflow
               env:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                  CUTOFF=$(python3 -c "import datetime; print((datetime.datetime.utcnow() - datetime.timedelta(days=30)).strftime('%Y-%m-%dT%H:%M:%SZ'))")
-                  echo "Deleting runs created before: $CUTOFF"
-
+                  KEEP=1
                   DELETED=0
-                  PAGE=1
-                  while true; do
-                      IDS=$(gh api "repos/${{ github.repository }}/actions/runs?per_page=100&page=$PAGE" \
-                          --jq ".workflow_runs[] | select(.status == \"completed\") | select(.created_at < \"$CUTOFF\") | .id" 2>/dev/null || true)
+                  REPO="${{ github.repository }}"
 
-                      [ -z "$IDS" ] && break
+                  # Obtener lista de workflows activos
+                  WF_IDS=$(gh api "repos/$REPO/actions/workflows" --jq '.workflows[].id')
+
+                  for WF_ID in $WF_IDS; do
+                      WF_NAME=$(gh api "repos/$REPO/actions/workflows/$WF_ID" --jq '.name')
+                      echo "Workflow: $WF_NAME ($WF_ID)"
+
+                      # Recopilar todos los run IDs ordenados por fecha desc
+                      ALL_RUNS=$(gh api "repos/$REPO/actions/workflows/$WF_ID/runs?per_page=100" \
+                          --jq '[.workflow_runs | sort_by(.created_at) | reverse | .[].id]')
+
+                      # Conservar los primeros KEEP, borrar el resto
+                      TO_DELETE=$(echo "$ALL_RUNS" | python3 -c "
+                  import json,sys
+                  ids = json.load(sys.stdin)
+                  for i in ids[$KEEP:]:
+                      print(i)
+                  ")
 
                       while IFS= read -r run_id; do
-                          echo "  Deleting run $run_id"
-                          gh api -X DELETE "repos/${{ github.repository }}/actions/runs/$run_id" --silent 2>/dev/null || true
+                          [ -z "$run_id" ] && continue
+                          echo "  DELETE run $run_id"
+                          gh api -X DELETE "repos/$REPO/actions/runs/$run_id" --silent 2>/dev/null || true
                           DELETED=$((DELETED + 1))
-                      done <<< "$IDS"
-
-                      PAGE=$((PAGE + 1))
+                      done <<< "$TO_DELETE"
                   done
 
-                  echo "Done. Deleted $DELETED runs."
+                  echo "Done. Total eliminados: $DELETED"
