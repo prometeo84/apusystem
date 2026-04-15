@@ -12,6 +12,10 @@ permissions:
     contents: write
     actions: read
 
+concurrency:
+    group: update-badge-${{ github.ref }}
+    cancel-in-progress: true
+
 jobs:
     update-badge:
         runs-on: ubuntu-latest
@@ -39,5 +43,5 @@ jobs:
                   git config user.name "github-actions[bot]"
                   git config user.email "github-actions[bot]@users.noreply.github.com"
                   git add assets/badges/artifacts.svg || true
-                  git commit -m "ci: update artifacts badge (artifacts count)" || echo "No changes to commit"
+                  git commit -m "ci: update artifacts badge [skip ci]" || echo "No changes to commit"
                   git push origin HEAD:main || true
