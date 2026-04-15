@@ -7,8 +7,10 @@ Sistema multi-tenant para análisis y gestión de APUs (Análisis de Precios Uni
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql)](https://mysql.com)
 [![License](https://img.shields.io/badge/License-Proprietary-red)]()
 
-[![W3C CI](https://github.com/prometeo84/apusystem/actions/workflows/css-validation.yml/badge.svg?branch=main)](https://github.com/prometeo84/apusystem/actions/workflows/css-validation.yml)
-[![W3C CI](https://img.shields.io/github/actions/workflow/status/prometeo84/apusystem/css-validation.yml?branch=main&label=W3C%20CI&style=flat-square)](https://github.com/prometeo84/apusystem/actions/workflows/css-validation.yml)
+[![CI - Tests](https://github.com/prometeo84/apusystem/actions/workflows/ci-tests.yml/badge.svg?branch=main)](https://github.com/prometeo84/apusystem/actions/workflows/ci-tests.yml)
+[![Validators Suite](https://github.com/prometeo84/apusystem/actions/workflows/validators.yml/badge.svg?branch=main)](https://github.com/prometeo84/apusystem/actions/workflows/validators.yml)
+[![CodeQL](https://github.com/prometeo84/apusystem/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)](https://github.com/prometeo84/apusystem/actions/workflows/codeql-analysis.yml)
+[![Snyk Security](https://github.com/prometeo84/apusystem/actions/workflows/snyk-scan.yml/badge.svg?branch=main)](https://github.com/prometeo84/apusystem/actions/workflows/snyk-scan.yml)
 
 ---
 

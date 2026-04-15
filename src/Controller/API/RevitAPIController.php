@@ -229,15 +229,25 @@ class RevitAPIController extends AbstractController
         try {
             $token = $this->jwtConfig->parser()->parse($tokenString);
 
-            if (!$this->jwtConfig->validator()->validate($token, ...$this->jwtConfig->validationConstraints())) {
+            $constraints = [
+                new \Lcobucci\JWT\Validation\Constraint\SignedWith(
+                    $this->jwtConfig->signer(),
+                    $this->jwtConfig->signingKey()
+                ),
+                new \Lcobucci\JWT\Validation\Constraint\LooseValidAt(
+                    new \Lcobucci\Clock\SystemClock(new \DateTimeZone('UTC'))
+                ),
+            ];
+
+            if (!$this->jwtConfig->validator()->validate($token, ...$constraints)) {
                 return null;
             }
 
             return [
                 'user_id' => $token->claims()->get('user_id'),
-                'email' => $token->claims()->get('email'),
-                'tenant' => $token->claims()->get('tenant'),
-                'role' => $token->claims()->get('role')
+                'email'   => $token->claims()->get('email'),
+                'tenant'  => $token->claims()->get('tenant'),
+                'role'    => $token->claims()->get('role'),
             ];
         } catch (\Exception $e) {
             return null;
