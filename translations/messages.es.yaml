@@ -398,6 +398,13 @@ security:
   last_update: "Última actualización"
   min_8_chars: "Mínimo 8 caracteres"
   password_advice: "Se recomienda cambiar tu contraseña regularmente para mantener tu cuenta segura."
+
+security_2fa:
+  verify_title: "Verificación de dos factores"
+  verify_description: "Ingresa el código de verificación de tu aplicación de autenticación o usa un código de recuperación." 
+  enter_code: "Ingresa el código de 6 dígitos"
+  verify_button: "Verificar"
+  use_recovery_code: "Usar código de recuperación"
   password_recommendation: "Se recomienda cambiar tu contraseña regularmente para mantener tu cuenta segura"
   recent_events: "Eventos de Seguridad Recientes"
   recommendation: "Se recomienda usar mayúsculas, minúsculas, números y símbolos"

@@ -398,6 +398,13 @@ security:
   password_recommendation: "It is recommended to change your password regularly to keep your account secure"
   recovery_codes_available: "Recovery codes available"
   sessions: "Active Sessions"
+
+security_2fa:
+  verify_title: "Two-factor verification"
+  verify_description: "Enter the verification code from your authenticator app or use a recovery code."
+  enter_code: "Enter the 6-digit code"
+  verify_button: "Verify"
+  use_recovery_code: "Use recovery code"
   revoke: "Revoke"
   no_active_sessions: "No active sessions."
   title: "Security Settings"
