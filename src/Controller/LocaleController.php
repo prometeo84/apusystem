@@ -31,17 +31,33 @@ class LocaleController extends AbstractController
                 $scheme = isset($parsed['scheme']) ? strtolower($parsed['scheme']) : 'http';
                 if ($parsed['host'] === $request->getHost() && in_array($scheme, ['http', 'https'], true)) {
                     // Build safe path: normalize to prevent protocol-relative redirects (// attack)
-                    $path = '/' . ltrim(isset($parsed['path']) ? $parsed['path'] : '/', '/');
+                    $rawPath = isset($parsed['path']) ? $parsed['path'] : '/';
+                    // Remove control characters and ensure single leading slash
+                    $rawPath = preg_replace('/[\x00-\x1F\x7F]+/u', '', $rawPath);
+                    $path = '/' . ltrim($rawPath, '/');
+
+                    // Safely rebuild query string to avoid injection
                     if (isset($parsed['query'])) {
-                        $path .= '?' . $parsed['query'];
+                        parse_str($parsed['query'], $qarr);
+                        $qs = http_build_query($qarr);
+                        if ($qs !== '') {
+                            $path .= '?' . $qs;
+                        }
                     }
+
                     return $this->redirect($path);
                 }
             } elseif (isset($parsed['path']) && strpos($parsed['path'], '/') === 0) {
                 // Relative path: normalize to prevent // protocol-relative trick
-                $path = '/' . ltrim($parsed['path'], '/');
+                $rawPath = $parsed['path'];
+                $rawPath = preg_replace('/[\x00-\x1F\x7F]+/u', '', $rawPath);
+                $path = '/' . ltrim($rawPath, '/');
                 if (isset($parsed['query'])) {
-                    $path .= '?' . $parsed['query'];
+                    parse_str($parsed['query'], $qarr);
+                    $qs = http_build_query($qarr);
+                    if ($qs !== '') {
+                        $path .= '?' . $qs;
+                    }
                 }
                 return $this->redirect($path);
             }
