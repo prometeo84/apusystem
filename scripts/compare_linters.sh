@@ -27,6 +27,16 @@ fi
 echo "Stylelint (local) -> .tools/local_stylelint.json"
 npx --yes stylelint 'assets/**/*.css' --formatter json > .tools/local_stylelint.json || true
 
+# normalize paths in local stylelint output
+if [ -f .tools/local_stylelint.json ]; then
+  sed -i.bak "s|$ROOT|.|g" .tools/local_stylelint.json || true
+fi
+if [ -f .tools/local_stylelint.json ] && command -v jq >/dev/null 2>&1; then
+  jq -S -c '.' .tools/local_stylelint.json > .tools/local_stylelint.json.tmp || true
+  mv .tools/local_stylelint.json.tmp .tools/local_stylelint.json || true
+  printf '\n' >> .tools/local_stylelint.json || true
+fi
+
 # PHPStan
 echo "PHPStan (local) -> .tools/local_phpstan.json"
 if [ -x vendor/bin/phpstan ]; then
@@ -63,6 +73,16 @@ fi
 
 echo "Stylelint (docker) -> .tools/docker_stylelint.json"
 docker run --rm -v "$ROOT":/work -w /work node:20 bash -lc "npm ci --no-audit --no-fund >/dev/null 2>&1 || true; npx --yes stylelint 'assets/**/*.css' --formatter json" > .tools/docker_stylelint.json || true
+
+# normalize paths in docker stylelint output
+if [ -f .tools/docker_stylelint.json ]; then
+  sed -i.bak "s|/work|.|g" .tools/docker_stylelint.json || true
+fi
+if [ -f .tools/docker_stylelint.json ] && command -v jq >/dev/null 2>&1; then
+  jq -S -c '.' .tools/docker_stylelint.json > .tools/docker_stylelint.json.tmp || true
+  mv .tools/docker_stylelint.json.tmp .tools/docker_stylelint.json || true
+  printf '\n' >> .tools/docker_stylelint.json || true
+fi
 
 # PHPStan using php:8.3-cli
 echo "PHPStan (docker) -> .tools/docker_phpstan.json"
