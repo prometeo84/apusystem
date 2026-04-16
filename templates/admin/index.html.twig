@@ -11,6 +11,7 @@
 
         <div class="container-fluid p-4 content-wrapper">
             <div class="row">
+                {% if not is_granted('ROLE_SUPER_ADMIN') %}
                 <div class="col-md-3 mb-4">
                     <div class="card text-white bg-primary">
                         <div class="card-body">
@@ -31,6 +32,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
 
                 <div class="col-md-3 mb-4">
                     <div class="card text-white bg-success">
@@ -90,6 +92,31 @@
                         </div>
                     </div>
                 </div>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <div class="col-md-3 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-speedometer2"></i> {{ 'admin.system_status'|trans }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    {{ 'admin.database'|trans }}: <strong>OK</strong>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    {{ 'admin.sessions'|trans }}: <strong>OK</strong>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    Email: <strong>OK</strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
 
             <div class="row">
@@ -126,6 +153,7 @@
                 </div>
 
                 <div class="col-md-4 mb-4">
+                    {% if not is_granted('ROLE_SUPER_ADMIN') %}
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0"><i class="bi bi-gear-fill"></i> {{ 'system.quick_actions'|trans }}</h5>
@@ -140,7 +168,9 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
 
+                    {% if not is_granted('ROLE_SUPER_ADMIN') %}
                     <div class="card mt-4">
                         <div class="card-header">
                             <h5 class="mb-0"><i class="bi bi-speedometer2"></i> {{ 'admin.system_status'|trans }}</h5>
@@ -162,6 +192,7 @@
                             </ul>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

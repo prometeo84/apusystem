@@ -103,15 +103,29 @@
                                             <td>{{ session.lastActivityAt|date('d/m/Y H:i') }}</td>
                                             <td>
                                                                                                 <form method="post" action="{{ path('app_security_session_revoke', {id: session.id}) }}"
-                                                                                                            style="display: inline;" onsubmit="return confirm('{{ 'security.revoke'|trans }}')">
-                                                                                                        {{ btn.button('security.revoke'|trans, 'outline-danger', 'bi-x-circle', {'type':'submit','class':'btn-sm'}) }}
-                                                                                                </form>
+                                                                                                        style="display: inline;" onsubmit="return confirm('{{ 'security.revoke'|trans }}')">
+                                                                                                    <input type="hidden" name="_token" value="{{ csrf_token('revoke_session' ~ session.id) }}">
+                                                                                                    {{ btn.button('security.revoke'|trans, 'outline-danger', 'bi-x-circle', {'type':'submit','class':'btn-sm'}) }}
+                                                                                                                            </form>
                                             </td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
                         </div>
+                        {% if sessions_total_pages is defined and sessions_total_pages > 1 %}
+                            <nav aria-label="Sessions pagination">
+                                <ul class="pagination mt-2">
+                                    <li class="page-item {{ sessions_page <= 1 ? 'disabled' }}">
+                                        <a class="page-link" href="{{ path('app_security', (app.request.query.all|merge({'sessions_page': sessions_page-1}))) }}">&laquo; {{ 'pagination.previous'|trans({}, 'messages') }}</a>
+                                    </li>
+                                    <li class="page-item disabled"><span class="page-link">{{ sessions_page }} / {{ sessions_total_pages }}</span></li>
+                                    <li class="page-item {{ sessions_page >= sessions_total_pages ? 'disabled' }}">
+                                        <a class="page-link" href="{{ path('app_security', (app.request.query.all|merge({'sessions_page': sessions_page+1}))) }}">{{ 'pagination.next'|trans({}, 'messages') }} &raquo;</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        {% endif %}
                     {% else %}
                         <p class="text-muted">{{ 'security.no_active_sessions'|trans }}</p>
                     {% endif %}
@@ -149,6 +163,19 @@
                             </tbody>
                         </table>
                     </div>
+                    {% if events_total_pages is defined and events_total_pages > 1 %}
+                        <nav aria-label="Events pagination">
+                            <ul class="pagination mt-2">
+                                <li class="page-item {{ events_page <= 1 ? 'disabled' }}">
+                                    <a class="page-link" href="{{ path('app_security', (app.request.query.all|merge({'events_page': events_page-1}))) }}">&laquo; {{ 'pagination.previous'|trans({}, 'messages') }}</a>
+                                </li>
+                                <li class="page-item disabled"><span class="page-link">{{ events_page }} / {{ events_total_pages }}</span></li>
+                                <li class="page-item {{ events_page >= events_total_pages ? 'disabled' }}">
+                                    <a class="page-link" href="{{ path('app_security', (app.request.query.all|merge({'events_page': events_page+1}))) }}">{{ 'pagination.next'|trans({}, 'messages') }} &raquo;</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    {% endif %}
                 </div>
             </div>
         </div>

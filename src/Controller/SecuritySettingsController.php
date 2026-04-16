@@ -24,25 +24,40 @@ class SecuritySettingsController extends AbstractController
     ) {}
 
     #[Route('', name: 'app_security')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         /** @var User $user */
         $user = $this->getUser();
 
-        // Obtener sesiones activas
-        $activeSessions = $this->em->getRepository(\App\Entity\LoginSession::class)
-            ->findBy([
-                'user' => $user,
-                'isActive' => true
-            ], ['lastActivityAt' => 'DESC']);
+        // Obtener sesiones activas con paginación
+        $sessionRepo = $this->em->getRepository(\App\Entity\LoginSession::class);
+        $sessionsPage = max(1, (int)$request->query->get('sessions_page', 1));
+        $sessionsPerPage = 10;
+        $totalSessions = $sessionRepo->count([
+            'user' => $user,
+            'isActive' => true
+        ]);
+        $sessionsOffset = ($sessionsPage - 1) * $sessionsPerPage;
+        $activeSessions = $sessionRepo->findBy([
+            'user' => $user,
+            'isActive' => true
+        ], ['lastActivityAt' => 'DESC'], $sessionsPerPage, $sessionsOffset);
+        $sessionsTotalPages = $sessionsPerPage > 0 ? (int)ceil($totalSessions / $sessionsPerPage) : 1;
 
-        // Obtener últimos eventos de seguridad
-        $securityEvents = $this->em->getRepository(\App\Entity\SecurityEvent::class)
-            ->findBy(
-                ['user' => $user],
-                ['createdAt' => 'DESC'],
-                10
-            );
+
+        // Obtener últimos eventos de seguridad con paginación
+        $eventsRepo = $this->em->getRepository(\App\Entity\SecurityEvent::class);
+        $eventsPage = max(1, (int)$request->query->get('events_page', 1));
+        $eventsPerPage = 10;
+        $totalEvents = $eventsRepo->count(['user' => $user]);
+        $eventsOffset = ($eventsPage - 1) * $eventsPerPage;
+        $securityEvents = $eventsRepo->findBy(
+            ['user' => $user],
+            ['createdAt' => 'DESC'],
+            $eventsPerPage,
+            $eventsOffset
+        );
+        $eventsTotalPages = $eventsPerPage > 0 ? (int)ceil($totalEvents / $eventsPerPage) : 1;
 
         return $this->render('security/index.html.twig', [
             'user' => $user,
@@ -50,6 +65,10 @@ class SecuritySettingsController extends AbstractController
             'securityEvents' => $securityEvents,
             'recoveryCodes' => $user->isTotpEnabled() ?
                 $this->twoFactorService->getRemainingRecoveryCodesCount($user) : 0,
+            'sessions_page' => $sessionsPage,
+            'sessions_total_pages' => $sessionsTotalPages,
+            'events_page' => $eventsPage,
+            'events_total_pages' => $eventsTotalPages,
         ]);
     }
 
@@ -185,7 +204,7 @@ class SecuritySettingsController extends AbstractController
     }
 
     #[Route('/sessions/{id}/revoke', name: 'app_security_session_revoke', methods: ['POST'])]
-    public function revokeSession(int $id): Response
+    public function revokeSession(Request $request, int $id): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -194,6 +213,13 @@ class SecuritySettingsController extends AbstractController
 
         if (!$session || $session->getUser()->getId() !== $user->getId()) {
             throw $this->createNotFoundException('Sesión no encontrada.');
+        }
+
+        // Verificar token CSRF
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('revoke_session' . $session->getId(), $token)) {
+            $this->addFlash('error', 'common.error_invalid_csrf');
+            return $this->redirectToRoute('app_security');
         }
 
         $session->invalidate();

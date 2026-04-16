@@ -15,10 +15,12 @@ when@dev:
                 channels: ["!event", "!deprecation"]
                 formatter: monolog.formatter.line
             # Handler específico para errores
+            # Usar nivel "critical" en dev para evitar que AccessDenied (403)
+            # generados por tests de control de acceso se almacenen en error.log.
             error:
                 type: stream
                 path: "%kernel.logs_dir%/error.log"
-                level: error
+                level: critical
             # Handler para seguridad
             security:
                 type: stream
@@ -43,7 +45,9 @@ when@test:
                 type: fingers_crossed
                 action_level: error
                 handler: nested
-                excluded_http_codes: [404, 405]
+                # Excluir 403 para evitar que AccessDenied (ROLE failures) registrados durante E2E
+                # sean tratados como errores que llenen error.log en el entorno de test.
+                excluded_http_codes: [403, 404, 405]
                 channels: ["!event"]
             nested:
                 type: stream

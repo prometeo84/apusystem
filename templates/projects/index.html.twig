@@ -36,21 +36,21 @@
                     <tbody>
                         {% for project in projects %}
                             <tr>
-                                <td><strong>{{ project.nombre }}</strong></td>
-                                <td><span class="badge bg-secondary">{{ project.codigo }}</span></td>
-                                <td>{{ project.cliente ?? '—' }}</td>
+                                <td><strong>{{ project.name }}</strong></td>
+                                <td><span class="badge bg-secondary">{{ project.code }}</span></td>
+                                <td>{{ project.client ?? '—' }}</td>
                                 <td>
                                     {% set statusClass = {
                                         'planificacion': 'warning',
                                         'en_proceso': 'primary',
                                         'pausado': 'secondary',
                                         'finalizado': 'success'
-                                    }[project.estado] ?? 'secondary' %}
-                                    <span class="badge bg-{{ statusClass }}">{{ ('project.status.' ~ project.estado)|trans }}</span>
+                                    }[project.status] ?? 'secondary' %}
+                                    <span class="badge bg-{{ statusClass }}">{{ ('project.status.' ~ project.status)|trans }}</span>
                                 </td>
                                 <td class="text-end">
-                                    {% if project.presupuestoTotal %}
-                                        ${{ project.presupuestoTotal|number_format(2, '.', ',') }}
+                                    {% if project.totalBudget %}
+                                        ${{ project.totalBudget|number_format(2, '.', ',') }}
                                     {% else %}
                                         —
                                     {% endif %}

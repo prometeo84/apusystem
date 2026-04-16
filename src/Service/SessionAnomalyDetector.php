@@ -87,6 +87,32 @@ class SessionAnomalyDetector
         return false;
     }
 
+    /**
+     * Detecta anomalías para todas las sesiones activas de un usuario.
+     * Retorna un array asociativo [sessionId => [anomalies...]] para sesiones sospechosas.
+     */
+    public function detectForUser(User $user): array
+    {
+        $results = [];
+
+        $sessions = $this->em->getRepository(LoginSession::class)
+            ->findBy(['user' => $user, 'isActive' => true]);
+
+        foreach ($sessions as $s) {
+            // Reusar detect() por sesión
+            if ($this->detect($user, $s->getSessionId())) {
+                $results[$s->getId()] = [
+                    'sessionId' => $s->getSessionId(),
+                    'ip' => $s->getIpAddress(),
+                    'userAgent' => $s->getUserAgent(),
+                    'lastActivityAt' => $s->getLastActivityAt(),
+                ];
+            }
+        }
+
+        return $results;
+    }
+
     private function detectIpChange(LoginSession $session, ?string $currentIp): bool
     {
         if (!$currentIp) {
@@ -106,7 +132,7 @@ class SessionAnomalyDetector
     private function detectMultipleSessions(User $user): bool
     {
         $cutoffTime = new \DateTime('-' . self::MULTIPLE_SESSIONS_WINDOW . ' seconds');
-        
+
         $qb = $this->em->createQueryBuilder();
         $qb->select('COUNT(DISTINCT ls.ipAddress)')
             ->from(LoginSession::class, 'ls')
@@ -125,7 +151,7 @@ class SessionAnomalyDetector
     {
         // Obtener requests del último minuto
         $cutoffTime = new \DateTime('-1 minute');
-        
+
         $qb = $this->em->createQueryBuilder();
         $qb->select('COUNT(ls.id)')
             ->from(LoginSession::class, 'ls')
@@ -144,7 +170,7 @@ class SessionAnomalyDetector
         // Analizar desviación estándar de intervalos de tiempo
         // (Bots tienen patrones muy regulares, humanos son más aleatorios)
         // Simplificación: si hay actividad muy constante, es sospechoso
-        
+
         return false; // Implementación simplificada
     }
 

@@ -304,12 +304,8 @@ emails:
 
 mails:
   important: "IMPORTANT"
-
-flash:
-  cannot_use_reserved_slug: "You cannot use this reserved identifier for the company."
-  cannot_modify_protected_company: "This protected company cannot be modified."
-
 # Report strings
+
 report:
   budget_title: "BUDGET"
   project_full_title: "PROJECT GENERAL BUDGET"
@@ -380,6 +376,7 @@ profile:
 
 security:
   2fa_description: "Add an extra layer of security to your account by requiring a verification code in addition to your password"
+  two_factor: "Two-Factor Authentication"
   2fa_disabled: "2FA Disabled"
   2fa_enabled: "2FA Enabled"
   change_password: "Change Password"
@@ -418,6 +415,8 @@ security:
     two_factor: "Two-Factor Authentication (2FA)"
     use_auth_app: "Use an authentication app like Google Authenticator or Authy"
     back_to_security: "Back to Security"
+  recent_events: "Recent Security Events"
+  severity: "Severity"
 
   superadmin_verify:
     title: "Email verification — Superadmin"
@@ -561,7 +560,7 @@ system:
   plan: "Plan"
   plan_duration: "Plan duration before expiring"
   plan_expired: "Expired plan: Requires immediate renewal"
-  plan_expiring: "Plan expiring soon: Less than 30 days"
+  plan_expiring: "Plan expiring soon: Less than 15 days"
   plan_info: "Plan Information"
   plan_validity: "Plan Validity (months)"
   professional_plan: "Professional: 25 users, 100 projects"
@@ -783,6 +782,8 @@ admin.tenant.title: "Company Settings"
 
 flash:
   test_logs_generated: "Test logs generated successfully. Check log files."
+  cannot_use_reserved_slug: "You cannot use this reserved identifier for the company."
+  cannot_modify_protected_company: "This protected company cannot be modified."
   fill_required_fields: "Please complete all required fields."
   subdomain_in_use: "The subdomain is already in use."
   company_created: "Company '%name%' created successfully."
@@ -820,6 +821,11 @@ flash:
   theme_reset: "Theme reset to default colors."
   enter_email: "Please enter your email address."
   password_reset_instructions_sent: "If the email exists, you will receive instructions to reset your password."
+  password_policy_not_met: "Your password does not meet the required password policy."
+  auth.reauth: "Re-authenticate"
+  auth.reauth_prompt: "For security, please re-enter your password to continue with this action."
+  auth.password: "Password"
+  auth.confirm: "Confirm"
   generic_error_try_again: "An error occurred. Please try again."
   reset_link_invalid_or_expired: "The reset link is invalid or has expired."
   password_reset_success: "Your password has been reset successfully. You can now sign in."

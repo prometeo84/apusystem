@@ -9,6 +9,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class LocaleController extends AbstractController
 {
+    // Backwards-compatible route: some clients/tests use /locale/{locale}
+    #[Route('/locale/{locale}', name: 'app_locale')]
     #[Route('/set-locale/{locale}', name: 'app_set_locale')]
     public function setLocale(Request $request, string $locale): RedirectResponse
     {

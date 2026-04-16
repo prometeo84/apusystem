@@ -39,7 +39,7 @@ class TemplateController extends AbstractController
         $project = $this->getProject($projectId);
 
         $plantillas = $this->em->getRepository(Template::class)->findBy(
-            ['proyecto' => $project],
+            ['project' => $project],
             ['createdAt' => 'ASC']
         );
 
@@ -85,7 +85,7 @@ class TemplateController extends AbstractController
         $project = $this->getProject($projectId);
         $plantilla = $this->em->getRepository(Template::class)->findOneBy([
             'id' => $id,
-            'proyecto' => $project,
+            'project' => $project,
         ]);
         if (!$plantilla) {
             throw $this->createNotFoundException();
@@ -116,7 +116,7 @@ class TemplateController extends AbstractController
         $project = $this->getProject($projectId);
         $plantilla = $this->em->getRepository(Template::class)->findOneBy([
             'id' => $id,
-            'proyecto' => $project,
+            'project' => $project,
         ]);
         if (!$plantilla) {
             throw $this->createNotFoundException();
@@ -228,7 +228,7 @@ class TemplateController extends AbstractController
         $project = $this->getProject($projectId);
         $original = $this->em->getRepository(Template::class)->findOneBy([
             'id' => $id,
-            'proyecto' => $project,
+            'project' => $project,
         ]);
         if (!$original) {
             throw $this->createNotFoundException();
@@ -271,7 +271,7 @@ class TemplateController extends AbstractController
         $project = $this->getProject($projectId);
         $plantilla = $this->em->getRepository(Template::class)->findOneBy([
             'id' => $id,
-            'proyecto' => $project,
+            'project' => $project,
         ]);
         if (!$plantilla) {
             throw $this->createNotFoundException();

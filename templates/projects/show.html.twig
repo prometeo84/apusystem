@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ project.nombre }} - APU System{% endblock %}
+{% block title %}{{ project.name }} - APU System{% endblock %}
 
 {% block body %}
 {% import 'partials/_button.html.twig' as btn %}
@@ -10,10 +10,10 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-1">
                     <li class="breadcrumb-item"><a href="{{ path('app_project_index') }}">{{ 'project.title'|trans }}</a></li>
-                    <li class="breadcrumb-item active">{{ project.nombre }}</li>
+                    <li class="breadcrumb-item active">{{ project.name }}</li>
                 </ol>
             </nav>
-            <h1 class="mb-0"><i class="bi bi-folder2-open"></i> {{ project.nombre }}</h1>
+            <h1 class="mb-0"><i class="bi bi-folder2-open"></i> {{ project.name }}</h1>
         </div>
         <div>
             {% if is_granted('ROLE_ADMIN') %}
@@ -43,21 +43,21 @@
                 <div class="card-body">
                     <dl class="row mb-0">
                         <dt class="col-sm-3">{{ 'project.col_code'|trans }}</dt>
-                        <dd class="col-sm-9"><span class="badge bg-secondary fs-6">{{ project.codigo }}</span></dd>
+                        <dd class="col-sm-9"><span class="badge bg-secondary fs-6">{{ project.code }}</span></dd>
 
-                        {% if project.descripcion %}
+                        {% if project.description %}
                         <dt class="col-sm-3">{{ 'common.description'|trans }}</dt>
-                        <dd class="col-sm-9">{{ project.descripcion }}</dd>
+                        <dd class="col-sm-9">{{ project.description }}</dd>
                         {% endif %}
 
-                        {% if project.cliente %}
+                        {% if project.client %}
                         <dt class="col-sm-3">{{ 'project.col_client'|trans }}</dt>
-                        <dd class="col-sm-9">{{ project.cliente }}</dd>
+                        <dd class="col-sm-9">{{ project.client }}</dd>
                         {% endif %}
 
-                        {% if project.ubicacion %}
+                        {% if project.location %}
                         <dt class="col-sm-3">{{ 'project.col_location'|trans }}</dt>
-                        <dd class="col-sm-9">{{ project.ubicacion }}</dd>
+                        <dd class="col-sm-9">{{ project.location }}</dd>
                         {% endif %}
                     </dl>
                 </div>
@@ -68,21 +68,21 @@
                     <span><i class="bi bi-layout-text-sidebar"></i> {{ 'plantilla.title'|trans }}</span>
                     {{ btn.button('plantilla.new'|trans, 'light', 'bi-plus', {'href': path('app_template_create', {projectId: project.id}), 'class':'btn-sm'}) }}
                 </div>
-                {% if project.plantillas|length > 0 %}
+                {% if project.templates|length > 0 %}
                 <div class="list-group list-group-flush">
-                    {% for plantilla in project.plantillas %}
+                    {% for plantilla in project.templates %}
                     <div class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
-                            <strong>{{ plantilla.nombre }}</strong>
-                            <span class="badge bg-secondary ms-2">{{ plantilla.plantillaRubros|length }} {{ 'plantilla.rubros'|trans }}</span>
-                            <div class="text-muted small mt-1">${{ plantilla.totalPresupuesto|number_format(2, '.', ',') }}</div>
+                            <strong>{{ plantilla.name }}</strong>
+                            <span class="badge bg-secondary ms-2">{{ plantilla.items|length }} {{ 'plantilla.rubros'|trans }}</span>
+                            <div class="text-muted small mt-1">${{ plantilla.totalBudget|number_format(2, '.', ',') }}</div>
                         </div>
                         <div class="d-flex gap-1">
                             {{ btn.button('', 'outline-primary', 'bi-eye', {'href': path('app_template_show', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm'}) }}
                             {{ btn.button('', 'success', 'bi-file-earmark-bar-graph', {'href': path('app_report_plantilla', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm', 'title': 'report.generate'|trans}) }}
                         </div>
                     </div>
-                    {% endfor %}
+                            {% endfor %}
                 </div>
                 {% else %}
                 <div class="card-body text-center text-muted py-3">
@@ -106,23 +106,23 @@
                                 'en_proceso': 'primary',
                                 'pausado': 'secondary',
                                 'finalizado': 'success'
-                            }[project.estado] ?? 'secondary' %}
-                            <span class="badge bg-{{ statusClass }}">{{ ('project.status.' ~ project.estado)|trans }}</span>
+                            }[project.status] ?? 'secondary' %}
+                            <span class="badge bg-{{ statusClass }}">{{ ('project.status.' ~ project.status)|trans }}</span>
                         </dd>
 
-                        {% if project.fechaInicio %}
+                        {% if project.startDate %}
                         <dt class="col-sm-5">{{ 'project.start_date'|trans }}</dt>
-                        <dd class="col-sm-7">{{ project.fechaInicio|date('d/m/Y') }}</dd>
+                        <dd class="col-sm-7">{{ project.startDate|date('d/m/Y') }}</dd>
                         {% endif %}
 
-                        {% if project.fechaFin %}
+                        {% if project.endDate %}
                         <dt class="col-sm-5">{{ 'project.end_date'|trans }}</dt>
-                        <dd class="col-sm-7">{{ project.fechaFin|date('d/m/Y') }}</dd>
+                        <dd class="col-sm-7">{{ project.endDate|date('d/m/Y') }}</dd>
                         {% endif %}
 
-                        {% if project.presupuestoTotal %}
+                        {% if project.totalBudget %}
                         <dt class="col-sm-5">{{ 'project.col_budget'|trans }}</dt>
-                        <dd class="col-sm-7"><strong>${{ project.presupuestoTotal|number_format(2, '.', ',') }}</strong></dd>
+                        <dd class="col-sm-7"><strong>${{ project.totalBudget|number_format(2, '.', ',') }}</strong></dd>
                         {% endif %}
 
                         <dt class="col-sm-5">{{ 'common.created_at'|trans }}</dt>

@@ -234,9 +234,55 @@ DEFAULT_TIMEZONE=America/Guayaquil
 
 ### Generar Claves JWT (para API)
 
-```bash
+````bash
 php bin/console lexik:jwt:generate-keypair
+
+## 🛫 Despliegue en Producción — Ejeción centralizada de CRON (cron-job.org)
+
+En entornos donde no es posible crear crons del sistema, podemos centralizar la ejecución usando cron-job.org. La idea es:
+
+- Configurar cron-job.org para llamar cada hora al endpoint `POST /cron/run` del servicio.
+- El `CronController` actúa como gateway/dispatcher y ejecuta sólo los jobs que estén programados para la hora actual (p. ej. ejecutar `purge_sessions` a las 03:00).
+
+Ventajas:
+
+- No necesita crontab en el host de producción.
+- Permite centralizar horarios y forzar ejecuciones puntuales mediante el parámetro `job`.
+
+Cómo configurarlo:
+
+1) Asegúrate de definir una API key en `.env` (`CRON_JOB_API_KEY`) y mantenerla secreta.
+
+2) Definir los horarios por job usando la variable `CRON_JOB_SCHEDULES` (JSON). Ejemplo en `.env`:
+
+```env
+# Ejecutado por cron-job.org cada hora; el dispatcher decide qué jobs ejecutar según la hora
+CRON_JOB_API_KEY=changeme_replace_with_secure_key
+CRON_JOB_SCHEDULES='{"purge_sessions":{"hours":[3],"days":15},"scan_anomalies":{"hours":[0,6,12,18]}}'
+# Opcional: zona horaria usada por el dispatcher (por defecto UTC)
+CRON_TIMEZONE=UTC
 ```
+
+Explicación: en el ejemplo `purge_sessions` sólo se ejecutará cuando la hora sea `03` (UTC). `scan_anomalies` se ejecutará a las 00:00, 06:00, 12:00 y 18:00.
+
+3) Programa cron-job.org para llamar cada hora (por ejemplo, todos los días cada hora). En la configuración de cron-job.org pon un `POST` a `https://tu-dominio/cron/run` e incluye el campo `api_key` con el valor de `CRON_JOB_API_KEY`, o añade cabecera `X-Cron-Api-Key`.
+
+4) Forzar ejecución puntual: puedes llamar `POST /cron/run` con `job=purge_sessions` y `force=1` para forzar la ejecución fuera de horario.
+
+5) Logs y supervisión: el endpoint devuelve JSON con el resultado de cada job. Recomendamos guardar registros de ejecución (proxy/nginx o logs de la app) y configurar alertas si un job falla.
+
+Notas de seguridad:
+
+- Mantén `CRON_JOB_API_KEY` fuera del repositorio (usa secret manager o variables de entorno del hosting).
+- Opcionalmente añade verificación de IPs permitidas o HMAC si necesitas mayor protección.
+
+Alternativa local (si puedes usar crontab): el repo incluye `scripts/purge_sessions.sh` y la entrada recomendada para `crontab` era:
+
+```cron
+# Ejecuta script de purga todos los días a las 03:00
+0 3 * * * /var/www/html/proyecto/scripts/purge_sessions.sh >> /var/www/html/proyecto/var/log/purge_sessions.log 2>&1
+```
+
 
 ---
 
@@ -245,8 +291,10 @@ php bin/console lexik:jwt:generate-keypair
 ### Acceso Web
 
 ```
+
 http://localhost:8000
-```
+
+````
 
 **Usuarios de Prueba:**
 
@@ -320,7 +368,7 @@ El sistema incluye API REST para integración con Autodesk Revit:
 POST /api/revit/authenticate
 POST /api/revit/upload
 GET /api/revit/files/{id}
-```
+````
 
 **Autenticación:**
 

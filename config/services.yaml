@@ -92,3 +92,24 @@ services:
             $defaultLocale: "%kernel.default_locale%"
         tags:
             - { name: kernel.event_subscriber }
+    # Re-authentication listener: configure routes requiring re-auth and timeout (seconds)
+    App\EventListener\ReauthListener:
+        arguments:
+            $routes:
+                [
+                    "app_admin_users_create",
+                    "app_admin_users_edit",
+                    "app_admin_users_toggle",
+                    "app_admin_tenant",
+                    "app_item_delete",
+                ]
+            $timeout: 300
+        tags:
+            - { name: kernel.event_subscriber }
+    # Doctrine token provider for remember_me
+    App\Security\DoctrineTokenProvider:
+        arguments:
+            $userProvider: '@App\Security\UserProvider'
+
+    # Session controller uses detector (ensure detector is registered)
+    App\Controller\Admin\SessionController: ~

@@ -19,7 +19,7 @@ class ItemController extends AbstractController
     #[Route('/', name: 'app_item_index')]
     public function index(): Response
     {
-        $items = $this->em->getRepository(Item::class)->findBy(['tenant' => $this->getUser()->getTenant()], ['codigo' => 'ASC']);
+        $items = $this->em->getRepository(Item::class)->findBy(['tenant' => $this->getUser()->getTenant()], ['code' => 'ASC']);
         // Templates expect the variable name `rubros` (legacy naming). Keep compatibility.
         return $this->render('items/index.html.twig', ['rubros' => $items]);
     }

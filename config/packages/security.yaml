@@ -28,20 +28,27 @@ security:
                 target: app_login
             remember_me:
                 secret: "%kernel.secret%"
-                lifetime: 10800 # 3 hours
+                lifetime: 900 # 15 minutes
                 path: /
                 always_remember_me: false
+                secure: auto
+                httponly: true
+                samesite: lax
+                remember_me_parameter: _remember_me
+                token_provider: App\Security\DoctrineTokenProvider
 
     # Access control
     access_control:
         - { path: ^/favicon.ico$, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/set-locale, roles: PUBLIC_ACCESS }
+        - { path: ^/locale, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/webauthn/login, roles: PUBLIC_ACCESS }
         - { path: ^/password/forgot, roles: PUBLIC_ACCESS }
         - { path: ^/password/reset, roles: PUBLIC_ACCESS }
         - { path: ^/api/, roles: PUBLIC_ACCESS }
+        - { path: ^/cron, roles: PUBLIC_ACCESS }
         - { path: ^/2fa-setup, roles: IS_AUTHENTICATED_REMEMBERED }
         # Allow public access to uploaded avatars so they can be served by Symfony
         - { path: ^/uploads/avatars, roles: PUBLIC_ACCESS }

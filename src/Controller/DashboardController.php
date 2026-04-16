@@ -35,7 +35,7 @@ class DashboardController extends AbstractController
             'total_proyectos' => $this->em->getRepository(\App\Entity\Projects::class)
                 ->count(['tenant' => $tenant]),
             'proyectos_activos' => $this->em->getRepository(\App\Entity\Projects::class)
-                ->count(['tenant' => $tenant, 'estado' => 'en_proceso']),
+                ->count(['tenant' => $tenant, 'status' => 'en_proceso']),
             'total_apus' => $this->em->getRepository(\App\Entity\Apu::class)
                 ->count(['tenant' => $tenant]),
             'total_plantillas' => 0, // Implementar cuando exista la entidad

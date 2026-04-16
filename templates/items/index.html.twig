@@ -32,14 +32,14 @@
                 <tbody>
                     {% for rubro in rubros %}
                     <tr>
-                        <td><code>{{ rubro.codigo }}</code></td>
-                        <td><strong>{{ rubro.nombre }}</strong>
-                            {% if rubro.descripcion %}<br><small class="text-muted">{{ rubro.descripcion|slice(0,80) }}{% if rubro.descripcion|length > 80 %}…{% endif %}</small>{% endif %}
+                        <td><code>{{ rubro.code }}</code></td>
+                        <td><strong>{{ rubro.name }}</strong>
+                            {% if rubro.description %}<br><small class="text-muted">{{ rubro.description|slice(0,80) }}{% if rubro.description|length > 80 %}…{% endif %}</small>{% endif %}
                         </td>
-                        <td><span class="badge bg-secondary">{{ rubro.unidad }}</span></td>
+                        <td><span class="badge bg-secondary">{{ rubro.unit }}</span></td>
                         <td>
-                            <span class="badge bg-{{ rubro.tipo == 'general' ? 'info' : 'primary' }}">
-                                {{ ('rubro.tipo.' ~ rubro.tipo)|trans }}
+                            <span class="badge bg-{{ rubro.type == 'general' ? 'info' : 'primary' }}">
+                                {{ ('rubro.tipo.' ~ rubro.type)|trans }}
                             </span>
                         </td>
                         <td>{{ rubro.createdAt|date('d/m/Y') }}</td>

@@ -87,6 +87,9 @@ class SecurityController extends AbstractController
                 $request->getSession()->set('2fa_verified', true);
                 $this->securityLogger->log2FASuccess($user, 'totp');
 
+                // Registrar timestamp de autenticación completa tras 2FA
+                $request->getSession()->set('last_full_auth', (new \DateTimeImmutable())->getTimestamp());
+
                 // Si es superadmin y aún no verificó el correo, redirigir a verificación por email
                 if ($request->getSession()->get('superadmin_email_code_hash')) {
                     return $this->redirectToRoute('app_superadmin_verify_email');
@@ -145,6 +148,8 @@ class SecurityController extends AbstractController
 
                 // Si la 2FA ya está verificada, ir al dashboard
                 if ($session->get('2fa_verified')) {
+                    // Registrar timestamp de autenticación completa cuando ambas verificaciones estén completas
+                    $session->set('last_full_auth', (new \DateTimeImmutable())->getTimestamp());
                     return $this->redirectToRoute('app_dashboard');
                 }
 

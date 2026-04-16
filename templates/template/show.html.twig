@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %}{{ plantilla.nombre }} - {{ project.nombre }}{% endblock %}
+{% block title %}{{ plantilla.name }} - {{ project.name }}{% endblock %}
 {% block body %}
 {% import 'partials/_button.html.twig' as btn %}
 <div class="container-fluid mt-4">
@@ -7,7 +7,7 @@
     <nav aria-label="breadcrumb" class="mb-2">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ path('app_project_index') }}">{{ 'project.title'|trans }}</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.nombre }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.name }}</a></li>
             <li class="breadcrumb-item"><a href="{{ path('app_template_index', {projectId: project.id}) }}">{{ 'plantilla.title'|trans }}</a></li>
             <li class="breadcrumb-item active">{{ plantilla.nombre }}</li>
         </ol>
@@ -15,8 +15,8 @@
 
     <div class="d-flex justify-content-between align-items-start mb-3">
         <div>
-            <h1 class="mb-0"><i class="bi bi-layout-text-sidebar"></i> {{ plantilla.nombre }}</h1>
-            {% if plantilla.descripcion %}<p class="text-muted mb-0">{{ plantilla.descripcion }}</p>{% endif %}
+            <h1 class="mb-0"><i class="bi bi-layout-text-sidebar"></i> {{ plantilla.name }}</h1>
+            {% if plantilla.description %}<p class="text-muted mb-0">{{ plantilla.description }}</p>{% endif %}
         </div>
         <div class="d-flex gap-2">
             {{ btn.button('plantilla.edit'|trans, 'outline-primary', 'bi-pencil', {'href': path('app_template_edit', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm'}) }}
@@ -39,9 +39,9 @@
             <div class="card">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <span><i class="bi bi-list-ol"></i> {{ 'plantilla.rubros'|trans }}</span>
-                    <strong class="fs-5">${{ plantilla.totalPresupuesto|number_format(2, '.', ',') }}</strong>
+                    <strong class="fs-5">${{ plantilla.totalBudget|number_format(2, '.', ',') }}</strong>
                 </div>
-                {% if plantilla.plantillaRubros|length > 0 %}
+                {% if plantilla.items|length > 0 %}
                 <div class="table-responsive">
                     <table class="table table-hover mb-0 align-middle">
                         <thead class="table-light">
@@ -57,30 +57,30 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for pr in plantilla.plantillaRubros %}
+                            {% for pr in plantilla.items %}
                             <tr>
                                 <td class="text-muted">{{ loop.index }}</td>
-                                <td><code>{{ pr.rubro.codigo }}</code></td>
+                                <td><code>{{ pr.item.code }}</code></td>
                                 <td>
-                                    <strong>{{ pr.rubro.nombre }}</strong>
+                                    <strong>{{ pr.item.name }}</strong>
                                     {% if pr.apuItem %}
                                         <br><small class="text-success"><i class="bi bi-check-circle"></i> APU</small>
                                     {% else %}
                                         <br><small class="text-warning"><i class="bi bi-exclamation-circle"></i> {{ 'plantilla.apu_pending'|trans }}</small>
                                     {% endif %}
                                 </td>
-                                <td class="text-center"><span class="badge bg-secondary">{{ pr.rubro.unidad }}</span></td>
-                                <td class="text-end">{{ pr.cantidad|number_format(2) }}</td>
+                                <td class="text-center"><span class="badge bg-secondary">{{ pr.item.unit }}</span></td>
+                                <td class="text-end">{{ pr.quantity|number_format(2) }}</td>
                                 <td class="text-end">
                                     {% if pr.apuItem %}
-                                        ${{ pr.precioUnitario|number_format(2) }}
+                                        ${{ pr.unitPrice|number_format(2) }}
                                     {% else %}
                                         <span class="text-muted">—</span>
                                     {% endif %}
                                 </td>
                                 <td class="text-end fw-bold">
                                     {% if pr.apuItem %}
-                                        ${{ pr.totalCosto|number_format(2) }}
+                                        ${{ pr.totalCost|number_format(2) }}
                                     {% else %}
                                         <span class="text-muted">—</span>
                                     {% endif %}
@@ -103,7 +103,7 @@
                         <tfoot>
                             <tr class="table-primary fw-bold">
                                 <td colspan="6" class="text-end">{{ 'plantilla.total_presupuesto'|trans }}</td>
-                                <td class="text-end fs-5">${{ plantilla.totalPresupuesto|number_format(2, '.', ',') }}</td>
+                                <td class="text-end fs-5">${{ plantilla.totalBudget|number_format(2, '.', ',') }}</td>
                                 <td></td>
                             </tr>
                         </tfoot>

@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'admin.sessions'|trans }} - APU System{% endblock %}
+
+{% block body %}
+<div class="container p-4">
+    <h3>{{ 'admin.sessions'|trans }}</h3>
+
+    <h5>{{ 'admin.active_sessions'|trans }}</h5>
+    <form method="post" action="{{ path('app_admin_sessions_bulk_revoke') }}">
+    <table class="table">
+        <thead>
+            <tr><th>ID</th><th>User Agent</th><th>IP</th><th>Last Activity</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+        {% for s in sessions %}
+            <tr>
+                <td><input type="checkbox" name="session_ids[]" value="{{ s.id }}"> {{ s.id }}</td>
+                <td>{{ s.userAgent }}</td>
+                <td>{{ s.ipAddress }}</td>
+                <td>{{ s.lastActivityAt|date('d/m/Y H:i') }}</td>
+                <td>
+                    <form method="post" action="{{ path('app_admin_session_revoke', {'id': s.id}) }}">
+                        <button class="btn btn-sm btn-danger">{{ 'admin.revoke'|trans }}</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="5">{{ 'admin.no_sessions'|trans }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="d-flex gap-2">
+        <button class="btn btn-danger btn-sm">{{ 'admin.revoke_selected'|trans }}</button>
+    </div>
+    </form>
+
+    <h5 class="mt-4">{{ 'admin.remember_me_tokens'|trans }}</h5>
+    <form method="post" action="{{ path('app_admin_sessions_bulk_revoke') }}">
+    <table class="table">
+        <thead><tr><th>ID</th><th>Series</th><th>Last Used</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for t in tokens %}
+            <tr>
+                <td><input type="checkbox" name="token_ids[]" value="{{ t.id }}"> {{ t.id }}</td>
+                <td>{{ t.series }}</td>
+                <td>{{ t.lastUsed|date('d/m/Y H:i') }}</td>
+                <td>
+                    <form method="post" action="{{ path('app_admin_token_revoke', {'id': t.id}) }}">
+                        <button class="btn btn-sm btn-danger">{{ 'admin.revoke'|trans }}</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4">{{ 'admin.no_tokens'|trans }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="d-flex gap-2">
+        <button class="btn btn-danger btn-sm">{{ 'admin.revoke_selected'|trans }}</button>
+    </div>
+    </form>
+
+    <h5 class="mt-4">{{ 'admin.session_anomalies'|trans }}</h5>
+    {% if anomalies is empty %}
+        <p>{{ 'admin.no_anomalies'|trans }}</p>
+    {% else %}
+        <ul>
+        {% for a in anomalies %}
+            <li>{{ a.message }} ({{ a.level }})</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+{% endblock %}

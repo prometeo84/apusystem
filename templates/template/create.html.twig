@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
-{% block title %}{{ 'plantilla.new'|trans }} - {{ project.nombre }}{% endblock %}
+{% block title %}{{ 'plantilla.new'|trans }} - {{ project.name }}{% endblock %}
 {% block body %}
 {% import 'partials/_button.html.twig' as btn %}
 <div class="container mt-4" style="max-width:650px">
     <nav aria-label="breadcrumb" class="mb-2">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.nombre }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.name }}</a></li>
             <li class="breadcrumb-item"><a href="{{ path('app_template_index', {projectId: project.id}) }}">{{ 'plantilla.title'|trans }}</a></li>
             <li class="breadcrumb-item active">{{ 'plantilla.new'|trans }}</li>
         </ol>

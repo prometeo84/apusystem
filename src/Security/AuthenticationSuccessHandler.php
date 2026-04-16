@@ -35,8 +35,49 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             return new RedirectResponse($this->router->generate('app_login'));
         }
 
-        // Actualizar información de último login
+        // Antes de crear sesión: verificar bloqueos por IP y aplicar rate-limit
         $ipAddress = $request->getClientIp() ?? '0.0.0.0';
+        // Verificar IP bloqueada
+        try {
+            $blocked = $this->em->getRepository(\App\Entity\BlockedIp::class)->findOneBy(['ipAddress' => $ipAddress]);
+            if ($blocked && method_exists($blocked, 'isBlocked') && $blocked->isBlocked()) {
+                // Registrar intento y redirigir a login con mensaje
+                $this->securityLogger->log('blocked_ip_login_attempt', 'WARNING', $user, ['ip' => $ipAddress]);
+                $request->getSession()->getFlashBag()->add('error', 'auth.too_many_attempts');
+                return new RedirectResponse($this->router->generate('app_login'));
+            }
+        } catch (\Throwable $e) {
+            // Ignore lookup errors
+        }
+
+        // Rate-limit: si hay muchas sesiones creadas desde esta IP en el último minuto, bloquear temporalmente
+        try {
+            $cutoff = new \DateTime('-1 minute');
+            $qb = $this->em->createQueryBuilder();
+            $qb->select('COUNT(ls.id)')
+                ->from(LoginSession::class, 'ls')
+                ->where('ls.ipAddress = :ip')
+                ->andWhere('ls.createdAt > :cutoff')
+                ->setParameter('ip', $ipAddress)
+                ->setParameter('cutoff', $cutoff);
+            $countRecent = (int)$qb->getQuery()->getSingleScalarResult();
+            if ($countRecent > 20) {
+                // Crear bloqueo temporal de 1 hora
+                $blockedIp = new \App\Entity\BlockedIp($ipAddress, 'rate_limit_exceeded', 'automatic');
+                $blockedIp->setBlockedUntil((new \DateTime('+1 hour')));
+                $blockedIp->setRiskScore(80);
+                $this->em->persist($blockedIp);
+                $this->em->flush();
+
+                $this->securityLogger->log('ip_blocked_rate_limit', 'WARNING', $user, ['ip' => $ipAddress, 'count' => $countRecent]);
+                $request->getSession()->getFlashBag()->add('error', 'auth.too_many_attempts');
+                return new RedirectResponse($this->router->generate('app_login'));
+            }
+        } catch (\Throwable $e) {
+            // ignore
+        }
+
+        // Actualizar información de último login
         $user->updateLastLogin($ipAddress);
 
         // Crear sesión de login
@@ -109,6 +150,9 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         // Marcar 2FA como verificado (ya que no está habilitado)
         $request->getSession()->set('2fa_verified', true);
+
+        // Registrar timestamp de autenticación completa
+        $request->getSession()->set('last_full_auth', (new \DateTimeImmutable())->getTimestamp());
 
         // Si es superadmin y hay un email pendiente, redirigir a verificación de email
         if ($isSuper && $request->getSession()->get('superadmin_email_code_hash')) {

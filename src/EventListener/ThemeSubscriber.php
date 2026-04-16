@@ -8,6 +8,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * ThemeSubscriber
@@ -18,11 +19,13 @@ class ThemeSubscriber implements EventSubscriberInterface
 {
     private TokenStorageInterface $tokenStorage;
     private Environment $twig;
+    private EntityManagerInterface $em;
 
-    public function __construct(TokenStorageInterface $tokenStorage, Environment $twig)
+    public function __construct(TokenStorageInterface $tokenStorage, Environment $twig, EntityManagerInterface $em)
     {
         $this->tokenStorage = $tokenStorage;
         $this->twig = $twig;
+        $this->em = $em;
     }
 
     public function onKernelRequest(RequestEvent $event): void
@@ -37,7 +40,15 @@ class ThemeSubscriber implements EventSubscriberInterface
         $mode = 'light';
 
         if ($token && $token->getUser() instanceof User) {
-            $user = $token->getUser();
+            // Reload the user from the EntityManager to pick up any recent changes
+            $tokenUser = $token->getUser();
+            $user = null;
+            if (method_exists($tokenUser, 'getId') && $tokenUser->getId()) {
+                $user = $this->em->getRepository(User::class)->find($tokenUser->getId());
+            }
+            if (!$user) {
+                $user = $tokenUser;
+            }
 
             // Prefer user settings; fallback to tenant; then system defaults
             $tenant = $user->getTenant();
@@ -46,6 +57,14 @@ class ThemeSubscriber implements EventSubscriberInterface
             $primaryHex = $user->getThemePrimaryColor() ?: ($tenant?->getThemePrimaryColor() ?: $primaryHex);
             $secondaryHex = $user->getThemeSecondaryColor() ?: ($tenant?->getThemeSecondaryColor() ?: $secondaryHex);
             $mode = $user->getThemeMode() ?: ($tenant?->getThemeMode() ?: $mode);
+        }
+
+        // Sanitize color values: accept only 6-digit hex with leading '#'
+        if (!preg_match('/^#[0-9A-Fa-f]{6}$/', $primaryHex)) {
+            $primaryHex = '#667eea';
+        }
+        if (!preg_match('/^#[0-9A-Fa-f]{6}$/', $secondaryHex)) {
+            $secondaryHex = '#764ba2';
         }
 
         // Compute RGB values for darker overlays

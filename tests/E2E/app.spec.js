@@ -8,7 +8,8 @@ async function loginAsAdmin(page) {
     await page.goto('/login');
     await page.waitForSelector('input[name="_username"]', { timeout: 8000 });
     await page.fill('input[name="_username"]', 'admin@demo.com');
-    await page.fill('input[name="_password"]', 'Admin123!');
+    const adminPassword = process.env.ADMIN_PASSWORD || 'Admin123!';
+    await page.fill('input[name="_password"]', adminPassword);
     await page.click('button[type="submit"]');
     // Esperar redirección post-login (dashboard o 2fa)
     await page.waitForURL(/\/(dashboard|2fa|$)/, { timeout: 10000 });
