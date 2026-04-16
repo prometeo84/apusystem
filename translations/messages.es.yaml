@@ -286,11 +286,6 @@ emails:
   enable_2fa: "Habilita la autenticación de dos factores (2FA) para mayor seguridad."
   automated_notice: "Este es un correo automatizado, por favor no respondas."
   rights_reserved: "Todos los derechos reservados."
-
-flash:
-  cannot_use_reserved_slug: "No se puede usar este identificador reservado para la empresa."
-  cannot_modify_protected_company: "No se puede modificar esta empresa protegida."
-
   error_notification:
     header: "⚠ Error en APU System"
     intro: "Hola %name%, se produjo un error no controlado en el sistema."
@@ -598,6 +593,8 @@ system:
 
 flash:
   test_logs_generated: "Logs de prueba generados exitosamente. Revisa los archivos de log."
+  cannot_use_reserved_slug: "No se puede usar este identificador reservado para la empresa."
+  cannot_modify_protected_company: "No se puede modificar esta empresa protegida."
   fill_required_fields: "Por favor complete todos los campos obligatorios."
   subdomain_in_use: "El subdominio ya está en uso."
   company_created: "Empresa '%name%' creada exitosamente."
