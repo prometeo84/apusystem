@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/revit')]
 #[IsGranted('ROLE_USER')]
@@ -18,7 +19,8 @@ class RevitUploadController extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $em,
-        private RevitFileProcessor $fileProcessor
+        private RevitFileProcessor $fileProcessor,
+        private TranslatorInterface $translator
     ) {}
 
     #[Route('/upload', name: 'app_revit_upload', methods: ['GET', 'POST'])]
@@ -43,14 +45,14 @@ class RevitUploadController extends AbstractController
                     $user
                 );
 
-                $this->addFlash('success', $this->container->get('translator')->trans('flash.file_uploaded_status', [
+                $this->addFlash('success', $this->translator->trans('flash.file_uploaded_status', [
                     '%filename%' => $revitFile->getOriginalFilename(),
                     '%status%' => $revitFile->getStatus()
                 ]));
 
                 return $this->redirectToRoute('app_revit_files');
             } catch (\Exception $e) {
-                $this->addFlash('error', $this->container->get('translator')->trans('flash.error_processing_file', ['%error%' => $e->getMessage()]));
+                $this->addFlash('error', $this->translator->trans('flash.error_processing_file', ['%error%' => $e->getMessage()]));
                 return $this->redirectToRoute('app_revit_upload');
             }
         }
@@ -120,7 +122,7 @@ class RevitUploadController extends AbstractController
             $this->fileProcessor->deleteFile($file);
             $this->addFlash('success', 'flash.file_deleted_success');
         } catch (\Exception $e) {
-            $this->addFlash('error', $this->container->get('translator')->trans('flash.error_deleting_file', ['%error%' => $e->getMessage()]));
+            $this->addFlash('error', $this->translator->trans('flash.error_deleting_file', ['%error%' => $e->getMessage()]));
         }
 
         return $this->redirectToRoute('app_revit_files');
@@ -149,7 +151,7 @@ class RevitUploadController extends AbstractController
 
             $this->addFlash('success', 'flash.file_marked_reprocess');
         } catch (\Exception $e) {
-            $this->addFlash('error', $this->container->get('translator')->trans('flash.error_generic_with_message', ['%error%' => $e->getMessage()]));
+            $this->addFlash('error', $this->translator->trans('flash.error_generic_with_message', ['%error%' => $e->getMessage()]));
         }
 
         return $this->redirectToRoute('app_revit_file_detail', ['id' => $id]);

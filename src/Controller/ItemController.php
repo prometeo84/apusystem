@@ -36,10 +36,10 @@ class ItemController extends AbstractController
 
             $item = new Item();
             $item->setTenant($this->getUser()->getTenant());
-            $item->setCodigo(trim($request->request->get('codigo', '')));
-            $item->setNombre(trim($request->request->get('nombre', '')));
-            $item->setDescripcion(trim($request->request->get('descripcion', '')) ?: null);
-            $item->setUnidad(trim($request->request->get('unidad', '')) ?: null);
+            $item->setCode(trim($request->request->get('codigo', '')));
+            $item->setName(trim($request->request->get('nombre', '')));
+            $item->setDescription(trim($request->request->get('descripcion', '')) ?: null);
+            $item->setUnit(trim($request->request->get('unidad', '')) ?: null);
 
             $this->em->persist($item);
             $this->em->flush();
@@ -66,10 +66,10 @@ class ItemController extends AbstractController
                 return $this->redirectToRoute('app_item_edit', ['id' => $id]);
             }
 
-            $item->setCodigo(trim($request->request->get('codigo', '')));
-            $item->setNombre(trim($request->request->get('nombre', '')));
-            $item->setDescripcion(trim($request->request->get('descripcion', '')) ?: null);
-            $item->setUnidad(trim($request->request->get('unidad', '')) ?: null);
+            $item->setCode(trim($request->request->get('codigo', '')));
+            $item->setName(trim($request->request->get('nombre', '')));
+            $item->setDescription(trim($request->request->get('descripcion', '')) ?: null);
+            $item->setUnit(trim($request->request->get('unidad', '')) ?: null);
 
             $this->em->flush();
             $this->addFlash('success', 'rubro.updated_success');

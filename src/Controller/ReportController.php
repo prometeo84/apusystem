@@ -49,7 +49,7 @@ class ReportController extends AbstractController
 
         return $this->render('reports/preview.html.twig', [
             'plantilla' => $plantilla,
-            'project'   => $plantilla->getProyecto(),
+            'project'   => $plantilla->getProject(),
             'html'      => $this->reportService->buildHtml($plantilla),
         ]);
     }
@@ -66,7 +66,7 @@ class ReportController extends AbstractController
             throw $this->createNotFoundException('report.pdf_error');
         }
 
-        $safeName = preg_replace('/[^a-z0-9_\-]/i', '_', $plantilla->getNombre());
+        $safeName = preg_replace('/[^a-z0-9_\-]/i', '_', $plantilla->getName());
         return $this->file($filepath, 'Presupuesto_' . $safeName . '.pdf');
     }
 
@@ -82,7 +82,7 @@ class ReportController extends AbstractController
             throw $this->createNotFoundException('report.excel_error');
         }
 
-        $safeName = preg_replace('/[^a-z0-9_\-]/i', '_', $plantilla->getNombre());
+        $safeName = preg_replace('/[^a-z0-9_\-]/i', '_', $plantilla->getName());
         return $this->file($filepath, 'Presupuesto_' . $safeName . '.xlsx');
     }
 
@@ -128,7 +128,7 @@ class ReportController extends AbstractController
             throw $this->createNotFoundException('report.pdf_error');
         }
 
-        $safeName = preg_replace('/[^a-z0-9_\-]/i', '_', $project->getNombre());
+        $safeName = preg_replace('/[^a-z0-9_\-]/i', '_', $project->getName());
         return $this->file($filepath, 'Proyecto_' . $safeName . '.pdf');
     }
 
@@ -145,7 +145,7 @@ class ReportController extends AbstractController
             throw $this->createNotFoundException('report.excel_error');
         }
 
-        $safeName = preg_replace('/[^a-z0-9_\-]/i', '_', $project->getNombre());
+        $safeName = preg_replace('/[^a-z0-9_\-]/i', '_', $project->getName());
         return $this->file($filepath, 'Proyecto_' . $safeName . '.xlsx');
     }
 }

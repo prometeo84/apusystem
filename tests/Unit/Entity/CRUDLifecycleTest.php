@@ -49,9 +49,9 @@ class CRUDLifecycleTest extends TestCase
     {
         $p = new Projects();
         $p->setTenant($tenant);
-        $p->setNombre('Edificio Residencial A');
-        $p->setCodigo($code);
-        $p->setEstado('activo');
+        $p->setName('Edificio Residencial A');
+        $p->setCode($code);
+        $p->setStatus('activo');
         return $p;
     }
 
@@ -59,10 +59,10 @@ class CRUDLifecycleTest extends TestCase
     {
         $r = new Item();
         $r->setTenant($tenant);
-        $r->setCodigo($code);
-        $r->setNombre('Excavación manual');
-        $r->setUnidad('m³');
-        $r->setTipo('personalizado');
+        $r->setCode($code);
+        $r->setName('Excavación manual');
+        $r->setUnit('m³');
+        $r->setType('personalizado');
         return $r;
     }
 
@@ -73,13 +73,13 @@ class CRUDLifecycleTest extends TestCase
         $item->setDescription('Hormigón f\'c=240 kg/cm²');
         $item->setUnit('m³');
         $item->setKhu('1.0');
-        $item->setRendimientoUh('1.0');
+        $item->setProductivityUh('1.0');
 
         $mat = new APUMaterial();
-        $mat->setDescripcion('Cemento Portland');
-        $mat->setUnidad('kg');
-        $mat->setCantidad('1.0');
-        $mat->setPrecioUnitario((string)$costPerUnit);
+        $mat->setDescription('Cemento Portland');
+        $mat->setUnit('kg');
+        $mat->setQuantity('1.0');
+        $mat->setUnitPrice((string)$costPerUnit);
         $item->addMaterial($mat);
         $item->calculateCosts();
 
@@ -94,9 +94,9 @@ class CRUDLifecycleTest extends TestCase
         $tenant  = $this->buildTenant();
         $project = $this->buildProject($tenant);
 
-        $this->assertSame('Edificio Residencial A', $project->getNombre());
-        $this->assertSame('P-001', $project->getCodigo());
-        $this->assertSame('activo', $project->getEstado());
+        $this->assertSame('Edificio Residencial A', $project->getName());
+        $this->assertSame('P-001', $project->getCode());
+        $this->assertSame('activo', $project->getStatus());
         $this->assertSame($tenant, $project->getTenant());
     }
 
@@ -106,11 +106,11 @@ class CRUDLifecycleTest extends TestCase
         $tenant  = $this->buildTenant();
         $project = $this->buildProject($tenant);
 
-        $project->setNombre('Edificio Comercial B');
-        $project->setEstado('finalizado');
+        $project->setName('Edificio Comercial B');
+        $project->setStatus('finalizado');
 
-        $this->assertSame('Edificio Comercial B', $project->getNombre());
-        $this->assertSame('finalizado', $project->getEstado());
+        $this->assertSame('Edificio Comercial B', $project->getName());
+        $this->assertSame('finalizado', $project->getStatus());
     }
 
     #[Test]
@@ -137,9 +137,9 @@ class CRUDLifecycleTest extends TestCase
         $tenant = $this->buildTenant();
         $rubro  = $this->buildRubro($tenant);
 
-        $this->assertTrue($rubro->isActivo());
-        $this->assertSame('personalizado', $rubro->getTipo());
-        $this->assertSame('R-001', $rubro->getCodigo());
+        $this->assertTrue($rubro->isActive());
+        $this->assertSame('personalizado', $rubro->getType());
+        $this->assertSame('R-001', $rubro->getCode());
     }
 
     #[Test]
@@ -148,8 +148,8 @@ class CRUDLifecycleTest extends TestCase
         $tenant = $this->buildTenant();
         $rubro  = $this->buildRubro($tenant);
 
-        $rubro->setActivo(false);
-        $this->assertFalse($rubro->isActivo());
+        $rubro->setActive(false);
+        $this->assertFalse($rubro->isActive());
     }
 
     #[Test]
@@ -158,12 +158,12 @@ class CRUDLifecycleTest extends TestCase
         $tenant = $this->buildTenant();
         $rubro  = $this->buildRubro($tenant);
 
-        $rubro->setNombre('Relleno compactado');
-        $rubro->setUnidad('m³');
-        $rubro->setCodigo('R-002');
+        $rubro->setName('Relleno compactado');
+        $rubro->setUnit('m³');
+        $rubro->setCode('R-002');
 
-        $this->assertSame('Relleno compactado', $rubro->getNombre());
-        $this->assertSame('R-002', $rubro->getCodigo());
+        $this->assertSame('Relleno compactado', $rubro->getName());
+        $this->assertSame('R-002', $rubro->getCode());
     }
 
     // ── CRUD APU ─────────────────────────────────────────────────────────────
@@ -187,22 +187,22 @@ class CRUDLifecycleTest extends TestCase
         $item->setDescription('APU Multi-componente');
         $item->setUnit('m²');
         $item->setKhu('1.0');
-        $item->setRendimientoUh('1.0');
+        $item->setProductivityUh('1.0');
 
         // Material: $10
         $mat = new APUMaterial();
-        $mat->setDescripcion('Material A');
-        $mat->setUnidad('u');
-        $mat->setCantidad('1.0');
-        $mat->setPrecioUnitario('10.00');
+        $mat->setDescription('Material A');
+        $mat->setUnit('u');
+        $mat->setQuantity('1.0');
+        $mat->setUnitPrice('10.00');
         $item->addMaterial($mat);
 
         // Material 2: $15
         $mat2 = new APUMaterial();
-        $mat2->setDescripcion('Material B');
-        $mat2->setUnidad('u');
-        $mat2->setCantidad('1.0');
-        $mat2->setPrecioUnitario('15.00');
+        $mat2->setDescription('Material B');
+        $mat2->setUnit('u');
+        $mat2->setQuantity('1.0');
+        $mat2->setUnitPrice('15.00');
         $item->addMaterial($mat2);
 
         $item->calculateCosts();
@@ -223,18 +223,18 @@ class CRUDLifecycleTest extends TestCase
 
         $plantilla = new Template();
         $plantilla->setTenant($tenant);
-        $plantilla->setProyecto($project);
-        $plantilla->setNombre('Presupuesto Final');
+        $plantilla->setProject($project);
+        $plantilla->setName('Presupuesto Final');
 
         $pr = new TemplateItem();
 
-        $pr->setRubro($rubro);
+        $pr->setItem($rubro);
         $pr->setApuItem($apuItem);
-        $pr->setCantidad('10.0');
-        $plantilla->addPlantillaRubro($pr);
+        $pr->setQuantity('10.0');
+        $plantilla->addItem($pr);
 
-        $this->assertCount(1, $plantilla->getPlantillaRubros());
-        $this->assertSame($rubro, $plantilla->getPlantillaRubros()->first()->getRubro());
+        $this->assertCount(1, $plantilla->getItems());
+        $this->assertSame($rubro, $plantilla->getItems()->first()->getItem());
     }
 
     #[Test]
@@ -244,28 +244,28 @@ class CRUDLifecycleTest extends TestCase
         $project  = $this->buildProject($tenant);
         $plantilla = new Template();
         $plantilla->setTenant($tenant);
-        $plantilla->setProyecto($project);
-        $plantilla->setNombre('Presupuesto Test');
+        $plantilla->setProject($project);
+        $plantilla->setName('Presupuesto Test');
 
         $rubro1 = $this->buildRubro($tenant, 'R-001');
         $rubro2 = $this->buildRubro($tenant, 'R-002');
 
         $pr1 = new TemplateItem();
 
-        $pr1->setRubro($rubro1);
-        $pr1->setCantidad('1.0');
+        $pr1->setItem($rubro1);
+        $pr1->setQuantity('1.0');
 
         $pr2 = new TemplateItem();
 
-        $pr2->setRubro($rubro2);
-        $pr2->setCantidad('2.0');
+        $pr2->setItem($rubro2);
+        $pr2->setQuantity('2.0');
 
-        $plantilla->addPlantillaRubro($pr1);
-        $plantilla->addPlantillaRubro($pr2);
-        $this->assertCount(2, $plantilla->getPlantillaRubros());
+        $plantilla->addItem($pr1);
+        $plantilla->addItem($pr2);
+        $this->assertCount(2, $plantilla->getItems());
 
-        $plantilla->removePlantillaRubro($pr1);
-        $this->assertCount(1, $plantilla->getPlantillaRubros());
+        $plantilla->removeItem($pr1);
+        $this->assertCount(1, $plantilla->getItems());
     }
 
     // ── Clonación de Proyecto ────────────────────────────────────────────────
@@ -281,42 +281,42 @@ class CRUDLifecycleTest extends TestCase
         // Plantilla original (Usuario A / Admin)
         $original = new Template();
         $original->setTenant($tenant);
-        $original->setProyecto($project);
-        $original->setNombre('Presupuesto Original');
+        $original->setProject($project);
+        $original->setName('Presupuesto Original');
 
         $prOrig = new TemplateItem();
 
-        $prOrig->setRubro($rubro);
+        $prOrig->setItem($rubro);
         $prOrig->setApuItem($apuItem);
-        $prOrig->setCantidad('5.0');
-        $original->addPlantillaRubro($prOrig);
+        $prOrig->setQuantity('5.0');
+        $original->addItem($prOrig);
 
         // Simular clonación: nuevo proyecto + nueva plantilla con mismos rubros
         $projectClone = $this->buildProject($tenant, 'P-CLONE');
         $clone = new Template();
         $clone->setTenant($tenant);
-        $clone->setProyecto($projectClone);
-        $clone->setNombre('Presupuesto Clonado (Usuario B)');
+        $clone->setProject($projectClone);
+        $clone->setName('Presupuesto Clonado (Usuario B)');
 
         $prClone = new TemplateItem();
 
-        $prClone->setRubro($rubro);
+        $prClone->setItem($rubro);
         $prClone->setApuItem($apuItem);
-        $prClone->setCantidad('5.0');
-        $clone->addPlantillaRubro($prClone);
+        $prClone->setQuantity('5.0');
+        $clone->addItem($prClone);
 
         // Usuario B modifica su clon: cambia cantidad
-        $prClone->setCantidad('20.0');
+        $prClone->setQuantity('20.0');
 
         // Proyecto A permanece intacto
         $this->assertSame(
             '5.0',
-            $prOrig->getCantidad(),
+            $prOrig->getQuantity(),
             'Proyecto A no debe cambiar al modificar el clon'
         );
 
         // Clon tiene la cantidad modificada
-        $this->assertSame('20.0', $prClone->getCantidad());
+        $this->assertSame('20.0', $prClone->getQuantity());
 
         // Son entidades distintas
         $this->assertNotSame($original, $clone);
@@ -328,16 +328,16 @@ class CRUDLifecycleTest extends TestCase
     {
         $tenant   = $this->buildTenant();
         $original = $this->buildProject($tenant, 'P-100');
-        $original->setNombre('Proyecto Alpha');
+        $original->setName('Proyecto Alpha');
 
         $clone = $this->buildProject($tenant, 'P-100-CLONE');
-        $clone->setNombre('Proyecto Alpha (Clon)');
+        $clone->setName('Proyecto Alpha (Clon)');
 
         // Modificar el clon no afecta el original
-        $clone->setNombre('Proyecto Beta Modificado');
+        $clone->setName('Proyecto Beta Modificado');
 
-        $this->assertSame('Proyecto Alpha', $original->getNombre());
-        $this->assertSame('Proyecto Beta Modificado', $clone->getNombre());
+        $this->assertSame('Proyecto Alpha', $original->getName());
+        $this->assertSame('Proyecto Beta Modificado', $clone->getName());
     }
 
     // ── Presupuesto ──────────────────────────────────────────────────────────
@@ -349,30 +349,30 @@ class CRUDLifecycleTest extends TestCase
         $project  = $this->buildProject($tenant);
         $plantilla = new Template();
         $plantilla->setTenant($tenant);
-        $plantilla->setProyecto($project);
-        $plantilla->setNombre('Presupuesto Calc');
+        $plantilla->setProject($project);
+        $plantilla->setName('Presupuesto Calc');
 
         // Rubro 1: APU costo unitario = $100, cantidad = 5 → subtotal = $500
         $rubro1  = $this->buildRubro($tenant, 'R-A');
         $apu1    = $this->buildAPUItem($tenant, 100.0);
         $pr1     = new TemplateItem();
 
-        $pr1->setRubro($rubro1);
+        $pr1->setItem($rubro1);
         $pr1->setApuItem($apu1);
-        $pr1->setCantidad('5.0');
-        $plantilla->addPlantillaRubro($pr1);
+        $pr1->setQuantity('5.0');
+        $plantilla->addItem($pr1);
 
         // Rubro 2: APU costo unitario = $200, cantidad = 3 → subtotal = $600
         $rubro2  = $this->buildRubro($tenant, 'R-B');
         $apu2    = $this->buildAPUItem($tenant, 200.0);
         $pr2     = new TemplateItem();
 
-        $pr2->setRubro($rubro2);
+        $pr2->setItem($rubro2);
         $pr2->setApuItem($apu2);
-        $pr2->setCantidad('3.0');
-        $plantilla->addPlantillaRubro($pr2);
+        $pr2->setQuantity('3.0');
+        $plantilla->addItem($pr2);
 
-        $total = $plantilla->getTotalPresupuesto();
+        $total = $plantilla->getTotalBudget();
         // Total esperado = 500 + 600 = 1100
         $this->assertEqualsWithDelta(
             1100.0,

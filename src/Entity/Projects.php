@@ -20,31 +20,31 @@ class Projects
     private ?Tenant $tenant = null;
 
     #[ORM\Column(name: 'name', type: 'string', length: 255)]
-    private ?string $nombre = null;
+    private ?string $name = null;
 
     #[ORM\Column(name: 'code', type: 'string', length: 100)]
-    private ?string $codigo = null;
+    private ?string $code = null;
 
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]
-    private ?string $descripcion = null;
+    private ?string $description = null;
 
     #[ORM\Column(name: 'client_name', type: 'string', length: 255, nullable: true)]
-    private ?string $cliente = null;
+    private ?string $client = null;
 
     #[ORM\Column(name: 'location', type: 'string', length: 255, nullable: true)]
-    private ?string $ubicacion = null;
+    private ?string $location = null;
 
     #[ORM\Column(name: 'start_date', type: 'date', nullable: true)]
-    private ?\DateTimeInterface $fechaInicio = null;
+    private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(name: 'end_date', type: 'date', nullable: true)]
-    private ?\DateTimeInterface $fechaFin = null;
+    private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(name: 'status', type: 'string', length: 50)]
-    private string $estado = 'planificacion'; // planificacion, en_proceso, pausado, finalizado
+    private string $status = 'planificacion'; // planificacion, en_proceso, pausado, finalizado
 
     #[ORM\Column(name: 'total_budget', type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    private ?string $presupuestoTotal = null;
+    private ?string $totalBudget = null;
 
     #[ORM\Column(name: 'created_at', type: 'datetime')]
     private ?\DateTimeInterface $createdAt = null;
@@ -52,13 +52,13 @@ class Projects
     #[ORM\Column(name: 'updated_at', type: 'datetime')]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\OneToMany(targetEntity: Template::class, mappedBy: 'proyecto', cascade: ['remove'])]
+    #[ORM\OneToMany(targetEntity: Template::class, mappedBy: 'project', cascade: ['remove'])]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
-    private Collection $plantillas;
+    private Collection $templates;
 
     public function __construct()
     {
-        $this->plantillas = new ArrayCollection();
+        $this->templates = new ArrayCollection();
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
     }
@@ -79,102 +79,102 @@ class Projects
         return $this;
     }
 
-    public function getNombre(): ?string
+    public function getName(): ?string
     {
-        return $this->nombre;
+        return $this->name;
     }
 
-    public function setNombre(string $nombre): self
+    public function setName(string $name): self
     {
-        $this->nombre = $nombre;
+        $this->name = $name;
         return $this;
     }
 
-    public function getCodigo(): ?string
+    public function getCode(): ?string
     {
-        return $this->codigo;
+        return $this->code;
     }
 
-    public function setCodigo(string $codigo): self
+    public function setCode(string $code): self
     {
-        $this->codigo = $codigo;
+        $this->code = $code;
         return $this;
     }
 
-    public function getDescripcion(): ?string
+    public function getDescription(): ?string
     {
-        return $this->descripcion;
+        return $this->description;
     }
 
-    public function setDescripcion(?string $descripcion): self
+    public function setDescription(?string $description): self
     {
-        $this->descripcion = $descripcion;
+        $this->description = $description;
         return $this;
     }
 
-    public function getCliente(): ?string
+    public function getClient(): ?string
     {
-        return $this->cliente;
+        return $this->client;
     }
 
-    public function setCliente(?string $cliente): self
+    public function setClient(?string $client): self
     {
-        $this->cliente = $cliente;
+        $this->client = $client;
         return $this;
     }
 
-    public function getUbicacion(): ?string
+    public function getLocation(): ?string
     {
-        return $this->ubicacion;
+        return $this->location;
     }
 
-    public function setUbicacion(?string $ubicacion): self
+    public function setLocation(?string $location): self
     {
-        $this->ubicacion = $ubicacion;
+        $this->location = $location;
         return $this;
     }
 
-    public function getFechaInicio(): ?\DateTimeInterface
+    public function getStartDate(): ?\DateTimeInterface
     {
-        return $this->fechaInicio;
+        return $this->startDate;
     }
 
-    public function setFechaInicio(?\DateTimeInterface $fechaInicio): self
+    public function setStartDate(?\DateTimeInterface $startDate): self
     {
-        $this->fechaInicio = $fechaInicio;
+        $this->startDate = $startDate;
         return $this;
     }
 
-    public function getFechaFin(): ?\DateTimeInterface
+    public function getEndDate(): ?\DateTimeInterface
     {
-        return $this->fechaFin;
+        return $this->endDate;
     }
 
-    public function setFechaFin(?\DateTimeInterface $fechaFin): self
+    public function setEndDate(?\DateTimeInterface $endDate): self
     {
-        $this->fechaFin = $fechaFin;
+        $this->endDate = $endDate;
         return $this;
     }
 
-    public function getEstado(): string
+    public function getStatus(): string
     {
-        return $this->estado;
+        return $this->status;
     }
 
-    public function setEstado(string $estado): self
+    public function setStatus(string $status): self
     {
-        $this->estado = $estado;
+        $this->status = $status;
         return $this;
     }
 
-    public function getPresupuestoTotal(): ?string
+    public function getTotalBudget(): ?string
     {
-        return $this->presupuestoTotal;
+        return $this->totalBudget;
     }
 
-    public function setPresupuestoTotal(?string $presupuestoTotal): self
+    public function setTotalBudget(?string $totalBudget): self
     {
-        $this->presupuestoTotal = $presupuestoTotal;
+        $this->totalBudget = $totalBudget;
         return $this;
     }
 
@@ -194,17 +194,17 @@ class Projects
         return $this;
     }
 
-    public function getPlantillas(): Collection
+    public function getTemplates(): Collection
     {
-        return $this->plantillas;
+        return $this->templates;
     }
 
-    /** Total presupuesto calculado sumando todas las plantillas */
-    public function getTotalCalculado(): float
+    /** Total budget calculated summing all templates */
+    public function getCalculatedTotal(): float
     {
         $total = 0.0;
-        foreach ($this->plantillas as $plantilla) {
-            $total += $plantilla->getTotalPresupuesto();
+        foreach ($this->templates as $template) {
+            $total += $template->getTotalBudget();
         }
         return $total;
     }

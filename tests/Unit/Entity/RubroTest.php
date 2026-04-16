@@ -24,10 +24,10 @@ class RubroTest extends TestCase
     {
         $rubro = new Item();
         $rubro->setTenant($this->buildTenant());
-        $rubro->setCodigo('R-001');
-        $rubro->setNombre('Excavación manual');
-        $rubro->setUnidad('m³');
-        $rubro->setTipo($tipo);
+        $rubro->setCode('R-001');
+        $rubro->setName('Excavación manual');
+        $rubro->setUnit('m³');
+        $rubro->setType($tipo);
         return $rubro;
     }
 
@@ -44,21 +44,21 @@ class RubroTest extends TestCase
     public function rubroTieneActivoTrueByDefault(): void
     {
         $rubro = $this->buildRubro();
-        $this->assertTrue($rubro->isActivo());
+        $this->assertTrue($rubro->isActive());
     }
 
     #[Test]
     public function rubroAceptaTipoPersonalizado(): void
     {
         $rubro = $this->buildRubro('personalizado');
-        $this->assertSame('personalizado', $rubro->getTipo());
+        $this->assertSame('personalizado', $rubro->getType());
     }
 
     #[Test]
     public function rubroAceptaTipoGeneral(): void
     {
         $rubro = $this->buildRubro('general');
-        $this->assertSame('general', $rubro->getTipo());
+        $this->assertSame('general', $rubro->getType());
     }
 
     // ---- Getters / Setters ----
@@ -68,28 +68,28 @@ class RubroTest extends TestCase
     {
         $rubro = $this->buildRubro();
 
-        $this->assertSame('R-001', $rubro->getCodigo());
-        $this->assertSame('Excavación manual', $rubro->getNombre());
-        $this->assertSame('m³', $rubro->getUnidad());
+        $this->assertSame('R-001', $rubro->getCode());
+        $this->assertSame('Excavación manual', $rubro->getName());
+        $this->assertSame('m³', $rubro->getUnit());
 
-        $rubro->setCodigo('R-002');
-        $rubro->setNombre('Hormigón f\'c=210 kg/cm²');
-        $rubro->setUnidad('m³');
-        $rubro->setActivo(false);
+        $rubro->setCode('R-002');
+        $rubro->setName('Hormigón f\'c=210 kg/cm²');
+        $rubro->setUnit('m³');
+        $rubro->setActive(false);
 
-        $this->assertSame('R-002', $rubro->getCodigo());
-        $this->assertSame('Hormigón f\'c=210 kg/cm²', $rubro->getNombre());
-        $this->assertFalse($rubro->isActivo());
+        $this->assertSame('R-002', $rubro->getCode());
+        $this->assertSame('Hormigón f\'c=210 kg/cm²', $rubro->getName());
+        $this->assertFalse($rubro->isActive());
     }
 
     #[Test]
     public function descripcionEsOpcional(): void
     {
         $rubro = $this->buildRubro();
-        $this->assertNull($rubro->getDescripcion());
+        $this->assertNull($rubro->getDescription());
 
-        $rubro->setDescripcion('Rubro de excavación en suelo normal');
-        $this->assertSame('Rubro de excavación en suelo normal', $rubro->getDescripcion());
+        $rubro->setDescription('Rubro de excavación en suelo normal');
+        $this->assertSame('Rubro de excavación en suelo normal', $rubro->getDescription());
     }
 
     // ---- Timestamps ----

@@ -43,7 +43,7 @@ class ExcelReportService
         $sheet->setCellValue('A' . $row, 'K(H/U):');
         $sheet->setCellValue('B' . $row, $apuItem->getKhu());
         $sheet->setCellValue('C' . $row, 'Rend. u/h:');
-        $sheet->setCellValue('D' . $row, $apuItem->getRendimientoUh());
+        $sheet->setCellValue('D' . $row, $apuItem->getProductivityUh());
         $row += 2;
 
         // Sección EQUIPO
@@ -63,7 +63,7 @@ class ExcelReportService
 
         $equipmentTotal = 0;
         foreach ($apuItem->getEquipment() as $equipment) {
-            $sheet->setCellValue('A' . $row, $equipment->getDescripcion());
+            $sheet->setCellValue('A' . $row, $equipment->getDescription());
             $sheet->setCellValue('B' . $row, $equipment->getNumero());
             $sheet->setCellValue('C' . $row, $equipment->getTarifa());
             $sheet->setCellValue('D' . $row, $equipment->getCHora());
@@ -94,7 +94,7 @@ class ExcelReportService
 
         $laborTotal = 0;
         foreach ($apuItem->getLabor() as $labor) {
-            $sheet->setCellValue('A' . $row, $labor->getDescripcion());
+            $sheet->setCellValue('A' . $row, $labor->getDescription());
             $sheet->setCellValue('B' . $row, $labor->getNumero());
             $sheet->setCellValue('C' . $row, $labor->getJorHora());
             $sheet->setCellValue('D' . $row, $labor->getCHora());
@@ -125,10 +125,10 @@ class ExcelReportService
 
         $materialTotal = 0;
         foreach ($apuItem->getMaterials() as $material) {
-            $sheet->setCellValue('A' . $row, $material->getDescripcion());
-            $sheet->setCellValue('B' . $row, $material->getUnidad());
-            $sheet->setCellValue('C' . $row, $material->getCantidad());
-            $sheet->setCellValue('D' . $row, $material->getPrecioUnitario());
+            $sheet->setCellValue('A' . $row, $material->getDescription());
+            $sheet->setCellValue('B' . $row, $material->getUnit());
+            $sheet->setCellValue('C' . $row, $material->getQuantity());
+            $sheet->setCellValue('D' . $row, $material->getUnitPrice());
             $sheet->setCellValue('E' . $row, $material->getTotalCost());
             $materialTotal += $material->getTotalCost();
             $row++;
@@ -156,9 +156,9 @@ class ExcelReportService
 
         $transportTotal = 0;
         foreach ($apuItem->getTransport() as $transport) {
-            $sheet->setCellValue('A' . $row, $transport->getDescripcion());
-            $sheet->setCellValue('B' . $row, $transport->getUnidad());
-            $sheet->setCellValue('C' . $row, $transport->getCantidad());
+            $sheet->setCellValue('A' . $row, $transport->getDescription());
+            $sheet->setCellValue('B' . $row, $transport->getUnit());
+            $sheet->setCellValue('C' . $row, $transport->getQuantity());
             $sheet->setCellValue('D' . $row, $transport->getDmt());
             $sheet->setCellValue('E' . $row, $transport->getTotalCost());
             $transportTotal += $transport->getTotalCost();

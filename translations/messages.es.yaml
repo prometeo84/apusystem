@@ -287,6 +287,10 @@ emails:
   automated_notice: "Este es un correo automatizado, por favor no respondas."
   rights_reserved: "Todos los derechos reservados."
 
+flash:
+  cannot_use_reserved_slug: "No se puede usar este identificador reservado para la empresa."
+  cannot_modify_protected_company: "No se puede modificar esta empresa protegida."
+
   error_notification:
     header: "⚠ Error en APU System"
     intro: "Hola %name%, se produjo un error no controlado en el sistema."
@@ -398,27 +402,22 @@ security:
   last_update: "Última actualización"
   min_8_chars: "Mínimo 8 caracteres"
   password_advice: "Se recomienda cambiar tu contraseña regularmente para mantener tu cuenta segura."
-
 security_2fa:
   verify_title: "Verificación de dos factores"
-  verify_description: "Ingresa el código de verificación de tu aplicación de autenticación o usa un código de recuperación." 
+  verify_description: "Ingresa el código de verificación de tu aplicación de autenticación o usa un código de recuperación."
   enter_code: "Ingresa el código de 6 dígitos"
   verify_button: "Verificar"
   use_recovery_code: "Usar código de recuperación"
-  password_recommendation: "Se recomienda cambiar tu contraseña regularmente para mantener tu cuenta segura"
-  recent_events: "Eventos de Seguridad Recientes"
-  recommendation: "Se recomienda usar mayúsculas, minúsculas, números y símbolos"
-  recovery_codes: "Códigos de recuperación disponibles"
-  recovery_codes_available: "Códigos de recuperación disponibles"
-  requirements: "Requisitos de seguridad"
+  code_from_app: "Código de 6 dígitos desde tu aplicación de autenticación"
+  code_invalidated: "El código se invalidará después de usarse"
+  codes_copied: "Códigos copiados al portapapeles"
+  configure_2fa: "Configurar Autenticación de Dos Factores"
   revoke: "Revocar"
-  sessions: "Sesiones Activas"
-  severity: "Severidad"
+  no_active_sessions: "No hay sesiones activas."
   title: "Configuración de Seguridad"
   two_factor: "Autenticación de Dos Factores (2FA)"
   use_auth_app: "Usa una aplicación de autenticación como Google Authenticator o Authy"
   back_to_security: "Volver a Seguridad"
-  no_active_sessions: "No hay sesiones activas."
 
   superadmin_verify:
     title: "Verificación de email — Superadmin"
@@ -439,13 +438,11 @@ security_2fa:
     google: "Google Authenticator: Disponible para iOS y Android"
     microsoft: "Microsoft Authenticator: Disponible para iOS y Android"
     authy: "Authy: Disponible para iOS, Android y Desktop"
+  recovery_codes: "Códigos de recuperación disponibles"
+  requirements: "Requisitos de seguridad"
+  sessions: "Sesiones Activas"
+  severity: "Severidad"
   secret_key: "Clave secreta"
-
-security_2fa:
-  code_from_app: "Código de 6 dígitos desde tu aplicación de autenticación"
-  code_invalidated: "El código se invalidará después de usarse"
-  codes_copied: "Códigos copiados al portapapeles"
-  configure_2fa: "Configurar Autenticación de Dos Factores"
 
 project:
   status:

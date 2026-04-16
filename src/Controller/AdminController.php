@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/admin')]
 #[IsGranted('ROLE_ADMIN')]
@@ -20,7 +21,8 @@ class AdminController extends AbstractController
     public function __construct(
         private EntityManagerInterface $em,
         private SecurityLogger $securityLogger,
-        private UserPasswordHasherInterface $passwordHasher
+        private UserPasswordHasherInterface $passwordHasher,
+        private TranslatorInterface $translator
     ) {}
 
     #[Route('', name: 'app_admin')]
@@ -233,7 +235,7 @@ class AdminController extends AbstractController
         $this->em->flush();
 
         $action = $userToToggle->isActive() ? 'activado' : 'desactivado';
-        $this->addFlash('success', $this->container->get('translator')->trans('flash.user_toggled', ['%action%' => $action]));
+        $this->addFlash('success', $this->translator->trans('flash.user_toggled', ['%action%' => $action]));
 
         return $this->redirectToRoute('app_admin_users');
     }
@@ -305,6 +307,12 @@ class AdminController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
+            // No permitir editar tenant protegido
+            if ($tenant->isProtected()) {
+                $this->addFlash('error', 'flash.cannot_modify_protected_company');
+                return $this->redirectToRoute('app_admin_tenant', ['tenant_id' => $tenant->getId()]);
+            }
+
             $name = $request->request->get('name');
             $timezone = $request->request->get('timezone');
             $currency = $request->request->get('currency');

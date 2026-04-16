@@ -17,11 +17,11 @@ class APUEquipment
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?APUItem $apuItem = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $descripcion;
+    #[ORM\Column(name: 'descripcion', type: 'string', length: 255)]
+    private string $description;
 
-    #[ORM\Column(type: 'integer')]
-    private int $numero;
+    #[ORM\Column(name: 'numero', type: 'integer')]
+    private int $quantity;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
     private string $tarifa; // Tarifa
@@ -53,25 +53,25 @@ class APUEquipment
         return $this;
     }
 
-    public function getDescripcion(): string
+    public function getDescription(): string
     {
-        return $this->descripcion;
+        return $this->description;
     }
 
-    public function setDescripcion(string $descripcion): self
+    public function setDescription(string $description): self
     {
-        $this->descripcion = $descripcion;
+        $this->description = $description;
         return $this;
     }
 
-    public function getNumero(): int
+    public function getQuantity(): int
     {
-        return $this->numero;
+        return $this->quantity;
     }
 
-    public function setNumero(int $numero): self
+    public function setQuantity(int $quantity): self
     {
-        $this->numero = $numero;
+        $this->quantity = $quantity;
         return $this;
     }
 

@@ -29,9 +29,9 @@ class PlantillaTest extends TestCase
     {
         $project = new Projects();
         $project->setTenant($tenant);
-        $project->setNombre('Edificio Residencial A');
-        $project->setCodigo('P-2026-001');
-        $project->setEstado('activo');
+        $project->setName('Edificio Residencial A');
+        $project->setCode('P-2026-001');
+        $project->setStatus('activo');
         return $project;
     }
 
@@ -39,10 +39,10 @@ class PlantillaTest extends TestCase
     {
         $rubro = new Item();
         $rubro->setTenant($tenant);
-        $rubro->setCodigo('R-001');
-        $rubro->setNombre('Excavación');
-        $rubro->setUnidad('m³');
-        $rubro->setTipo('personalizado');
+        $rubro->setCode('R-001');
+        $rubro->setName('Excavación');
+        $rubro->setUnit('m³');
+        $rubro->setType('personalizado');
         return $rubro;
     }
 
@@ -53,13 +53,13 @@ class PlantillaTest extends TestCase
         $item->setDescription('APU Test');
         $item->setUnit('m³');
         $item->setKhu('1.0');
-        $item->setRendimientoUh('1.0');
+        $item->setProductivityUh('1.0');
 
         $mat = new APUMaterial();
-        $mat->setDescripcion('Material Test');
-        $mat->setUnidad('u');
-        $mat->setCantidad('1.0');
-        $mat->setPrecioUnitario((string)$costPerUnit);
+        $mat->setDescription('Material Test');
+        $mat->setUnit('u');
+        $mat->setQuantity('1.0');
+        $mat->setUnitPrice((string)$costPerUnit);
         $item->addMaterial($mat);
         $item->calculateCosts();
 
@@ -76,11 +76,11 @@ class PlantillaTest extends TestCase
 
         $plantilla = new Template();
         $plantilla->setTenant($tenant);
-        $plantilla->setProyecto($project);
-        $plantilla->setNombre('Presupuesto Fondaciones');
+        $plantilla->setProject($project);
+        $plantilla->setName('Presupuesto Fondaciones');
 
         $this->assertNull($plantilla->getId());
-        $this->assertCount(0, $plantilla->getPlantillaRubros());
+        $this->assertCount(0, $plantilla->getItems());
     }
 
     #[Test]
@@ -91,17 +91,17 @@ class PlantillaTest extends TestCase
 
         $plantilla = new Template();
         $plantilla->setTenant($tenant);
-        $plantilla->setProyecto($project);
-        $plantilla->setNombre('Vacía');
+        $plantilla->setProject($project);
+        $plantilla->setName('Vacía');
 
-        $this->assertSame(0.0, $plantilla->getTotalPresupuesto());
+        $this->assertSame(0.0, $plantilla->getTotalBudget());
     }
 
     #[Test]
     public function activaEsTruePorDefecto(): void
     {
         $plantilla = new Template();
-        $this->assertTrue($plantilla->isActiva());
+        $this->assertTrue($plantilla->isActive());
     }
 
     #[Test]
@@ -121,12 +121,12 @@ class PlantillaTest extends TestCase
         $apu     = $this->buildAPUWithMaterialCost($tenant, 50.0); // costo unitario = 50
 
         $pr = new TemplateItem();
-        $pr->setRubro($rubro);
+        $pr->setItem($rubro);
         $pr->setApuItem($apu);
-        $pr->setCantidad('3.0'); // 3 unidades
+        $pr->setQuantity('3.0'); // 3 unidades
 
         // getTotalCosto = cantidad * totalCost = 3 * 50 = 150
-        $this->assertEqualsWithDelta(150.0, $pr->getTotalCosto(), 0.001);
+        $this->assertEqualsWithDelta(150.0, $pr->getTotalCost(), 0.001);
     }
 
     #[Test]
@@ -136,25 +136,25 @@ class PlantillaTest extends TestCase
         $rubro  = $this->buildRubro($tenant);
 
         $pr = new TemplateItem();
-        $pr->setRubro($rubro);
-        $pr->setCantidad('5.0');
+        $pr->setItem($rubro);
+        $pr->setQuantity('5.0');
         // Sin APU
 
-        $this->assertSame(0.0, $pr->getTotalCosto());
+        $this->assertSame(0.0, $pr->getTotalCost());
     }
 
     #[Test]
     public function plantillaRubroCantidadDefaultEsUno(): void
     {
         $pr = new TemplateItem();
-        $this->assertSame('1.0000', $pr->getCantidad());
+        $this->assertSame('1.0000', $pr->getQuantity());
     }
 
     #[Test]
     public function plantillaRubroOrdenDefaultEsCero(): void
     {
         $pr = new TemplateItem();
-        $this->assertSame(0, $pr->getOrden());
+        $this->assertSame(0, $pr->getOrder());
     }
 
     #[Test]
@@ -165,11 +165,11 @@ class PlantillaTest extends TestCase
         $apu    = $this->buildAPUWithMaterialCost($tenant, 75.0);
 
         $pr = new TemplateItem();
-        $pr->setRubro($rubro);
+        $pr->setItem($rubro);
         $pr->setApuItem($apu);
-        $pr->setCantidad('2.0');
+        $pr->setQuantity('2.0');
 
-        $this->assertEqualsWithDelta(75.0, $pr->getPrecioUnitario(), 0.001);
+        $this->assertEqualsWithDelta(75.0, $pr->getUnitPrice(), 0.001);
     }
 
     // ---- Integración Plantilla + PlantillaRubros ----
@@ -184,19 +184,19 @@ class PlantillaTest extends TestCase
         for ($i = 1; $i <= 2; $i++) {
             $rubro = new Item();
             $rubro->setTenant($tenant);
-            $rubro->setCodigo('R-00' . $i);
-            $rubro->setNombre('Rubro ' . $i);
-            $rubro->setUnidad('m²');
-            $rubro->setTipo('general');
+            $rubro->setCode('R-00' . $i);
+            $rubro->setName('Rubro ' . $i);
+            $rubro->setUnit('m²');
+            $rubro->setType('general');
 
             $apu = $this->buildAPUWithMaterialCost($tenant, 100.0); // 100 por unidad
 
             $pr = new TemplateItem();
-            $pr->setRubro($rubro);
+            $pr->setItem($rubro);
             $pr->setApuItem($apu);
-            $pr->setCantidad('5.0'); // 5 unidades => 500 cada uno
+            $pr->setQuantity('5.0'); // 5 unidades => 500 cada uno
 
-            $total += $pr->getTotalCosto();
+            $total += $pr->getTotalCost();
         }
 
         // total = 500 + 500 = 1000

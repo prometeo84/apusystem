@@ -170,16 +170,16 @@ class RevitFileProcessor
                 $apu->setDescription($element['name'] ?? $element['category']);
                 $apu->setUnit($element['unit'] ?? 'm²');
                 $apu->setKhu($element['khu'] ?? 1.0);
-                $apu->setRendimientoUh($element['rendimiento'] ?? 1.0);
+                $apu->setProductivityUh($element['rendimiento'] ?? 1.0);
 
                 // Si tiene materiales, crearlos
                 if (isset($element['materials']) && \is_array($element['materials'])) {
                     foreach ($element['materials'] as $matData) {
                         $material = new APUMaterial();
-                        $material->setDescripcion($matData['name'] ?? 'Material');
-                        $material->setUnidad($matData['unit'] ?? 'kg');
-                        $material->setCantidad($matData['quantity'] ?? 1.0);
-                        $material->setPrecioUnitario($matData['price'] ?? 0.0);
+                        $material->setDescription($matData['name'] ?? 'Material');
+                        $material->setUnit($matData['unit'] ?? 'kg');
+                        $material->setQuantity($matData['quantity'] ?? 1.0);
+                        $material->setUnitPrice($matData['price'] ?? 0.0);
                         $material->setApuItem($apu);
                         $apu->addMaterial($material);
                     }

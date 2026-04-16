@@ -31,7 +31,7 @@ class APUItemTest extends TestCase
         $item->setDescription('Excavación manual en suelo normal');
         $item->setUnit('m³');
         $item->setKhu('0.2500');
-        $item->setRendimientoUh('4.0000');
+        $item->setProductivityUh('4.0000');
         return $item;
     }
 
@@ -65,8 +65,8 @@ class APUItemTest extends TestCase
         $item = $this->buildAPUItem();
 
         $equip = new APUEquipment();
-        $equip->setDescripcion('Retroexcavadora');
-        $equip->setNumero(1);
+        $equip->setDescription('Retroexcavadora');
+        $equip->setQuantity(1);
         $equip->setTarifa('50.00');
         $equip->setCHora('8.0000');
         $item->addEquipment($equip);
@@ -84,8 +84,8 @@ class APUItemTest extends TestCase
         $item = $this->buildAPUItem();
 
         $labor = new APULabor();
-        $labor->setDescripcion('Peón');
-        $labor->setNumero(2);
+        $labor->setDescription('Peón');
+        $labor->setQuantity(2);
         $labor->setJorHora('3.75');
         $labor->setCHora('8.0000');
         $item->addLabor($labor);
@@ -102,10 +102,10 @@ class APUItemTest extends TestCase
         $item = $this->buildAPUItem();
 
         $mat = new APUMaterial();
-        $mat->setDescripcion('Cemento Portland');
-        $mat->setUnidad('saco');
-        $mat->setCantidad('10.5');
-        $mat->setPrecioUnitario('8.50');
+        $mat->setDescription('Cemento Portland');
+        $mat->setUnit('saco');
+        $mat->setQuantity('10.5');
+        $mat->setUnitPrice('8.50');
         $item->addMaterial($mat);
 
         $item->calculateCosts();
@@ -120,17 +120,17 @@ class APUItemTest extends TestCase
         $item = $this->buildAPUItem();
 
         $equip = new APUEquipment();
-        $equip->setDescripcion('Compresor');
-        $equip->setNumero(1);
+        $equip->setDescription('Compresor');
+        $equip->setQuantity(1);
         $equip->setTarifa('20.00');
         $equip->setCHora('5.0000');
         $item->addEquipment($equip);
 
         $mat = new APUMaterial();
-        $mat->setDescripcion('Arena fina');
-        $mat->setUnidad('m³');
-        $mat->setCantidad('2.0');
-        $mat->setPrecioUnitario('15.00');
+        $mat->setDescription('Arena fina');
+        $mat->setUnit('m³');
+        $mat->setQuantity('2.0');
+        $mat->setUnitPrice('15.00');
         $item->addMaterial($mat);
 
         $item->calculateCosts();
@@ -145,30 +145,30 @@ class APUItemTest extends TestCase
     public function utilidadPctEsNullPorDefecto(): void
     {
         $item = $this->buildAPUItem();
-        $this->assertNull($item->getUtilidadPct());
+        $this->assertNull($item->getProfitPct());
     }
 
     #[Test]
     public function precioOfertadoEsNullPorDefecto(): void
     {
         $item = $this->buildAPUItem();
-        $this->assertNull($item->getPrecioOfertado());
+        $this->assertNull($item->getOfferedPrice());
     }
 
     #[Test]
     public function setUtilidadPctGuardaElValor(): void
     {
         $item = $this->buildAPUItem();
-        $item->setUtilidadPct('20.00');
-        $this->assertSame('20.00', $item->getUtilidadPct());
+        $item->setProfitPct('20.00');
+        $this->assertSame('20.00', $item->getProfitPct());
     }
 
     #[Test]
     public function setPrecioOfertadoGuardaElValor(): void
     {
         $item = $this->buildAPUItem();
-        $item->setPrecioOfertado('150.00');
-        $this->assertSame('150.00', $item->getPrecioOfertado());
+        $item->setOfferedPrice('150.00');
+        $this->assertSame('150.00', $item->getOfferedPrice());
     }
 
     #[Test]
@@ -177,17 +177,17 @@ class APUItemTest extends TestCase
         $item = $this->buildAPUItem();
 
         $mat = new APUMaterial();
-        $mat->setDescripcion('Bloques de concreto');
-        $mat->setUnidad('u');
-        $mat->setCantidad('100.0');
-        $mat->setPrecioUnitario('1.00');
+        $mat->setDescription('Bloques de concreto');
+        $mat->setUnit('u');
+        $mat->setQuantity('100.0');
+        $mat->setUnitPrice('1.00');
         $item->addMaterial($mat);
         $item->calculateCosts(); // totalCost = 100
 
-        $item->setUtilidadPct('20.00');
+        $item->setProfitPct('20.00');
 
         // precioCalculo = 100 * (1 + 20/100) = 120
-        $this->assertEqualsWithDelta(120.0, $item->getPrecioCalculo(), 0.001);
+        $this->assertEqualsWithDelta(120.0, $item->getCalculationPrice(), 0.001);
     }
 
     #[Test]
@@ -196,32 +196,32 @@ class APUItemTest extends TestCase
         $item = $this->buildAPUItem();
 
         $mat = new APUMaterial();
-        $mat->setDescripcion('Test mat');
-        $mat->setUnidad('u');
-        $mat->setCantidad('1.0');
-        $mat->setPrecioUnitario('50.00');
+        $mat->setDescription('Test mat');
+        $mat->setUnit('u');
+        $mat->setQuantity('1.0');
+        $mat->setUnitPrice('50.00');
         $item->addMaterial($mat);
         $item->calculateCosts();
 
         // Sin utilidadPct debería retornar totalCost
-        $this->assertEqualsWithDelta(50.0, $item->getPrecioCalculo(), 0.001);
+        $this->assertEqualsWithDelta(50.0, $item->getCalculationPrice(), 0.001);
     }
 
     #[Test]
     public function utilidadPctNullNoCausaError(): void
     {
         $item = $this->buildAPUItem();
-        $item->setUtilidadPct(null);
+        $item->setProfitPct(null);
 
         $mat = new APUMaterial();
-        $mat->setDescripcion('Test');
-        $mat->setUnidad('u');
-        $mat->setCantidad('1.0');
-        $mat->setPrecioUnitario('100.00');
+        $mat->setDescription('Test');
+        $mat->setUnit('u');
+        $mat->setQuantity('1.0');
+        $mat->setUnitPrice('100.00');
         $item->addMaterial($mat);
         $item->calculateCosts();
 
-        $precioCalculo = $item->getPrecioCalculo();
+        $precioCalculo = $item->getCalculationPrice();
         $this->assertIsFloat($precioCalculo);
         $this->assertEqualsWithDelta(100.0, $precioCalculo, 0.001);
     }
@@ -234,9 +234,9 @@ class APUItemTest extends TestCase
         $item = $this->buildAPUItem();
 
         $transport = new APUTransport();
-        $transport->setDescripcion('Volqueta');
-        $transport->setUnidad('m³');
-        $transport->setCantidad('5.0');
+        $transport->setDescription('Volqueta');
+        $transport->setUnit('m³');
+        $transport->setQuantity('5.0');
         $transport->setDmt('10.0');
         $transport->setTarifaKm('0.50');
         $item->addTransport($transport);
@@ -255,8 +255,8 @@ class APUItemTest extends TestCase
         $item = $this->buildAPUItem();
 
         $equip = new APUEquipment();
-        $equip->setDescripcion('Grúa');
-        $equip->setNumero(1);
+        $equip->setDescription('Grúa');
+        $equip->setQuantity(1);
         $equip->setTarifa('100.00');
         $equip->setCHora('4.0000');
         $item->addEquipment($equip);

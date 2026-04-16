@@ -62,9 +62,9 @@ class TemplateController extends AbstractController
 
             $plantilla = new Template();
             $plantilla->setTenant($this->getUser()->getTenant());
-            $plantilla->setProyecto($project);
-            $plantilla->setNombre(trim($request->request->get('nombre', '')));
-            $plantilla->setDescripcion(trim($request->request->get('descripcion', '')) ?: null);
+            $plantilla->setProject($project);
+            $plantilla->setName(trim($request->request->get('nombre', '')));
+            $plantilla->setDescription(trim($request->request->get('descripcion', '')) ?: null);
 
             $this->em->persist($plantilla);
             $this->em->flush();
@@ -98,8 +98,8 @@ class TemplateController extends AbstractController
 
         // IDs de rubros ya agregados
         $rubrosAgregados = [];
-        foreach ($plantilla->getPlantillaRubros() as $pr) {
-            $rubrosAgregados[] = $pr->getRubro()->getId();
+        foreach ($plantilla->getItems() as $pr) {
+            $rubrosAgregados[] = $pr->getItem()->getId();
         }
 
         return $this->render('template/show.html.twig', [
@@ -128,8 +128,8 @@ class TemplateController extends AbstractController
                 return $this->redirectToRoute('app_template_edit', ['projectId' => $projectId, 'id' => $id]);
             }
 
-            $plantilla->setNombre(trim($request->request->get('nombre', '')));
-            $plantilla->setDescripcion(trim($request->request->get('descripcion', '')) ?: null);
+            $plantilla->setName(trim($request->request->get('nombre', '')));
+            $plantilla->setDescription(trim($request->request->get('descripcion', '')) ?: null);
             $plantilla->setUpdatedAt(new \DateTime());
 
             $this->em->flush();
@@ -172,21 +172,21 @@ class TemplateController extends AbstractController
         }
 
         // No duplicar
-        foreach ($plantilla->getPlantillaRubros() as $pr) {
-            if ($pr->getRubro()->getId() === $rubro->getId()) {
+        foreach ($plantilla->getItems() as $pr) {
+            if ($pr->getItem()->getId() === $rubro->getId()) {
                 $this->addFlash('warning', 'plantilla.rubro_already_added');
                 return $this->redirectToRoute('app_template_show', ['projectId' => $projectId, 'id' => $id]);
             }
         }
 
         $cantidad = $request->request->get('cantidad', '1.00');
-        $orden = $plantilla->getPlantillaRubros()->count();
+        $orden = $plantilla->getItems()->count();
 
         $pr = new TemplateItem();
-        $pr->setPlantilla($plantilla);
-        $pr->setRubro($rubro);
-        $pr->setCantidad($cantidad);
-        $pr->setOrden($orden);
+        $pr->setTemplate($plantilla);
+        $pr->setItem($rubro);
+        $pr->setQuantity($cantidad);
+        $pr->setOrder($orden);
 
         $this->em->persist($pr);
         $this->em->flush();
@@ -213,7 +213,7 @@ class TemplateController extends AbstractController
         }
 
         $pr = $this->em->getRepository(TemplateItem::class)->find($prId);
-        if ($pr && $pr->getPlantilla()->getId() === $plantilla->getId()) {
+        if ($pr && $pr->getTemplate()->getId() === $plantilla->getId()) {
             $this->em->remove($pr);
             $this->em->flush();
             $this->addFlash('success', 'plantilla.rubro_removed');
@@ -241,16 +241,16 @@ class TemplateController extends AbstractController
 
         $copy = new Template();
         $copy->setTenant($original->getTenant());
-        $copy->setProyecto($project);
-        $copy->setNombre($original->getNombre() . ' (copia)');
-        $copy->setDescripcion($original->getDescripcion());
+        $copy->setProject($project);
+        $copy->setName($original->getName() . ' (copia)');
+        $copy->setDescription($original->getDescription());
 
-        foreach ($original->getPlantillaRubros() as $pr) {
+        foreach ($original->getItems() as $pr) {
             $newPr = new TemplateItem();
-            $newPr->setPlantilla($copy);
-            $newPr->setRubro($pr->getRubro());
-            $newPr->setCantidad($pr->getCantidad());
-            $newPr->setOrden($pr->getOrden());
+            $newPr->setTemplate($copy);
+            $newPr->setItem($pr->getItem());
+            $newPr->setQuantity($pr->getQuantity());
+            $newPr->setOrder($pr->getOrder());
             // APU no se duplica — queda pendiente de asignar
             $this->em->persist($newPr);
         }

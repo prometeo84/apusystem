@@ -65,24 +65,24 @@ class ProjectController extends AbstractController
 
             $project = new Projects();
             $project->setTenant($tenant);
-            $project->setNombre(trim($request->request->get('nombre', '')));
-            $project->setCodigo(trim($request->request->get('codigo', '')));
-            $project->setDescripcion(trim($request->request->get('descripcion', '')) ?: null);
-            $project->setCliente(trim($request->request->get('cliente', '')) ?: null);
-            $project->setUbicacion(trim($request->request->get('ubicacion', '')) ?: null);
-            $project->setEstado($request->request->get('estado', 'planificacion'));
+            $project->setName(trim($request->request->get('nombre', '')));
+            $project->setCode(trim($request->request->get('codigo', '')));
+            $project->setDescription(trim($request->request->get('descripcion', '')) ?: null);
+            $project->setClient(trim($request->request->get('cliente', '')) ?: null);
+            $project->setLocation(trim($request->request->get('ubicacion', '')) ?: null);
+            $project->setStatus($request->request->get('estado', 'planificacion'));
 
             $presupuesto = $request->request->get('presupuesto_total', '');
-            $project->setPresupuestoTotal($presupuesto !== '' ? $presupuesto : null);
+            $project->setTotalBudget($presupuesto !== '' ? $presupuesto : null);
 
             $fechaInicio = $request->request->get('fecha_inicio', '');
             if ($fechaInicio !== '') {
-                $project->setFechaInicio(new \DateTime($fechaInicio));
+                $project->setStartDate(new \DateTime($fechaInicio));
             }
 
             $fechaFin = $request->request->get('fecha_fin', '');
             if ($fechaFin !== '') {
-                $project->setFechaFin(new \DateTime($fechaFin));
+                $project->setEndDate(new \DateTime($fechaFin));
             }
 
             $this->em->persist($project);
@@ -133,21 +133,21 @@ class ProjectController extends AbstractController
                 return $this->redirectToRoute('app_project_edit', ['id' => $id]);
             }
 
-            $project->setNombre(trim($request->request->get('nombre', '')));
-            $project->setCodigo(trim($request->request->get('codigo', '')));
-            $project->setDescripcion(trim($request->request->get('descripcion', '')) ?: null);
-            $project->setCliente(trim($request->request->get('cliente', '')) ?: null);
-            $project->setUbicacion(trim($request->request->get('ubicacion', '')) ?: null);
-            $project->setEstado($request->request->get('estado', 'planificacion'));
+            $project->setName(trim($request->request->get('nombre', '')));
+            $project->setCode(trim($request->request->get('codigo', '')));
+            $project->setDescription(trim($request->request->get('descripcion', '')) ?: null);
+            $project->setClient(trim($request->request->get('cliente', '')) ?: null);
+            $project->setLocation(trim($request->request->get('ubicacion', '')) ?: null);
+            $project->setStatus($request->request->get('estado', 'planificacion'));
 
             $presupuesto = $request->request->get('presupuesto_total', '');
-            $project->setPresupuestoTotal($presupuesto !== '' ? $presupuesto : null);
+            $project->setTotalBudget($presupuesto !== '' ? $presupuesto : null);
 
             $fechaInicio = $request->request->get('fecha_inicio', '');
-            $project->setFechaInicio($fechaInicio !== '' ? new \DateTime($fechaInicio) : null);
+            $project->setStartDate($fechaInicio !== '' ? new \DateTime($fechaInicio) : null);
 
             $fechaFin = $request->request->get('fecha_fin', '');
-            $project->setFechaFin($fechaFin !== '' ? new \DateTime($fechaFin) : null);
+            $project->setEndDate($fechaFin !== '' ? new \DateTime($fechaFin) : null);
 
             $this->em->flush();
 
@@ -208,32 +208,32 @@ class ProjectController extends AbstractController
 
         $copy = new Projects();
         $copy->setTenant($tenant);
-        $copy->setNombre($original->getNombre() . ' (copia)');
-        $copy->setCodigo($original->getCodigo() . '-C');
-        $copy->setDescripcion($original->getDescripcion());
-        $copy->setCliente($original->getCliente());
-        $copy->setUbicacion($original->getUbicacion());
-        $copy->setEstado('planificacion');
-        $copy->setPresupuestoTotal($original->getPresupuestoTotal());
-        $copy->setFechaInicio($original->getFechaInicio());
-        $copy->setFechaFin($original->getFechaFin());
+        $copy->setName($original->getName() . ' (copia)');
+        $copy->setCode($original->getCode() . '-C');
+        $copy->setDescription($original->getDescription());
+        $copy->setClient($original->getClient());
+        $copy->setLocation($original->getLocation());
+        $copy->setStatus('planificacion');
+        $copy->setTotalBudget($original->getTotalBudget());
+        $copy->setStartDate($original->getStartDate());
+        $copy->setEndDate($original->getEndDate());
 
         $this->em->persist($copy);
 
         // Duplicar plantillas (sin APUs)
-        foreach ($original->getPlantillas() as $plantilla) {
+        foreach ($original->getTemplates() as $plantilla) {
             $newPlantilla = new Template();
             $newPlantilla->setTenant($tenant);
-            $newPlantilla->setProyecto($copy);
-            $newPlantilla->setNombre($plantilla->getNombre());
-            $newPlantilla->setDescripcion($plantilla->getDescripcion());
+            $newPlantilla->setProject($copy);
+            $newPlantilla->setName($plantilla->getName());
+            $newPlantilla->setDescription($plantilla->getDescription());
 
-            foreach ($plantilla->getPlantillaRubros() as $pr) {
+            foreach ($plantilla->getItems() as $pr) {
                 $newPr = new TemplateItem();
-                $newPr->setPlantilla($newPlantilla);
-                $newPr->setRubro($pr->getRubro());
-                $newPr->setCantidad($pr->getCantidad());
-                $newPr->setOrden($pr->getOrden());
+                $newPr->setTemplate($newPlantilla);
+                $newPr->setItem($pr->getItem());
+                $newPr->setQuantity($pr->getQuantity());
+                $newPr->setOrder($pr->getOrder());
                 $this->em->persist($newPr);
             }
 

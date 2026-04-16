@@ -3,7 +3,7 @@
         'name' => 'proyecto/apu-system',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'e1091a98c15f02b9adb0091589e66e0e09fd2bd4',
+        'reference' => '43b77686364e68ed9bc786b451d2fb3f662ec412',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -475,7 +475,7 @@
         'proyecto/apu-system' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'e1091a98c15f02b9adb0091589e66e0e09fd2bd4',
+            'reference' => '43b77686364e68ed9bc786b451d2fb3f662ec412',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

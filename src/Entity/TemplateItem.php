@@ -13,26 +13,26 @@ class TemplateItem
     #[ORM\Column(type: 'bigint', options: ['unsigned' => true])]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Template::class, inversedBy: 'plantillaRubros')]
+    #[ORM\ManyToOne(targetEntity: Template::class, inversedBy: 'items')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private Template $plantilla;
+    private Template $template;
 
-    #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: 'plantillaRubros')]
+    #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: 'templateItems')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'RESTRICT')]
-    private Item $rubro;
+    private Item $item;
 
     /** APU asociado a este rubro en esta plantilla (nullable: el rubro puede no tener APU aún) */
     #[ORM\OneToOne(targetEntity: APUItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?APUItem $apuItem = null;
 
-    /** Cantidad del rubro en el presupuesto */
-    #[ORM\Column(type: 'decimal', precision: 15, scale: 4)]
-    private string $cantidad = '1.0000';
+    /** Quantity of the item in the template */
+    #[ORM\Column(name: 'cantidad', type: 'decimal', precision: 15, scale: 4)]
+    private string $quantity = '1.0000';
 
-    /** Orden de aparición en la plantilla */
-    #[ORM\Column(type: 'integer')]
-    private int $orden = 0;
+    /** Display order in the template */
+    #[ORM\Column(name: 'orden', type: 'integer')]
+    private int $order = 0;
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
@@ -47,23 +47,23 @@ class TemplateItem
         return $this->id;
     }
 
-    public function getPlantilla(): Template
+    public function getTemplate(): Template
     {
-        return $this->plantilla;
+        return $this->template;
     }
-    public function setPlantilla(Template $plantilla): self
+    public function setTemplate(Template $template): self
     {
-        $this->plantilla = $plantilla;
+        $this->template = $template;
         return $this;
     }
 
-    public function getRubro(): Item
+    public function getItem(): Item
     {
-        return $this->rubro;
+        return $this->item;
     }
-    public function setRubro(Item $rubro): self
+    public function setItem(Item $item): self
     {
-        $this->rubro = $rubro;
+        $this->item = $item;
         return $this;
     }
 
@@ -77,23 +77,23 @@ class TemplateItem
         return $this;
     }
 
-    public function getCantidad(): string
+    public function getQuantity(): string
     {
-        return $this->cantidad;
+        return $this->quantity;
     }
-    public function setCantidad(string $cantidad): self
+    public function setQuantity(string $quantity): self
     {
-        $this->cantidad = $cantidad;
+        $this->quantity = $quantity;
         return $this;
     }
 
-    public function getOrden(): int
+    public function getOrder(): int
     {
-        return $this->orden;
+        return $this->order;
     }
-    public function setOrden(int $orden): self
+    public function setOrder(int $order): self
     {
-        $this->orden = $orden;
+        $this->order = $order;
         return $this;
     }
 
@@ -102,17 +102,17 @@ class TemplateItem
         return $this->createdAt;
     }
 
-    /** Costo total de este rubro = cantidad × precio unitario del APU */
-    public function getTotalCosto(): float
+    /** Total cost of this item = quantity × APU unit price */
+    public function getTotalCost(): float
     {
         if ($this->apuItem === null) {
             return 0.0;
         }
-        return (float) $this->cantidad * (float) $this->apuItem->getTotalCost();
+        return (float) $this->quantity * (float) $this->apuItem->getTotalCost();
     }
 
-    /** Precio unitario del APU (precio de cálculo con utilidad) */
-    public function getPrecioUnitario(): float
+    /** Unit price of the APU (calculation price with profit) */
+    public function getUnitPrice(): float
     {
         return $this->apuItem ? (float) $this->apuItem->getTotalCost() : 0.0;
     }

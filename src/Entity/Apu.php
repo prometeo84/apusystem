@@ -18,29 +18,29 @@ class Apu
     private ?Tenant $tenant = null;
 
     #[ORM\ManyToOne(targetEntity: Projects::class)]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Projects $proyecto = null;
+    #[ORM\JoinColumn(name: 'proyecto_id', nullable: true)]
+    private ?Projects $project = null;
 
-    #[ORM\Column(type: 'string', length: 100)]
-    private ?string $codigo = null;
+    #[ORM\Column(name: 'codigo', type: 'string', length: 100)]
+    private ?string $code = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private ?string $descripcion = null;
+    #[ORM\Column(name: 'descripcion', type: 'string', length: 255)]
+    private ?string $description = null;
 
-    #[ORM\Column(type: 'string', length: 50)]
-    private ?string $unidad = null;
+    #[ORM\Column(name: 'unidad', type: 'string', length: 50)]
+    private ?string $unit = null;
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    private ?string $cantidad = null;
+    #[ORM\Column(name: 'cantidad', type: 'decimal', precision: 10, scale: 2, nullable: true)]
+    private ?string $quantity = null;
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
-    private ?string $rendimiento = null;
+    #[ORM\Column(name: 'rendimiento', type: 'decimal', precision: 10, scale: 2, nullable: true)]
+    private ?string $yield = null;
 
-    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    private ?string $costoUnitario = null;
+    #[ORM\Column(name: 'costo_unitario', type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    private ?string $unitCost = null;
 
-    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    private ?string $costoTotal = null;
+    #[ORM\Column(name: 'costo_total', type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    private ?string $totalCost = null;
 
     #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $createdAt = null;
@@ -70,91 +70,91 @@ class Apu
         return $this;
     }
 
-    public function getProyecto(): ?Projects
+    public function getProject(): ?Projects
     {
-        return $this->proyecto;
+        return $this->project;
     }
 
-    public function setProyecto(?Projects $proyecto): self
+    public function setProject(?Projects $project): self
     {
-        $this->proyecto = $proyecto;
+        $this->project = $project;
         return $this;
     }
 
-    public function getCodigo(): ?string
+    public function getCode(): ?string
     {
-        return $this->codigo;
+        return $this->code;
     }
 
-    public function setCodigo(string $codigo): self
+    public function setCode(string $code): self
     {
-        $this->codigo = $codigo;
+        $this->code = $code;
         return $this;
     }
 
-    public function getDescripcion(): ?string
+    public function getDescription(): ?string
     {
-        return $this->descripcion;
+        return $this->description;
     }
 
-    public function setDescripcion(string $descripcion): self
+    public function setDescription(string $description): self
     {
-        $this->descripcion = $descripcion;
+        $this->description = $description;
         return $this;
     }
 
-    public function getUnidad(): ?string
+    public function getUnit(): ?string
     {
-        return $this->unidad;
+        return $this->unit;
     }
 
-    public function setUnidad(string $unidad): self
+    public function setUnit(string $unit): self
     {
-        $this->unidad = $unidad;
+        $this->unit = $unit;
         return $this;
     }
 
-    public function getCantidad(): ?string
+    public function getQuantity(): ?string
     {
-        return $this->cantidad;
+        return $this->quantity;
     }
 
-    public function setCantidad(?string $cantidad): self
+    public function setQuantity(?string $quantity): self
     {
-        $this->cantidad = $cantidad;
+        $this->quantity = $quantity;
         return $this;
     }
 
-    public function getRendimiento(): ?string
+    public function getYield(): ?string
     {
-        return $this->rendimiento;
+        return $this->yield;
     }
 
-    public function setRendimiento(?string $rendimiento): self
+    public function setYield(?string $yield): self
     {
-        $this->rendimiento = $rendimiento;
+        $this->yield = $yield;
         return $this;
     }
 
-    public function getCostoUnitario(): ?string
+    public function getUnitCost(): ?string
     {
-        return $this->costoUnitario;
+        return $this->unitCost;
     }
 
-    public function setCostoUnitario(?string $costoUnitario): self
+    public function setUnitCost(?string $unitCost): self
     {
-        $this->costoUnitario = $costoUnitario;
+        $this->unitCost = $unitCost;
         return $this;
     }
 
-    public function getCostoTotal(): ?string
+    public function getTotalCost(): ?string
     {
-        return $this->costoTotal;
+        return $this->totalCost;
     }
 
-    public function setCostoTotal(?string $costoTotal): self
+    public function setTotalCost(?string $totalCost): self
     {
-        $this->costoTotal = $costoTotal;
+        $this->totalCost = $totalCost;
         return $this;
     }
 

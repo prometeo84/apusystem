@@ -20,26 +20,26 @@ class Item
     private Tenant $tenant;
 
     #[ORM\Column(name: 'code', type: 'string', length: 100)]
-    private string $codigo;
+    private string $code;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $nombre;
+    #[ORM\Column(name: 'nombre', type: 'string', length: 255)]
+    private string $name;
 
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]
-    private ?string $descripcion = null;
+    private ?string $description = null;
 
     #[ORM\Column(name: 'unit', type: 'string', length: 50)]
-    private string $unidad;
+    private string $unit;
 
-    /** tipo: general | personalizado */
-    #[ORM\Column(type: 'string', length: 20)]
-    private string $tipo = 'personalizado';
+    /** type: general | personalizado */
+    #[ORM\Column(name: 'tipo', type: 'string', length: 20)]
+    private string $type = 'personalizado';
 
-    #[ORM\Column(type: 'boolean')]
-    private bool $activo = true;
+    #[ORM\Column(name: 'activo', type: 'boolean')]
+    private bool $active = true;
 
-    #[ORM\OneToMany(targetEntity: TemplateItem::class, mappedBy: 'rubro', cascade: ['remove'])]
-    private Collection $plantillaRubros;
+    #[ORM\OneToMany(targetEntity: TemplateItem::class, mappedBy: 'item', cascade: ['remove'])]
+    private Collection $templateItems;
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
@@ -49,7 +49,7 @@ class Item
 
     public function __construct()
     {
-        $this->plantillaRubros = new ArrayCollection();
+        $this->templateItems = new ArrayCollection();
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
     }
@@ -69,69 +69,69 @@ class Item
         return $this;
     }
 
-    public function getCodigo(): string
+    public function getCode(): string
     {
-        return $this->codigo;
+        return $this->code;
     }
-    public function setCodigo(string $codigo): self
+    public function setCode(string $code): self
     {
-        $this->codigo = $codigo;
+        $this->code = $code;
         return $this;
     }
 
-    public function getNombre(): string
+    public function getName(): string
     {
-        return $this->nombre;
+        return $this->name;
     }
-    public function setNombre(string $nombre): self
+    public function setName(string $name): self
     {
-        $this->nombre = $nombre;
+        $this->name = $name;
         return $this;
     }
 
-    public function getDescripcion(): ?string
+    public function getDescription(): ?string
     {
-        return $this->descripcion;
+        return $this->description;
     }
-    public function setDescripcion(?string $d): self
+    public function setDescription(?string $d): self
     {
-        $this->descripcion = $d;
+        $this->description = $d;
         return $this;
     }
 
-    public function getUnidad(): string
+    public function getUnit(): string
     {
-        return $this->unidad;
+        return $this->unit;
     }
-    public function setUnidad(string $unidad): self
+    public function setUnit(string $unit): self
     {
-        $this->unidad = $unidad;
+        $this->unit = $unit;
         return $this;
     }
 
-    public function getTipo(): string
+    public function getType(): string
     {
-        return $this->tipo;
+        return $this->type;
     }
-    public function setTipo(string $tipo): self
+    public function setType(string $type): self
     {
-        $this->tipo = $tipo;
+        $this->type = $type;
         return $this;
     }
 
-    public function isActivo(): bool
+    public function isActive(): bool
     {
-        return $this->activo;
+        return $this->active;
     }
-    public function setActivo(bool $activo): self
+    public function setActive(bool $active): self
     {
-        $this->activo = $activo;
+        $this->active = $active;
         return $this;
     }
 
-    public function getPlantillaRubros(): Collection
+    public function getTemplateItems(): Collection
     {
-        return $this->plantillaRubros;
+        return $this->templateItems;
     }
 
     public function getCreatedAt(): \DateTimeInterface

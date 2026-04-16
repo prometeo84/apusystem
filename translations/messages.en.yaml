@@ -305,6 +305,10 @@ emails:
 mails:
   important: "IMPORTANT"
 
+flash:
+  cannot_use_reserved_slug: "You cannot use this reserved identifier for the company."
+  cannot_modify_protected_company: "This protected company cannot be modified."
+
 # Report strings
 report:
   budget_title: "BUDGET"
@@ -398,19 +402,22 @@ security:
   password_recommendation: "It is recommended to change your password regularly to keep your account secure"
   recovery_codes_available: "Recovery codes available"
   sessions: "Active Sessions"
-
-security_2fa:
-  verify_title: "Two-factor verification"
-  verify_description: "Enter the verification code from your authenticator app or use a recovery code."
-  enter_code: "Enter the 6-digit code"
-  verify_button: "Verify"
-  use_recovery_code: "Use recovery code"
-  revoke: "Revoke"
-  no_active_sessions: "No active sessions."
-  title: "Security Settings"
-  two_factor: "Two-Factor Authentication (2FA)"
-  use_auth_app: "Use an authentication app like Google Authenticator or Authy"
-  back_to_security: "Back to Security"
+  security_2fa:
+    verify_title: "Two-factor verification"
+    verify_description: "Enter the verification code from your authenticator app or use a recovery code."
+    enter_code: "Enter the 6-digit code"
+    verify_button: "Verify"
+    use_recovery_code: "Use recovery code"
+    code_from_app: "6-digit code from your authentication app"
+    code_invalidated: "The code will be invalidated after use"
+    codes_copied: "Codes copied to clipboard"
+    configure_2fa: "Configure Two-Factor Authentication"
+    revoke: "Revoke"
+    no_active_sessions: "No active sessions."
+    title: "Security Settings"
+    two_factor: "Two-Factor Authentication (2FA)"
+    use_auth_app: "Use an authentication app like Google Authenticator or Authy"
+    back_to_security: "Back to Security"
 
   superadmin_verify:
     title: "Email verification — Superadmin"
@@ -420,30 +427,33 @@ security_2fa:
     verify: "Verify"
     expires_in: "The code expires in %minutes% minute(s) (%time%)."
     expired: "The code has expired."
-  regenerate_title: "Regenerate Recovery Codes"
-  regenerate_header: "Regenerate recovery codes"
-  regenerate_instructions: "To regenerate your recovery codes you must confirm your current password."
-  current_password: "Current password"
 
-  recommended_apps: "Recommended Apps"
-  min_8_chars: "Minimum 8 characters"
-  password_advice: "We recommend changing your password regularly to keep your account secure."
-  recent_events: "Recent Security Events"
-  recommendation: "It is recommended to use uppercase, lowercase, numbers and symbols"
-  recommended:
-    authy: "Authy: Available for iOS, Android and Desktop"
-    google: "Google Authenticator: Available for iOS and Android"
-    microsoft: "Microsoft Authenticator: Available for iOS and Android"
-  recovery_codes: "Recovery codes available"
-  requirements: "Security requirements"
-  secret_key: "Secret key"
-  severity: "Severity"
+    superadmin_verify:
+      title: "Email verification — Superadmin"
+      header: "Additional verification for superadmin"
+      instruction: "A temporary code has been sent to your email. Enter the code to complete sign-in."
+      code_label: "Code"
+      verify: "Verify"
+      expires_in: "The code expires in %minutes% minute(s) (%time%)."
+      expired: "The code has expired."
+    regenerate_title: "Regenerate Recovery Codes"
+    regenerate_header: "Regenerate recovery codes"
+    regenerate_instructions: "To regenerate your recovery codes you must confirm your current password."
+    current_password: "Current password"
 
-security_2fa:
-  code_from_app: "6-digit code from your authentication app"
-  code_invalidated: "The code will be invalidated after use"
-  codes_copied: "Codes copied to clipboard"
-  configure_2fa: "Configure Two-Factor Authentication"
+    recommended_apps: "Recommended Apps"
+    min_8_chars: "Minimum 8 characters"
+    password_advice: "We recommend changing your password regularly to keep your account secure."
+    recent_events: "Recent Security Events"
+    recommendation: "It is recommended to use uppercase, lowercase, numbers and symbols"
+    recommended:
+      authy: "Authy: Available for iOS, Android and Desktop"
+      google: "Google Authenticator: Available for iOS and Android"
+      microsoft: "Microsoft Authenticator: Available for iOS and Android"
+    recovery_codes: "Recovery codes available"
+    requirements: "Security requirements"
+    secret_key: "Secret key"
+    severity: "Severity"
 
 project:
   status:

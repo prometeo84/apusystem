@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 #[ORM\Table(name: 'tenants')]
 class Tenant
 {
+    public const PROTECTED_SLUG = 'apu-system';
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'bigint', options: ['unsigned' => true])]
@@ -238,6 +239,11 @@ class Tenant
     public function getUsers(): Collection
     {
         return $this->users;
+    }
+
+    public function isProtected(): bool
+    {
+        return $this->slug === self::PROTECTED_SLUG;
     }
 
     public function getThemePrimaryColor(): ?string

@@ -19,22 +19,22 @@ class Template
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Tenant $tenant;
 
-    #[ORM\ManyToOne(targetEntity: Projects::class, inversedBy: 'plantillas')]
+    #[ORM\ManyToOne(targetEntity: Projects::class, inversedBy: 'templates')]
     #[ORM\JoinColumn(name: 'project_id', nullable: false, onDelete: 'CASCADE')]
-    private Projects $proyecto;
+    private Projects $project;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $nombre;
+    #[ORM\Column(name: 'nombre', type: 'string', length: 255)]
+    private string $name;
 
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]
-    private ?string $descripcion = null;
+    private ?string $description = null;
 
-    #[ORM\Column(type: 'boolean')]
-    private bool $activa = true;
+    #[ORM\Column(name: 'activa', type: 'boolean')]
+    private bool $active = true;
 
-    #[ORM\OneToMany(targetEntity: TemplateItem::class, mappedBy: 'plantilla', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: TemplateItem::class, mappedBy: 'template', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['orden' => 'ASC'])]
-    private Collection $plantillaRubros;
+    private Collection $items;
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
@@ -44,7 +44,7 @@ class Template
 
     public function __construct()
     {
-        $this->plantillaRubros = new ArrayCollection();
+        $this->items = new ArrayCollection();
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
     }
@@ -64,72 +64,72 @@ class Template
         return $this;
     }
 
-    public function getProyecto(): Projects
+    public function getProject(): Projects
     {
-        return $this->proyecto;
+        return $this->project;
     }
-    public function setProyecto(Projects $proyecto): self
+    public function setProject(Projects $project): self
     {
-        $this->proyecto = $proyecto;
+        $this->project = $project;
         return $this;
     }
 
-    public function getNombre(): string
+    public function getName(): string
     {
-        return $this->nombre;
+        return $this->name;
     }
-    public function setNombre(string $nombre): self
+    public function setName(string $name): self
     {
-        $this->nombre = $nombre;
+        $this->name = $name;
         return $this;
     }
 
-    public function getDescripcion(): ?string
+    public function getDescription(): ?string
     {
-        return $this->descripcion;
+        return $this->description;
     }
-    public function setDescripcion(?string $d): self
+    public function setDescription(?string $d): self
     {
-        $this->descripcion = $d;
+        $this->description = $d;
         return $this;
     }
 
-    public function isActiva(): bool
+    public function isActive(): bool
     {
-        return $this->activa;
+        return $this->active;
     }
-    public function setActiva(bool $activa): self
+    public function setActive(bool $active): self
     {
-        $this->activa = $activa;
+        $this->active = $active;
         return $this;
     }
 
-    public function getPlantillaRubros(): Collection
+    public function getItems(): Collection
     {
-        return $this->plantillaRubros;
+        return $this->items;
     }
 
-    public function addPlantillaRubro(TemplateItem $plantillaRubro): self
+    public function addItem(TemplateItem $item): self
     {
-        if (!$this->plantillaRubros->contains($plantillaRubro)) {
-            $this->plantillaRubros->add($plantillaRubro);
-            $plantillaRubro->setPlantilla($this);
+        if (!$this->items->contains($item)) {
+            $this->items->add($item);
+            $item->setTemplate($this);
         }
         return $this;
     }
 
-    public function removePlantillaRubro(TemplateItem $plantillaRubro): self
+    public function removeItem(TemplateItem $item): self
     {
-        $this->plantillaRubros->removeElement($plantillaRubro);
+        $this->items->removeElement($item);
         return $this;
     }
 
-    /** Total presupuesto = suma de todos los costos de los rubros */
-    public function getTotalPresupuesto(): float
+    /** Total budget = sum of all item costs */
+    public function getTotalBudget(): float
     {
         $total = 0.0;
-        foreach ($this->plantillaRubros as $pr) {
-            $total += $pr->getTotalCosto();
+        foreach ($this->items as $item) {
+            $total += $item->getTotalCost();
         }
         return $total;
     }

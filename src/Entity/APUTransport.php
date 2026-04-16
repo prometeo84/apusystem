@@ -17,14 +17,14 @@ class APUTransport
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?APUItem $apuItem = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $descripcion;
+    #[ORM\Column(name: 'descripcion', type: 'string', length: 255)]
+    private string $description;
 
-    #[ORM\Column(type: 'string', length: 50)]
-    private string $unidad;
+    #[ORM\Column(name: 'unidad', type: 'string', length: 50)]
+    private string $unit;
 
-    #[ORM\Column(type: 'decimal', precision: 15, scale: 4)]
-    private string $cantidad; // CANTIDAD
+    #[ORM\Column(name: 'cantidad', type: 'decimal', precision: 15, scale: 4)]
+    private string $quantity; // QUANTITY
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
     private string $dmt; // DMT (km) - Distancia Media de Transporte
@@ -56,36 +56,36 @@ class APUTransport
         return $this;
     }
 
-    public function getDescripcion(): string
+    public function getDescription(): string
     {
-        return $this->descripcion;
+        return $this->description;
     }
 
-    public function setDescripcion(string $descripcion): self
+    public function setDescription(string $description): self
     {
-        $this->descripcion = $descripcion;
+        $this->description = $description;
         return $this;
     }
 
-    public function getUnidad(): string
+    public function getUnit(): string
     {
-        return $this->unidad;
+        return $this->unit;
     }
 
-    public function setUnidad(string $unidad): self
+    public function setUnit(string $unit): self
     {
-        $this->unidad = $unidad;
+        $this->unit = $unit;
         return $this;
     }
 
-    public function getCantidad(): string
+    public function getQuantity(): string
     {
-        return $this->cantidad;
+        return $this->quantity;
     }
 
-    public function setCantidad(string $cantidad): self
+    public function setQuantity(string $quantity): self
     {
-        $this->cantidad = $cantidad;
+        $this->quantity = $quantity;
         return $this;
     }
 
@@ -118,6 +118,6 @@ class APUTransport
 
     public function getTotalCost(): float
     {
-        return (float) $this->cantidad * (float) $this->dmt * (float) $this->tarifaKm;
+        return (float) $this->quantity * (float) $this->dmt * (float) $this->tarifaKm;
     }
 }

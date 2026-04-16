@@ -17,17 +17,17 @@ class APUMaterial
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?APUItem $apuItem = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $descripcion;
+    #[ORM\Column(name: 'descripcion', type: 'string', length: 255)]
+    private string $description;
 
-    #[ORM\Column(type: 'string', length: 50)]
-    private string $unidad;
+    #[ORM\Column(name: 'unidad', type: 'string', length: 50)]
+    private string $unit;
 
-    #[ORM\Column(type: 'decimal', precision: 15, scale: 4)]
-    private string $cantidad;
+    #[ORM\Column(name: 'cantidad', type: 'decimal', precision: 15, scale: 4)]
+    private string $quantity;
 
-    #[ORM\Column(type: 'decimal', precision: 15, scale: 2)]
-    private string $precioUnitario;
+    #[ORM\Column(name: 'precio_unitario', type: 'decimal', precision: 15, scale: 2)]
+    private string $unitPrice;
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
@@ -53,47 +53,47 @@ class APUMaterial
         return $this;
     }
 
-    public function getDescripcion(): string
+    public function getDescription(): string
     {
-        return $this->descripcion;
+        return $this->description;
     }
 
-    public function setDescripcion(string $descripcion): self
+    public function setDescription(string $description): self
     {
-        $this->descripcion = $descripcion;
+        $this->description = $description;
         return $this;
     }
 
-    public function getUnidad(): string
+    public function getUnit(): string
     {
-        return $this->unidad;
+        return $this->unit;
     }
 
-    public function setUnidad(string $unidad): self
+    public function setUnit(string $unit): self
     {
-        $this->unidad = $unidad;
+        $this->unit = $unit;
         return $this;
     }
 
-    public function getCantidad(): string
+    public function getQuantity(): string
     {
-        return $this->cantidad;
+        return $this->quantity;
     }
 
-    public function setCantidad(string $cantidad): self
+    public function setQuantity(string $quantity): self
     {
-        $this->cantidad = $cantidad;
+        $this->quantity = $quantity;
         return $this;
     }
 
-    public function getPrecioUnitario(): string
+    public function getUnitPrice(): string
     {
-        return $this->precioUnitario;
+        return $this->unitPrice;
     }
 
-    public function setPrecioUnitario(string $precioUnitario): self
+    public function setUnitPrice(string $unitPrice): self
     {
-        $this->precioUnitario = $precioUnitario;
+        $this->unitPrice = $unitPrice;
         return $this;
     }
 
@@ -104,6 +104,6 @@ class APUMaterial
 
     public function getTotalCost(): float
     {
-        return (float) $this->cantidad * (float) $this->precioUnitario;
+        return (float) $this->quantity * (float) $this->unitPrice;
     }
 }

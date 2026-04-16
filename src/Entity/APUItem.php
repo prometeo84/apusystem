@@ -31,8 +31,8 @@ class APUItem
     #[ORM\Column(type: 'decimal', precision: 10, scale: 4)]
     private string $khu; // K(H/U) - Coeficiente hora/unidad
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 4)]
-    private string $rendimientoUh; // Rend. u/h - Rendimiento unidad/hora
+    #[ORM\Column(name: 'rendimiento_uh', type: 'decimal', precision: 10, scale: 4)]
+    private string $productivityUh; // Rend. u/h - Productivity units/hour
 
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private ?string $totalCost = null;
@@ -49,13 +49,13 @@ class APUItem
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private ?string $transportCost = null;
 
-    /** Porcentaje de utilidad aplicado al precio de cálculo */
-    #[ORM\Column(type: 'decimal', precision: 5, scale: 2, nullable: true)]
-    private ?string $utilidadPct = null;
+    /** Profit percentage applied to the calculation price */
+    #[ORM\Column(name: 'utilidad_pct', type: 'decimal', precision: 5, scale: 2, nullable: true)]
+    private ?string $profitPct = null;
 
-    /** Precio ofertado final (USD) definido manualmente o igual al precio de cálculo */
-    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
-    private ?string $precioOfertado = null;
+    /** Final offered price (USD) defined manually or equal to the calculation price */
+    #[ORM\Column(name: 'precio_ofertado', type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    private ?string $offeredPrice = null;
 
     #[ORM\OneToMany(targetEntity: APUEquipment::class, mappedBy: 'apuItem', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $equipment;
@@ -160,14 +160,14 @@ class APUItem
         return $this;
     }
 
-    public function getRendimientoUh(): string
+    public function getProductivityUh(): string
     {
-        return $this->rendimientoUh;
+        return $this->productivityUh;
     }
 
-    public function setRendimientoUh(string $rendimientoUh): self
+    public function setProductivityUh(string $productivityUh): self
     {
-        $this->rendimientoUh = $rendimientoUh;
+        $this->productivityUh = $productivityUh;
         $this->updatedAt = new \DateTime();
         return $this;
     }
@@ -355,12 +355,12 @@ class APUItem
 
         $materialSum = 0.0;
         foreach ($this->materials as $material) {
-            $materialSum += (float) $material->getCantidad() * (float) $material->getPrecioUnitario();
+            $materialSum += (float) $material->getQuantity() * (float) $material->getUnitPrice();
         }
 
         $transportSum = 0.0;
         foreach ($this->transport as $transport) {
-            $transportSum += (float) $transport->getCantidad() * (float) $transport->getDmt() * (float) $transport->getTarifaKm();
+            $transportSum += (float) $transport->getQuantity() * (float) $transport->getDmt() * (float) $transport->getTarifaKm();
         }
 
         $this->equipmentCost = (string) $equipmentSum;
@@ -373,31 +373,31 @@ class APUItem
         return $this;
     }
 
-    public function getUtilidadPct(): ?string
+    public function getProfitPct(): ?string
     {
-        return $this->utilidadPct;
+        return $this->profitPct;
     }
-    public function setUtilidadPct(?string $v): self
+    public function setProfitPct(?string $v): self
     {
-        $this->utilidadPct = $v;
+        $this->profitPct = $v;
         return $this;
     }
 
-    public function getPrecioOfertado(): ?string
+    public function getOfferedPrice(): ?string
     {
-        return $this->precioOfertado;
+        return $this->offeredPrice;
     }
-    public function setPrecioOfertado(?string $v): self
+    public function setOfferedPrice(?string $v): self
     {
-        $this->precioOfertado = $v;
+        $this->offeredPrice = $v;
         return $this;
     }
 
-    /** Precio de cálculo = totalCost * (1 + utilidadPct/100) */
-    public function getPrecioCalculo(): float
+    /** Calculation price = totalCost * (1 + profitPct/100) */
+    public function getCalculationPrice(): float
     {
         $base = (float) ($this->totalCost ?? 0);
-        $pct  = (float) ($this->utilidadPct ?? 0);
+        $pct  = (float) ($this->profitPct ?? 0);
         return $base * (1 + $pct / 100);
     }
 }

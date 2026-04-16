@@ -6,6 +6,7 @@ use App\Entity\SecurityEvent;
 use App\Entity\User;
 use App\Entity\LoginSession;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class SystemController extends AbstractController
 {
     public function __construct(
-        private EntityManagerInterface $em
+        private EntityManagerInterface $em,
+        private TranslatorInterface $translator
     ) {}
 
     #[Route('', name: 'app_system')]
@@ -318,6 +320,12 @@ class SystemController extends AbstractController
                 return $this->redirectToRoute('app_system_tenants_create');
             }
 
+            // Proteger slug reservado
+            if ($slug === \App\Entity\Tenant::PROTECTED_SLUG) {
+                $this->addFlash('error', 'flash.cannot_use_reserved_slug');
+                return $this->redirectToRoute('app_system_tenants_create');
+            }
+
             // Verificar slug único
             $existing = $this->em->getRepository(\App\Entity\Tenant::class)->findOneBy(['slug' => $slug]);
             if ($existing) {
@@ -341,7 +349,7 @@ class SystemController extends AbstractController
             $this->em->persist($tenant);
             $this->em->flush();
 
-            $this->addFlash('success', $this->container->get('translator')->trans('flash.company_created', ['%name%' => $name]));
+            $this->addFlash('success', $this->translator->trans('flash.company_created', ['%name%' => $name]));
             return $this->redirectToRoute('app_system_tenants');
         }
 
@@ -355,6 +363,12 @@ class SystemController extends AbstractController
 
         if (!$tenant) {
             $this->addFlash('error', 'flash.company_not_found');
+            return $this->redirectToRoute('app_system_tenants');
+        }
+
+        // No permitir editar tenant protegido
+        if ($tenant->isProtected()) {
+            $this->addFlash('error', 'flash.cannot_modify_protected_company');
             return $this->redirectToRoute('app_system_tenants');
         }
 
@@ -380,7 +394,7 @@ class SystemController extends AbstractController
 
             $this->em->flush();
 
-            $this->addFlash('success', $this->container->get('translator')->trans('flash.company_updated', ['%name%' => $name]));
+            $this->addFlash('success', $this->translator->trans('flash.company_updated', ['%name%' => $name]));
             return $this->redirectToRoute('app_system_tenants');
         }
 
