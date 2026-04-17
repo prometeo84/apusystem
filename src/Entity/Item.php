@@ -22,7 +22,7 @@ class Item
     #[ORM\Column(name: 'code', type: 'string', length: 100)]
     private string $code;
 
-    #[ORM\Column(name: 'nombre', type: 'string', length: 255)]
+    #[ORM\Column(name: 'name', type: 'string', length: 255)]
     private string $name;
 
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]
@@ -32,10 +32,10 @@ class Item
     private string $unit;
 
     /** type: general | personalizado */
-    #[ORM\Column(name: 'tipo', type: 'string', length: 20)]
+    #[ORM\Column(name: 'type', type: 'string', length: 20)]
     private string $type = 'personalizado';
 
-    #[ORM\Column(name: 'activo', type: 'boolean')]
+    #[ORM\Column(name: 'active', type: 'boolean')]
     private bool $active = true;
 
     #[ORM\OneToMany(targetEntity: TemplateItem::class, mappedBy: 'item', cascade: ['remove'])]
