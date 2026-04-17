@@ -92,8 +92,8 @@ class TemplateController extends AbstractController
         }
 
         $rubrosDisponibles = $this->em->getRepository(Item::class)->findBy(
-            ['tenant' => $this->getUser()->getTenant(), 'activo' => true],
-            ['codigo' => 'ASC']
+            ['tenant' => $this->getUser()->getTenant(), 'active' => true],
+            ['code' => 'ASC']
         );
 
         // IDs de rubros ya agregados
@@ -149,7 +149,7 @@ class TemplateController extends AbstractController
         $project = $this->getProject($projectId);
         $plantilla = $this->em->getRepository(Template::class)->findOneBy([
             'id' => $id,
-            'proyecto' => $project,
+            'project' => $project,
         ]);
         if (!$plantilla) {
             throw $this->createNotFoundException();
@@ -201,7 +201,7 @@ class TemplateController extends AbstractController
         $project = $this->getProject($projectId);
         $plantilla = $this->em->getRepository(Template::class)->findOneBy([
             'id' => $id,
-            'proyecto' => $project,
+            'project' => $project,
         ]);
         if (!$plantilla) {
             throw $this->createNotFoundException();

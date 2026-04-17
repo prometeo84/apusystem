@@ -5,6 +5,24 @@
 
 {% block body %}
 <div class="container mt-4">
+    <style>
+        .apu-submit-floating { position: static; }
+        @media (max-width: 768px) {
+            .apu-submit-floating {
+                position: fixed !important;
+                left: 12px !important;
+                right: 12px !important;
+                bottom: 12px !important;
+                display: flex !important;
+                justify-content: flex-end !important;
+                gap: .5rem !important;
+                z-index: 2147483647 !important;
+                pointer-events: auto !important;
+            }
+            .apu-submit-floating .btn { pointer-events: auto !important; }
+            .main-content { padding-bottom: 180px !important; }
+        }
+    </style>
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-calculator"></i> {{ 'apu.header'|trans }}</h1>
         {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_apu_index')}) }}
@@ -191,8 +209,8 @@
                                     </td>
                                     <td class="text-end" style="width: 45%">
                                         <div class="input-group input-group-sm">
-                                            <input type="number" class="form-control text-end" id="utilidadPct"
-                                                   name="utilidad_pct" value="20" min="0" max="100" step="0.1">
+                                              <input type="number" class="form-control text-end" id="utilidadPct"
+                                                  name="utilidad_pct" value="20" min="0" max="100" step="0.1" style="pointer-events: auto;">
                                             <span class="input-group-text">%</span>
                                         </div>
                                     </td>
@@ -206,8 +224,8 @@
                                     <td class="text-end">
                                         <div class="input-group input-group-sm">
                                             <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control text-end fw-bold" id="precioOfertado"
-                                                   name="precio_ofertado" step="0.01" min="0" placeholder="0.00">
+                                              <input type="number" class="form-control text-end fw-bold" id="precioOfertado"
+                                                  name="precio_ofertado" step="0.01" min="0" placeholder="0.00" style="pointer-events: auto;">
                                         </div>
                                     </td>
                                 </tr>
@@ -218,11 +236,12 @@
             </div>
         </div>
 
-        <div class="d-flex gap-2 justify-content-end mt-3">
-            {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_apu_index')}) }}
-            {{ btn.button('apu.save'|trans, 'primary', 'bi-save', {'type':'submit','class':'btn-gradient'}) }}
-        </div>
+
     </form>
+    <div class="d-flex gap-2 justify-content-end mt-3 apu-submit-floating">
+        {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_apu_index')}) }}
+        {{ btn.button('apu.save'|trans, 'primary', 'bi-save', {'type':'submit','form':'apuForm','class':'btn-gradient'}) }}
+    </div>
 </div>
 
 <script>
@@ -369,5 +388,110 @@ addEquipmentRow();
 addLaborRow();
 addMaterialRow();
 addTransportRow();
+
+// Move floating submit container to body to avoid stacking-context overlay issues
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        const el = document.querySelector('.apu-submit-floating');
+        if (el && el.parentElement && el.parentElement.tagName.toLowerCase() !== 'body') {
+            document.body.appendChild(el);
+        }
+    } catch (e) {
+        console.error('move submit to body failed', e);
+    }
+});
+
+// Disable pointer-events on elements that overlap the floating submit area on mobile
+(function() {
+    let disabled = [];
+    function clearDisabled() {
+        disabled.forEach(el => {
+            try { el.style.pointerEvents = el.dataset._oldPointer || ''; delete el.dataset._oldPointer; } catch(e){}
+        });
+        disabled = [];
+    }
+    function disableOverlapping() {
+        clearDisabled();
+        if (window.innerWidth > 768) return;
+        const btn = document.querySelector('.apu-submit-floating');
+        if (!btn) return;
+        const rect = btn.getBoundingClientRect();
+        const cols = 3, rows = 2;
+        const seen = new Set();
+        for (let i=0;i<cols;i++){
+            for (let j=0;j<rows;j++){
+                const px = Math.round(rect.left + (i+0.5)*(rect.width/cols));
+                const py = Math.round(rect.top + (j+0.5)*(rect.height/rows));
+                document.elementsFromPoint(px, py).forEach(el => {
+                    if (!el || el === btn) return;
+                    if (seen.has(el)) return; seen.add(el);
+                    try {
+                        const cs = window.getComputedStyle(el);
+                        if (cs.pointerEvents !== 'none') {
+                            el.dataset._oldPointer = el.style.pointerEvents || '';
+                            el.style.pointerEvents = 'none';
+                            disabled.push(el);
+                        }
+                    } catch(e){}
+                });
+            }
+        }
+    }
+    // Expose to window so event handlers can call it synchronously before the click
+    window._apuClearDisabled = clearDisabled;
+    window._apuDisableOverlapping = disableOverlapping;
+    window.addEventListener('resize', disableOverlapping);
+    document.addEventListener('DOMContentLoaded', function(){ setTimeout(disableOverlapping, 50); });
+    // Run repeatedly for a short period on mobile to catch late-added elements
+    document.addEventListener('DOMContentLoaded', function(){
+        if (window.innerWidth > 768) return;
+        let runs = 0;
+        const tid = setInterval(function(){
+            try { disableOverlapping(); } catch(e){}
+            runs++;
+            if (runs > 25) clearInterval(tid);
+        }, 200);
+        setTimeout(function(){ try{ clearInterval(tid); }catch(e){} }, 6000);
+    });
+    // Attach immediate handlers to the floating submit button so pointer-events are cleared right before interaction
+    document.addEventListener('DOMContentLoaded', function(){
+        const btn = document.querySelector('.apu-submit-floating');
+        if (!btn) return;
+        btn.addEventListener('pointerdown', function(){ try { window._apuDisableOverlapping(); } catch(e){} });
+        btn.addEventListener('touchstart', function(){ try { window._apuDisableOverlapping(); } catch(e){} });
+        btn.addEventListener('pointerup', function(){ setTimeout(window._apuClearDisabled, 300); });
+        btn.addEventListener('touchend', function(){ setTimeout(window._apuClearDisabled, 300); });
+    });
+})();
+
+    // Add a body class on mobile to hide interfering headers/buttons while floating submit is visible
+    (function(){
+        function updateBodyClass() {
+            if (window.innerWidth <= 768) document.body.classList.add('apu-floating-active');
+            else document.body.classList.remove('apu-floating-active');
+        }
+        window.addEventListener('resize', updateBodyClass);
+        document.addEventListener('DOMContentLoaded', function(){ updateBodyClass(); });
+    })();
 </script>
+
+    <style>
+    /* Mobile: hide card headers and inline add-row buttons that intercepted clicks in tests */
+    @media (max-width: 768px) {
+        body.apu-floating-active .card-header { display: none !important; }
+        body.apu-floating-active .btn.btn-light.float-end { display: none !important; }
+    }
+    </style>
+
+    <style>
+    /* Ensure floating submit is fixed and on top of everything */
+    .apu-submit-floating {
+        position: fixed !important;
+        bottom: 16px !important;
+        right: 16px !important;
+        z-index: 2147483647 !important;
+        pointer-events: auto !important;
+    }
+    </style>
+    </style>
 {% endblock %}

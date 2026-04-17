@@ -109,6 +109,22 @@ class Item
         return $this;
     }
 
+    // Backwards-compatible accessors (legacy template names)
+    public function getCodigo(): string
+    {
+        return $this->code;
+    }
+
+    public function getNombre(): string
+    {
+        return $this->name;
+    }
+
+    public function getUnidad(): string
+    {
+        return $this->unit;
+    }
+
     public function getType(): string
     {
         return $this->type;

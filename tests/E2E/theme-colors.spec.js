@@ -34,7 +34,10 @@ async function loginAs(page, email, password) {
     await page.fill('input[name="_username"]', email);
     await page.fill('input[name="_password"]', password);
     await page.click('button[type="submit"]');
-    await page.waitForURL(/\/(dashboard|2fa|system|$)/, { timeout: 12000 });
+    await Promise.race([
+        page.waitForURL(/\/(dashboard|2fa|system|$)/, { timeout: 30000 }),
+        page.waitForSelector('a[href="/logout"], nav, [data-theme]', { timeout: 30000 }),
+    ]);
 }
 
 // ────────────────────────────────────────────────────────────

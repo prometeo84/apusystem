@@ -41,7 +41,7 @@ class SecurityHeadersSubscriber implements EventSubscriberInterface
             "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com",
             "img-src 'self' data: https:",
             "font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com",
-            "connect-src 'self'",
+            "connect-src 'self' https://cdn.jsdelivr.net",
             "frame-ancestors 'none'",
         ];
         $response->headers->set('Content-Security-Policy', implode('; ', $csp));

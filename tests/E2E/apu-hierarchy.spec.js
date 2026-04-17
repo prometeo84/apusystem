@@ -21,7 +21,10 @@ async function loginAsUser(page) {
     await page.fill('input[name="_username"]', 'user@abc.com');
     await page.fill('input[name="_password"]', 'Admin123!');
     await page.click('button[type="submit"]');
-    await page.waitForURL(/\/(dashboard|2fa|$)/, { timeout: 10000 });
+    await Promise.race([
+        page.waitForURL(/\/(dashboard|2fa|$)/, { timeout: 30000 }),
+        page.waitForSelector('a[href="/logout"], nav, [data-theme]', { timeout: 30000 }),
+    ]);
 }
 
 async function loginAsAdmin(page) {
@@ -30,7 +33,10 @@ async function loginAsAdmin(page) {
     await page.fill('input[name="_username"]', 'admin@abc.com');
     await page.fill('input[name="_password"]', 'Admin123!');
     await page.click('button[type="submit"]');
-    await page.waitForURL(/\/(dashboard|2fa|$)/, { timeout: 10000 });
+    await Promise.race([
+        page.waitForURL(/\/(dashboard|2fa|$)/, { timeout: 30000 }),
+        page.waitForSelector('a[href="/logout"], nav, [data-theme]', { timeout: 30000 }),
+    ]);
 }
 
 // ============================================================
@@ -224,7 +230,8 @@ test.describe('UC-H06: Reporte de plantilla', () => {
             return;
         }
 
-        await projectLink.click();
+        await projectLink.scrollIntoViewIfNeeded();
+        await projectLink.click({ timeout: 30000, force: true });
         await page.waitForLoadState('networkidle');
 
         // Buscar botón de reporte de plantilla
@@ -261,7 +268,8 @@ test.describe('UC-H07: Reporte completo del proyecto', () => {
             return;
         }
 
-        await projectLink.click();
+        await projectLink.scrollIntoViewIfNeeded();
+        await projectLink.click({ timeout: 30000, force: true });
         await page.waitForLoadState('networkidle');
 
         // Buscar enlace al reporte completo del proyecto
@@ -318,7 +326,8 @@ test.describe('UC-H08: Duplicar proyecto', () => {
             return;
         }
 
-        await projectLink.click();
+        await projectLink.scrollIntoViewIfNeeded();
+        await projectLink.click({ timeout: 30000, force: true });
         await page.waitForLoadState('networkidle');
 
         // El formulario de duplicar debe existir

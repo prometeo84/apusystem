@@ -12,6 +12,7 @@
         "build": "vite build",
         "preview": "vite preview",
         "test:e2e": "npx playwright test",
+        "test:e2e:mobile": "npx playwright test --project=\"Mobile Chrome\"",
         "validate:css": "sh scripts/validate-css.sh",
         "test:e2e:update": "npx playwright test --update-snapshots",
         "test:accessibility": "node tools/run-lighthouse.js http://localhost:8080/admin/logs"

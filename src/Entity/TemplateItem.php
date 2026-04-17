@@ -14,11 +14,11 @@ class TemplateItem
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Template::class, inversedBy: 'items')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(name: 'plantilla_id', nullable: false, onDelete: 'CASCADE')]
     private Template $template;
 
     #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: 'templateItems')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'RESTRICT')]
+    #[ORM\JoinColumn(name: 'rubro_id', nullable: false, onDelete: 'RESTRICT')]
     private Item $item;
 
     /** APU asociado a este rubro en esta plantilla (nullable: el rubro puede no tener APU aún) */

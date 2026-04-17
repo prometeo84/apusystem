@@ -9,7 +9,7 @@
             <li class="breadcrumb-item"><a href="{{ path('app_project_index') }}">{{ 'project.title'|trans }}</a></li>
             <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.name }}</a></li>
             <li class="breadcrumb-item"><a href="{{ path('app_template_index', {projectId: project.id}) }}">{{ 'plantilla.title'|trans }}</a></li>
-            <li class="breadcrumb-item active">{{ plantilla.nombre }}</li>
+            <li class="breadcrumb-item active">{{ plantilla.name }}</li>
         </ol>
     </nav>
 
@@ -134,7 +134,7 @@
                                 <option value="">{{ 'common.select'|trans }}</option>
                                 {% for rubro in rubrosDisponibles %}
                                     {% if rubro.id not in rubrosAgregados %}
-                                    <option value="{{ rubro.id }}">{{ rubro.codigo }} — {{ rubro.nombre }} ({{ rubro.unidad }})</option>
+                                    <option value="{{ rubro.id }}">{{ rubro.code }} — {{ rubro.name }} ({{ rubro.unit }})</option>
                                     {% endif %}
                                 {% endfor %}
                             </select>

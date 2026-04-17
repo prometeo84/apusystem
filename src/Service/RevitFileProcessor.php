@@ -47,8 +47,16 @@ class RevitFileProcessor
             $extension
         );
 
-        // Mover archivo
-        $file->move($uploadPath, $storedFilename);
+        // Mover archivo (si falla, intentar copia como fallback)
+        try {
+            $file->move($uploadPath, $storedFilename);
+        } catch (\Throwable $e) {
+            $source = $file->getPathname();
+            $dest = $uploadPath . '/' . $storedFilename;
+            if (!@copy($source, $dest)) {
+                throw new \RuntimeException(sprintf('Could not move the file "%s" to "%s" (%s)', $source, $dest, $e->getMessage()));
+            }
+        }
         $filePath = self::UPLOAD_DIR . '/' . $storedFilename;
 
         // Calcular hash

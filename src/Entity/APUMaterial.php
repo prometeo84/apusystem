@@ -17,16 +17,16 @@ class APUMaterial
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?APUItem $apuItem = null;
 
-    #[ORM\Column(name: 'descripcion', type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255)]
     private string $description;
 
-    #[ORM\Column(name: 'unidad', type: 'string', length: 50)]
+    #[ORM\Column(type: 'string', length: 50)]
     private string $unit;
 
-    #[ORM\Column(name: 'cantidad', type: 'decimal', precision: 15, scale: 4)]
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 4)]
     private string $quantity;
 
-    #[ORM\Column(name: 'precio_unitario', type: 'decimal', precision: 15, scale: 2)]
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2)]
     private string $unitPrice;
 
     #[ORM\Column(type: 'datetime')]

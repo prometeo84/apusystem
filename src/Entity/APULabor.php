@@ -17,10 +17,10 @@ class APULabor
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?APUItem $apuItem = null;
 
-    #[ORM\Column(name: 'descripcion', type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255)]
     private string $description;
 
-    #[ORM\Column(name: 'numero', type: 'integer')]
+    #[ORM\Column(type: 'integer')]
     private int $quantity;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 4)]

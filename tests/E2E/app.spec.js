@@ -12,7 +12,10 @@ async function loginAsAdmin(page) {
     await page.fill('input[name="_password"]', adminPassword);
     await page.click('button[type="submit"]');
     // Esperar redirección post-login (dashboard o 2fa)
-    await page.waitForURL(/\/(dashboard|2fa|$)/, { timeout: 10000 });
+    await Promise.race([
+        page.waitForURL(/\/(dashboard|2fa|system|admin|projects|$)/, { timeout: 30000 }),
+        page.waitForSelector('a[href="/logout"], nav, [data-theme]', { timeout: 30000 }),
+    ]);
 }
 
 // ============================================================

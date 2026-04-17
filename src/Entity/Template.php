@@ -33,7 +33,7 @@ class Template
     private bool $active = true;
 
     #[ORM\OneToMany(targetEntity: TemplateItem::class, mappedBy: 'template', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[ORM\OrderBy(['orden' => 'ASC'])]
+    #[ORM\OrderBy(['order' => 'ASC'])]
     private Collection $items;
 
     #[ORM\Column(type: 'datetime')]

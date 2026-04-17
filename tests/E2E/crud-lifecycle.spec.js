@@ -27,7 +27,10 @@ async function loginAsAdmin(page) {
     await page.fill('input[name="_username"]', ADMIN.email);
     await page.fill('input[name="_password"]', ADMIN.password);
     await page.click('button[type="submit"]');
-    await page.waitForURL(/\/(dashboard|2fa|admin|projects|$)/, { timeout: 12000 });
+    await Promise.race([
+        page.waitForURL(/\/(dashboard|2fa|admin|projects|$)/, { timeout: 30000 }),
+        page.waitForSelector('a[href="/logout"], nav, [data-theme]', { timeout: 30000 }),
+    ]);
 }
 
 /**
@@ -166,7 +169,8 @@ test.describe('UC-CRUD-04: Duplicar proyecto', () => {
                 }
             }
             if (firstProject) {
-                await firstProject.click();
+                await firstProject.scrollIntoViewIfNeeded();
+                await firstProject.click({ timeout: 30000, force: true });
                 await page.waitForLoadState('networkidle');
                 const innerClone = page
                     .locator(

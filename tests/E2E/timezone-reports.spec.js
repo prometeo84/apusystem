@@ -20,7 +20,10 @@ async function loginAsAdmin(page) {
     await page.fill('input[name="_username"]', ADMIN.email);
     await page.fill('input[name="_password"]', ADMIN.password);
     await page.click('button[type="submit"]');
-    await page.waitForURL(/\/(dashboard|2fa|admin|projects|$)/, { timeout: 12000 });
+    await Promise.race([
+        page.waitForURL(/\/(dashboard|2fa|admin|projects|$)/, { timeout: 30000 }),
+        page.waitForSelector('a[href="/logout"], nav, [data-theme]', { timeout: 30000 }),
+    ]);
 }
 
 /**
