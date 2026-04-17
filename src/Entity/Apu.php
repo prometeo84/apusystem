@@ -18,28 +18,27 @@ class Apu
     private ?Tenant $tenant = null;
 
     #[ORM\ManyToOne(targetEntity: Projects::class)]
-    #[ORM\JoinColumn(name: 'proyecto_id', nullable: true)]
+    #[ORM\JoinColumn(name: 'project_id', nullable: true)]
     private ?Projects $project = null;
-
-    #[ORM\Column(name: 'codigo', type: 'string', length: 100)]
+    #[ORM\Column(type: 'string', length: 100)]
     private ?string $code = null;
 
-    #[ORM\Column(name: 'descripcion', type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $description = null;
 
-    #[ORM\Column(name: 'unidad', type: 'string', length: 50)]
+    #[ORM\Column(type: 'string', length: 50)]
     private ?string $unit = null;
 
-    #[ORM\Column(name: 'cantidad', type: 'decimal', precision: 10, scale: 2, nullable: true)]
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
     private ?string $quantity = null;
 
-    #[ORM\Column(name: 'rendimiento', type: 'decimal', precision: 10, scale: 2, nullable: true)]
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
     private ?string $yield = null;
 
-    #[ORM\Column(name: 'costo_unitario', type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private ?string $unitCost = null;
 
-    #[ORM\Column(name: 'costo_total', type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private ?string $totalCost = null;
 
     #[ORM\Column(type: 'datetime')]
