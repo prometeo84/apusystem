@@ -26,11 +26,11 @@ class APUTransport
     #[ORM\Column(type: 'decimal', precision: 15, scale: 4)]
     private string $quantity; // QUANTITY
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private string $dmt; // DMT (km) - Distancia Media de Transporte
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, name: 'avg_distance')]
+    private string $avgDistance; // formerly 'dmt' (Distancia media de transporte)
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private string $tarifaKm; // Tarifa por kilómetro
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, name: 'rate_per_km')]
+    private string $ratePerKm; // formerly 'tarifa_km'
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
@@ -88,26 +88,25 @@ class APUTransport
         $this->quantity = $quantity;
         return $this;
     }
-
-    public function getDmt(): string
+    public function getAvgDistance(): string
     {
-        return $this->dmt;
+        return $this->avgDistance;
     }
 
-    public function setDmt(string $dmt): self
+    public function setAvgDistance(string $avgDistance): self
     {
-        $this->dmt = $dmt;
+        $this->avgDistance = $avgDistance;
         return $this;
     }
 
-    public function getTarifaKm(): string
+    public function getRatePerKm(): string
     {
-        return $this->tarifaKm;
+        return $this->ratePerKm;
     }
 
-    public function setTarifaKm(string $tarifaKm): self
+    public function setRatePerKm(string $ratePerKm): self
     {
-        $this->tarifaKm = $tarifaKm;
+        $this->ratePerKm = $ratePerKm;
         return $this;
     }
 
@@ -118,6 +117,6 @@ class APUTransport
 
     public function getTotalCost(): float
     {
-        return (float) $this->quantity * (float) $this->dmt * (float) $this->tarifaKm;
+        return (float) $this->quantity * (float) $this->avgDistance * (float) $this->ratePerKm;
     }
 }
