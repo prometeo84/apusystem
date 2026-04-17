@@ -17,19 +17,19 @@ class APUEquipment
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?APUItem $apuItem = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, name: 'description')]
     private string $description;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', name: 'quantity')]
     private int $quantity;
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private string $tarifa; // Tarifa
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, name: 'rate')]
+    private string $rate; // formerly 'tarifa'
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 4)]
-    private string $cHora; // C/HORA (Costo por hora)
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 4, name: 'cost_per_hour')]
+    private string $costPerHour; // formerly 'c_hora'
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime', name: 'created_at')]
     private \DateTimeInterface $createdAt;
 
     public function __construct()
@@ -74,26 +74,25 @@ class APUEquipment
         $this->quantity = $quantity;
         return $this;
     }
-
-    public function getTarifa(): string
+    public function getRate(): string
     {
-        return $this->tarifa;
+        return $this->rate;
     }
 
-    public function setTarifa(string $tarifa): self
+    public function setRate(string $rate): self
     {
-        $this->tarifa = $tarifa;
+        $this->rate = $rate;
         return $this;
     }
 
-    public function getCHora(): string
+    public function getCostPerHour(): string
     {
-        return $this->cHora;
+        return $this->costPerHour;
     }
 
-    public function setCHora(string $cHora): self
+    public function setCostPerHour(string $costPerHour): self
     {
-        $this->cHora = $cHora;
+        $this->costPerHour = $costPerHour;
         return $this;
     }
 
@@ -104,6 +103,6 @@ class APUEquipment
 
     public function getTotalCost(): float
     {
-        return (float) $this->tarifa * (float) $this->cHora;
+        return (float) $this->rate * (float) $this->costPerHour;
     }
 }
