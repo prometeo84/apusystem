@@ -23,13 +23,13 @@ class Template
     #[ORM\JoinColumn(name: 'project_id', nullable: false, onDelete: 'CASCADE')]
     private Projects $project;
 
-    #[ORM\Column(name: 'nombre', type: 'string', length: 255)]
+    #[ORM\Column(name: 'name', type: 'string', length: 255)]
     private string $name;
 
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(name: 'activa', type: 'boolean')]
+    #[ORM\Column(name: 'active', type: 'boolean')]
     private bool $active = true;
 
     #[ORM\OneToMany(targetEntity: TemplateItem::class, mappedBy: 'template', cascade: ['persist', 'remove'], orphanRemoval: true)]
