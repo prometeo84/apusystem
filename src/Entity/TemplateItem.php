@@ -14,24 +14,24 @@ class TemplateItem
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Template::class, inversedBy: 'items')]
-    #[ORM\JoinColumn(name: 'plantilla_id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(name: 'template_id', nullable: false, onDelete: 'CASCADE')]
     private Template $template;
 
     #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: 'templateItems')]
-    #[ORM\JoinColumn(name: 'rubro_id', nullable: false, onDelete: 'RESTRICT')]
+    #[ORM\JoinColumn(name: 'item_id', nullable: false, onDelete: 'RESTRICT')]
     private Item $item;
 
     /** APU asociado a este rubro en esta plantilla (nullable: el rubro puede no tener APU aún) */
     #[ORM\OneToOne(targetEntity: APUItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    #[ORM\JoinColumn(name: 'apu_item_id', nullable: true, onDelete: 'SET NULL')]
     private ?APUItem $apuItem = null;
 
     /** Quantity of the item in the template */
-    #[ORM\Column(name: 'cantidad', type: 'decimal', precision: 15, scale: 4)]
+    #[ORM\Column(name: 'quantity', type: 'decimal', precision: 15, scale: 4)]
     private string $quantity = '1.0000';
 
     /** Display order in the template */
-    #[ORM\Column(name: 'orden', type: 'integer')]
+    #[ORM\Column(name: 'order', type: 'integer')]
     private int $order = 0;
 
     #[ORM\Column(type: 'datetime')]
