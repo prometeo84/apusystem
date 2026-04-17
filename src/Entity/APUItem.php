@@ -31,7 +31,7 @@ class APUItem
     #[ORM\Column(type: 'decimal', precision: 10, scale: 4)]
     private string $khu; // K(H/U) - Coeficiente hora/unidad
 
-    #[ORM\Column(name: 'rendimiento_uh', type: 'decimal', precision: 10, scale: 4)]
+    #[ORM\Column(name: 'productivity_uh', type: 'decimal', precision: 10, scale: 4)]
     private string $productivityUh; // Rend. u/h - Productivity units/hour
 
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
@@ -50,11 +50,11 @@ class APUItem
     private ?string $transportCost = null;
 
     /** Profit percentage applied to the calculation price */
-    #[ORM\Column(name: 'utilidad_pct', type: 'decimal', precision: 5, scale: 2, nullable: true)]
+    #[ORM\Column(name: 'profit_pct', type: 'decimal', precision: 5, scale: 2, nullable: true)]
     private ?string $profitPct = null;
 
     /** Final offered price (USD) defined manually or equal to the calculation price */
-    #[ORM\Column(name: 'precio_ofertado', type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    #[ORM\Column(name: 'offered_price', type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private ?string $offeredPrice = null;
 
     #[ORM\OneToMany(targetEntity: APUEquipment::class, mappedBy: 'apuItem', cascade: ['persist', 'remove'], orphanRemoval: true)]
