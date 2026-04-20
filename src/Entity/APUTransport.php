@@ -82,10 +82,12 @@ class APUTransport
     {
         return $this->quantity;
     }
-
-    public function setQuantity(string $quantity): self
+    /**
+     * @param float|int|string $quantity
+     */
+    public function setQuantity(float|int|string $quantity): self
     {
-        $this->quantity = $quantity;
+        $this->quantity = (string) $quantity;
         return $this;
     }
     public function getAvgDistance(): string
@@ -93,9 +95,12 @@ class APUTransport
         return $this->avgDistance;
     }
 
-    public function setAvgDistance(string $avgDistance): self
+    /**
+     * @param float|int|string $avgDistance
+     */
+    public function setAvgDistance(float|int|string $avgDistance): self
     {
-        $this->avgDistance = $avgDistance;
+        $this->avgDistance = (string) $avgDistance;
         return $this;
     }
 
@@ -104,10 +109,38 @@ class APUTransport
         return $this->ratePerKm;
     }
 
-    public function setRatePerKm(string $ratePerKm): self
+    /**
+     * @param float|int|string $ratePerKm
+     */
+    public function setRatePerKm(float|int|string $ratePerKm): self
     {
-        $this->ratePerKm = $ratePerKm;
+        $this->ratePerKm = (string) $ratePerKm;
         return $this;
+    }
+
+    // Backwards-compatible aliases (Spanish names)
+    /** @param float|int|string $dmt */
+    public function setDmt(float|int|string $dmt): self
+    {
+        return $this->setAvgDistance($dmt);
+    }
+
+    /** @param float|int|string $tarifaKm */
+    public function setTarifaKm(float|int|string $tarifaKm): self
+    {
+        return $this->setRatePerKm($tarifaKm);
+    }
+
+    /** @return string */
+    public function getDmt(): string
+    {
+        return $this->getAvgDistance();
+    }
+
+    /** @return string */
+    public function getTarifaKm(): string
+    {
+        return $this->getRatePerKm();
     }
 
     public function getCreatedAt(): \DateTimeInterface

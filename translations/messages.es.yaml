@@ -273,7 +273,8 @@ password:
 
 emails:
   greeting: "Hola %name%,"
-  password_reset_intro: "Has solicitado restablecer tu contraseña. Usa el siguiente botón para continuar:"
+  password_reset_intro: "Has solicitado restablecer tu contraseña. Usa el
+    siguiente botón para continuar:"
   password_reset_action: "Restablecer contraseña"
   password_reset_subject: "Restablecimiento de Contraseña - APU System"
   copy_link: "Si no ves el botón, copia y pega este enlace en tu navegador:"
@@ -300,7 +301,8 @@ emails:
     datetime_label: "Fecha/Hora"
     user_agent_label: "User-Agent"
     stack_label: "Stack Trace"
-    footer: "APU System · Notificación automática de errores · No responder a este correo"
+    footer: "APU System · Notificación automática de errores · No responder a este
+      correo"
 
 mails:
   important: "IMPORTANTE"
@@ -375,7 +377,8 @@ profile:
   username: "Usuario"
 
 security:
-  2fa_description: "Agrega una capa adicional de seguridad a tu cuenta requiriendo un código de verificación además de tu contraseña"
+  2fa_description: "Agrega una capa adicional de seguridad a tu cuenta requiriendo
+    un código de verificación además de tu contraseña"
   two_factor: "Autenticación de Dos Factores"
   2fa_disabled: "2FA Deshabilitado"
   2fa_enabled: "2FA Habilitado"
@@ -396,15 +399,18 @@ security:
   revoke: "Revocar"
   recent_events: "Eventos Recientes"
   severity: "Severidad"
-  if_lose_device: "Si pierdes tu dispositivo de autenticación, ve a la página de inicio de sesión"
+  if_lose_device: "Si pierdes tu dispositivo de autenticación, ve a la página de
+    inicio de sesión"
   in_your_app: "en tu aplicación de autenticación"
   last_activity: "Última Actividad"
   last_update: "Última actualización"
   min_8_chars: "Mínimo 8 caracteres"
-  password_advice: "Se recomienda cambiar tu contraseña regularmente para mantener tu cuenta segura."
+  password_advice: "Se recomienda cambiar tu contraseña regularmente para mantener
+    tu cuenta segura."
 security_2fa:
   verify_title: "Verificación de dos factores"
-  verify_description: "Ingresa el código de verificación de tu aplicación de autenticación o usa un código de recuperación."
+  verify_description: "Ingresa el código de verificación de tu aplicación de
+    autenticación o usa un código de recuperación."
   enter_code: "Ingresa el código de 6 dígitos"
   verify_button: "Verificar"
   use_recovery_code: "Usar código de recuperación"
@@ -422,7 +428,8 @@ security_2fa:
   superadmin_verify:
     title: "Verificación de email — Superadmin"
     header: "Verificación adicional para superadmin"
-    instruction: "Se ha enviado un código temporal a tu correo. Ingresa el código para completar el inicio de sesión."
+    instruction: "Se ha enviado un código temporal a tu correo. Ingresa el código
+      para completar el inicio de sesión."
     code_label: "Código"
     verify: "Verificar"
     expires_in: "El código expira en %minutes% minuto(s) (%time%)."
@@ -430,7 +437,8 @@ security_2fa:
 
   regenerate_title: "Regenerar Códigos de Recuperación"
   regenerate_header: "Regenerar códigos de recuperación"
-  regenerate_instructions: "Para regenerar tus códigos de recuperación debes confirmar tu contraseña actual."
+  regenerate_instructions: "Para regenerar tus códigos de recuperación debes
+    confirmar tu contraseña actual."
   current_password: "Contraseña actual"
 
   recommended_apps: "Aplicaciones Recomendadas"
@@ -459,13 +467,16 @@ project:
   print_codes: "Imprimir Códigos"
   recovery_codes_title: "Códigos de Recuperación"
   regenerate_button: "Regenerar Códigos"
-  regenerate_confirm: "¿Regenerar códigos de recuperación? Los códigos actuales dejarán de funcionar"
+  regenerate_confirm: "¿Regenerar códigos de recuperación? Los códigos actuales
+    dejarán de funcionar"
   save_important: "Guarda estos códigos en un lugar seguro"
   scan_with_app: "para escanear este código QR"
   step_1: "Paso 1: Escanea el código QR"
   step_2: "Paso 2: Verifica tu código"
-  use_if_lost: "Si pierdes el acceso a tu aplicación de autenticación, puedes usar estos códigos para iniciar sesión"
-  use_recovery_click: 'Después de ingresar tu contraseña, haz clic en "Usar código de recuperación"'
+  use_if_lost: "Si pierdes el acceso a tu aplicación de autenticación, puedes usar
+    estos códigos para iniciar sesión"
+  use_recovery_click: "Después de ingresar tu contraseña, haz clic en \"Usar
+    código de recuperación\""
   use_recovery_code: "Usar código de recuperación"
   verification_code: "Código de verificación"
   verify_button: "Verificar"
@@ -615,7 +626,8 @@ flash:
   no_recovery_codes: "No hay códigos de recuperación para mostrar."
   password_policy_not_met: "La contraseña no cumple con la política de contraseñas requerida."
   auth.reauth: "Re-autenticación"
-  auth.reauth_prompt: "Por seguridad, por favor reingresa tu contraseña para continuar con esta acción."
+  auth.reauth_prompt: "Por seguridad, por favor reingresa tu contraseña para
+    continuar con esta acción."
   auth.password: "Contraseña"
   auth.confirm: "Confirmar"
   password_incorrect: "Contraseña incorrecta."
@@ -641,7 +653,8 @@ flash:
   preferences_updated: "Preferencias actualizadas exitosamente."
   theme_reset: "Tema restablecido a los colores predeterminados."
   enter_email: "Por favor ingrese su correo electrónico."
-  password_reset_instructions_sent: "Si el correo existe, recibirás instrucciones para restablecer tu contraseña."
+  password_reset_instructions_sent: "Si el correo existe, recibirás instrucciones
+    para restablecer tu contraseña."
   generic_error_try_again: "Ocurrió un error. Por favor intenta nuevamente."
   reset_link_invalid_or_expired: "El enlace de restablecimiento es inválido o ha expirado."
   password_reset_success: "Tu contraseña ha sido restablecida exitosamente. Ya puedes iniciar sesión."
@@ -708,7 +721,9 @@ test:
   logs_title: "Test de Logs y Errores"
   main_log: "Log principal"
   other_tests: "Otras Pruebas Disponibles"
-  other_tests_description: "Enlaces rápidos para pruebas: generar un error no capturado, enviar un email de prueba, recuperar contraseña o ver los logs del sistema."
+  other_tests_description: "Enlaces rápidos para pruebas: generar un error no
+    capturado, enviar un email de prueba, recuperar contraseña o ver los logs
+    del sistema."
   php_errors: "Errores de PHP"
   security_events: "Eventos de seguridad"
   send_reset_link: "Haz clic en 'Enviar enlace de restablecimiento'"
@@ -779,7 +794,8 @@ pagination:
 
 test_mail:
   check_mailpit: "Revisa Mailpit en"
-  description: "Para probar el envío de correos, usa la página de recuperación de contraseña"
+  description: "Para probar el envío de correos, usa la página de recuperación de
+    contraseña"
   enter_email: "Ingresa un email válido"
   goto_password_recovery: "Ir a Recuperación de Contraseña"
   goto_recovery: "Ve a la página de"
@@ -887,8 +903,10 @@ common.select: "Seleccionar..."
 apu.update: "Actualizar APU"
 
 security.2fa.important: "Importante"
-security.2fa.once_enabled: "Una vez habilitado el 2FA, necesitarás tu contraseña y un código de verificación para iniciar sesión."
-security.2fa.disable_instructions: "Para deshabilitar la autenticación de dos factores, ingresa tu código 2FA actual:"
+security.2fa.once_enabled: "Una vez habilitado el 2FA, necesitarás tu contraseña
+  y un código de verificación para iniciar sesión."
+security.2fa.disable_instructions: "Para deshabilitar la autenticación de dos
+  factores, ingresa tu código 2FA actual:"
 security.2fa.code_placeholder: "Código de 6 dígitos"
 
 password.reset.title: "Restablecer Contraseña"
@@ -902,16 +920,20 @@ email.superadmin_code.expired: "El código ha expirado."
 email.superadmin_code.ignore_if_not_requested: "Si no solicitaste este código, ignora este correo."
 email.superadmin_code.title: "Verificación de acceso"
 email.superadmin_code.instruction: "Usa el siguiente código para completar el inicio de sesión de administrador."
-email.superadmin_code.no_request_notice: "Si no solicitaste este código, ignora este correo o contacta al equipo de seguridad."
+email.superadmin_code.no_request_notice: "Si no solicitaste este código, ignora
+  este correo o contacta al equipo de seguridad."
 email.recovery_code_used.title: "Alerta de seguridad"
-email.recovery_code_used.body: "Se ha utilizado un código de recuperación para acceder a tu cuenta. Si no fuiste tú, por favor contacta al administrador inmediatamente y revoca sesiones activas desde tu panel de seguridad."
+email.recovery_code_used.body: "Se ha utilizado un código de recuperación para
+  acceder a tu cuenta. Si no fuiste tú, por favor contacta al administrador
+  inmediatamente y revoca sesiones activas desde tu panel de seguridad."
 email.recovery_code_used.action_if_you: "Si fuiste tú, puedes ignorar este correo."
 password.test_emails: "📧 Para pruebas usa: admin@demo.com, admin@abc.com o user@abc.com"
 
 # WebAuthn (ampliado)
 webauthn.registered_keys: "Llaves registradas"
 webauthn.register_new_key: "Registrar nueva llave"
-webauthn.register_description: "Registra tu llave de seguridad física, Face ID, Touch ID u otro autenticador compatible con WebAuthn."
+webauthn.register_description: "Registra tu llave de seguridad física, Face ID,
+  Touch ID u otro autenticador compatible con WebAuthn."
 webauthn.registering: "Registrando..."
 webauthn.registered_ok: "Llave registrada correctamente."
 webauthn.revoked_ok: "Llave revocada correctamente."
@@ -942,7 +964,8 @@ common.description: "Descripción"
 buttons.cancel: "Cancelar"
 buttons.back: "Volver"
 
-flash.tenant_user_limit_reached: "Se ha alcanzado el límite máximo de usuarios para este plan. Contacte al administrador."
+flash.tenant_user_limit_reached: "Se ha alcanzado el límite máximo de usuarios
+  para este plan. Contacte al administrador."
 
 # Proyectos
 project.title: "Proyectos"
@@ -971,7 +994,8 @@ project.updated_success: "Proyecto actualizado exitosamente."
 project.deleted_success: "Proyecto eliminado."
 project.error_invalid_csrf: "Token de seguridad inválido. Por favor, intente nuevamente."
 project.not_found: "Proyecto no encontrado."
-project.confirm_delete: "¿Está seguro de que desea eliminar este proyecto? Esta acción no se puede deshacer."
+project.confirm_delete: "¿Está seguro de que desea eliminar este proyecto? Esta
+  acción no se puede deshacer."
 project.apus: "APUs del Proyecto"
 project.no_apus_yet: "No hay APUs asociados a este proyecto aún."
 project.placeholder_name: "Ej: Construcción Bloque A"
@@ -1025,8 +1049,40 @@ plantilla.created_success: "Plantilla creada exitosamente."
 plantilla.updated_success: "Plantilla actualizada exitosamente."
 plantilla.deleted_success: "Plantilla eliminada."
 plantilla.duplicated_success: "Plantilla duplicada exitosamente."
-plantilla.confirm_delete: "¿Eliminar esta plantilla y todos sus rubros? Esta acción no se puede deshacer."
+plantilla.confirm_delete: "¿Eliminar esta plantilla y todos sus rubros? Esta
+  acción no se puede deshacer."
 plantilla.confirm_remove_rubro: "¿Eliminar este rubro de la plantilla?"
+
+# Claves compatibles con prefijo 'template' (inglés)
+template.title: "Plantillas"
+template.new: "Nueva Plantilla"
+template.edit_title: "Editar Plantilla"
+template.save: "Guardar Plantilla"
+template.duplicate: "Duplicar"
+template.edit: "Editar"
+template.col_name: "Nombre"
+template.rubros: "Rubros"
+template.add_rubro: "Agregar Rubro"
+template.select_rubro: "Seleccionar Rubro"
+template.col_cantidad: "Cantidad"
+template.col_precio_unit: "Precio Unit."
+template.col_total: "Total"
+template.total_presupuesto: "Total Presupuesto"
+template.apu_pending: "Sin APU"
+template.create_apu: "Crear APU"
+template.no_rubros: "No hay rubros en esta plantilla."
+template.no_plantillas: "No hay plantillas en este proyecto."
+template.no_rubros_available: "No hay rubros disponibles. Cree rubros primero."
+template.rubro_already_added: "El rubro ya está en esta plantilla."
+template.rubro_added: "Rubro agregado a la plantilla."
+template.rubro_removed: "Rubro eliminado de la plantilla."
+template.created_success: "Plantilla creada exitosamente."
+template.updated_success: "Plantilla actualizada exitosamente."
+template.deleted_success: "Plantilla eliminada."
+template.duplicated_success: "Plantilla duplicada exitosamente."
+template.confirm_delete: "¿Eliminar esta plantilla y todos sus rubros? Esta
+  acción no se puede deshacer."
+template.confirm_remove_rubro: "¿Eliminar este rubro de la plantilla?"
 
 # Proyectos (adicional)
 project.duplicate: "Duplicar Proyecto"

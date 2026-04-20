@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'project.edit_title'|trans }} - {{ project.nombre }}{% endblock %}
+{% block title %}{{ 'project.edit_title'|trans }} - {{ project.name }}{% endblock %}
 
 {% block body %}
 {% import 'partials/_button.html.twig' as btn %}
@@ -10,7 +10,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-1">
                     <li class="breadcrumb-item"><a href="{{ path('app_project_index') }}">{{ 'project.title'|trans }}</a></li>
-                    <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.nombre }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.name }}</a></li>
                     <li class="breadcrumb-item active">{{ 'common.edit'|trans }}</li>
                 </ol>
             </nav>
@@ -32,33 +32,33 @@
                 <div class="row">
                     <div class="col-md-8 mb-3">
                         <label class="form-label fw-semibold">{{ 'project.col_name'|trans }} <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="nombre" maxlength="255"
-                               value="{{ project.nombre }}" required>
+                           <input type="text" class="form-control" name="name" maxlength="255"
+                               value="{{ project.name }}" required>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label fw-semibold">{{ 'project.col_code'|trans }} <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="codigo" maxlength="100"
-                               value="{{ project.codigo }}" required>
+                           <input type="text" class="form-control" name="code" maxlength="100"
+                               value="{{ project.code }}" required>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-12 mb-3">
                         <label class="form-label fw-semibold">{{ 'common.description'|trans }}</label>
-                        <textarea class="form-control" name="descripcion" rows="3">{{ project.descripcion }}</textarea>
+                        <textarea class="form-control" name="description" rows="3">{{ project.description }}</textarea>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">{{ 'project.col_client'|trans }}</label>
-                        <input type="text" class="form-control" name="cliente" maxlength="255"
-                               value="{{ project.cliente }}">
+                           <input type="text" class="form-control" name="client" maxlength="255"
+                               value="{{ project.client }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">{{ 'project.col_location'|trans }}</label>
-                        <input type="text" class="form-control" name="ubicacion" maxlength="255"
-                               value="{{ project.ubicacion }}">
+                           <input type="text" class="form-control" name="location" maxlength="255"
+                               value="{{ project.location }}">
                     </div>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label class="form-label fw-semibold">{{ 'project.col_status'|trans }}</label>
-                        <select class="form-select" name="estado">
+                        <select class="form-select" name="status">
                             {% for statusKey in ['planificacion','en_proceso','pausado','finalizado'] %}
                                 <option value="{{ statusKey }}" {{ project.estado == statusKey ? 'selected' : '' }}>
                                     {{ ('project.status.' ~ statusKey)|trans }}
@@ -82,13 +82,13 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label fw-semibold">{{ 'project.start_date'|trans }}</label>
-                        <input type="date" class="form-control" name="fecha_inicio"
-                               value="{{ project.fechaInicio ? project.fechaInicio|date('Y-m-d') : '' }}">
+                           <input type="date" class="form-control" name="start_date"
+                               value="{{ project.startDate ? project.startDate|date('Y-m-d') : '' }}">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label fw-semibold">{{ 'project.end_date'|trans }}</label>
-                        <input type="date" class="form-control" name="fecha_fin"
-                               value="{{ project.fechaFin ? project.fechaFin|date('Y-m-d') : '' }}">
+                           <input type="date" class="form-control" name="end_date"
+                               value="{{ project.endDate ? project.endDate|date('Y-m-d') : '' }}">
                     </div>
                 </div>
                 <div class="row">
@@ -96,8 +96,8 @@
                         <label class="form-label fw-semibold">{{ 'project.col_budget'|trans }} (USD)</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
-                            <input type="number" step="0.01" min="0" class="form-control" name="presupuesto_total"
-                                   value="{{ project.presupuestoTotal }}">
+                            <input type="number" step="0.01" min="0" class="form-control" name="total_budget"
+                                value="{{ project.totalBudget }}">
                         </div>
                     </div>
                 </div>

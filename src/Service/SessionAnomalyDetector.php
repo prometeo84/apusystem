@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 use App\Entity\LoginSession;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -24,7 +25,7 @@ class SessionAnomalyDetector
      * Detecta anomalías en la sesión del usuario
      * Retorna true si se detecta una anomalía que requiere re-autenticación
      */
-    public function detect(User $user, string $sessionId): bool
+    public function detect(UserInterface $user, string $sessionId): bool
     {
         $score = 0;
         $anomalies = [];
@@ -91,7 +92,7 @@ class SessionAnomalyDetector
      * Detecta anomalías para todas las sesiones activas de un usuario.
      * Retorna un array asociativo [sessionId => [anomalies...]] para sesiones sospechosas.
      */
-    public function detectForUser(User $user): array
+    public function detectForUser(UserInterface $user): array
     {
         $results = [];
 
@@ -129,7 +130,7 @@ class SessionAnomalyDetector
         return $session->getUserAgent() !== $currentUserAgent;
     }
 
-    private function detectMultipleSessions(User $user): bool
+    private function detectMultipleSessions(UserInterface $user): bool
     {
         $cutoffTime = new \DateTime('-' . self::MULTIPLE_SESSIONS_WINDOW . ' seconds');
 
@@ -147,7 +148,7 @@ class SessionAnomalyDetector
         return $distinctIpCount >= 3;
     }
 
-    private function detectBotPattern(User $user): bool
+    private function detectBotPattern(UserInterface $user): bool
     {
         // Obtener requests del último minuto
         $cutoffTime = new \DateTime('-1 minute');

@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %}{{ plantilla.name }} - {{ project.name }}{% endblock %}
+{% block title %}{{ template.name }} - {{ project.name }}{% endblock %}
 {% block body %}
 {% import 'partials/_button.html.twig' as btn %}
 <div class="container-fluid mt-4">
@@ -8,25 +8,25 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ path('app_project_index') }}">{{ 'project.title'|trans }}</a></li>
             <li class="breadcrumb-item"><a href="{{ path('app_project_show', {id: project.id}) }}">{{ project.name }}</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('app_template_index', {projectId: project.id}) }}">{{ 'plantilla.title'|trans }}</a></li>
-            <li class="breadcrumb-item active">{{ plantilla.name }}</li>
+            <li class="breadcrumb-item"><a href="{{ path('app_template_index', {projectId: project.id}) }}">{{ 'template.title'|trans }}</a></li>
+            <li class="breadcrumb-item active">{{ template.name }}</li>
         </ol>
     </nav>
 
     <div class="d-flex justify-content-between align-items-start mb-3">
         <div>
-            <h1 class="mb-0"><i class="bi bi-layout-text-sidebar"></i> {{ plantilla.name }}</h1>
-            {% if plantilla.description %}<p class="text-muted mb-0">{{ plantilla.description }}</p>{% endif %}
+            <h1 class="mb-0"><i class="bi bi-layout-text-sidebar"></i> {{ template.name }}</h1>
+            {% if template.description %}<p class="text-muted mb-0">{{ template.description }}</p>{% endif %}
         </div>
         <div class="d-flex gap-2">
-            {{ btn.button('plantilla.edit'|trans, 'outline-primary', 'bi-pencil', {'href': path('app_template_edit', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm'}) }}
+            {{ btn.button('template.edit'|trans, 'outline-primary', 'bi-pencil', {'href': path('app_template_edit', {projectId: project.id, id: template.id}), 'class':'btn-sm'}) }}
             {# Duplicar #}
-            <form method="POST" action="{{ path('app_template_duplicate', {projectId: project.id, id: plantilla.id}) }}" class="d-inline">
-                <input type="hidden" name="_token" value="{{ csrf_token('plantilla_dup_' ~ plantilla.id) }}">
-                {{ btn.button('plantilla.duplicate'|trans, 'outline-secondary', 'bi-copy', {'type':'submit', 'class':'btn-sm'}) }}
+                <form method="POST" action="{{ path('app_template_duplicate', {projectId: project.id, id: template.id}) }}" class="d-inline">
+                <input type="hidden" name="_token" value="{{ csrf_token('plantilla_dup_' ~ template.id) }}">
+                {{ btn.button('template.duplicate'|trans, 'outline-secondary', 'bi-copy', {'type':'submit', 'class':'btn-sm'}) }}
             </form>
             {# Reporte #}
-            {{ btn.button('report.generate'|trans, 'success', 'bi-file-earmark-bar-graph', {'href': path('app_report_plantilla', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm'}) }}
+                    {{ btn.button('report.generate'|trans, 'success', 'bi-file-earmark-bar-graph', {'href': path('app_report_plantilla', {projectId: project.id, id: template.id}), 'class':'btn-sm'}) }}
                     {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_template_index', {projectId: project.id}), 'class':'btn-sm'}) }}
         </div>
     </div>
@@ -39,9 +39,9 @@
             <div class="card">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <span><i class="bi bi-list-ol"></i> {{ 'plantilla.rubros'|trans }}</span>
-                    <strong class="fs-5">${{ plantilla.totalBudget|number_format(2, '.', ',') }}</strong>
+                    <strong class="fs-5">${{ template.totalBudget|number_format(2, '.', ',') }}</strong>
                 </div>
-                {% if plantilla.items|length > 0 %}
+                {% if template.items|length > 0 %}
                 <div class="table-responsive">
                     <table class="table table-hover mb-0 align-middle">
                         <thead class="table-light">
@@ -57,7 +57,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for pr in plantilla.items %}
+                            {% for pr in template.items %}
                             <tr>
                                 <td class="text-muted">{{ loop.index }}</td>
                                 <td><code>{{ pr.item.code }}</code></td>
@@ -89,11 +89,11 @@
                                     {% if pr.apuItem %}
                                         {{ btn.button('', 'outline-primary', 'bi-calculator', {'href': path('app_apu_edit', {id: pr.apuItem.id}), 'class':'btn-sm', 'title': 'apu.edit'|trans}) }}
                                     {% else %}
-                                        {{ btn.button('', 'warning', 'bi-calculator-fill', {'href': path('app_apu_create_for_rubro', {plantillaRubroId: pr.id}), 'class':'btn-sm', 'title': 'plantilla.create_apu'|trans}) }}
+                                        {{ btn.button('', 'warning', 'bi-calculator-fill', {'href': path('app_apu_create_for_rubro', {plantillaRubroId: pr.id}), 'class':'btn-sm', 'title': 'template.create_apu'|trans}) }}
                                     {% endif %}
-                                    <form method="POST" action="{{ path('app_template_remove_item', {projectId: project.id, id: plantilla.id, prId: pr.id}) }}" class="d-inline"
+                                                                                <form method="POST" action="{{ path('app_template_remove_item', {projectId: project.id, id: template.id, prId: pr.id}) }}" class="d-inline"
                                           onsubmit="return confirm('{{ 'plantilla.confirm_remove_rubro'|trans }}')">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('remove_rubro_' ~ pr.id) }}">
+                                                                                <input type="hidden" name="_token" value="{{ csrf_token('remove_rubro_' ~ pr.id) }}">
                                         {{ btn.button('', 'outline-danger', 'bi-trash', {'type':'submit', 'class':'btn-sm'}) }}
                                     </form>
                                 </td>
@@ -103,7 +103,7 @@
                         <tfoot>
                             <tr class="table-primary fw-bold">
                                 <td colspan="6" class="text-end">{{ 'plantilla.total_presupuesto'|trans }}</td>
-                                <td class="text-end fs-5">${{ plantilla.totalBudget|number_format(2, '.', ',') }}</td>
+                                <td class="text-end fs-5">${{ template.totalBudget|number_format(2, '.', ',') }}</td>
                                 <td></td>
                             </tr>
                         </tfoot>
@@ -125,23 +125,23 @@
                     <i class="bi bi-plus-circle"></i> {{ 'plantilla.add_rubro'|trans }}
                 </div>
                 <div class="card-body">
-                    {% if rubrosDisponibles|length > 0 %}
-                    <form method="POST" action="{{ path('app_template_add_item', {projectId: project.id, id: plantilla.id}) }}">
-                        <input type="hidden" name="_token" value="{{ csrf_token('add_rubro_' ~ plantilla.id) }}">
+                    {% if itemsAvailable|length > 0 %}
+                        <form method="POST" action="{{ path('app_template_add_item', {projectId: project.id, id: template.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('add_rubro_' ~ template.id) }}">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">{{ 'plantilla.select_rubro'|trans }}</label>
-                            <select class="form-select" name="rubro_id" required>
+                            <select class="form-select" name="item_id" required>
                                 <option value="">{{ 'common.select'|trans }}</option>
-                                {% for rubro in rubrosDisponibles %}
-                                    {% if rubro.id not in rubrosAgregados %}
-                                    <option value="{{ rubro.id }}">{{ rubro.code }} — {{ rubro.name }} ({{ rubro.unit }})</option>
-                                    {% endif %}
-                                {% endfor %}
+                                    {% for item in itemsAvailable %}
+                                        {% if item.id not in itemsAdded %}
+                                        <option value="{{ item.id }}">{{ item.code }} — {{ item.name }} ({{ item.unit }})</option>
+                                        {% endif %}
+                                    {% endfor %}
                             </select>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">{{ 'plantilla.col_cantidad'|trans }}</label>
-                            <input type="number" class="form-control" name="cantidad" value="1.00" step="0.01" min="0.01" required>
+                            <input type="number" class="form-control" name="quantity" value="1.00" step="0.01" min="0.01" required>
                         </div>
                         {{ btn.button('plantilla.add_rubro'|trans, 'primary', 'bi-plus', {'type':'submit', 'class':'w-100'}) }}
                     </form>
@@ -158,10 +158,10 @@
                     <i class="bi bi-exclamation-triangle"></i> {{ 'common.danger_zone'|trans }}
                 </div>
                 <div class="card-body">
-                        <form method="POST" action="{{ path('app_template_delete', {projectId: project.id, id: plantilla.id}) }}"
-                          onsubmit="return confirm('{{ 'plantilla.confirm_delete'|trans }}')">
-                        <input type="hidden" name="_token" value="{{ csrf_token('plantilla_delete_' ~ plantilla.id) }}">
-                        {{ btn.button('common.delete'|trans ~ ' plantilla', 'danger', 'bi-trash', {'type':'submit', 'class':'w-100'}) }}
+                                        <form method="POST" action="{{ path('app_template_delete', {projectId: project.id, id: template.id}) }}"
+                                                    onsubmit="return confirm('{{ 'plantilla.confirm_delete'|trans }}')">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('plantilla_delete_' ~ template.id) }}">
+                                                {{ btn.button('common.delete'|trans ~ ' template', 'danger', 'bi-trash', {'type':'submit', 'class':'w-100'}) }}
                     </form>
                 </div>
             </div>

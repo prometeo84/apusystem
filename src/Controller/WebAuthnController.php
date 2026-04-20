@@ -29,6 +29,7 @@ class WebAuthnController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function listCredentials(): Response
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         $creds = $this->em->getRepository(WebAuthnCredential::class)->findBy(['user' => $user]);
 
@@ -45,6 +46,7 @@ class WebAuthnController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function startRegistration(Request $request): JsonResponse
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         $challenge = random_bytes(32);
@@ -82,6 +84,7 @@ class WebAuthnController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function finishRegistration(Request $request): JsonResponse
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
         $data = json_decode($request->getContent(), true);

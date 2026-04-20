@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'projects')]
@@ -20,9 +21,15 @@ class Projects
     private ?Tenant $tenant = null;
 
     #[ORM\Column(name: 'name', type: 'string', length: 255)]
+    #[Assert\NotBlank(message: 'name.required')]
+    #[Assert\Length(max: 255)]
+    #[Assert\Regex(pattern: '/^[\\p{L}\\s]+$/u', message: 'name.invalid')]
     private ?string $name = null;
 
     #[ORM\Column(name: 'code', type: 'string', length: 100)]
+    #[Assert\NotBlank(message: 'code.required')]
+    #[Assert\Length(max: 100)]
+    #[Assert\Regex(pattern: '/^[A-Za-z0-9]+$/', message: 'code.invalid')]
     private ?string $code = null;
 
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]
@@ -35,15 +42,28 @@ class Projects
     private ?string $location = null;
 
     #[ORM\Column(name: 'start_date', type: 'date', nullable: true)]
+    #[Assert\NotBlank(message: 'start_date.required')]
+    #[Assert\Type(
+        type: \DateTimeInterface::class,
+        message: 'start_date.invalid'
+    )]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(name: 'end_date', type: 'date', nullable: true)]
+    #[Assert\NotBlank(message: 'end_date.required')]
+    #[Assert\Type(
+        type: \DateTimeInterface::class,
+        message: 'end_date.invalid'
+    )]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(name: 'status', type: 'string', length: 50)]
+    #[Assert\NotBlank(message: 'status.required')]
     private string $status = 'planificacion'; // planificacion, en_proceso, pausado, finalizado
 
     #[ORM\Column(name: 'total_budget', type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    #[Assert\NotBlank(message: 'total_budget.required')]
+    #[Assert\Regex(pattern: '/^\d+(\.\d{1,2})?$/', message: 'total_budget.invalid')]
     private ?string $totalBudget = null;
 
     #[ORM\Column(name: 'created_at', type: 'datetime')]

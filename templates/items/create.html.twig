@@ -15,20 +15,26 @@
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label class="form-label fw-semibold">{{ 'rubro.col_code'|trans }} <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="codigo" maxlength="100" placeholder="Ej: 101.001" required>
+                        <input type="text" class="form-control{% if fieldErrors.code is defined %} is-invalid{% endif %}" name="code" maxlength="100" placeholder="Ej: 101.001" required aria-invalid="{{ fieldErrors.code is defined ? 'true' : 'false' }}" value="{{ item is defined ? item.getCode() : '' }}">
+                        {% if fieldErrors.code is defined %}
+                            <div class="invalid-feedback">{{ fieldErrors.code[0] }}</div>
+                        {% endif %}
                     </div>
                     <div class="col-md-8 mb-3">
                         <label class="form-label fw-semibold">{{ 'rubro.col_name'|trans }} <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="nombre" maxlength="255" required>
+                        <input type="text" class="form-control{% if fieldErrors.name is defined %} is-invalid{% endif %}" name="name" maxlength="255" required aria-invalid="{{ fieldErrors.name is defined ? 'true' : 'false' }}" value="{{ item is defined ? item.getName() : '' }}">
+                        {% if fieldErrors.name is defined %}
+                            <div class="invalid-feedback">{{ fieldErrors.name[0] }}</div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">{{ 'common.description'|trans }}</label>
-                    <textarea class="form-control" name="descripcion" rows="2"></textarea>
+                    <textarea class="form-control" name="description" rows="2"></textarea>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">{{ 'rubro.col_unit'|trans }} <span class="text-danger">*</span></label>
-                    <select class="form-select" name="unidad" required>
+                        <select class="form-select{% if fieldErrors.unit is defined %} is-invalid{% endif %}" name="unit" required aria-invalid="{{ fieldErrors.unit is defined ? 'true' : 'false' }}">
                         <option value="">{{ 'common.select'|trans }}</option>
                         <option value="m²">m²</option>
                         <option value="m³">m³</option>
@@ -40,7 +46,7 @@
                         <option value="t">t (tonelada)</option>
                     </select>
                 </div>
-                <div class="text-end mt-4">
+                    <div class="text-end mt-4">
                     {{ btn.button('buttons.cancel'|trans, 'secondary', 'bi-x', {'href': path('app_item_index')}) }}
                     &nbsp;
                     {{ btn.button('rubro.save'|trans, 'primary', 'bi-save', {'type':'submit'}) }}
@@ -49,4 +55,45 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        (function(){
+            const form = document.querySelector('form[action="{{ path('app_item_create') }}"]');
+            if (!form) return;
+            form.addEventListener('submit', function(e){
+                const code = form.querySelector('input[name="code"]').value.trim();
+                const name = form.querySelector('input[name="name"]').value.trim();
+                const unit = (form.querySelector('select[name="unit"]') || {}).value || '';
+                let ok = true;
+
+                function setErr(el, msg){
+                    el.classList.add('is-invalid');
+                    let fb = el.parentNode.querySelector('.invalid-feedback');
+                    if (!fb) { fb = document.createElement('div'); fb.className = 'invalid-feedback'; el.parentNode.appendChild(fb); }
+                    fb.textContent = msg;
+                    el.setAttribute('aria-invalid', 'true');
+                }
+                function clearErr(el){
+                    el.classList.remove('is-invalid');
+                    const fb = el.parentNode.querySelector('.invalid-feedback'); if (fb) fb.remove();
+                    el.setAttribute('aria-invalid', 'false');
+                }
+
+                const codeEl = form.querySelector('input[name="code"]');
+                const nameEl = form.querySelector('input[name="name"]');
+                const unitEl = form.querySelector('select[name="unit"]');
+
+                clearErr(codeEl); clearErr(nameEl); clearErr(unitEl);
+
+                if (!/^[A-Za-z0-9]+$/.test(code)) { setErr(codeEl, 'Invalid code'); ok = false; }
+                if (!/^[\p{L}\s]+$/u.test(name)) { setErr(nameEl, 'Invalid name'); ok = false; }
+                if (!unit || unit === '') { setErr(unitEl, 'Unit required'); ok = false; }
+
+                if (!ok) e.preventDefault();
+            });
+        })();
+    </script>
 {% endblock %}

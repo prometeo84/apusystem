@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %}{{ 'rubro.edit_title'|trans }} - {{ rubro.nombre }}{% endblock %}
+{% block title %}{{ 'item.edit_title'|trans }} - {{ item.name }}{% endblock %}
 {% block body %}
 {% import 'partials/_button.html.twig' as btn %}
 <div class="container mt-4" style="max-width:700px">
@@ -10,27 +10,27 @@
     {% include 'partials/_flashes.html.twig' %}
     <div class="card">
         <div class="card-body">
-            <form method="POST" action="{{ path('app_item_edit', {id: rubro.id}) }}">
-                <input type="hidden" name="_token" value="{{ csrf_token('rubro_edit_' ~ rubro.id) }}">
+            <form method="POST" action="{{ path('app_item_edit', {id: item.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('rubro_edit_' ~ item.id) }}">
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label class="form-label fw-semibold">{{ 'rubro.col_code'|trans }} <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="codigo" maxlength="100" value="{{ rubro.codigo }}" required>
+                        <input type="text" class="form-control" name="code" maxlength="100" value="{{ item.code }}" required>
                     </div>
                     <div class="col-md-8 mb-3">
                         <label class="form-label fw-semibold">{{ 'rubro.col_name'|trans }} <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="nombre" maxlength="255" value="{{ rubro.nombre }}" required>
+                        <input type="text" class="form-control" name="name" maxlength="255" value="{{ item.name }}" required>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">{{ 'common.description'|trans }}</label>
-                    <textarea class="form-control" name="descripcion" rows="2">{{ rubro.descripcion }}</textarea>
+                    <textarea class="form-control" name="description" rows="2">{{ item.description }}</textarea>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">{{ 'rubro.col_unit'|trans }} <span class="text-danger">*</span></label>
-                    <select class="form-select" name="unidad" required>
+                    <select class="form-select" name="unit" required>
                         {% for u in ['m²','m³','m','kg','u','GLB','h','t'] %}
-                            <option value="{{ u }}" {{ rubro.unidad == u ? 'selected' : '' }}>{{ u }}</option>
+                            <option value="{{ u }}" {{ item.unit == u ? 'selected' : '' }}>{{ u }}</option>
                         {% endfor %}
                     </select>
                 </div>

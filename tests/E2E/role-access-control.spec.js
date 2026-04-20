@@ -31,13 +31,13 @@ test.describe('ROLE_ADMIN — rutas de escritura accesibles', () => {
     test('Admin puede ver formulario de nuevo item', async ({ page }) => {
         await page.goto('/items/create');
         await expect(page).not.toHaveURL(/login/);
-        await expect(page.locator('input[name="codigo"]').first()).toBeVisible();
+        await expect(page.locator('input[name="code"]').first()).toBeVisible();
     });
 
     test('Admin puede ver formulario de nuevo proyecto', async ({ page }) => {
         await page.goto('/projects/create');
         await expect(page).not.toHaveURL(/login/);
-        await expect(page.locator('input[name="nombre"]').first()).toBeVisible();
+        await expect(page.locator('input[name="name"]').first()).toBeVisible();
     });
 
     test('Admin ve botón Nuevo Proyecto en listado', async ({ page }) => {

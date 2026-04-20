@@ -15,7 +15,7 @@
 
     {% include 'partials/_flashes.html.twig' %}
 
-    {% if rubros|length > 0 %}
+    {% if items|length > 0 %}
     <div class="card">
         <div class="card-body p-0">
             <table class="table table-hover mb-0">
@@ -30,25 +30,25 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for rubro in rubros %}
+                    {% for item in items %}
                     <tr>
-                        <td><code>{{ rubro.code }}</code></td>
-                        <td><strong>{{ rubro.name }}</strong>
-                            {% if rubro.description %}<br><small class="text-muted">{{ rubro.description|slice(0,80) }}{% if rubro.description|length > 80 %}…{% endif %}</small>{% endif %}
+                        <td><code>{{ item.code }}</code></td>
+                        <td><strong>{{ item.name }}</strong>
+                            {% if item.description %}<br><small class="text-muted">{{ item.description|slice(0,80) }}{% if item.description|length > 80 %}…{% endif %}</small>{% endif %}
                         </td>
-                        <td><span class="badge bg-secondary">{{ rubro.unit }}</span></td>
+                        <td><span class="badge bg-secondary">{{ item.unit }}</span></td>
                         <td>
-                            <span class="badge bg-{{ rubro.type == 'general' ? 'info' : 'primary' }}">
-                                {{ ('rubro.tipo.' ~ rubro.type)|trans }}
+                            <span class="badge bg-{{ item.type == 'general' ? 'info' : 'primary' }}">
+                                {{ ('rubro.tipo.' ~ item.type)|trans }}
                             </span>
                         </td>
-                        <td>{{ rubro.createdAt|date('d/m/Y') }}</td>
+                        <td>{{ item.createdAt|date('d/m/Y') }}</td>
                         <td class="text-center">
                             {% if is_granted('ROLE_ADMIN') %}
-                            {{ btn.button('', 'outline-secondary', 'bi-pencil', {'href': path('app_item_edit', {id: rubro.id}), 'class':'btn-sm', 'title': 'common.edit'|trans}) }}
-                            <form method="POST" action="{{ path('app_item_delete', {id: rubro.id}) }}" class="d-inline"
-                                  onsubmit="return confirm('{{ 'rubro.confirm_delete'|trans }}')">
-                                <input type="hidden" name="_token" value="{{ csrf_token('rubro_delete_' ~ rubro.id) }}">
+                                                        {{ btn.button('', 'outline-secondary', 'bi-pencil', {'href': path('app_item_edit', {id: item.id}), 'class':'btn-sm', 'title': 'common.edit'|trans}) }}
+                            <form method="POST" action="{{ path('app_item_delete', {id: item.id}) }}" class="d-inline"
+                                                                    onsubmit="return confirm('{{ 'rubro.confirm_delete'|trans }}')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('rubro_delete_' ~ item.id) }}">
                                 {{ btn.button('', 'outline-danger', 'bi-trash', {'type':'submit', 'class':'btn-sm', 'title': 'common.delete'|trans}) }}
                             </form>
                             {% endif %}

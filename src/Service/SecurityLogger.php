@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\SecurityEvent;
 use App\Entity\User;
 use App\Entity\Tenant;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -18,7 +19,7 @@ class SecurityLogger
     public function log(
         string $eventType,
         string $severity = 'INFO',
-        ?User $user = null,
+        ?UserInterface $user = null,
         ?array $eventData = null
     ): void {
         $request   = $this->requestStack->getCurrentRequest();
@@ -28,9 +29,16 @@ class SecurityLogger
         // Use raw DBAL INSERT to avoid forcing an ORM flush that could persist
         // unrelated pending entity changes and incur a full unit-of-work traversal.
         $conn = $this->em->getConnection();
+        $tenantId = null;
+        $userId = null;
+        if ($user instanceof User) {
+            $tenantId = $user->getTenant()?->getId();
+            $userId = $user->getId();
+        }
+
         $conn->insert('security_events', [
-            'tenant_id'  => $user?->getTenant()?->getId(),
-            'user_id'    => $user?->getId(),
+            'tenant_id'  => $tenantId,
+            'user_id'    => $userId,
             'event_type' => $eventType,
             'severity'   => $severity,
             'ip_address' => $ipAddress,
@@ -41,7 +49,7 @@ class SecurityLogger
     }
 
     // Convenience methods for common events
-    public function logLoginSuccess(User $user): void
+    public function logLoginSuccess(UserInterface $user): void
     {
         $this->log('login_success', 'INFO', $user);
     }
@@ -54,12 +62,12 @@ class SecurityLogger
         ]);
     }
 
-    public function log2FASuccess(User $user, string $method): void
+    public function log2FASuccess(UserInterface $user, string $method): void
     {
         $this->log('2fa_success', 'INFO', $user, ['method' => $method]);
     }
 
-    public function log2FAFailed(User $user, string $method, string $reason): void
+    public function log2FAFailed(UserInterface $user, string $method, string $reason): void
     {
         $this->log('2fa_failed', 'WARNING', $user, [
             'method' => $method,
@@ -67,53 +75,59 @@ class SecurityLogger
         ]);
     }
 
-    public function logSessionAnomalyDetected(User $user, array $anomalyDetails): void
+    public function logSessionAnomalyDetected(UserInterface $user, array $anomalyDetails): void
     {
         $this->log('session_anomaly_detected', 'CRITICAL', $user, $anomalyDetails);
     }
 
-    public function logAdminTotpVerificationFailed(User $admin, string $action): void
+    public function logAdminTotpVerificationFailed(UserInterface $admin, string $action): void
     {
         $this->log('admin_totp_verification_failed', 'CRITICAL', $admin, [
             'action' => $action
         ]);
     }
 
-    public function logAdminRateLimitExceeded(User $admin, string $action): void
+    public function logAdminRateLimitExceeded(UserInterface $admin, string $action): void
     {
         $this->log('admin_rate_limit_exceeded', 'WARNING', $admin, [
             'action' => $action
         ]);
     }
 
-    public function logRecoveryCodesRegenerated(User $user, User $admin): void
+    public function logRecoveryCodesRegenerated(UserInterface $user, UserInterface $admin): void
     {
+        $adminId = null;
+        $adminEmail = null;
+        if ($admin instanceof User) {
+            $adminId = $admin->getId();
+            $adminEmail = $admin->getEmail();
+        }
         $this->log('recovery_codes_regenerated_by_admin', 'INFO', $user, [
-            'admin_id' => $admin->getId(),
-            'admin_email' => $admin->getEmail()
+            'admin_id' => $adminId,
+            'admin_email' => $adminEmail
         ]);
     }
 
-    public function logWebAuthnRegistered(User $user, string $deviceName): void
+    public function logWebAuthnRegistered(UserInterface $user, string $deviceName): void
     {
         $this->log('webauthn_registered', 'INFO', $user, [
             'device_name' => $deviceName
         ]);
     }
 
-    public function logWebAuthnFailed(User $user, string $reason): void
+    public function logWebAuthnFailed(UserInterface $user, string $reason): void
     {
         $this->log('webauthn_failed', 'WARNING', $user, [
             'reason' => $reason
         ]);
     }
 
-    public function logTrustedDeviceAdded(User $user): void
+    public function logTrustedDeviceAdded(UserInterface $user): void
     {
         $this->log('trusted_device_added', 'INFO', $user);
     }
 
-    public function logTrustedDeviceRevoked(User $user): void
+    public function logTrustedDeviceRevoked(UserInterface $user): void
     {
         $this->log('trusted_device_revoked', 'INFO', $user);
     }

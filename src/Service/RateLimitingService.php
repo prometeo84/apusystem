@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
@@ -26,8 +27,9 @@ class RateLimitingService
     /**
      * Verifica límite de acciones de administrador
      */
-    public function checkAdminActionRateLimit(User $admin, string $action): bool
+    public function checkAdminActionRateLimit(UserInterface $admin, string $action): bool
     {
+        /** @var \App\Entity\User $admin */
         $identifier = 'admin_' . $admin->getId() . '_' . $action;
         $exceeded = !$this->checkRateLimit('admin_action', $identifier, 10, 3600); // 10 en 1 hora
 

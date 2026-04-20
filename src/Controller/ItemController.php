@@ -9,19 +9,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Psr\Log\LoggerInterface;
 
 #[Route('/items')]
 #[IsGranted('ROLE_USER')]
 class ItemController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $em) {}
+    public function __construct(private EntityManagerInterface $em, private ValidatorInterface $validator, private LoggerInterface $logger) {}
 
     #[Route('/', name: 'app_item_index')]
     public function index(): Response
     {
         $items = $this->em->getRepository(Item::class)->findBy(['tenant' => $this->getUser()->getTenant()], ['code' => 'ASC']);
-        // Templates expect the variable name `rubros` (legacy naming). Keep compatibility.
-        return $this->render('items/index.html.twig', ['rubros' => $items]);
+        // Expose both `items` (new) and `rubros` (legacy) for compatibility while templates migrate.
+        return $this->render('items/index.html.twig', ['items' => $items, 'rubros' => $items]);
     }
 
     #[Route('/create', name: 'app_item_create', methods: ['GET', 'POST'])]
@@ -36,13 +38,59 @@ class ItemController extends AbstractController
 
             $item = new Item();
             $item->setTenant($this->getUser()->getTenant());
-            $item->setCode(trim($request->request->get('codigo', '')));
-            $item->setName(trim($request->request->get('nombre', '')));
-            $item->setDescription(trim($request->request->get('descripcion', '')) ?: null);
-            $item->setUnit(trim($request->request->get('unidad', '')) ?: null);
 
-            $this->em->persist($item);
-            $this->em->flush();
+            // Log incoming values for debugging E2E creation flakiness
+            $this->logger->info('Item create POST received', [
+                'payload' => [
+                    'code' => $request->request->get('code', ''),
+                    'name' => $request->request->get('name', ''),
+                    'unit' => $request->request->get('unit', ''),
+                ],
+            ]);
+
+            $code = trim($request->request->get('code', ''));
+            $name = trim($request->request->get('name', ''));
+            $description = trim($request->request->get('description', '')) ?: null;
+            $unit = trim($request->request->get('unit', '')) ?: null;
+
+            $item->setCode($code);
+            $item->setName($name);
+            $item->setDescription($description);
+            $item->setUnit($unit);
+
+            // Manual quick checks to ensure immediate feedback in templates
+            $fieldErrors = [];
+            if ($code === '' || !preg_match('/^[A-Za-z0-9]+$/', $code)) {
+                $fieldErrors['code'][] = 'code.invalid';
+            }
+            if ($name === '' || !preg_match('/^[\p{L}\s]+$/u', $name)) {
+                $fieldErrors['name'][] = 'name.invalid';
+            }
+            if ($unit === null || $unit === '') {
+                $fieldErrors['unit'][] = 'unit.required';
+            }
+
+            // Run validator for additional checks but merge results
+            $errors = $this->validator->validate($item);
+            foreach ($errors as $e) {
+                $fieldErrors[$e->getPropertyPath()][] = $e->getMessage();
+            }
+
+            if (count($fieldErrors) > 0) {
+                $this->logger->info('Item create validation failed', ['code' => $code, 'name' => $name, 'unit' => $unit, 'fieldErrors' => $fieldErrors]);
+                return $this->render('items/create.html.twig', ['fieldErrors' => $fieldErrors, 'item' => $item]);
+            }
+
+            $this->logger->info('Item create validation passed', ['code' => $code, 'name' => $name, 'unit' => $unit]);
+
+            try {
+                $this->em->persist($item);
+                $this->em->flush();
+            } catch (\Throwable $ex) {
+                $this->logger->error('Item persist/flush failed', ['exception' => (string) $ex, 'code' => $code, 'name' => $name]);
+                $this->addFlash('error', 'rubro.create_error');
+                return $this->render('items/create.html.twig', ['fieldErrors' => ['exception' => [$ex->getMessage()]], 'item' => $item]);
+            }
 
             $this->addFlash('success', 'rubro.created_success');
             return $this->redirectToRoute('app_item_index');
@@ -66,10 +114,10 @@ class ItemController extends AbstractController
                 return $this->redirectToRoute('app_item_edit', ['id' => $id]);
             }
 
-            $item->setCode(trim($request->request->get('codigo', '')));
-            $item->setName(trim($request->request->get('nombre', '')));
-            $item->setDescription(trim($request->request->get('descripcion', '')) ?: null);
-            $item->setUnit(trim($request->request->get('unidad', '')) ?: null);
+            $item->setCode(trim($request->request->get('code', '')));
+            $item->setName(trim($request->request->get('name', '')));
+            $item->setDescription(trim($request->request->get('description', '')) ?: null);
+            $item->setUnit(trim($request->request->get('unit', '')) ?: null);
 
             $this->em->flush();
             $this->addFlash('success', 'rubro.updated_success');

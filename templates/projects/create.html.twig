@@ -23,20 +23,26 @@
                 <div class="row">
                     <div class="col-md-8 mb-3">
                         <label class="form-label fw-semibold">{{ 'project.col_name'|trans }} <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="nombre" maxlength="255"
-                               placeholder="{{ 'project.placeholder_name'|trans }}" required>
+                                     <input type="text" class="form-control{% if fieldErrors.name is defined %} is-invalid{% endif %}" name="name" maxlength="255"
+                                         placeholder="{{ 'project.placeholder_name'|trans }}" required aria-invalid="{{ fieldErrors.name is defined ? 'true' : 'false' }}" value="{{ project is defined ? project.getName() : '' }}">
+                                     {% if fieldErrors.name is defined %}
+                                          <div class="invalid-feedback">{{ fieldErrors.name[0] }}</div>
+                                     {% endif %}
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label fw-semibold">{{ 'project.col_code'|trans }} <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="codigo" maxlength="100"
-                               placeholder="{{ 'project.placeholder_code'|trans }}" required>
+                                     <input type="text" class="form-control{% if fieldErrors.code is defined %} is-invalid{% endif %}" name="code" maxlength="100"
+                                 placeholder="{{ 'project.placeholder_code'|trans }}" required aria-invalid="{{ fieldErrors.code is defined ? 'true' : 'false' }}" value="{{ project is defined ? project.getCode() : '' }}">
+                                     {% if fieldErrors.code is defined %}
+                                         <div class="invalid-feedback">{{ fieldErrors.code[0] }}</div>
+                                     {% endif %}
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-12 mb-3">
                         <label class="form-label fw-semibold">{{ 'common.description'|trans }}</label>
-                        <textarea class="form-control" name="descripcion" rows="3"
+                        <textarea class="form-control" name="description" rows="3"
                                   placeholder="{{ 'project.placeholder_description'|trans }}"></textarea>
                     </div>
                 </div>
@@ -44,12 +50,12 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">{{ 'project.col_client'|trans }}</label>
-                        <input type="text" class="form-control" name="cliente" maxlength="255"
+                           <input type="text" class="form-control" name="client" maxlength="255"
                                placeholder="{{ 'project.placeholder_client'|trans }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-semibold">{{ 'project.col_location'|trans }}</label>
-                        <input type="text" class="form-control" name="ubicacion" maxlength="255"
+                           <input type="text" class="form-control" name="location" maxlength="255"
                                placeholder="{{ 'project.placeholder_location'|trans }}">
                     </div>
                 </div>
@@ -64,7 +70,7 @@
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label class="form-label fw-semibold">{{ 'project.col_status'|trans }}</label>
-                        <select class="form-select" name="estado">
+                        <select class="form-select{% if fieldErrors.status is defined %} is-invalid{% endif %}" name="status" aria-invalid="{{ fieldErrors.status is defined ? 'true' : 'false' }}">
                             <option value="planificacion">{{ 'project.status.planificacion'|trans }}</option>
                             <option value="en_proceso">{{ 'project.status.en_proceso'|trans }}</option>
                             <option value="pausado">{{ 'project.status.pausado'|trans }}</option>
@@ -73,11 +79,17 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label fw-semibold">{{ 'project.start_date'|trans }}</label>
-                        <input type="date" class="form-control" name="fecha_inicio">
+                        <input type="date" class="form-control{% if fieldErrors.startDate is defined %} is-invalid{% endif %}" name="start_date" aria-invalid="{{ fieldErrors.startDate is defined ? 'true' : 'false' }}" value="{{ project is defined and project.getStartDate() ? project.getStartDate().format('Y-m-d') : '' }}">
+                        {% if fieldErrors.startDate is defined %}
+                            <div class="invalid-feedback">{{ fieldErrors.startDate[0] }}</div>
+                        {% endif %}
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label fw-semibold">{{ 'project.end_date'|trans }}</label>
-                        <input type="date" class="form-control" name="fecha_fin">
+                        <input type="date" class="form-control{% if fieldErrors.endDate is defined %} is-invalid{% endif %}" name="end_date" aria-invalid="{{ fieldErrors.endDate is defined ? 'true' : 'false' }}" value="{{ project is defined and project.getEndDate() ? project.getEndDate().format('Y-m-d') : '' }}">
+                        {% if fieldErrors.endDate is defined %}
+                            <div class="invalid-feedback">{{ fieldErrors.endDate[0] }}</div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row">
@@ -85,8 +97,11 @@
                         <label class="form-label fw-semibold">{{ 'project.col_budget'|trans }} (USD)</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
-                            <input type="number" step="0.01" min="0" class="form-control" name="presupuesto_total"
-                                   placeholder="0.00">
+                            <input type="number" step="0.01" min="0" class="form-control{% if fieldErrors.totalBudget is defined %} is-invalid{% endif %}" name="total_budget"
+                                placeholder="0.00" aria-invalid="{{ fieldErrors.totalBudget is defined ? 'true' : 'false' }}" value="{{ project is defined ? project.getTotalBudget() : '' }}">
+                            {% if fieldErrors.totalBudget is defined %}
+                                <div class="invalid-feedback">{{ fieldErrors.totalBudget[0] }}</div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %}{{ 'plantilla.edit_title'|trans }} - {{ plantilla.nombre }}{% endblock %}
+{% block title %}{{ 'template.edit_title'|trans }} - {{ template.name }}{% endblock %}
 {% block body %}
 {% import 'partials/_button.html.twig' as btn %}
 <div class="container mt-4" style="max-width:650px">
@@ -7,18 +7,18 @@
         <div class="card-header bg-primary text-white"><i class="bi bi-pencil"></i> {{ 'plantilla.edit_title'|trans }}</div>
         <div class="card-body">
             {% include 'partials/_flashes.html.twig' %}
-            <form method="POST" action="{{ path('app_template_edit', {projectId: project.id, id: plantilla.id}) }}">
-                <input type="hidden" name="_token" value="{{ csrf_token('plantilla_edit_' ~ plantilla.id) }}">
+            <form method="POST" action="{{ path('app_template_edit', {projectId: project.id, id: template.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('plantilla_edit_' ~ template.id) }}">
                 <div class="mb-3">
                     <label class="form-label fw-semibold">{{ 'plantilla.col_name'|trans }} <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="nombre" maxlength="255" value="{{ plantilla.nombre }}" required>
+                    <input type="text" class="form-control" name="name" maxlength="255" value="{{ template.name }}" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">{{ 'common.description'|trans }}</label>
-                    <textarea class="form-control" name="descripcion" rows="2">{{ plantilla.descripcion }}</textarea>
+                    <textarea class="form-control" name="description" rows="2">{{ template.description }}</textarea>
                 </div>
                 <div class="text-end">
-                    {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_template_show', {projectId: project.id, id: plantilla.id})}) }}
+                    {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_template_show', {projectId: project.id, id: template.id})}) }}
                     &nbsp;
                     {{ btn.button('plantilla.save'|trans, 'primary', 'bi-save', {'type':'submit'}) }}
                 </div>

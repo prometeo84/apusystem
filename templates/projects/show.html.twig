@@ -70,16 +70,16 @@
                 </div>
                 {% if project.templates|length > 0 %}
                 <div class="list-group list-group-flush">
-                    {% for plantilla in project.templates %}
+                    {% for template in project.templates %}
                     <div class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
-                            <strong>{{ plantilla.name }}</strong>
-                            <span class="badge bg-secondary ms-2">{{ plantilla.items|length }} {{ 'plantilla.rubros'|trans }}</span>
-                            <div class="text-muted small mt-1">${{ plantilla.totalBudget|number_format(2, '.', ',') }}</div>
+                            <strong>{{ template.name }}</strong>
+                            <span class="badge bg-secondary ms-2">{{ template.items|length }} {{ 'plantilla.rubros'|trans }}</span>
+                            <div class="text-muted small mt-1">${{ template.totalBudget|number_format(2, '.', ',') }}</div>
                         </div>
                         <div class="d-flex gap-1">
-                            {{ btn.button('', 'outline-primary', 'bi-eye', {'href': path('app_template_show', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm'}) }}
-                            {{ btn.button('', 'success', 'bi-file-earmark-bar-graph', {'href': path('app_report_plantilla', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm', 'title': 'report.generate'|trans}) }}
+                            {{ btn.button('', 'outline-primary', 'bi-eye', {'href': path('app_template_show', {projectId: project.id, id: template.id}), 'class':'btn-sm'}) }}
+                            {{ btn.button('', 'success', 'bi-file-earmark-bar-graph', {'href': path('app_report_plantilla', {projectId: project.id, id: template.id}), 'class':'btn-sm', 'title': 'report.generate'|trans}) }}
                         </div>
                     </div>
                             {% endfor %}

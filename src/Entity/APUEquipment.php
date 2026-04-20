@@ -74,26 +74,65 @@ class APUEquipment
         $this->quantity = $quantity;
         return $this;
     }
+    /**
+     * @return string
+     */
     public function getRate(): string
     {
         return $this->rate;
     }
 
-    public function setRate(string $rate): self
+    /**
+     * Accept numeric or string inputs and store as string (DB decimal)
+     * @param float|int|string $rate
+     */
+    public function setRate(float|int|string $rate): self
     {
-        $this->rate = $rate;
+        $this->rate = (string) $rate;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getCostPerHour(): string
     {
         return $this->costPerHour;
     }
 
-    public function setCostPerHour(string $costPerHour): self
+    /**
+     * Accept numeric or string inputs and store as string (DB decimal)
+     * @param float|int|string $costPerHour
+     */
+    public function setCostPerHour(float|int|string $costPerHour): self
     {
-        $this->costPerHour = $costPerHour;
+        $this->costPerHour = (string) $costPerHour;
         return $this;
+    }
+
+    // Backwards-compatible aliases (Spanish names)
+    /** @param float|int|string $tarifa */
+    public function setTarifa(float|int|string $tarifa): self
+    {
+        return $this->setRate($tarifa);
+    }
+
+    /** @param float|int|string $cHora */
+    public function setCHora(float|int|string $cHora): self
+    {
+        return $this->setCostPerHour($cHora);
+    }
+
+    /** @return string */
+    public function getTarifa(): string
+    {
+        return $this->getRate();
+    }
+
+    /** @return string */
+    public function getCHora(): string
+    {
+        return $this->getCostPerHour();
     }
 
     public function getCreatedAt(): \DateTimeInterface

@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %}{{ 'plantilla.title'|trans }} - {{ project.name }}{% endblock %}
+{% block title %}{{ 'template.title'|trans }} - {{ project.name }}{% endblock %}
 {% block body %}
 {% import 'partials/_button.html.twig' as btn %}
 <div class="container-fluid mt-4">
@@ -19,26 +19,26 @@
     </div>
     {% include 'partials/_flashes.html.twig' %}
 
-    {% if plantillas|length > 0 %}
+    {% if templates|length > 0 %}
     <div class="row g-3">
-        {% for plantilla in plantillas %}
+        {% for template in templates %}
         <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-layout-text-sidebar"></i> {{ plantilla.name }}</span>
-                    <span class="badge bg-white text-primary">{{ plantilla.items|length }} {{ 'plantilla.rubros'|trans }}</span>
+                    <span><i class="bi bi-layout-text-sidebar"></i> {{ template.name }}</span>
+                    <span class="badge bg-white text-primary">{{ template.items|length }} {{ 'template.rubros'|trans }}</span>
                 </div>
                 <div class="card-body">
-                    {% if plantilla.description %}<p class="text-muted small">{{ plantilla.description }}</p>{% endif %}
+                    {% if template.description %}<p class="text-muted small">{{ template.description }}</p>{% endif %}
                     <div class="d-flex justify-content-between align-items-center mt-2">
                         <span class="text-muted small">{{ 'plantilla.total_presupuesto'|trans }}</span>
-                        <strong class="text-primary">${{ plantilla.totalBudget|number_format(2, '.', ',') }}</strong>
+                        <strong class="text-primary">${{ template.totalBudget|number_format(2, '.', ',') }}</strong>
                     </div>
-                    <div class="text-muted small mt-1">{{ plantilla.createdAt|date('d/m/Y') }}</div>
+                    <div class="text-muted small mt-1">{{ template.createdAt|date('d/m/Y') }}</div>
                 </div>
                 <div class="card-footer d-flex gap-2">
-                    {{ btn.button('common.view'|trans, 'primary', 'bi-eye', {'href': path('app_template_show', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm flex-fill'}) }}
-                    {{ btn.button('report.generate'|trans, 'success', 'bi-file-earmark-bar-graph', {'href': path('app_report_plantilla', {projectId: project.id, id: plantilla.id}), 'class':'btn-sm'}) }}
+                    {{ btn.button('common.view'|trans, 'primary', 'bi-eye', {'href': path('app_template_show', {projectId: project.id, id: template.id}), 'class':'btn-sm flex-fill'}) }}
+                    {{ btn.button('report.generate'|trans, 'success', 'bi-file-earmark-bar-graph', {'href': path('app_report_plantilla', {projectId: project.id, id: template.id}), 'class':'btn-sm'}) }}
                 </div>
             </div>
         </div>

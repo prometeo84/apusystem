@@ -153,9 +153,12 @@ class APUItem
         return $this->khu;
     }
 
-    public function setKhu(string $khu): self
+    /**
+     * @param float|int|string $khu
+     */
+    public function setKhu(float|int|string $khu): self
     {
-        $this->khu = $khu;
+        $this->khu = (string) $khu;
         $this->updatedAt = new \DateTime();
         return $this;
     }
@@ -165,9 +168,12 @@ class APUItem
         return $this->productivityUh;
     }
 
-    public function setProductivityUh(string $productivityUh): self
+    /**
+     * @param float|int|string $productivityUh
+     */
+    public function setProductivityUh(float|int|string $productivityUh): self
     {
-        $this->productivityUh = $productivityUh;
+        $this->productivityUh = (string) $productivityUh;
         $this->updatedAt = new \DateTime();
         return $this;
     }
@@ -345,7 +351,8 @@ class APUItem
 
         $equipmentSum = 0.0;
         foreach ($this->equipment as $equipment) {
-            $equipmentSum += (float) $equipment->getTarifa() * (float) $equipment->getCHora();
+            // equipment entity uses english-named getters `getRate` / `getCostPerHour`
+            $equipmentSum += (float) $equipment->getRate() * (float) $equipment->getCostPerHour();
         }
 
         $laborSum = 0.0;
@@ -360,7 +367,7 @@ class APUItem
 
         $transportSum = 0.0;
         foreach ($this->transport as $transport) {
-            $transportSum += (float) $transport->getQuantity() * (float) $transport->getDmt() * (float) $transport->getTarifaKm();
+            $transportSum += (float) $transport->getQuantity() * (float) $transport->getAvgDistance() * (float) $transport->getRatePerKm();
         }
 
         $this->equipmentCost = (string) $equipmentSum;

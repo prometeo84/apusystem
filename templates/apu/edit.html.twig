@@ -9,18 +9,18 @@
         <small class="text-muted fs-6 ms-2">#{{ apu_item.id }} — {{ apu_item.description }}</small>
     </h1>
 
-    {% if plantillaRubro %}
+    {% if templateItem %}
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ path('app_project_index') }}">{{ 'nav.projects'|trans }}</a></li>
             <li class="breadcrumb-item">
-                <a href="{{ path('app_template_index', {'projectId': plantillaRubro.plantilla.proyecto.id}) }}">
-                    {{ plantillaRubro.plantilla.proyecto.nombre }}
+                <a href="{{ path('app_template_index', {'projectId': templateItem.template.project.id}) }}">
+                    {{ templateItem.template.project.name }}
                 </a>
             </li>
             <li class="breadcrumb-item">
-                <a href="{{ path('app_template_show', {'projectId': plantillaRubro.plantilla.proyecto.id, 'id': plantillaRubro.plantilla.id}) }}">
-                    {{ plantillaRubro.plantilla.nombre }}
+                <a href="{{ path('app_template_show', {'projectId': templateItem.template.project.id, 'id': templateItem.template.id}) }}">
+                    {{ templateItem.template.name }}
                 </a>
             </li>
             <li class="breadcrumb-item active">{{ 'apu.edit.title'|trans }}</li>
@@ -89,7 +89,7 @@
                     <tbody>
                         {% for equip in apu_item.equipment %}
                         <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="equipment[{{ loop.index0 }}][descripcion]" value="{{ equip.descripcion }}" required></td>
+                            <td><input type="text" class="form-control form-control-sm" name="equipment[{{ loop.index0 }}][description]" value="{{ equip.description }}" required></td>
                             <td><input type="number" class="form-control form-control-sm calc-input" data-section="equipment" name="equipment[{{ loop.index0 }}][numero]" value="{{ equip.numero }}" min="0" step="1" required></td>
                             <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="equipment" name="equipment[{{ loop.index0 }}][tarifa]" value="{{ equip.tarifa }}" min="0" required></td>
                             <td class="fw-semibold text-end row-subtotal">${{ (equip.numero * equip.tarifa)|number_format(2) }}</td>
@@ -120,7 +120,7 @@
                     <tbody>
                         {% for labor in apu_item.labor %}
                         <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="labor[{{ loop.index0 }}][descripcion]" value="{{ labor.descripcion }}" required></td>
+                            <td><input type="text" class="form-control form-control-sm" name="labor[{{ loop.index0 }}][description]" value="{{ labor.description }}" required></td>
                             <td><input type="number" class="form-control form-control-sm calc-input" data-section="labor" name="labor[{{ loop.index0 }}][numero]" value="{{ labor.numero }}" min="0" step="1" required></td>
                             <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="labor" name="labor[{{ loop.index0 }}][jor_hora]" value="{{ labor.jorHora }}" min="0" required></td>
                             <td class="fw-semibold text-end row-subtotal">${{ (labor.numero * labor.jorHora)|number_format(2) }}</td>
@@ -152,7 +152,7 @@
                     <tbody>
                         {% for mat in apu_item.materials %}
                         <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="materials[{{ loop.index0 }}][descripcion]" value="{{ mat.descripcion }}" required></td>
+                            <td><input type="text" class="form-control form-control-sm" name="materials[{{ loop.index0 }}][description]" value="{{ mat.description }}" required></td>
                             <td><input type="text" class="form-control form-control-sm" name="materials[{{ loop.index0 }}][unidad]" value="{{ mat.unidad }}" required></td>
                             <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="material" name="materials[{{ loop.index0 }}][cantidad]" value="{{ mat.cantidad }}" min="0" required></td>
                             <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="material" name="materials[{{ loop.index0 }}][precio_unitario]" value="{{ mat.precioUnitario }}" min="0" required></td>
@@ -185,7 +185,7 @@
                     <tbody>
                         {% for trn in apu_item.transport %}
                         <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="transport[{{ loop.index0 }}][descripcion]" value="{{ trn.descripcion }}" required></td>
+                            <td><input type="text" class="form-control form-control-sm" name="transport[{{ loop.index0 }}][description]" value="{{ trn.description }}" required></td>
                             <td><input type="text" class="form-control form-control-sm" name="transport[{{ loop.index0 }}][unidad]" value="{{ trn.unidad }}" required></td>
                             <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="transport" name="transport[{{ loop.index0 }}][cantidad]" value="{{ trn.cantidad }}" min="0" required></td>
                             <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="transport" name="transport[{{ loop.index0 }}][dmt]" value="{{ trn.dmt }}" min="0" required></td>
@@ -253,9 +253,9 @@
         </div>
 
         <div class="d-flex justify-content-between">
-            {% if plantillaRubro %}
+            {% if templateItem %}
                 {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left',
-                    {'href': path('app_template_show', {'projectId': plantillaRubro.plantilla.proyecto.id, 'id': plantillaRubro.plantilla.id})}) }}
+                    {'href': path('app_template_show', {'projectId': templateItem.template.project.id, 'id': templateItem.template.id})}) }}
             {% else %}
                 {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_apu_index')}) }}
             {% endif %}
@@ -274,7 +274,7 @@ function addEquipmentRow() {
     const tbody = document.querySelector('#equipmentTable tbody');
     const row = document.createElement('tr');
     row.innerHTML = `
-        <td><input type="text" class="form-control form-control-sm" name="equipment[${equipmentIndex}][descripcion]" required></td>
+        <td><input type="text" class="form-control form-control-sm" name="equipment[${equipmentIndex}][description]" required></td>
         <td><input type="number" class="form-control form-control-sm calc-input" data-section="equipment" name="equipment[${equipmentIndex}][numero]" value="1" min="0" step="1" required></td>
         <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="equipment" name="equipment[${equipmentIndex}][tarifa]" value="0" min="0" required></td>
         <td class="fw-semibold text-end row-subtotal">$0.00</td>
@@ -291,7 +291,7 @@ function addLaborRow() {
     const tbody = document.querySelector('#laborTable tbody');
     const row = document.createElement('tr');
     row.innerHTML = `
-        <td><input type="text" class="form-control form-control-sm" name="labor[${laborIndex}][descripcion]" required></td>
+        <td><input type="text" class="form-control form-control-sm" name="labor[${laborIndex}][description]" required></td>
         <td><input type="number" class="form-control form-control-sm calc-input" data-section="labor" name="labor[${laborIndex}][numero]" value="1" min="0" step="1" required></td>
         <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="labor" name="labor[${laborIndex}][jor_hora]" value="0" min="0" required></td>
         <td class="fw-semibold text-end row-subtotal">$0.00</td>
@@ -308,7 +308,7 @@ function addMaterialRow() {
     const tbody = document.querySelector('#materialTable tbody');
     const row = document.createElement('tr');
     row.innerHTML = `
-        <td><input type="text" class="form-control form-control-sm" name="materials[${materialIndex}][descripcion]" required></td>
+        <td><input type="text" class="form-control form-control-sm" name="materials[${materialIndex}][description]" required></td>
         <td><input type="text" class="form-control form-control-sm" name="materials[${materialIndex}][unidad]" required></td>
         <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="material" name="materials[${materialIndex}][cantidad]" value="0" min="0" required></td>
         <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="material" name="materials[${materialIndex}][precio_unitario]" value="0" min="0" required></td>
@@ -325,7 +325,7 @@ function addTransportRow() {
     const tbody = document.querySelector('#transportTable tbody');
     const row = document.createElement('tr');
     row.innerHTML = `
-        <td><input type="text" class="form-control form-control-sm" name="transport[${transportIndex}][descripcion]" required></td>
+        <td><input type="text" class="form-control form-control-sm" name="transport[${transportIndex}][description]" required></td>
         <td><input type="text" class="form-control form-control-sm" name="transport[${transportIndex}][unidad]" required></td>
         <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="transport" name="transport[${transportIndex}][cantidad]" value="0" min="0" required></td>
         <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="transport" name="transport[${transportIndex}][dmt]" value="0" min="0" required></td>

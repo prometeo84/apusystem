@@ -74,15 +74,15 @@ class APUController extends AbstractController
         }
 
         // Detectar si este APU está vinculado a un TemplateItem (para saber a dónde redirigir)
-        $plantillaRubro = $this->em->getRepository(TemplateItem::class)->findOneBy(['apuItem' => $apuItem]);
+        $templateItem = $this->em->getRepository(TemplateItem::class)->findOneBy(['apuItem' => $apuItem]);
 
         if ($request->isMethod('POST')) {
-            return $this->handleUpdate($request, $apuItem, $plantillaRubro);
+            return $this->handleUpdate($request, $apuItem, $templateItem);
         }
 
         return $this->render('apu/edit.html.twig', [
-            'apu_item'       => $apuItem,
-            'plantillaRubro' => $plantillaRubro,
+            'apu_item'     => $apuItem,
+            'templateItem' => $templateItem,
         ]);
     }
 
@@ -102,7 +102,13 @@ class APUController extends AbstractController
             throw $this->createNotFoundException('apu.export_error');
         }
 
-        return $this->file($filepath, 'APU_' . $apuItem->getId() . '.xlsx');
+        $real = realpath($filepath);
+        $tmp = realpath(sys_get_temp_dir());
+        if ($real === false || $tmp === false || strpos($real, $tmp) !== 0) {
+            throw $this->createNotFoundException('apu.export_error');
+        }
+
+        return $this->file($real, 'APU_' . $apuItem->getId() . '.xlsx');
     }
 
     /** Crear APU vinculado a un PlantillaRubro específico */
@@ -169,7 +175,7 @@ class APUController extends AbstractController
         if (isset($data['equipment'])) {
             foreach ($data['equipment'] as $equipData) {
                 $equipment = new APUEquipment();
-                $equipment->setDescription($equipData['descripcion']);
+                $equipment->setDescription($equipData['description']);
                 $equipment->setQuantity((int)$equipData['numero']);
                 $equipment->setTarifa((float)$equipData['tarifa']);
                 $equipment->setCHora((float)($equipData['c_hora'] ?? ($equipData['numero'] * $equipData['tarifa'])));
@@ -180,7 +186,7 @@ class APUController extends AbstractController
         if (isset($data['labor'])) {
             foreach ($data['labor'] as $laborData) {
                 $labor = new APULabor();
-                $labor->setDescription($laborData['descripcion']);
+                $labor->setDescription($laborData['description']);
                 $labor->setQuantity((int)$laborData['numero']);
                 $labor->setJorHora((float)$laborData['jor_hora']);
                 $labor->setCHora((float)($laborData['c_hora'] ?? ($laborData['numero'] * $laborData['jor_hora'])));
@@ -191,7 +197,7 @@ class APUController extends AbstractController
         if (isset($data['materials'])) {
             foreach ($data['materials'] as $materialData) {
                 $material = new APUMaterial();
-                $material->setDescription($materialData['descripcion']);
+                $material->setDescription($materialData['description']);
                 $material->setUnit($materialData['unidad']);
                 $material->setQuantity((float)$materialData['cantidad']);
                 $material->setUnitPrice((float)$materialData['precio_unitario']);
@@ -202,7 +208,7 @@ class APUController extends AbstractController
         if (isset($data['transport'])) {
             foreach ($data['transport'] as $transportData) {
                 $transport = new APUTransport();
-                $transport->setDescription($transportData['descripcion']);
+                $transport->setDescription($transportData['description']);
                 $transport->setUnit($transportData['unidad']);
                 $transport->setQuantity((float)$transportData['cantidad']);
                 $transport->setDmt((float)$transportData['dmt']);
@@ -216,7 +222,7 @@ class APUController extends AbstractController
         return $apuItem;
     }
 
-    private function handleUpdate(Request $request, APUItem $apuItem, ?TemplateItem $plantillaRubro = null): Response
+    private function handleUpdate(Request $request, APUItem $apuItem, ?TemplateItem $templateItem = null): Response
     {
         $data = $request->request->all();
 
@@ -245,7 +251,7 @@ class APUController extends AbstractController
         if (isset($data['equipment'])) {
             foreach ($data['equipment'] as $equipData) {
                 $equipment = new APUEquipment();
-                $equipment->setDescription($equipData['descripcion']);
+                $equipment->setDescription($equipData['description']);
                 $equipment->setQuantity((int)$equipData['numero']);
                 $equipment->setTarifa((float)$equipData['tarifa']);
                 $equipment->setCHora((float)($equipData['c_hora'] ?? ((float)$equipData['numero'] * (float)$equipData['tarifa'])));
@@ -256,7 +262,7 @@ class APUController extends AbstractController
         if (isset($data['labor'])) {
             foreach ($data['labor'] as $laborData) {
                 $labor = new APULabor();
-                $labor->setDescription($laborData['descripcion']);
+                $labor->setDescription($laborData['description']);
                 $labor->setQuantity((int)$laborData['numero']);
                 $labor->setJorHora((float)$laborData['jor_hora']);
                 $labor->setCHora((float)($laborData['c_hora'] ?? ((float)$laborData['numero'] * (float)$laborData['jor_hora'])));
@@ -267,7 +273,7 @@ class APUController extends AbstractController
         if (isset($data['materials'])) {
             foreach ($data['materials'] as $materialData) {
                 $material = new APUMaterial();
-                $material->setDescription($materialData['descripcion']);
+                $material->setDescription($materialData['description']);
                 $material->setUnit($materialData['unidad']);
                 $material->setQuantity((float)$materialData['cantidad']);
                 $material->setUnitPrice((float)$materialData['precio_unitario']);
@@ -278,7 +284,7 @@ class APUController extends AbstractController
         if (isset($data['transport'])) {
             foreach ($data['transport'] as $transportData) {
                 $transport = new APUTransport();
-                $transport->setDescription($transportData['descripcion']);
+                $transport->setDescription($transportData['description']);
                 $transport->setUnit($transportData['unidad']);
                 $transport->setQuantity((float)$transportData['cantidad']);
                 $transport->setDmt((float)$transportData['dmt']);
@@ -293,8 +299,8 @@ class APUController extends AbstractController
 
         $this->addFlash('success', 'flash.apu_updated');
 
-        if ($plantillaRubro) {
-            $plantilla = $plantillaRubro->getTemplate();
+        if ($templateItem) {
+            $plantilla = $templateItem->getTemplate();
             return $this->redirectToRoute('app_template_show', [
                 'projectId' => $plantilla->getProject()->getId(),
                 'id'        => $plantilla->getId(),

@@ -20,7 +20,7 @@ class ReportController extends AbstractController
         private BudgetReportService $reportService
     ) {}
 
-    private function getPlantilla(int $projectId, int $id): Template
+    private function getTemplate(int $projectId, int $id): Template
     {
         $project = $this->em->getRepository(Projects::class)->findOneBy([
             'id' => $projectId,
@@ -30,27 +30,27 @@ class ReportController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $plantilla = $this->em->getRepository(Template::class)->findOneBy([
+        $template = $this->em->getRepository(Template::class)->findOneBy([
             'id' => $id,
-            'proyecto' => $project,
+            'project' => $project,
         ]);
-        if (!$plantilla) {
+        if (!$template) {
             throw $this->createNotFoundException();
         }
 
-        return $plantilla;
+        return $template;
     }
 
     /** Vista previa HTML del reporte */
     #[Route('/project/{projectId}/plantilla/{id}', name: 'app_report_plantilla', requirements: ['projectId' => '\d+', 'id' => '\d+'])]
     public function preview(int $projectId, int $id): Response
     {
-        $plantilla = $this->getPlantilla($projectId, $id);
+        $template = $this->getTemplate($projectId, $id);
 
         return $this->render('reports/preview.html.twig', [
-            'plantilla' => $plantilla,
-            'project'   => $plantilla->getProject(),
-            'html'      => $this->reportService->buildHtml($plantilla),
+            'template' => $template,
+            'project'   => $template->getProject(),
+            'html'      => $this->reportService->buildHtml($template),
         ]);
     }
 
@@ -58,32 +58,44 @@ class ReportController extends AbstractController
     #[Route('/project/{projectId}/plantilla/{id}/pdf', name: 'app_report_plantilla_pdf', requirements: ['projectId' => '\d+', 'id' => '\d+'])]
     public function pdf(int $projectId, int $id): Response
     {
-        $plantilla = $this->getPlantilla($projectId, $id);
+        $template = $this->getTemplate($projectId, $id);
 
-        $filepath = $this->reportService->generatePdf($plantilla);
+        $filepath = $this->reportService->generatePdf($template);
 
         if (!file_exists($filepath)) {
             throw $this->createNotFoundException('report.pdf_error');
         }
 
-        $safeName = preg_replace('/[^a-z0-9_\-]/i', '_', $plantilla->getName());
-        return $this->file($filepath, 'Presupuesto_' . $safeName . '.pdf');
+        $real = realpath($filepath);
+        $tmp = realpath(sys_get_temp_dir());
+        if ($real === false || $tmp === false || strpos($real, $tmp) !== 0) {
+            throw $this->createNotFoundException('report.pdf_error');
+        }
+
+        $safeName = preg_replace('/[^a-z0-9_\-]/i', '_', $template->getName());
+        return $this->file($real, 'Presupuesto_' . $safeName . '.pdf');
     }
 
     /** Exportar Excel del presupuesto */
     #[Route('/project/{projectId}/plantilla/{id}/excel', name: 'app_report_plantilla_excel', requirements: ['projectId' => '\d+', 'id' => '\d+'])]
     public function excel(int $projectId, int $id): Response
     {
-        $plantilla = $this->getPlantilla($projectId, $id);
+        $template = $this->getTemplate($projectId, $id);
 
-        $filepath = $this->reportService->generateExcel($plantilla);
+        $filepath = $this->reportService->generateExcel($template);
 
         if (!file_exists($filepath)) {
             throw $this->createNotFoundException('report.excel_error');
         }
 
-        $safeName = preg_replace('/[^a-z0-9_\-]/i', '_', $plantilla->getName());
-        return $this->file($filepath, 'Presupuesto_' . $safeName . '.xlsx');
+        $real = realpath($filepath);
+        $tmp = realpath(sys_get_temp_dir());
+        if ($real === false || $tmp === false || strpos($real, $tmp) !== 0) {
+            throw $this->createNotFoundException('report.excel_error');
+        }
+
+        $safeName = preg_replace('/[^a-z0-9_\-]/i', '_', $template->getName());
+        return $this->file($real, 'Presupuesto_' . $safeName . '.xlsx');
     }
 
     // ─────────────────────────────────────────────────────────────────────────

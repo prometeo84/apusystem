@@ -18,16 +18,16 @@
                 <input type="hidden" name="_token" value="{{ csrf_token('plantilla_create_' ~ project.id) }}">
                 <div class="mb-3">
                     <label class="form-label fw-semibold">{{ 'plantilla.col_name'|trans }} <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="nombre" maxlength="255" required>
+                    <input type="text" class="form-control" name="name" maxlength="255" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">{{ 'common.description'|trans }}</label>
-                    <textarea class="form-control" name="descripcion" rows="2"></textarea>
+                    <textarea class="form-control" name="description" rows="2"></textarea>
                 </div>
                 <div class="text-end">
                     {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_template_index', {projectId: project.id})}) }}
                     &nbsp;
-                    {{ btn.button('plantilla.save'|trans, 'primary', 'bi-save', {'type':'submit'}) }}
+                    {{ btn.button('template.save'|trans, 'primary', 'bi-save', {'type':'submit'}) }}
                 </div>
             </form>
         </div>

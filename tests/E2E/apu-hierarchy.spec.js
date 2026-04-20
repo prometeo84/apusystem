@@ -92,18 +92,16 @@ test.describe('UC-H02: Módulo Rubros — creación (solo admin)', () => {
     test('GET /items/create renderiza formulario de creación', async ({ page }) => {
         await page.goto('/items/create');
         expect(page.url()).not.toContain('/login');
-        await expect(
-            page.locator('input[name="codigo"], input[name="nombre"]').first()
-        ).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('input[name="code"], input[name="name"]').first()).toBeVisible({
+            timeout: 5000,
+        });
     });
 
     test('Formulario de item tiene campos código, nombre, unidad', async ({ page }) => {
         await page.goto('/items/create');
-        await expect(page.locator('input[name="codigo"]')).toBeVisible();
-        await expect(page.locator('input[name="nombre"]')).toBeVisible();
-        await expect(
-            page.locator('select[name="unidad"], input[name="unidad"]').first()
-        ).toBeVisible();
+        await expect(page.locator('input[name="code"]')).toBeVisible();
+        await expect(page.locator('input[name="name"]')).toBeVisible();
+        await expect(page.locator('select[name="unit"], input[name="unit"]').first()).toBeVisible();
     });
 });
 

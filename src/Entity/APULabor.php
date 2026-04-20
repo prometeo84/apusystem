@@ -81,9 +81,12 @@ class APULabor
         return $this->workHours;
     }
 
-    public function setJorHora(string $jorHora): self
+    /**
+     * @param float|int|string $jorHora
+     */
+    public function setJorHora(float|int|string $jorHora): self
     {
-        $this->workHours = $jorHora;
+        $this->workHours = (string) $jorHora;
         return $this;
     }
 
@@ -92,9 +95,12 @@ class APULabor
         return $this->costPerHour;
     }
 
-    public function setCHora(string $cHora): self
+    /**
+     * @param float|int|string $cHora
+     */
+    public function setCHora(float|int|string $cHora): self
     {
-        $this->costPerHour = $cHora;
+        $this->costPerHour = (string) $cHora;
         return $this;
     }
 

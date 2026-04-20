@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\WebAuthnCredential;
 use App\Entity\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Psr\Log\LoggerInterface;
 
 class WebAuthnService
@@ -57,7 +58,7 @@ class WebAuthnService
         string $clientDataJSONB64,
         string $expectedChallenge,
         string $rawIdB64,
-        User $user,
+        UserInterface $user,
         string $host
     ): bool {
         return $this->doValidateRegistration($attestationObjectB64, $clientDataJSONB64, $expectedChallenge, $rawIdB64, $user, $host) !== null;
@@ -74,7 +75,7 @@ class WebAuthnService
         string $clientDataJSONB64,
         string $expectedChallenge,
         string $rawIdB64,
-        User $user,
+        UserInterface $user,
         string $host
     ): ?array {
         return $this->doValidateRegistration($attestationObjectB64, $clientDataJSONB64, $expectedChallenge, $rawIdB64, $user, $host);
@@ -194,7 +195,7 @@ class WebAuthnService
         string $clientDataJSONB64,
         string $expectedChallenge,
         string $rawIdB64,
-        User $user,
+        UserInterface $user,
         string $host
     ): ?array {
         if (!$this->validateClientData($clientDataJSONB64, $expectedChallenge, 'webauthn.create')) {

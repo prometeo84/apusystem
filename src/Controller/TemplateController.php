@@ -38,14 +38,14 @@ class TemplateController extends AbstractController
     {
         $project = $this->getProject($projectId);
 
-        $plantillas = $this->em->getRepository(Template::class)->findBy(
+        $templates = $this->em->getRepository(Template::class)->findBy(
             ['project' => $project],
             ['createdAt' => 'ASC']
         );
 
         return $this->render('template/index.html.twig', [
             'project'   => $project,
-            'plantillas' => $plantillas,
+            'templates' => $templates,
         ]);
     }
 
@@ -60,19 +60,19 @@ class TemplateController extends AbstractController
                 return $this->redirectToRoute('app_template_create', ['projectId' => $projectId]);
             }
 
-            $plantilla = new Template();
-            $plantilla->setTenant($this->getUser()->getTenant());
-            $plantilla->setProject($project);
-            $plantilla->setName(trim($request->request->get('nombre', '')));
-            $plantilla->setDescription(trim($request->request->get('descripcion', '')) ?: null);
+            $template = new Template();
+            $template->setTenant($this->getUser()->getTenant());
+            $template->setProject($project);
+            $template->setName(trim($request->request->get('name', '')));
+            $template->setDescription(trim($request->request->get('description', '')) ?: null);
 
-            $this->em->persist($plantilla);
+            $this->em->persist($template);
             $this->em->flush();
 
             $this->addFlash('success', 'plantilla.created_success');
             return $this->redirectToRoute('app_template_show', [
                 'projectId' => $projectId,
-                'id' => $plantilla->getId(),
+                'id' => $template->getId(),
             ]);
         }
 
@@ -83,30 +83,30 @@ class TemplateController extends AbstractController
     public function show(int $projectId, int $id): Response
     {
         $project = $this->getProject($projectId);
-        $plantilla = $this->em->getRepository(Template::class)->findOneBy([
+        $template = $this->em->getRepository(Template::class)->findOneBy([
             'id' => $id,
             'project' => $project,
         ]);
-        if (!$plantilla) {
+        if (!$template) {
             throw $this->createNotFoundException();
         }
 
-        $rubrosDisponibles = $this->em->getRepository(Item::class)->findBy(
+        $itemsAvailable = $this->em->getRepository(Item::class)->findBy(
             ['tenant' => $this->getUser()->getTenant(), 'active' => true],
             ['code' => 'ASC']
         );
 
-        // IDs de rubros ya agregados
-        $rubrosAgregados = [];
-        foreach ($plantilla->getItems() as $pr) {
-            $rubrosAgregados[] = $pr->getItem()->getId();
+        // IDs de items ya agregados
+        $itemsAdded = [];
+        foreach ($template->getItems() as $pr) {
+            $itemsAdded[] = $pr->getItem()->getId();
         }
 
         return $this->render('template/show.html.twig', [
             'project'          => $project,
-            'plantilla'        => $plantilla,
-            'rubrosDisponibles' => $rubrosDisponibles,
-            'rubrosAgregados'  => $rubrosAgregados,
+            'template'         => $template,
+            'itemsAvailable'   => $itemsAvailable,
+            'itemsAdded'       => $itemsAdded,
         ]);
     }
 
@@ -114,11 +114,11 @@ class TemplateController extends AbstractController
     public function edit(int $projectId, int $id, Request $request): Response
     {
         $project = $this->getProject($projectId);
-        $plantilla = $this->em->getRepository(Template::class)->findOneBy([
+        $template = $this->em->getRepository(Template::class)->findOneBy([
             'id' => $id,
             'project' => $project,
         ]);
-        if (!$plantilla) {
+        if (!$template) {
             throw $this->createNotFoundException();
         }
 
@@ -128,9 +128,9 @@ class TemplateController extends AbstractController
                 return $this->redirectToRoute('app_template_edit', ['projectId' => $projectId, 'id' => $id]);
             }
 
-            $plantilla->setName(trim($request->request->get('nombre', '')));
-            $plantilla->setDescription(trim($request->request->get('descripcion', '')) ?: null);
-            $plantilla->setUpdatedAt(new \DateTime());
+            $template->setName(trim($request->request->get('name', '')));
+            $template->setDescription(trim($request->request->get('description', '')) ?: null);
+            $template->setUpdatedAt(new \DateTime());
 
             $this->em->flush();
             $this->addFlash('success', 'plantilla.updated_success');
@@ -139,7 +139,7 @@ class TemplateController extends AbstractController
 
         return $this->render('template/edit.html.twig', [
             'project'  => $project,
-            'plantilla' => $plantilla,
+            'template' => $template,
         ]);
     }
 
@@ -147,11 +147,11 @@ class TemplateController extends AbstractController
     public function addRubro(int $projectId, int $id, Request $request): Response
     {
         $project = $this->getProject($projectId);
-        $plantilla = $this->em->getRepository(Template::class)->findOneBy([
+        $template = $this->em->getRepository(Template::class)->findOneBy([
             'id' => $id,
             'project' => $project,
         ]);
-        if (!$plantilla) {
+        if (!$template) {
             throw $this->createNotFoundException();
         }
 
@@ -160,31 +160,31 @@ class TemplateController extends AbstractController
             return $this->redirectToRoute('app_template_show', ['projectId' => $projectId, 'id' => $id]);
         }
 
-        $rubroId = (int) $request->request->get('rubro_id');
-        $rubro = $this->em->getRepository(Item::class)->findOneBy([
-            'id' => $rubroId,
+        $itemId = (int) $request->request->get('item_id');
+        $item = $this->em->getRepository(Item::class)->findOneBy([
+            'id' => $itemId,
             'tenant' => $this->getUser()->getTenant(),
         ]);
 
-        if (!$rubro) {
+        if (!$item) {
             $this->addFlash('error', 'rubro.not_found');
             return $this->redirectToRoute('app_template_show', ['projectId' => $projectId, 'id' => $id]);
         }
 
         // No duplicar
-        foreach ($plantilla->getItems() as $pr) {
-            if ($pr->getItem()->getId() === $rubro->getId()) {
+        foreach ($template->getItems() as $pr) {
+            if ($pr->getItem()->getId() === $item->getId()) {
                 $this->addFlash('warning', 'plantilla.rubro_already_added');
                 return $this->redirectToRoute('app_template_show', ['projectId' => $projectId, 'id' => $id]);
             }
         }
 
-        $cantidad = $request->request->get('cantidad', '1.00');
-        $orden = $plantilla->getItems()->count();
+        $cantidad = $request->request->get('quantity', '1.00');
+        $orden = $template->getItems()->count();
 
         $pr = new TemplateItem();
-        $pr->setTemplate($plantilla);
-        $pr->setItem($rubro);
+        $pr->setTemplate($template);
+        $pr->setItem($item);
         $pr->setQuantity($cantidad);
         $pr->setOrder($orden);
 
@@ -199,11 +199,11 @@ class TemplateController extends AbstractController
     public function removeRubro(int $projectId, int $id, int $prId, Request $request): Response
     {
         $project = $this->getProject($projectId);
-        $plantilla = $this->em->getRepository(Template::class)->findOneBy([
+        $template = $this->em->getRepository(Template::class)->findOneBy([
             'id' => $id,
             'project' => $project,
         ]);
-        if (!$plantilla) {
+        if (!$template) {
             throw $this->createNotFoundException();
         }
 
@@ -213,7 +213,7 @@ class TemplateController extends AbstractController
         }
 
         $pr = $this->em->getRepository(TemplateItem::class)->find($prId);
-        if ($pr && $pr->getTemplate()->getId() === $plantilla->getId()) {
+        if ($pr && $pr->getTemplate()->getId() === $template->getId()) {
             $this->em->remove($pr);
             $this->em->flush();
             $this->addFlash('success', 'plantilla.rubro_removed');
@@ -269,11 +269,11 @@ class TemplateController extends AbstractController
     public function delete(int $projectId, int $id, Request $request): Response
     {
         $project = $this->getProject($projectId);
-        $plantilla = $this->em->getRepository(Template::class)->findOneBy([
+        $template = $this->em->getRepository(Template::class)->findOneBy([
             'id' => $id,
             'project' => $project,
         ]);
-        if (!$plantilla) {
+        if (!$template) {
             throw $this->createNotFoundException();
         }
 
@@ -282,7 +282,7 @@ class TemplateController extends AbstractController
             return $this->redirectToRoute('app_template_index', ['projectId' => $projectId]);
         }
 
-        $this->em->remove($plantilla);
+        $this->em->remove($template);
         $this->em->flush();
 
         $this->addFlash('success', 'plantilla.deleted_success');

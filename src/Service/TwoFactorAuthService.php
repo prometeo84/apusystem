@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PragmaRX\Google2FA\Google2FA;
 use BaconQrCode\Renderer\ImageRenderer;
@@ -37,8 +38,9 @@ class TwoFactorAuthService
     /**
      * Genera el QR code para TOTP
      */
-    public function generateQrCode(User $user, string $secret): string
+    public function generateQrCode(UserInterface $user, string $secret): string
     {
+        /** @var \App\Entity\User $user */
         $qrCodeUrl = $this->google2fa->getQRCodeUrl(
             'APU System',
             $user->getEmail(),
@@ -134,8 +136,9 @@ class TwoFactorAuthService
     /**
      * Habilita TOTP para un usuario
      */
-    public function enableTotp(User $user, string $secret, string $verificationCode): bool
+    public function enableTotp(UserInterface $user, string $secret, string $verificationCode): bool
     {
+        /** @var \App\Entity\User $user */
         if (!$this->verifyTotpCode($secret, $verificationCode)) {
             $this->securityLogger->log2FAFailed($user, 'totp', 'Invalid verification code');
             return false;
@@ -154,8 +157,9 @@ class TwoFactorAuthService
     /**
      * Deshabilita TOTP para un usuario
      */
-    public function disableTotp(User $user): void
+    public function disableTotp(UserInterface $user): void
     {
+        /** @var \App\Entity\User $user */
         $user->setTotpSecret(null);
         $user->setTotpEnabled(false);
 
@@ -165,8 +169,9 @@ class TwoFactorAuthService
     /**
      * Genera códigos de recuperación
      */
-    public function generateRecoveryCodes(User $user, ?User $performedBy = null): array
+    public function generateRecoveryCodes(UserInterface $user, ?UserInterface $performedBy = null): array
     {
+        /** @var \App\Entity\User $user */
         $codes = [];
 
         // Eliminar códigos anteriores no usados
@@ -225,8 +230,9 @@ class TwoFactorAuthService
     /**
      * Verifica y consume un código de recuperación
      */
-    public function verifyRecoveryCode(User $user, string $code): bool
+    public function verifyRecoveryCode(UserInterface $user, string $code): bool
     {
+        /** @var \App\Entity\User $user */
         $conn = $this->em->getConnection();
 
         // Rate limit para uso de recovery codes
@@ -309,8 +315,9 @@ class TwoFactorAuthService
     /**
      * Obtiene el número de códigos de recuperación restantes
      */
-    public function getRemainingRecoveryCodesCount(User $user): int
+    public function getRemainingRecoveryCodesCount(UserInterface $user): int
     {
+        /** @var \App\Entity\User $user */
         $conn = $this->em->getConnection();
         $stmt = $conn->executeQuery(
             'SELECT COUNT(*) as count FROM recovery_codes WHERE user_id = ? AND used_at IS NULL',

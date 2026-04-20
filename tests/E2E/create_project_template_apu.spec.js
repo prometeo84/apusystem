@@ -1,6 +1,28 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
 
+function sanitizeForTest(raw) {
+    return String(raw)
+        .trim()
+        .replace(/[^A-Za-z0-9]+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+}
+
+async function waitForTextInItems(page, text, sanText, timeout = 30000) {
+    const start = Date.now();
+    while (Date.now() - start < timeout) {
+        await page.goto('/items');
+        await page.waitForSelector('table', { timeout: 5000 }).catch(() => {});
+        const foundA = await page.locator(`table >> text=${text}`).count();
+        if (foundA) return;
+        const foundB = await page.locator(`table >> text=${sanText}`).count();
+        if (foundB) return;
+        await page.waitForTimeout(1000);
+    }
+    throw new Error(`Timed out waiting for item text: ${text} or ${sanText}`);
+}
+
 async function loginAsAdmin(page) {
     await page.goto('/login');
     await page.waitForSelector('input[name="_username"]', { timeout: 10000 });
@@ -161,6 +183,7 @@ async function loginAsAdmin(page) {
             .catch(() => {});
         console.log('WROTE /tmp/final_diag.json');
     }
+    // Submit login form
     await page.click('button[type="submit"]');
     await Promise.race([
         page.waitForURL(/\/(dashboard|2fa|system|admin|projects|$)/, { timeout: 30000 }),
@@ -173,14 +196,79 @@ test('E2E: crear proyecto, plantilla, rubro y APU por UI', async ({ page }) => {
 
     // 1) Crear rubro (item)
     await page.goto('/items/create');
-    await page.waitForSelector('input[name="codigo"]');
-    const codigo = 'E2E-' + Date.now();
-    const nombre = 'Rubro E2E ' + Math.floor(Math.random() * 10000);
-    await page.fill('input[name="codigo"]', codigo);
-    await page.fill('input[name="nombre"]', nombre);
-    await page.selectOption('select[name="unidad"]', 'm²');
-    await page.click('button[type="submit"]');
-    await page.waitForURL(/\/items/, { timeout: 10000 });
+    await page.waitForSelector('input[name="code"]');
+    const codigo = 'E2E' + Date.now();
+    const randomLetters = (
+        Math.random()
+            .toString(36)
+            .replace(/[^a-z]+/g, '')
+            .slice(0, 6) || 'aa'
+    ).toUpperCase();
+    const nombre = 'Rubro ' + randomLetters;
+    await page.fill('input[name="code"]', codigo);
+    await page.fill('input[name="name"]', nombre);
+    // Select unit robustly: try by option label containing 'm²', then by value, then fallback to first option
+    const unitOptions = page.locator('select[name="unit"] option');
+    const countOptions = await unitOptions.count();
+    let selected = false;
+    for (let i = 0; i < countOptions; i++) {
+        const text = await unitOptions
+            .nth(i)
+            .innerText()
+            .catch(() => '');
+        const val = await unitOptions
+            .nth(i)
+            .getAttribute('value')
+            .catch(() => '');
+        if (text && text.includes('m²')) {
+            await page.selectOption('select[name="unit"]', { value: val || text });
+            selected = true;
+            break;
+        }
+    }
+    if (!selected) {
+        // try by value label 'm²'
+        try {
+            await page.selectOption('select[name="unit"]', { label: 'm²' });
+            selected = true;
+        } catch (e) {
+            // fallback: select first non-empty option value
+            for (let i = 0; i < countOptions; i++) {
+                const val = await unitOptions
+                    .nth(i)
+                    .getAttribute('value')
+                    .catch(() => null);
+                if (val && String(val).trim() !== '') {
+                    await page.selectOption('select[name="unit"]', val);
+                    selected = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Click the submit button specific to the item create form
+    await page.click('form[action="/items/create"] button[type="submit"]');
+    await page.waitForLoadState('networkidle');
+    // Short pause to allow server-side redirect/processing
+    await page.waitForTimeout(500);
+
+    // Force reload items page for deterministic check
+    await page.goto('/items');
+    const sanCodigo = sanitizeForTest(codigo);
+    try {
+        await waitForTextInItems(page, codigo, sanCodigo, 30000);
+    } catch (err) {
+        // Save diagnostic snapshot to help debug why item didn't appear
+        const outPath = `test-results/debug/items_after_submit_${Date.now()}.html`;
+        await require('fs')
+            .promises.mkdir('test-results/debug', { recursive: true })
+            .catch(() => {});
+        await require('fs')
+            .promises.writeFile(outPath, await page.content())
+            .catch(() => {});
+        throw err;
+    }
 
     // Confirmar que el rubro creado aparece en el listado y obtener su id
     await page.goto('/items');
@@ -215,11 +303,20 @@ test('E2E: crear proyecto, plantilla, rubro y APU por UI', async ({ page }) => {
 
     // 2) Crear proyecto
     await page.goto('/projects/create');
-    await page.waitForSelector('input[name="nombre"]');
-    const projectName = 'PTO E2E ' + Date.now();
-    const projectCode = 'P-' + Math.floor(Math.random() * 10000);
-    await page.fill('input[name="nombre"]', projectName);
-    await page.fill('input[name="codigo"]', projectCode);
+    await page.waitForSelector('input[name="name"]');
+    const projectName = 'Project ' + randomLetters;
+    const projectCode = 'P' + (randomLetters.slice(0, 4) || 'PRJ');
+    // Fill required project fields to satisfy server-side validation
+    await page.fill('input[name="name"]', projectName);
+    await page.fill('input[name="code"]', projectCode);
+    // dates: start = tomorrow, end = +10 days
+    const now = new Date();
+    const start = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    const end = new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000);
+    const fmt = (d) => d.toISOString().slice(0, 10);
+    await page.fill('input[name="start_date"]', fmt(start));
+    await page.fill('input[name="end_date"]', fmt(end));
+    await page.fill('input[name="total_budget"]', '1000.00');
     await page.click('button[type="submit"]');
     // After create, redirect to /projects/{id}
     await page.waitForURL(/\/projects\/\d+/, { timeout: 15000 });
@@ -230,9 +327,9 @@ test('E2E: crear proyecto, plantilla, rubro y APU por UI', async ({ page }) => {
 
     // 3) Crear plantilla
     await page.goto(`/projects/${projectId}/templates/create`);
-    await page.waitForSelector('input[name="nombre"]');
+    await page.waitForSelector('input[name="name"]');
     const plantillaName = 'Plantilla E2E ' + Date.now();
-    await page.fill('input[name="nombre"]', plantillaName);
+    await page.fill('input[name="name"]', plantillaName);
     await page.click('button[type="submit"]');
     await page.waitForURL(new RegExp(`/projects/${projectId}/templates/\\d+`), { timeout: 15000 });
     const tplUrl = page.url();
@@ -243,14 +340,15 @@ test('E2E: crear proyecto, plantilla, rubro y APU por UI', async ({ page }) => {
     // 4) Agregar rubro a plantilla
     // buscar opción que contenga el código del rubro creado
     await page.waitForLoadState('networkidle');
-    const optionLocator = page
-        .locator('select[name="rubro_id"] option')
-        .filter({ hasText: codigo })
+    const optionLocator = page.locator('select[name="item_id"] option');
+    // try to find by original code or sanitized
+    const option = optionLocator
+        .filter({ hasText: new RegExp(`(${codigo}|${sanCodigo})`) })
         .first();
-    const exists = await optionLocator.count();
+    const exists = await option.count();
     if (exists) {
-        const val = await optionLocator.getAttribute('value');
-        await page.selectOption('select[name="rubro_id"]', val);
+        const val = await option.getAttribute('value');
+        await page.selectOption('select[name="item_id"]', val);
     } else {
         // guardar snapshot para diagnóstico y fallar con mensaje claro
         const html = await page.content();
@@ -261,7 +359,7 @@ test('E2E: crear proyecto, plantilla, rubro y APU por UI', async ({ page }) => {
             'No available rubro option found in plantilla show page; saved /tmp/template_show_snapshot.html'
         );
     }
-    await page.fill('input[name="cantidad"]', '2.00');
+    await page.fill('input[name="quantity"]', '2.00');
     await page.click('form[action*="add-item"] button[type="submit"]');
     await page.waitForURL(new RegExp(`/projects/${projectId}/templates/${plantillaId}`), {
         timeout: 10000,
@@ -283,7 +381,7 @@ test('E2E: crear proyecto, plantilla, rubro y APU por UI', async ({ page }) => {
     await page.click('button[onclick*="addMaterialRow"]');
     // Fill last material row inputs
     await page.fill(
-        '#materialTable tbody tr:last-of-type input[name^="materials"][name$="[descripcion]"]',
+        '#materialTable tbody tr:last-of-type input[name^="materials"][name$="[description]"]',
         'Cemento'
     );
     await page.fill(

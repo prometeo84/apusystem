@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'items')]
@@ -20,15 +21,22 @@ class Item
     private Tenant $tenant;
 
     #[ORM\Column(name: 'code', type: 'string', length: 100)]
+    #[Assert\NotBlank(message: 'code.required')]
+    #[Assert\Length(max: 100)]
+    #[Assert\Regex(pattern: '/^[A-Za-z0-9]+$/', message: 'code.invalid')]
     private string $code;
 
     #[ORM\Column(name: 'name', type: 'string', length: 255)]
+    #[Assert\NotBlank(message: 'name.required')]
+    #[Assert\Length(max: 255)]
+    #[Assert\Regex(pattern: '/^[\\p{L}\\s]+$/u', message: 'name.invalid')]
     private string $name;
 
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(name: 'unit', type: 'string', length: 50)]
+    #[Assert\NotBlank(message: 'unit.required')]
     private string $unit;
 
     /** type: general | personalizado */

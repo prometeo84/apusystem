@@ -80,9 +80,12 @@ class APUMaterial
         return $this->quantity;
     }
 
-    public function setQuantity(string $quantity): self
+    /**
+     * @param float|int|string $quantity
+     */
+    public function setQuantity(float|int|string $quantity): self
     {
-        $this->quantity = $quantity;
+        $this->quantity = (string) $quantity;
         return $this;
     }
 
@@ -91,9 +94,12 @@ class APUMaterial
         return $this->unitPrice;
     }
 
-    public function setUnitPrice(string $unitPrice): self
+    /**
+     * @param float|int|string $unitPrice
+     */
+    public function setUnitPrice(float|int|string $unitPrice): self
     {
-        $this->unitPrice = $unitPrice;
+        $this->unitPrice = (string) $unitPrice;
         return $this;
     }
 

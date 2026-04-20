@@ -375,7 +375,8 @@ profile:
   username: "Username"
 
 security:
-  2fa_description: "Add an extra layer of security to your account by requiring a verification code in addition to your password"
+  2fa_description: "Add an extra layer of security to your account by requiring a
+    verification code in addition to your password"
   two_factor: "Two-Factor Authentication"
   2fa_disabled: "2FA Disabled"
   2fa_enabled: "2FA Enabled"
@@ -396,12 +397,14 @@ security:
   device: "Device"
   event: "Event"
   last_activity: "Last activity"
-  password_recommendation: "It is recommended to change your password regularly to keep your account secure"
+  password_recommendation: "It is recommended to change your password regularly to
+    keep your account secure"
   recovery_codes_available: "Recovery codes available"
   sessions: "Active Sessions"
   security_2fa:
     verify_title: "Two-factor verification"
-    verify_description: "Enter the verification code from your authenticator app or use a recovery code."
+    verify_description: "Enter the verification code from your authenticator app or
+      use a recovery code."
     enter_code: "Enter the 6-digit code"
     verify_button: "Verify"
     use_recovery_code: "Use recovery code"
@@ -421,7 +424,8 @@ security:
   superadmin_verify:
     title: "Email verification — Superadmin"
     header: "Additional verification for superadmin"
-    instruction: "A temporary code has been sent to your email. Enter the code to complete sign-in."
+    instruction: "A temporary code has been sent to your email. Enter the code to
+      complete sign-in."
     code_label: "Code"
     verify: "Verify"
     expires_in: "The code expires in %minutes% minute(s) (%time%)."
@@ -430,7 +434,8 @@ security:
     superadmin_verify:
       title: "Email verification — Superadmin"
       header: "Additional verification for superadmin"
-      instruction: "A temporary code has been sent to your email. Enter the code to complete sign-in."
+      instruction: "A temporary code has been sent to your email. Enter the code to
+        complete sign-in."
       code_label: "Code"
       verify: "Verify"
       expires_in: "The code expires in %minutes% minute(s) (%time%)."
@@ -442,7 +447,8 @@ security:
 
     recommended_apps: "Recommended Apps"
     min_8_chars: "Minimum 8 characters"
-    password_advice: "We recommend changing your password regularly to keep your account secure."
+    password_advice: "We recommend changing your password regularly to keep your
+      account secure."
     recent_events: "Recent Security Events"
     recommendation: "It is recommended to use uppercase, lowercase, numbers and symbols"
     recommended:
@@ -474,8 +480,9 @@ project:
   scan_with_app: "to scan this QR code"
   step_1: "Step 1: Scan the QR code"
   step_2: "Step 2: Verify your code"
-  use_if_lost: "If you lose access to your authentication app, you can use these codes to log in"
-  use_recovery_click: 'After entering your password, click on "Use recovery code"'
+  use_if_lost: "If you lose access to your authentication app, you can use these
+    codes to log in"
+  use_recovery_click: "After entering your password, click on \"Use recovery code\""
   use_recovery_code: "Use recovery code"
   verification_code: "Verification code"
   verify_button: "Verify"
@@ -886,7 +893,8 @@ apu.edit: "Edit APU"
 apu.export_excel: "Export Excel"
 
 security.2fa.important: "Important"
-security.2fa.once_enabled: "Once 2FA is enabled you will need your password and a verification code to sign in."
+security.2fa.once_enabled: "Once 2FA is enabled you will need your password and
+  a verification code to sign in."
 security.2fa.disable_instructions: "To disable two-factor authentication, enter your current 2FA code:"
 security.2fa.code_placeholder: "6-digit code"
 
@@ -901,20 +909,25 @@ email.superadmin_code.expired: "The code has expired."
 email.superadmin_code.ignore_if_not_requested: "If you did not request this code, please ignore this email."
 email.superadmin_code.title: "Access verification"
 email.superadmin_code.instruction: "Use the following code to complete the administrator sign-in."
-email.superadmin_code.no_request_notice: "If you did not request this code, please ignore this email or contact the security team."
+email.superadmin_code.no_request_notice: "If you did not request this code,
+  please ignore this email or contact the security team."
 email.recovery_code_used.title: "Security Alert"
-email.recovery_code_used.body: "A recovery code was used to access your account. If this wasn't you, please contact your administrator immediately and revoke active sessions from your security panel."
+email.recovery_code_used.body: "A recovery code was used to access your account.
+  If this wasn't you, please contact your administrator immediately and revoke
+  active sessions from your security panel."
 email.recovery_code_used.action_if_you: "If this was you, you can ignore this email."
 password.test_emails: "📧 For testing use: admin@demo.com, admin@abc.com or user@abc.com"
 
 # WebAuthn (extended)
 webauthn.registered_keys: "Registered keys"
 webauthn.register_new_key: "Register new key"
-webauthn.register_description: "Register your physical security key, Face ID, Touch ID or other WebAuthn-compatible authenticator."
+webauthn.register_description: "Register your physical security key, Face ID,
+  Touch ID or other WebAuthn-compatible authenticator."
 webauthn.registering: "Registering..."
 webauthn.registered_ok: "Key registered successfully."
 webauthn.revoked_ok: "Key revoked successfully."
-webauthn.confirm_revoke: "Are you sure you want to revoke this key? You will no longer be able to use it to sign in."
+webauthn.confirm_revoke: "Are you sure you want to revoke this key? You will no
+  longer be able to use it to sign in."
 webauthn.error_start: "Error starting registration."
 webauthn.error_registration: "Registration error"
 webauthn.error_revoke: "Error revoking key."
@@ -941,7 +954,8 @@ common.description: "Description"
 buttons.cancel: "Cancel"
 buttons.back: "Back"
 
-flash.tenant_user_limit_reached: "The maximum user limit for this plan has been reached. Please contact the administrator."
+flash.tenant_user_limit_reached: "The maximum user limit for this plan has been
+  reached. Please contact the administrator."
 
 # Projects
 project.title: "Projects"
@@ -1038,6 +1052,36 @@ plantilla.deleted_success: "Template deleted."
 plantilla.duplicated_success: "Template duplicated successfully."
 plantilla.confirm_delete: "Delete this template and all its items? This action cannot be undone."
 plantilla.confirm_remove_rubro: "Remove this item from the template?"
+
+# Backwards-compatible keys using English 'template' prefix
+template.title: "Templates"
+template.new: "New Template"
+template.edit_title: "Edit Template"
+template.save: "Save Template"
+template.duplicate: "Duplicate"
+template.edit: "Edit"
+template.col_name: "Name"
+template.rubros: "Items"
+template.add_rubro: "Add Item"
+template.select_rubro: "Select Item"
+template.col_cantidad: "Quantity"
+template.col_precio_unit: "Unit Price"
+template.col_total: "Total"
+template.total_presupuesto: "Budget Total"
+template.apu_pending: "No APU"
+template.create_apu: "Create APU"
+template.no_rubros: "No items in this template."
+template.no_plantillas: "No templates in this project."
+template.no_rubros_available: "No items available. Create items first."
+template.rubro_already_added: "Item already in this template."
+template.rubro_added: "Item added to template."
+template.rubro_removed: "Item removed from template."
+template.created_success: "Template created successfully."
+template.updated_success: "Template updated successfully."
+template.deleted_success: "Template deleted."
+template.duplicated_success: "Template duplicated successfully."
+template.confirm_delete: "Delete this template and all its items? This action cannot be undone."
+template.confirm_remove_rubro: "Remove this item from the template?"
 
 # Projects (additional)
 project.duplicate: "Duplicate Project"
