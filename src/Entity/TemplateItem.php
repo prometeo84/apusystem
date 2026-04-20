@@ -31,7 +31,8 @@ class TemplateItem
     private string $quantity = '1.0000';
 
     /** Display order in the template */
-    #[ORM\Column(name: 'order', type: 'integer')]
+    // Use quoted column name because `order` is a reserved keyword in MySQL
+    #[ORM\Column(name: '`order`', type: 'integer')]
     private int $order = 0;
 
     #[ORM\Column(type: 'datetime')]

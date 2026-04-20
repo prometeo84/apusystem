@@ -1,0 +1,10 @@
+FROM mcr.microsoft.com/playwright:v1.59.1-jammy
+
+# Run as root to install a specific npm globally, then switch back to default
+USER root
+RUN npm install -g npm@11.12.1
+
+# Restore non-root user used by the official image (pwuser exists in Playwright images)
+USER pwuser
+
+# EOF
