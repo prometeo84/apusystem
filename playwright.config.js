@@ -19,6 +19,7 @@ module.exports = defineConfig({
         actionTimeout: 15000,
         navigationTimeout: 30000,
         // Increase default expect timeout
+        expect: { timeout: 10000 },
         launchOptions: {},
     },
     projects: [
@@ -28,15 +29,33 @@ module.exports = defineConfig({
         },
         {
             name: 'Mobile Chrome',
-            use: { ...devices['Pixel 5'] },
+            timeout: 120000,
+            use: {
+                ...devices['Pixel 5'],
+                actionTimeout: 30000,
+                navigationTimeout: 60000,
+                expect: { timeout: 20000 },
+            },
         },
         {
             name: 'Tablet iPad',
-            use: { ...devices['iPad (gen 7)'] },
+            timeout: 120000,
+            use: {
+                ...devices['iPad (gen 7)'],
+                actionTimeout: 30000,
+                navigationTimeout: 60000,
+                expect: { timeout: 20000 },
+            },
         },
         {
             name: 'Tablet Galaxy',
-            use: { ...devices['Galaxy Tab S4'] },
+            timeout: 120000,
+            use: {
+                ...devices['Galaxy Tab S4'],
+                actionTimeout: 30000,
+                navigationTimeout: 60000,
+                expect: { timeout: 20000 },
+            },
         },
     ],
     // No webServer — app managed externally by Docker
