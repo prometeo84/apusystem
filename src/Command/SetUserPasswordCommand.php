@@ -18,7 +18,7 @@ class SetUserPasswordCommand extends Command
         private EntityManagerInterface $em,
         private UserPasswordHasherInterface $hasher
     ) {
-        parent::__construct();
+        parent::__construct(self::$defaultName);
     }
 
     protected function configure(): void

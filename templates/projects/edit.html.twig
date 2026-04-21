@@ -74,7 +74,7 @@
                         <label class="form-label fw-semibold">{{ 'project.col_status'|trans }}</label>
                         <select class="form-select" name="status">
                             {% for statusKey in ['planificacion','en_proceso','pausado','finalizado'] %}
-                                <option value="{{ statusKey }}" {{ project.estado == statusKey ? 'selected' : '' }}>
+                                <option value="{{ statusKey }}" {{ project.status == statusKey ? 'selected' : '' }}>
                                     {{ ('project.status.' ~ statusKey)|trans }}
                                 </option>
                             {% endfor %}

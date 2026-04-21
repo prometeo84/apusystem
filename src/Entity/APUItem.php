@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\User;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'apu_items')]
@@ -86,6 +87,10 @@ class APUItem
         $this->updatedAt = new \DateTime();
     }
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'created_by', nullable: true, onDelete: 'SET NULL')]
+    private ?User $createdBy = null;
+
     private function generateUuid(): string
     {
         return sprintf(
@@ -116,6 +121,9 @@ class APUItem
     public function setTenant(Tenant $tenant): self
     {
         $this->tenant = $tenant;
+        if ($tenant !== null && method_exists($tenant, 'getApuItems') && !$tenant->getApuItems()->contains($this)) {
+            $tenant->getApuItems()->add($this);
+        }
         return $this;
     }
 
@@ -164,6 +172,15 @@ class APUItem
     }
 
     public function getProductivityUh(): string
+    {
+        return $this->productivityUh;
+    }
+
+    /**
+     * Alias en español para compatibilidad con plantillas antiguas.
+     * @return string
+     */
+    public function getRendimientoUh(): string
     {
         return $this->productivityUh;
     }
@@ -339,6 +356,17 @@ class APUItem
         return $this->updatedAt;
     }
 
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $user): self
+    {
+        $this->createdBy = $user;
+        return $this;
+    }
+
     /**
      * Calcular costos totales automáticamente
      */
@@ -390,6 +418,15 @@ class APUItem
         return $this;
     }
 
+    /**
+     * Alias en español para compatibilidad con plantillas antiguas.
+     * @return ?string
+     */
+    public function getUtilidadPct(): ?string
+    {
+        return $this->profitPct;
+    }
+
     public function getOfferedPrice(): ?string
     {
         return $this->offeredPrice;
@@ -400,11 +437,29 @@ class APUItem
         return $this;
     }
 
+    /**
+     * Alias en español para compatibilidad con plantillas antiguas.
+     * @return ?string
+     */
+    public function getPrecioOfertado(): ?string
+    {
+        return $this->offeredPrice;
+    }
+
     /** Calculation price = totalCost * (1 + profitPct/100) */
     public function getCalculationPrice(): float
     {
         $base = (float) ($this->totalCost ?? 0);
         $pct  = (float) ($this->profitPct ?? 0);
         return $base * (1 + $pct / 100);
+    }
+
+    /**
+     * Alias en español para compatibilidad con plantillas antiguas.
+     * @return float
+     */
+    public function getPrecioCalculo(): float
+    {
+        return $this->getCalculationPrice();
     }
 }

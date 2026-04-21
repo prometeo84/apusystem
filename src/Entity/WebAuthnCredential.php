@@ -5,7 +5,8 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'webauthn_credentials', indexes: [new \Doctrine\ORM\Mapping\Index(name: 'idx_webauthn_user', columns: ['user_id'])])]
+#[ORM\Table(name: 'webauthn_credentials')]
+#[ORM\Index(name: 'idx_webauthn_user', columns: ['user_id'])]
 class WebAuthnCredential
 {
     #[ORM\Id]

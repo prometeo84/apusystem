@@ -50,6 +50,9 @@ class APUMaterial
     public function setApuItem(?APUItem $apuItem): self
     {
         $this->apuItem = $apuItem;
+        if ($apuItem !== null && !$apuItem->getMaterials()->contains($this)) {
+            $apuItem->addMaterial($this);
+        }
         return $this;
     }
 
@@ -69,6 +72,15 @@ class APUMaterial
         return $this->unit;
     }
 
+    /**
+     * Alias en español para compatibilidad con plantillas antiguas.
+     * @return string
+     */
+    public function getUnidad(): string
+    {
+        return $this->unit;
+    }
+
     public function setUnit(string $unit): self
     {
         $this->unit = $unit;
@@ -76,6 +88,15 @@ class APUMaterial
     }
 
     public function getQuantity(): string
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * Alias en español para compatibilidad con plantillas antiguas.
+     * @return string
+     */
+    public function getCantidad(): string
     {
         return $this->quantity;
     }
@@ -90,6 +111,15 @@ class APUMaterial
     }
 
     public function getUnitPrice(): string
+    {
+        return $this->unitPrice;
+    }
+
+    /**
+     * Alias en español para compatibilidad con plantillas antiguas.
+     * @return string
+     */
+    public function getPrecioUnitario(): string
     {
         return $this->unitPrice;
     }

@@ -6,6 +6,7 @@ use App\Entity\Template;
 use App\Entity\TemplateItem;
 use App\Entity\Projects;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\SecurityLogger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,8 @@ class ProjectController extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $em,
-        private ValidatorInterface $validator
+        private ValidatorInterface $validator,
+        private SecurityLogger $securityLogger
     ) {}
 
     private function sanitizeCode(string $raw): string
@@ -52,12 +54,19 @@ class ProjectController extends AbstractController
             ($currentPage - 1) * $perPage
         );
 
+        $canCreateProject = true;
+        $maxProjects = $tenant->getMaxProjects();
+        if ($maxProjects > 0) {
+            $canCreateProject = $totalItems < $maxProjects;
+        }
+
         return $this->render('projects/index.html.twig', [
             'projects'    => $projects,
             'currentPage' => $currentPage,
             'totalPages'  => $totalPages,
             'totalItems'  => $totalItems,
             'perPage'     => $perPage,
+            'can_create_project' => $canCreateProject,
         ]);
     }
 
@@ -78,6 +87,18 @@ class ProjectController extends AbstractController
 
             $project = new Projects();
             $project->setTenant($tenant);
+            $project->setCreatedBy($this->getUser());
+            // Check tenant project limit before creating
+            $repo = $this->em->getRepository(Projects::class);
+            $current = $repo->count(['tenant' => $tenant]);
+            if ($current >= $tenant->getMaxProjects()) {
+                $this->securityLogger->log('project_creation_blocked_limit', 'WARNING', $user, [
+                    'current' => $current,
+                    'limit' => $tenant->getMaxProjects()
+                ]);
+                $this->addFlash('error', 'project.limit_reached');
+                return $this->render('projects/create.html.twig', ['project' => $project]);
+            }
             // Ensure name is trimmed and does not exceed DB column length
             $rawName = trim($request->request->get('name', ''));
             if (mb_strlen($rawName) > 255) {
@@ -247,6 +268,7 @@ class ProjectController extends AbstractController
 
         $copy = new Projects();
         $copy->setTenant($tenant);
+        $copy->setCreatedBy($this->getUser());
         // Asegurar que el nombre de la copia no exceda la longitud de la columna DB
         $copyName = $original->getName() . ' (copia)';
         if (mb_strlen($copyName) > 255) {
@@ -261,6 +283,19 @@ class ProjectController extends AbstractController
         $copy->setTotalBudget($original->getTotalBudget());
         $copy->setStartDate($original->getStartDate());
         $copy->setEndDate($original->getEndDate());
+
+        // Check tenant project limit before persisting duplicate
+        $repo = $this->em->getRepository(Projects::class);
+        $current = $repo->count(['tenant' => $tenant]);
+        if ($current >= $tenant->getMaxProjects()) {
+            $this->securityLogger->log('project_duplicate_blocked_limit', 'WARNING', $this->getUser(), [
+                'current' => $current,
+                'limit' => $tenant->getMaxProjects(),
+                'original_project_id' => $original->getId(),
+            ]);
+            $this->addFlash('error', 'project.limit_reached');
+            return $this->redirectToRoute('app_project_show', ['id' => $id]);
+        }
 
         $this->em->persist($copy);
 

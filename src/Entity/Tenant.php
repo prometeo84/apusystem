@@ -64,6 +64,15 @@ class Tenant
     #[ORM\OneToMany(mappedBy: 'tenant', targetEntity: User::class)]
     private Collection $users;
 
+    #[ORM\OneToMany(mappedBy: 'tenant', targetEntity: Projects::class, cascade: ['remove'])]
+    private Collection $projects;
+
+    #[ORM\OneToMany(mappedBy: 'tenant', targetEntity: APUItem::class, cascade: ['remove'])]
+    private Collection $apuItems;
+
+    #[ORM\OneToMany(mappedBy: 'tenant', targetEntity: Template::class, cascade: ['remove'])]
+    private Collection $templates;
+
     #[ORM\Column(type: 'string', length: 7, nullable: true)]
     private ?string $themePrimaryColor = null;
 
@@ -79,6 +88,9 @@ class Tenant
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
         $this->users = new ArrayCollection();
+        $this->projects = new ArrayCollection();
+        $this->apuItems = new ArrayCollection();
+        $this->templates = new ArrayCollection();
     }
 
     private function generateUuid(): string
@@ -239,6 +251,21 @@ class Tenant
     public function getUsers(): Collection
     {
         return $this->users;
+    }
+
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function getApuItems(): Collection
+    {
+        return $this->apuItems;
+    }
+
+    public function getTemplates(): Collection
+    {
+        return $this->templates;
     }
 
     public function isProtected(): bool

@@ -87,9 +87,15 @@
                                 </td>
                                 <td class="text-center">
                                     {% if pr.apuItem %}
-                                        {{ btn.button('', 'outline-primary', 'bi-calculator', {'href': path('app_apu_edit', {id: pr.apuItem.id}), 'class':'btn-sm', 'title': 'apu.edit'|trans}) }}
+                                        {% if not is_granted('ROLE_ADMIN') %}
+                                            {{ btn.button('', 'outline-primary', 'bi-calculator', {'href': path('app_apu_edit', {id: pr.apuItem.id}), 'class':'btn-sm', 'title': 'apu.edit'|trans}) }}
+                                        {% endif %}
                                     {% else %}
-                                        {{ btn.button('', 'warning', 'bi-calculator-fill', {'href': path('app_apu_create_for_rubro', {plantillaRubroId: pr.id}), 'class':'btn-sm', 'title': 'template.create_apu'|trans}) }}
+                                        {% if can_create_apu is defined and not can_create_apu %}
+                                            {{ btn.button('', 'outline-secondary', 'bi-calculator-fill', {'href': '#', 'class':'btn-sm disabled', 'title': 'apu.limit_reached'|trans}) }}
+                                        {% else %}
+                                            {{ btn.button('', 'warning', 'bi-calculator-fill', {'href': path('app_apu_create_for_rubro', {plantillaRubroId: pr.id}), 'class':'btn-sm', 'title': 'template.create_apu'|trans}) }}
+                                        {% endif %}
                                     {% endif %}
                                                                                 <form method="POST" action="{{ path('app_template_remove_item', {projectId: project.id, id: template.id, prId: pr.id}) }}" class="d-inline"
                                           onsubmit="return confirm('{{ 'plantilla.confirm_remove_rubro'|trans }}')">
@@ -147,7 +153,11 @@
                     </form>
                     {% else %}
                     <p class="text-muted small">{{ 'plantilla.no_rubros_available'|trans }}</p>
-                    {{ btn.button('rubro.new'|trans, 'outline-primary', 'bi-tag-fill', {'href': path('app_item_create'), 'class':'w-100'}) }}
+                    {% if can_create_item is defined and not can_create_item %}
+                        {{ btn.button('rubro.new'|trans, 'outline-secondary', 'bi-tag-fill', {'href': '#', 'class':'w-100 disabled', 'title': 'flash.tenant_item_limit_reached'|trans}) }}
+                    {% else %}
+                        {{ btn.button('rubro.new'|trans, 'outline-primary', 'bi-tag-fill', {'href': path('app_item_create'), 'class':'w-100'}) }}
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>
@@ -161,7 +171,7 @@
                                         <form method="POST" action="{{ path('app_template_delete', {projectId: project.id, id: template.id}) }}"
                                                     onsubmit="return confirm('{{ 'plantilla.confirm_delete'|trans }}')">
                                                 <input type="hidden" name="_token" value="{{ csrf_token('plantilla_delete_' ~ template.id) }}">
-                                                {{ btn.button('common.delete'|trans ~ ' template', 'danger', 'bi-trash', {'type':'submit', 'class':'w-100'}) }}
+                                                {{ btn.button('plantilla.delete'|trans, 'danger', 'bi-trash', {'type':'submit', 'class':'w-100'}) }}
                     </form>
                 </div>
             </div>

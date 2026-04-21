@@ -50,6 +50,9 @@ class APUEquipment
     public function setApuItem(?APUItem $apuItem): self
     {
         $this->apuItem = $apuItem;
+        if ($apuItem !== null && !$apuItem->getEquipment()->contains($this)) {
+            $apuItem->addEquipment($this);
+        }
         return $this;
     }
 

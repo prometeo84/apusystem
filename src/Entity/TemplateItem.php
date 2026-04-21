@@ -55,6 +55,9 @@ class TemplateItem
     public function setTemplate(Template $template): self
     {
         $this->template = $template;
+        if ($template !== null && !$template->getItems()->contains($this)) {
+            $template->getItems()->add($this);
+        }
         return $this;
     }
 

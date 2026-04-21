@@ -62,6 +62,7 @@ class TemplateController extends AbstractController
 
             $template = new Template();
             $template->setTenant($this->getUser()->getTenant());
+            $template->setCreatedBy($this->getUser());
             $template->setProject($project);
             $template->setName(trim($request->request->get('name', '')));
             $template->setDescription(trim($request->request->get('description', '')) ?: null);
@@ -102,11 +103,21 @@ class TemplateController extends AbstractController
             $itemsAdded[] = $pr->getItem()->getId();
         }
 
+        // APU create availability based on optional config limit
+        $apuCount = $this->em->getRepository(\App\Entity\Apu::class)->count(['tenant' => $this->getUser()->getTenant()]);
+        $maxApus = $this->getParameter('limits.apus_per_tenant');
+        $canCreateApu = true;
+        if ($maxApus !== null && (int)$maxApus > 0) {
+            $canCreateApu = $apuCount < (int)$maxApus;
+        }
+
         return $this->render('template/show.html.twig', [
             'project'          => $project,
             'template'         => $template,
             'itemsAvailable'   => $itemsAvailable,
             'itemsAdded'       => $itemsAdded,
+            'can_create_apu'   => $canCreateApu,
+            'max_apus_limit'   => $maxApus ?? null,
         ]);
     }
 
@@ -241,6 +252,7 @@ class TemplateController extends AbstractController
 
         $copy = new Template();
         $copy->setTenant($original->getTenant());
+        $copy->setCreatedBy($this->getUser());
         $copy->setProject($project);
         $copy->setName($original->getName() . ' (copia)');
         $copy->setDescription($original->getDescription());

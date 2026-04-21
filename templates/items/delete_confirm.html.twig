@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'rubro.confirm_delete'|trans }} - APU System{% endblock %}
+{% block body %}
+{% import 'partials/_button.html.twig' as btn %}
+<div class="container-fluid mt-4">
+    <div class="card mx-auto" style="max-width:720px;">
+        <div class="card-header bg-danger text-white">
+            <i class="bi bi-exclamation-triangle"></i> {{ 'rubro.confirm_delete'|trans }}
+        </div>
+        <div class="card-body">
+            <p class="mb-3">{{ 'rubro.confirm_delete'|trans }}</p>
+            <p><strong>{{ item.code }} — {{ item.name }}</strong></p>
+            <div class="d-flex gap-2 mt-3">
+                <form method="POST" action="{{ path('app_item_delete', {id: item.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('rubro_delete_' ~ item.id) }}">
+                    {{ btn.button('common.delete'|trans, 'danger', 'bi-trash', {'type':'submit'}) }}
+                </form>
+                {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_item_index')}) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

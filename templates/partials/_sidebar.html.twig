@@ -68,21 +68,42 @@
                 </a>
             {% else %}
                 {# Menú para usuarios de empresa #}
-                <a class="nav-link {% if app.request.get('_route') starts with 'app_dashboard' %}active{% endif %}"
-                   href="{{ path('app_dashboard') }}">
-                    <i class="bi bi-speedometer2"></i> {{ 'nav.dashboard'|trans }}
-                </a>
                 <a class="nav-link {% if app.request.get('_route') starts with 'app_project' %}active{% endif %}"
                    href="{{ path('app_project_index') }}">
                     <i class="bi bi-folder"></i> {{ 'dashboard.projects'|trans }}
                 </a>
-                <a class="nav-link {% if app.request.get('_route') starts with 'app_apu' %}active{% endif %}"
-                   href="{{ path('app_apu_index') }}">
-                    <i class="bi bi-file-earmark-bar-graph"></i> {{ 'dashboard.apus'|trans }}
-                </a>
+
                 <a class="nav-link {% if app.request.get('_route') starts with 'app_item' %}active{% endif %}"
                    href="{{ path('app_item_index') }}">
                     <i class="bi bi-tags"></i> {{ 'dashboard.rubros'|trans }}
+                </a>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a class="nav-link {% if app.request.get('_route') starts with 'app_template' %}active{% endif %}"
+                       href="{% if app.request.get('projectId') %}{{ path('app_template_index', {projectId: app.request.get('projectId')}) }}{% else %}{{ path('app_project_index') }}{% endif %}">
+                        <i class="bi bi-layout-text-window-reverse"></i> {{ 'dashboard.templates'|trans }}
+                    </a>
+                    <a class="nav-link {% if app.request.get('_route') starts with 'catalog_material' %}active{% endif %}"
+                       href="{{ path('catalog_material_index') }}">
+                        <i class="bi bi-box-seam"></i> {{ 'dashboard.materials'|trans }}
+                    </a>
+                    <a class="nav-link {% if app.request.get('_route') starts with 'catalog_labor' %}active{% endif %}"
+                       href="{{ path('catalog_labor_index') }}">
+                        <i class="bi bi-people"></i> {{ 'dashboard.labor'|trans }}
+                    </a>
+                    <a class="nav-link {% if app.request.get('_route') starts with 'catalog_equipment' %}active{% endif %}"
+                       href="{{ path('catalog_equipment_index') }}">
+                        <i class="bi bi-hdd"></i> {{ 'dashboard.equipment'|trans }}
+                    </a>
+                    <a class="nav-link {% if app.request.get('_route') starts with 'catalog_transport' %}active{% endif %}"
+                       href="{{ path('catalog_transport_index') }}">
+                        <i class="bi bi-truck"></i> {{ 'dashboard.transport'|trans }}
+                    </a>
+                {% endif %}
+
+                <a class="nav-link {% if app.request.get('_route') starts with 'app_apu' %}active{% endif %}"
+                   href="{{ path('app_apu_index') }}">
+                    <i class="bi bi-file-earmark-bar-graph"></i> {{ 'dashboard.apus'|trans }}
                 </a>
 
                 <hr class="my-2">

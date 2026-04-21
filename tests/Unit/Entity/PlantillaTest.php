@@ -9,6 +9,7 @@ use App\Entity\TemplateItem;
 use App\Entity\Projects;
 use App\Entity\Item;
 use App\Entity\Tenant;
+use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 
@@ -81,6 +82,17 @@ class PlantillaTest extends TestCase
 
         $this->assertNull($plantilla->getId());
         $this->assertCount(0, $plantilla->getItems());
+    }
+
+    #[Test]
+    public function createdByEsNullPorDefectoYSetterFunciona(): void
+    {
+        $plantilla = new Template();
+        $this->assertNull($plantilla->getCreatedBy());
+
+        $user = new User();
+        $plantilla->setCreatedBy($user);
+        $this->assertSame($user, $plantilla->getCreatedBy());
     }
 
     #[Test]

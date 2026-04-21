@@ -9,7 +9,14 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-calculator"></i> {{ 'apu.header'|trans }}</h1>
         <div class="d-flex gap-2">
-            {{ btn.button('apu.new_apu'|trans, 'primary', 'bi-plus-circle', {'href': path('app_apu_create'), 'class':'btn-gradient'}) }}
+            {# Mostrar creación de APU sólo a usuarios (no admins) #}
+            {% if is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN') %}
+                {% if can_create_apu %}
+                    {{ btn.button('apu.new_apu'|trans, 'primary', 'bi-plus-circle', {'href': path('app_apu_create'), 'class':'btn-gradient'}) }}
+                {% else %}
+                    {{ btn.button('apu.new_apu'|trans, 'secondary', 'bi-plus-circle', {'href': '#', 'class':'btn-gradient disabled', 'title': 'apu.limit_reached'|trans}) }}
+                {% endif %}
+            {% endif %}
             {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_dashboard')}) }}
         </div>
     </div>
@@ -61,7 +68,11 @@
     {% else %}
         <div class="alert alert-info">
             <i class="bi bi-info-circle"></i> {{ 'apu.no_apus'|trans }}
-            <a href="{{ path('app_apu_create') }}" class="alert-link">{{ 'apu.create_first'|trans }}</a>
+            {% if can_create_apu %}
+                <a href="{{ path('app_apu_create') }}" class="alert-link">{{ 'apu.create_first'|trans }}</a>
+            {% else %}
+                <span class="text-muted">{{ 'apu.create_first'|trans }}</span>
+            {% endif %}
         </div>
     {% endif %}
 </div>

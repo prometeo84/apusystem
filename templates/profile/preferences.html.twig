@@ -38,9 +38,11 @@
                                 <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
                                 <div class="mb-3">
                                     <label for="locale" class="form-label">{{ 'preferences.language'|trans }}</label>
+                                    {# Use database value or default to 'en' when missing #}
+                                    {% set currentLocale = user.locale|default('en') %}
                                     <select name="locale" id="locale" class="form-select" required>
-                                        <option value="es" {% if user.locale == 'es' %}selected{% endif %}>🇪🇸 Español</option>
-                                        <option value="en" {% if user.locale == 'en' %}selected{% endif %}>🇺🇸 English</option>
+                                        <option value="es" {% if currentLocale == 'es' %}selected{% endif %}>🇪🇸 Español</option>
+                                        <option value="en" {% if currentLocale == 'en' %}selected{% endif %}>🇺🇸 English</option>
                                     </select>
                                     <div class="form-text">
                                         {{ 'common.interface_language'|trans }}
@@ -174,7 +176,8 @@
                     <div class="row">
                         <div class="col-md-4">
                             <strong>{{ 'preferences.language'|trans }}:</strong><br>
-                            {% if user.locale == 'es' %}🇪🇸 Español{% else %}🇺🇸 English{% endif %}
+                            {% set currentLocale = user.locale|default('en') %}
+                            {% if currentLocale == 'es' %}🇪🇸 Español{% else %}🇺🇸 English{% endif %}
                         </div>
                         <div class="col-md-4">
                             <strong>{{ 'preferences.timezone'|trans }}:</strong><br>
@@ -233,7 +236,7 @@ function resetTheme() {
 // Actualizar hora actual cada segundo
 function updateCurrentTime() {
     const now = new Date();
-    document.getElementById('currentTime').textContent = now.toLocaleString('{{ user.locale }}', {
+    document.getElementById('currentTime').textContent = now.toLocaleString('{{ user.locale|default('en') }}', {
         timeZone: '{{ user.timezone }}',
         dateStyle: 'short',
         timeStyle: 'medium'

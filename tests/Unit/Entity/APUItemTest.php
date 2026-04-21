@@ -8,6 +8,7 @@ use App\Entity\APULabor;
 use App\Entity\APUMaterial;
 use App\Entity\APUTransport;
 use App\Entity\Tenant;
+use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 
@@ -264,5 +265,16 @@ class APUItemTest extends TestCase
         $this->assertCount(1, $item->getEquipment());
         $item->removeEquipment($equip);
         $this->assertCount(0, $item->getEquipment());
+    }
+
+    #[Test]
+    public function createdByEsNullPorDefectoYSetterFunciona(): void
+    {
+        $item = $this->buildAPUItem();
+        $this->assertNull($item->getCreatedBy());
+
+        $user = new User();
+        $item->setCreatedBy($user);
+        $this->assertSame($user, $item->getCreatedBy());
     }
 }

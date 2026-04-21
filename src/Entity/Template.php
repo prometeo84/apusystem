@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\User;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'templates')]
@@ -49,6 +50,10 @@ class Template
         $this->updatedAt = new \DateTime();
     }
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'created_by', nullable: true, onDelete: 'SET NULL')]
+    private ?User $createdBy = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,6 +66,9 @@ class Template
     public function setTenant(Tenant $tenant): self
     {
         $this->tenant = $tenant;
+        if ($tenant !== null && !$tenant->getTemplates()->contains($this)) {
+            $tenant->getTemplates()->add($this);
+        }
         return $this;
     }
 
@@ -71,6 +79,9 @@ class Template
     public function setProject(Projects $project): self
     {
         $this->project = $project;
+        if ($project !== null && !$project->getTemplates()->contains($this)) {
+            $project->getTemplates()->add($this);
+        }
         return $this;
     }
 
@@ -145,6 +156,17 @@ class Template
     public function setUpdatedAt(\DateTimeInterface $d): self
     {
         $this->updatedAt = $d;
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $user): self
+    {
+        $this->createdBy = $user;
         return $this;
     }
 }

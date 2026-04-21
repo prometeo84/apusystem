@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block title %}Confirmar eliminación - Transporte{% endblock %}
+{% block body %}
+{% import 'partials/_button.html.twig' as btn %}
+<div class="container-fluid mt-4">
+    <div class="card mx-auto" style="max-width:720px;">
+        <div class="card-header bg-danger text-white">
+            <i class="bi bi-exclamation-triangle"></i> {{ 'catalog.confirm_delete'|trans }}
+        </div>
+        <div class="card-body">
+            <p class="mb-3">{{ 'catalog.confirm_delete'|trans }}</p>
+            <p><strong>{{ item.code }} — {{ item.name }}</strong></p>
+            <div class="d-flex gap-2 mt-3">
+                <form method="POST" action="{{ path('catalog_transport_delete', {id: item.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('catalog_transport_delete_' ~ item.id) }}">
+                    {{ btn.button('common.delete'|trans, 'danger', 'bi-trash', {'type':'submit'}) }}
+                </form>
+                {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('catalog_transport_index')}) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

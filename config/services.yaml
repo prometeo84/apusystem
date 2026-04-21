@@ -1,3 +1,8 @@
+parameters:
+    limits.apus_per_tenant: null
+    limits.items_per_tenant: null
+    app.link_display_mode: "both" # options: 'mobile', 'desktop', 'both'
+
 services:
     # Default configuration for services in *this* file
     _defaults:
@@ -15,7 +20,7 @@ services:
     # Controllers
     App\Controller\:
         resource: "../src/Controller/"
-        tags: ["controller.service_arguments"]
+        tags: [ "controller.service_arguments" ]
 
     # Bind JWT secret for Revit API controller constructor
     App\Controller\API\RevitAPIController:
@@ -44,7 +49,7 @@ services:
     App\Service\TwoFactorAuthService:
         arguments:
             $em: "@doctrine.orm.entity_manager"
-            $google2fa: '@PragmaRX\Google2FA\Google2FA'
+            $google2fa: "@PragmaRX\\Google2FA\\Google2FA"
 
     PragmaRX\Google2FA\Google2FA: ~
 
@@ -109,7 +114,7 @@ services:
     # Doctrine token provider for remember_me
     App\Security\DoctrineTokenProvider:
         arguments:
-            $userProvider: '@App\Security\UserProvider'
+            $userProvider: "@App\\Security\\UserProvider"
 
     # Session controller uses detector (ensure detector is registered)
     App\Controller\Admin\SessionController: ~

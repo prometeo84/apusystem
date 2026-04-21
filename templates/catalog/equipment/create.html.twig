@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nuevo Equipo{% endblock %}
+{% block body %}
+{% import 'partials/_button.html.twig' as btn %}
+<div class="container-fluid mt-4">
+    <div class="mb-3">
+        <h1><i class="bi bi-hdd"></i> Nuevo Equipo</h1>
+    </div>
+    <form method="POST" action="{{ path('catalog_equipment_create') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('equipment_create') }}">
+        <div class="mb-3">
+            <label class="form-label">Código</label>
+            <input class="form-control" name="code" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input class="form-control" name="name" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Unidad</label>
+            <input class="form-control" name="unit">
+        </div>
+        {{ btn.button('Guardar', 'primary', 'bi-save', {'type':'submit'}) }}
+    </form>
+</div>
+{% endblock %}

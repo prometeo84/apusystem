@@ -5,10 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'rate_limit_logs', indexes: [
-    new ORM\Index(name: 'idx_identifier_endpoint', columns: ['identifier', 'endpoint', 'window_end']),
-    new ORM\Index(name: 'idx_window_end', columns: ['window_end'])
-])]
+#[ORM\Table(name: 'rate_limit_logs')]
+#[ORM\Index(name: 'idx_identifier_endpoint', columns: ['identifier', 'endpoint', 'window_end'])]
+#[ORM\Index(name: 'idx_window_end', columns: ['window_end'])]
 class RateLimitLog
 {
     #[ORM\Id]

@@ -3,21 +3,27 @@
   Usage: {% include 'partials/_flashes.html.twig' %}
   Supports Bootstrap alert types: success, error, danger, warning, info
 #}
+{# Prevent duplicate flash messages: collect rendered keys and skip repeats #}
+{% set rendered = [] %}
 {% for label, messages in app.flashes %}
     {% set alertType = label == 'error' ? 'danger' : label %}
     {% for message in messages %}
-        <div class="alert alert-{{ alertType }} alert-dismissible fade show" role="alert">
-            {% if alertType == 'success' %}
-                <i class="bi bi-check-circle-fill me-1"></i>
-            {% elseif alertType == 'danger' %}
-                <i class="bi bi-exclamation-triangle-fill me-1"></i>
-            {% elseif alertType == 'warning' %}
-                <i class="bi bi-exclamation-circle-fill me-1"></i>
-            {% else %}
-                <i class="bi bi-info-circle-fill me-1"></i>
-            {% endif %}
-            {{ message|trans }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+        {% set key = label ~ '|' ~ message %}
+        {% if key not in rendered %}
+            <div class="alert alert-{{ alertType }} alert-dismissible fade show" role="alert">
+                {% if alertType == 'success' %}
+                    <i class="bi bi-check-circle-fill me-1"></i>
+                {% elseif alertType == 'danger' %}
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                {% elseif alertType == 'warning' %}
+                    <i class="bi bi-exclamation-circle-fill me-1"></i>
+                {% else %}
+                    <i class="bi bi-info-circle-fill me-1"></i>
+                {% endif %}
+                {{ message|trans }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% set rendered = rendered|merge([key]) %}
+        {% endif %}
     {% endfor %}
 {% endfor %}

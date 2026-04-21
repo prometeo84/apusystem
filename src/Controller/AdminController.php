@@ -65,6 +65,12 @@ class AdminController extends AbstractController
             ->getQuery()
             ->getResult();
 
+        $canCreateUser = true;
+        $maxUsers = $tenant->getMaxUsers();
+        if ($maxUsers > 0) {
+            $canCreateUser = $totalUsers < $maxUsers;
+        }
+
         return $this->render('admin/index.html.twig', [
             'user' => $user,
             'tenant' => $tenant,
@@ -73,6 +79,7 @@ class AdminController extends AbstractController
             'users2FA' => $users2FA,
             'eventsToday' => $eventsToday,
             'recentEvents' => $recentEvents,
+            'can_create_user' => $canCreateUser,
         ]);
     }
 
@@ -96,6 +103,12 @@ class AdminController extends AbstractController
         );
         $totalPages = (int) ceil($total / $perPage);
 
+        $canCreateUser = true;
+        $maxUsers = $tenant->getMaxUsers();
+        if ($maxUsers > 0) {
+            $canCreateUser = $total < $maxUsers;
+        }
+
         return $this->render('admin/users.html.twig', [
             'user'        => $user,
             'users'       => $users,
@@ -103,6 +116,7 @@ class AdminController extends AbstractController
             'totalPages'  => $totalPages,
             'totalItems'  => $total,
             'perPage'     => $perPage,
+            'can_create_user' => $canCreateUser,
         ]);
     }
 
@@ -112,6 +126,15 @@ class AdminController extends AbstractController
         /** @var User $currentUser */
         $currentUser = $this->getUser();
         $tenant = $currentUser->getTenant();
+        // Allow super admins to create users for a specific tenant via tenant_id
+        $selectedTenant = $tenant;
+        $requestedTenantId = $request->query->get('tenant_id') ?: $request->request->get('tenant_id');
+        if ($this->isGranted('ROLE_SUPER_ADMIN') && $requestedTenantId) {
+            $candidate = $this->em->getRepository(Tenant::class)->find((int) $requestedTenantId);
+            if ($candidate) {
+                $selectedTenant = $candidate;
+            }
+        }
 
         if ($request->isMethod('POST')) {
             $email = $request->request->get('email');
@@ -145,7 +168,7 @@ class AdminController extends AbstractController
 
             // Crear usuario
             $newUser = new User();
-            $newUser->setTenant($tenant);
+            $newUser->setTenant($selectedTenant);
             $newUser->setEmail($email);
             $newUser->setUsername($username);
             $newUser->setFirstName($firstName);
@@ -167,8 +190,15 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_admin_users');
         }
 
+        $tenants = [];
+        if ($this->isGranted('ROLE_SUPER_ADMIN')) {
+            $tenants = $this->em->getRepository(Tenant::class)->findBy([], ['name' => 'ASC']);
+        }
+
         return $this->render('admin/users_create.html.twig', [
             'user' => $currentUser,
+            'tenants' => $tenants,
+            'selectedTenantId' => $selectedTenant->getId(),
         ]);
     }
 

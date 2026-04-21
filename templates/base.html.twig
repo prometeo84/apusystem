@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ app.request.locale }}" data-theme="{{ user_theme.mode|default('light') }}">
+<html lang="{{ app.request.locale }}" data-theme="{{ user_theme.mode|default('light') }}"
+    style="--primary-color: {{ user_theme.primary_color|default('#667eea') }}; --secondary-color: {{ user_theme.secondary_color|default('#764ba2') }}; --primary-rgb: {{ user_theme.primary_rgb|default('102, 126, 234') }}; --secondary-rgb: {{ user_theme.secondary_rgb|default('118, 75, 162') }}; --primary-text-color: {{ user_theme.primary_text_color|default('#ffffff') }}; --secondary-text-color: {{ user_theme.secondary_text_color|default('#ffffff') }};">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

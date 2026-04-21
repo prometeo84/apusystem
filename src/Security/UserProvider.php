@@ -21,7 +21,7 @@ class UserProvider implements UserProviderInterface
         }
 
         $refreshedUser = $this->em->getRepository(User::class)->find($user->getId());
-        
+
         if (!$refreshedUser) {
             throw new UserNotFoundException();
         }
@@ -41,6 +41,8 @@ class UserProvider implements UserProviderInterface
             ->where('u.email = :identifier')
             ->orWhere('u.username = :identifier')
             ->setParameter('identifier', $identifier)
+            ->orderBy('u.id', 'DESC')
+            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
 

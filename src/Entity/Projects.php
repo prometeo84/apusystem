@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\User;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'projects')]
@@ -17,7 +18,7 @@ class Projects
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Tenant::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Tenant $tenant = null;
 
     #[ORM\Column(name: 'name', type: 'string', length: 255)]
@@ -76,6 +77,11 @@ class Projects
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $templates;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'created_by', nullable: true, onDelete: 'SET NULL')]
+    private ?User $createdBy = null;
+
+
     public function __construct()
     {
         $this->templates = new ArrayCollection();
@@ -96,6 +102,9 @@ class Projects
     public function setTenant(?Tenant $tenant): self
     {
         $this->tenant = $tenant;
+        if ($tenant !== null && !$tenant->getProjects()->contains($this)) {
+            $tenant->getProjects()->add($this);
+        }
         return $this;
     }
 
@@ -217,6 +226,17 @@ class Projects
     public function getTemplates(): Collection
     {
         return $this->templates;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $user): self
+    {
+        $this->createdBy = $user;
+        return $this;
     }
 
     /** Total budget calculated summing all templates */

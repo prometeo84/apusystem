@@ -85,6 +85,9 @@ class BudgetReportService
         $totalLabel = $this->translator->trans('report.total_label');
         $generated = $this->translator->trans('report.generated_by');
 
+        $totalFormatted = number_format((float)$total, 2, '.', ',');
+        $totalFormattedWithDollar = '$' . $totalFormatted;
+
         return <<<HTML
 <!DOCTYPE html>
 <html lang="{$locale}">
@@ -127,7 +130,7 @@ class BudgetReportService
     <tfoot>
         <tr class="total-row">
             <td colspan="6" style="text-align:right">{$totalLabel}</td>
-            <td style="text-align:right">$' . number_format($total, 2) . '</td>
+            <td style="text-align:right">{$totalFormattedWithDollar}</td>
         </tr>
     </tfoot>
 </table>

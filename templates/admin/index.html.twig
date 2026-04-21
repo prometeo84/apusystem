@@ -139,7 +139,7 @@
                                     <tbody>
                                         {% for event in recentEvents %}
                                             <tr>
-                                                <td>{{ event.user.email }}</td>
+                                                <td>{{ event.user ? event.user.email : '—' }}</td>
                                                 <td>{{ event.eventType|replace({'_': ' '})|title }}</td>
                                                 <td>{{ event.createdAt|date('d/m/Y H:i') }}</td>
                                                 <td>{{ event.ipAddress }}</td>
@@ -161,7 +161,11 @@
                         <div class="card-body">
                             <div class="d-grid gap-2">
                                     {% import 'partials/_button.html.twig' as btn %}
-                                    {{ btn.button('admin.create_user'|trans, 'primary', 'bi-person-plus', {'href': path('app_admin_users_create')}) }}
+                                    {% if can_create_user is defined and not can_create_user %}
+                                        {{ btn.button('admin.create_user'|trans, 'secondary', 'bi-person-plus', {'href': '#', 'class':'disabled', 'title': 'flash.tenant_user_limit_reached'|trans}) }}
+                                    {% else %}
+                                        {{ btn.button('admin.create_user'|trans, 'primary', 'bi-person-plus', {'href': path('app_admin_users_create')}) }}
+                                    {% endif %}
                                 {{ btn.button('admin.manage_users'|trans, 'outline-primary', 'bi-bi-people', {'href': path('app_admin_users')}) }}
                                 {{ btn.button('admin.view_security_logs'|trans, 'outline-secondary', 'bi-bi-file-text', {'href': path('app_admin_logs')}) }}
                                 {# Botón 'Configurar Empresa' eliminado según solicitud del usuario #}

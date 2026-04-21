@@ -53,6 +53,9 @@ class APUTransport
     public function setApuItem(?APUItem $apuItem): self
     {
         $this->apuItem = $apuItem;
+        if ($apuItem !== null && !$apuItem->getTransport()->contains($this)) {
+            $apuItem->addTransport($this);
+        }
         return $this;
     }
 

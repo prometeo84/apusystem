@@ -46,6 +46,22 @@
                         <option value="t">t (tonelada)</option>
                     </select>
                 </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Visibilidad</label>
+                    <select class="form-select" name="visibility" id="visibility-select">
+                        <option value="tenant">{{ 'items.visibility.tenant'|default('Visible para todo el tenant') }}</option>
+                        <option value="project">{{ 'items.visibility.project'|default('Visible solo para proyecto') }}</option>
+                    </select>
+                </div>
+                <div class="mb-3" id="project-select-group" style="display:none;">
+                    <label class="form-label fw-semibold">Proyecto (si aplica)</label>
+                    <select class="form-select" name="project_id">
+                        <option value="">{{ 'common.select'|trans }}</option>
+                        {% for p in projects %}
+                            <option value="{{ p.id }}">{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                     <div class="text-end mt-4">
                     {{ btn.button('buttons.cancel'|trans, 'secondary', 'bi-x', {'href': path('app_item_index')}) }}
                     &nbsp;
@@ -88,11 +104,21 @@
 
                 clearErr(codeEl); clearErr(nameEl); clearErr(unitEl);
 
-                if (!/^[A-Za-z0-9]+$/.test(code)) { setErr(codeEl, 'Invalid code'); ok = false; }
-                if (!/^[\p{L}\s]+$/u.test(name)) { setErr(nameEl, 'Invalid name'); ok = false; }
+                if (!/^[A-Za-z0-9\-\_\.]+$/.test(code)) { setErr(codeEl, 'Invalid code'); ok = false; }
+                if (!/^[\p{L}\d\s\-\.\_]+$/u.test(name)) { setErr(nameEl, 'Invalid name'); ok = false; }
                 if (!unit || unit === '') { setErr(unitEl, 'Unit required'); ok = false; }
 
                 if (!ok) e.preventDefault();
+            });
+        })();
+    </script>
+    <script>
+        (function(){
+            const vis = document.getElementById('visibility-select');
+            const group = document.getElementById('project-select-group');
+            if (!vis || !group) return;
+            vis.addEventListener('change', function(){
+                if (vis.value === 'project') group.style.display = 'block'; else group.style.display = 'none';
             });
         })();
     </script>

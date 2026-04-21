@@ -4,6 +4,7 @@ namespace App\Tests\Unit\Entity;
 
 use App\Entity\Item;
 use App\Entity\Tenant;
+use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 
@@ -106,5 +107,16 @@ class RubroTest extends TestCase
     {
         $rubro = $this->buildRubro();
         $this->assertInstanceOf(\DateTimeInterface::class, $rubro->getUpdatedAt());
+    }
+
+    #[Test]
+    public function createdByEsNullPorDefectoYSetterFunciona(): void
+    {
+        $rubro = $this->buildRubro();
+        $this->assertNull($rubro->getCreatedBy());
+
+        $user = new User();
+        $rubro->setCreatedBy($user);
+        $this->assertSame($user, $rubro->getCreatedBy());
     }
 }

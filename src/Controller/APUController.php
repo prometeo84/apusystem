@@ -45,18 +45,28 @@ class APUController extends AbstractController
             ($currentPage - 1) * $perPage
         );
 
+        $maxApus = $this->getParameter('limits.apus_per_tenant');
+        $canCreateApu = $maxApus === null || $totalItems < (int) $maxApus;
+
         return $this->render('apu/index.html.twig', [
-            'apu_items'   => $apuItems,
-            'currentPage' => $currentPage,
-            'totalPages'  => $totalPages,
-            'totalItems'  => $totalItems,
-            'perPage'     => $perPage,
+            'apu_items'     => $apuItems,
+            'currentPage'   => $currentPage,
+            'totalPages'    => $totalPages,
+            'totalItems'    => $totalItems,
+            'perPage'       => $perPage,
+            'can_create_apu' => $canCreateApu,
+            'max_apus_limit' => $maxApus,
         ]);
     }
 
     #[Route('/create', name: 'app_apu_create', methods: ['GET', 'POST'])]
     public function create(Request $request): Response
     {
+        // Administradores no pueden crear APUs via UI
+        if ($this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('Admins cannot create APUs');
+        }
+
         if ($request->isMethod('POST')) {
             return $this->handleCreate($request);
         }
@@ -121,10 +131,30 @@ class APUController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        // Administradores no pueden crear APUs via UI
+        if ($this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('Admins cannot create APUs');
+        }
+
         if ($request->isMethod('POST')) {
             $apuItem = $this->buildApuFromRequest($request);
             $apuItem->setDescription($apuItem->getDescription() ?: $pr->getItem()->getName());
             $apuItem->setUnit($apuItem->getUnit() ?: $pr->getItem()->getUnit());
+
+            // Enforce APU limit
+            $tenant = $this->getUser()->getTenant();
+            $repo = $this->em->getRepository(APUItem::class);
+            $current = $repo->count(['tenant' => $tenant]);
+            $maxApus = $this->getParameter('limits.apus_per_tenant');
+            if ($maxApus !== null && (int)$maxApus > 0 && $current >= (int)$maxApus) {
+                $this->addFlash('error', 'apu.limit_reached');
+                return $this->render('apu/create.html.twig', [
+                    'plantillaRubroId' => $plantillaRubroId,
+                    'rubroNombre' => $pr->getItem()->getName(),
+                    'rubroUnidad' => $pr->getItem()->getUnit(),
+                    'apu_item' => $apuItem,
+                ]);
+            }
 
             $this->em->persist($apuItem);
 
@@ -149,7 +179,22 @@ class APUController extends AbstractController
 
     private function handleCreate(Request $request): Response
     {
+        // Prevent admins from creating APU via direct POST
+        if ($this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('Admins cannot create APUs');
+        }
+
         $apuItem = $this->buildApuFromRequest($request);
+
+        // Check tenant APU limit (optional parameter)
+        $tenant = $this->getUser()->getTenant();
+        $repo = $this->em->getRepository(APUItem::class);
+        $current = $repo->count(['tenant' => $tenant]);
+        $maxApus = $this->getParameter('limits.apus_per_tenant');
+        if ($maxApus !== null && (int)$maxApus > 0 && $current >= (int)$maxApus) {
+            $this->addFlash('error', 'apu.limit_reached');
+            return $this->render('apu/create.html.twig', ['apu_item' => $apuItem]);
+        }
 
         $this->em->persist($apuItem);
         $this->em->flush();
@@ -165,6 +210,7 @@ class APUController extends AbstractController
 
         $apuItem = new APUItem();
         $apuItem->setTenant($this->getUser()->getTenant());
+        $apuItem->setCreatedBy($this->getUser());
         $apuItem->setDescription($data['description']);
         $apuItem->setUnit($data['unit']);
         $apuItem->setKhu((float)$data['khu']);
@@ -172,48 +218,53 @@ class APUController extends AbstractController
         $apuItem->setProfitPct(isset($data['utilidad_pct']) ? (string)(float)$data['utilidad_pct'] : null);
         $apuItem->setOfferedPrice(isset($data['precio_ofertado']) && $data['precio_ofertado'] !== '' ? (string)(float)$data['precio_ofertado'] : null);
 
-        if (isset($data['equipment'])) {
-            foreach ($data['equipment'] as $equipData) {
-                $equipment = new APUEquipment();
-                $equipment->setDescription($equipData['description']);
-                $equipment->setQuantity((int)$equipData['numero']);
-                $equipment->setTarifa((float)$equipData['tarifa']);
-                $equipment->setCHora((float)($equipData['c_hora'] ?? ($equipData['numero'] * $equipData['tarifa'])));
-                $apuItem->addEquipment($equipment);
-            }
-        }
+        // Sólo usuarios con ROLE_ADMIN pueden agregar componentes (equipment, labor, materials, transport)
+        $allowComponents = $this->isGranted('ROLE_ADMIN');
 
-        if (isset($data['labor'])) {
-            foreach ($data['labor'] as $laborData) {
-                $labor = new APULabor();
-                $labor->setDescription($laborData['description']);
-                $labor->setQuantity((int)$laborData['numero']);
-                $labor->setJorHora((float)$laborData['jor_hora']);
-                $labor->setCHora((float)($laborData['c_hora'] ?? ($laborData['numero'] * $laborData['jor_hora'])));
-                $apuItem->addLabor($labor);
+        if ($allowComponents) {
+            if (isset($data['equipment'])) {
+                foreach ($data['equipment'] as $equipData) {
+                    $equipment = new APUEquipment();
+                    $equipment->setDescription($equipData['description']);
+                    $equipment->setQuantity((int)$equipData['numero']);
+                    $equipment->setTarifa((float)$equipData['tarifa']);
+                    $equipment->setCHora((float)($equipData['c_hora'] ?? ($equipData['numero'] * $equipData['tarifa'])));
+                    $apuItem->addEquipment($equipment);
+                }
             }
-        }
 
-        if (isset($data['materials'])) {
-            foreach ($data['materials'] as $materialData) {
-                $material = new APUMaterial();
-                $material->setDescription($materialData['description']);
-                $material->setUnit($materialData['unidad']);
-                $material->setQuantity((float)$materialData['cantidad']);
-                $material->setUnitPrice((float)$materialData['precio_unitario']);
-                $apuItem->addMaterial($material);
+            if (isset($data['labor'])) {
+                foreach ($data['labor'] as $laborData) {
+                    $labor = new APULabor();
+                    $labor->setDescription($laborData['description']);
+                    $labor->setQuantity((int)$laborData['numero']);
+                    $labor->setJorHora((float)$laborData['jor_hora']);
+                    $labor->setCHora((float)($laborData['c_hora'] ?? ($laborData['numero'] * $laborData['jor_hora'])));
+                    $apuItem->addLabor($labor);
+                }
             }
-        }
 
-        if (isset($data['transport'])) {
-            foreach ($data['transport'] as $transportData) {
-                $transport = new APUTransport();
-                $transport->setDescription($transportData['description']);
-                $transport->setUnit($transportData['unidad']);
-                $transport->setQuantity((float)$transportData['cantidad']);
-                $transport->setDmt((float)$transportData['dmt']);
-                $transport->setTarifaKm((float)$transportData['tarifa_km']);
-                $apuItem->addTransport($transport);
+            if (isset($data['materials'])) {
+                foreach ($data['materials'] as $materialData) {
+                    $material = new APUMaterial();
+                    $material->setDescription($materialData['description']);
+                    $material->setUnit($materialData['unidad']);
+                    $material->setQuantity((float)$materialData['cantidad']);
+                    $material->setUnitPrice((float)$materialData['precio_unitario']);
+                    $apuItem->addMaterial($material);
+                }
+            }
+
+            if (isset($data['transport'])) {
+                foreach ($data['transport'] as $transportData) {
+                    $transport = new APUTransport();
+                    $transport->setDescription($transportData['description']);
+                    $transport->setUnit($transportData['unidad']);
+                    $transport->setQuantity((float)$transportData['cantidad']);
+                    $transport->setDmt((float)$transportData['dmt']);
+                    $transport->setTarifaKm((float)$transportData['tarifa_km']);
+                    $apuItem->addTransport($transport);
+                }
             }
         }
 
@@ -233,63 +284,66 @@ class APUController extends AbstractController
         $apuItem->setProfitPct(isset($data['utilidad_pct']) ? (string)(float)$data['utilidad_pct'] : null);
         $apuItem->setOfferedPrice(isset($data['precio_ofertado']) && $data['precio_ofertado'] !== '' ? (string)(float)$data['precio_ofertado'] : null);
 
-        // Eliminar elementos antiguos
-        foreach ($apuItem->getEquipment() as $equipment) {
-            $apuItem->removeEquipment($equipment);
-        }
-        foreach ($apuItem->getLabor() as $labor) {
-            $apuItem->removeLabor($labor);
-        }
-        foreach ($apuItem->getMaterials() as $material) {
-            $apuItem->removeMaterial($material);
-        }
-        foreach ($apuItem->getTransport() as $transport) {
-            $apuItem->removeTransport($transport);
-        }
-
-        // Agregar nuevos elementos
-        if (isset($data['equipment'])) {
-            foreach ($data['equipment'] as $equipData) {
-                $equipment = new APUEquipment();
-                $equipment->setDescription($equipData['description']);
-                $equipment->setQuantity((int)$equipData['numero']);
-                $equipment->setTarifa((float)$equipData['tarifa']);
-                $equipment->setCHora((float)($equipData['c_hora'] ?? ((float)$equipData['numero'] * (float)$equipData['tarifa'])));
-                $apuItem->addEquipment($equipment);
+        // Sólo los administradores pueden modificar/replace los componentes.
+        if ($this->isGranted('ROLE_ADMIN')) {
+            // Eliminar elementos antiguos
+            foreach ($apuItem->getEquipment() as $equipment) {
+                $apuItem->removeEquipment($equipment);
             }
-        }
-
-        if (isset($data['labor'])) {
-            foreach ($data['labor'] as $laborData) {
-                $labor = new APULabor();
-                $labor->setDescription($laborData['description']);
-                $labor->setQuantity((int)$laborData['numero']);
-                $labor->setJorHora((float)$laborData['jor_hora']);
-                $labor->setCHora((float)($laborData['c_hora'] ?? ((float)$laborData['numero'] * (float)$laborData['jor_hora'])));
-                $apuItem->addLabor($labor);
+            foreach ($apuItem->getLabor() as $labor) {
+                $apuItem->removeLabor($labor);
             }
-        }
-
-        if (isset($data['materials'])) {
-            foreach ($data['materials'] as $materialData) {
-                $material = new APUMaterial();
-                $material->setDescription($materialData['description']);
-                $material->setUnit($materialData['unidad']);
-                $material->setQuantity((float)$materialData['cantidad']);
-                $material->setUnitPrice((float)$materialData['precio_unitario']);
-                $apuItem->addMaterial($material);
+            foreach ($apuItem->getMaterials() as $material) {
+                $apuItem->removeMaterial($material);
             }
-        }
+            foreach ($apuItem->getTransport() as $transport) {
+                $apuItem->removeTransport($transport);
+            }
 
-        if (isset($data['transport'])) {
-            foreach ($data['transport'] as $transportData) {
-                $transport = new APUTransport();
-                $transport->setDescription($transportData['description']);
-                $transport->setUnit($transportData['unidad']);
-                $transport->setQuantity((float)$transportData['cantidad']);
-                $transport->setDmt((float)$transportData['dmt']);
-                $transport->setTarifaKm((float)$transportData['tarifa_km']);
-                $apuItem->addTransport($transport);
+            // Agregar nuevos elementos
+            if (isset($data['equipment'])) {
+                foreach ($data['equipment'] as $equipData) {
+                    $equipment = new APUEquipment();
+                    $equipment->setDescription($equipData['description']);
+                    $equipment->setQuantity((int)$equipData['numero']);
+                    $equipment->setTarifa((float)$equipData['tarifa']);
+                    $equipment->setCHora((float)($equipData['c_hora'] ?? ((float)$equipData['numero'] * (float)$equipData['tarifa'])));
+                    $apuItem->addEquipment($equipment);
+                }
+            }
+
+            if (isset($data['labor'])) {
+                foreach ($data['labor'] as $laborData) {
+                    $labor = new APULabor();
+                    $labor->setDescription($laborData['description']);
+                    $labor->setQuantity((int)$laborData['numero']);
+                    $labor->setJorHora((float)$laborData['jor_hora']);
+                    $labor->setCHora((float)($laborData['c_hora'] ?? ((float)$laborData['numero'] * (float)$laborData['jor_hora'])));
+                    $apuItem->addLabor($labor);
+                }
+            }
+
+            if (isset($data['materials'])) {
+                foreach ($data['materials'] as $materialData) {
+                    $material = new APUMaterial();
+                    $material->setDescription($materialData['description']);
+                    $material->setUnit($materialData['unidad']);
+                    $material->setQuantity((float)$materialData['cantidad']);
+                    $material->setUnitPrice((float)$materialData['precio_unitario']);
+                    $apuItem->addMaterial($material);
+                }
+            }
+
+            if (isset($data['transport'])) {
+                foreach ($data['transport'] as $transportData) {
+                    $transport = new APUTransport();
+                    $transport->setDescription($transportData['description']);
+                    $transport->setUnit($transportData['unidad']);
+                    $transport->setQuantity((float)$transportData['cantidad']);
+                    $transport->setDmt((float)$transportData['dmt']);
+                    $transport->setTarifaKm((float)$transportData['tarifa_km']);
+                    $apuItem->addTransport($transport);
+                }
             }
         }
 

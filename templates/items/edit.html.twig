@@ -34,6 +34,22 @@
                         {% endfor %}
                     </select>
                 </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Visibilidad</label>
+                    <select class="form-select" name="visibility" id="visibility-select">
+                        <option value="tenant" {{ item.project is null ? 'selected' : '' }}>{{ 'items.visibility.tenant'|default('Visible para todo el tenant') }}</option>
+                        <option value="project" {{ item.project is not null ? 'selected' : '' }}>{{ 'items.visibility.project'|default('Visible solo para proyecto') }}</option>
+                    </select>
+                </div>
+                <div class="mb-3" id="project-select-group" style="display:{{ item.project is not null ? 'block' : 'none' }};">
+                    <label class="form-label fw-semibold">Proyecto (si aplica)</label>
+                    <select class="form-select" name="project_id">
+                        <option value="">{{ 'common.select'|trans }}</option>
+                        {% for p in projects %}
+                            <option value="{{ p.id }}" {{ item.project is not null and item.project.id == p.id ? 'selected' : '' }}>{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <div class="text-end mt-4">
                     {{ btn.button('buttons.cancel'|trans, 'secondary', 'bi-x', {'href': path('app_item_index')}) }}
                     &nbsp;
@@ -43,4 +59,18 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        (function(){
+            const vis = document.getElementById('visibility-select');
+            const group = document.getElementById('project-select-group');
+            if (!vis || !group) return;
+            vis.addEventListener('change', function(){
+                if (vis.value === 'project') group.style.display = 'block'; else group.style.display = 'none';
+            });
+        })();
+    </script>
 {% endblock %}

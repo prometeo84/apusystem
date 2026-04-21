@@ -51,6 +51,9 @@ class APULabor
     public function setApuItem(?APUItem $apuItem): self
     {
         $this->apuItem = $apuItem;
+        if ($apuItem !== null && !$apuItem->getLabor()->contains($this)) {
+            $apuItem->addLabor($this);
+        }
         return $this;
     }
 

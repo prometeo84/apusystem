@@ -7,13 +7,9 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity]
-#[ORM\Table(
-    name: 'users',
-    uniqueConstraints: [
-        new \Doctrine\ORM\Mapping\UniqueConstraint(name: 'uuid', columns: ['uuid']),
-        new \Doctrine\ORM\Mapping\UniqueConstraint(name: 'unique_username_per_tenant', columns: ['tenant_id', 'username'])
-    ]
-)]
+#[ORM\Table(name: 'users')]
+#[ORM\UniqueConstraint(name: 'uuid', columns: ['uuid'])]
+#[ORM\UniqueConstraint(name: 'unique_username_per_tenant', columns: ['tenant_id', 'username'])]
 #[ORM\Index(name: 'unique_username_per_tenant', columns: ['tenant_id', 'username'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {

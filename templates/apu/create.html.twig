@@ -80,7 +80,10 @@
         <div class="card mb-3">
                 <div class="card-header bg-warning">
                 <i class="bi bi-tools"></i> {{ 'apu.equipment'|trans }}
-                {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addEquipmentRow()','class':'btn-sm float-end'}) }}
+                {# Sólo mostrar controles para añadir componentes a usuarios con permisos administrativos #}
+                {% if not (is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN')) %}
+                    {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addEquipmentRow()','class':'btn-sm float-end'}) }}
+                {% endif %}
             </div>
             <div class="card-body">
                 <table class="table table-sm" id="equipmentTable">
@@ -96,7 +99,9 @@
         <div class="card mb-3">
                 <div class="card-header bg-info text-white">
                 <i class="bi bi-people"></i> {{ 'apu.labor'|trans }}
-                {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addLaborRow()','class':'btn-sm float-end'}) }}
+                {% if not (is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN')) %}
+                    {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addLaborRow()','class':'btn-sm float-end'}) }}
+                {% endif %}
             </div>
             <div class="card-body">
                 <table class="table table-sm" id="laborTable">
@@ -120,7 +125,9 @@
         <div class="card mb-3">
                 <div class="card-header bg-success text-white">
                 <i class="bi bi-box-seam"></i> {{ 'apu.materials'|trans }}
-                {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addMaterialRow()','class':'btn-sm float-end'}) }}
+                {% if not (is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN')) %}
+                    {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addMaterialRow()','class':'btn-sm float-end'}) }}
+                {% endif %}
             </div>
             <div class="card-body">
                 <table class="table table-sm" id="materialTable">
@@ -145,7 +152,9 @@
         <div class="card mb-3">
                 <div class="card-header bg-secondary text-white">
                 <i class="bi bi-truck"></i> {{ 'apu.transport'|trans }}
-                {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addTransportRow()','class':'btn-sm float-end'}) }}
+                {% if not (is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN')) %}
+                    {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addTransportRow()','class':'btn-sm float-end'}) }}
+                {% endif %}
             </div>
             <div class="card-body">
                 <table class="table table-sm" id="transportTable">
@@ -249,12 +258,15 @@ let equipmentIndex = 0;
 let laborIndex = 0;
 let materialIndex = 0;
 let transportIndex = 0;
+const selectPlaceholder = '{{ "common.select"|trans }}';
 
 function addEquipmentRow() {
     const tbody = document.querySelector('#equipmentTable tbody');
     const row = document.createElement('tr');
     row.innerHTML = `
-        <td><input type="text" class="form-control form-control-sm" name="equipment[${equipmentIndex}][description]" required></td>
+        <td>
+            <select class="form-select form-select-sm catalog-select" name="equipment[${equipmentIndex}][id]" required></select>
+        </td>
         <td><input type="number" class="form-control form-control-sm calc-input" data-section="equipment" name="equipment[${equipmentIndex}][numero]" value="1" min="0" step="1" required></td>
         <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="equipment" name="equipment[${equipmentIndex}][tarifa]" value="0" min="0" required></td>
         <td class="fw-semibold text-end row-subtotal">$0.00</td>
@@ -264,6 +276,7 @@ function addEquipmentRow() {
     tbody.appendChild(row);
     equipmentIndex++;
     attachInputListeners(row);
+    populateSelects();
     calculateTotals();
 }
 
@@ -271,7 +284,9 @@ function addLaborRow() {
     const tbody = document.querySelector('#laborTable tbody');
     const row = document.createElement('tr');
     row.innerHTML = `
-        <td><input type="text" class="form-control form-control-sm" name="labor[${laborIndex}][description]" required></td>
+        <td>
+            <select class="form-select form-select-sm catalog-select" name="labor[${laborIndex}][id]" required></select>
+        </td>
         <td><input type="number" class="form-control form-control-sm calc-input" data-section="labor" name="labor[${laborIndex}][numero]" value="1" min="0" step="1" required></td>
         <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="labor" name="labor[${laborIndex}][jor_hora]" value="0" min="0" required></td>
         <td class="fw-semibold text-end row-subtotal">$0.00</td>
@@ -281,6 +296,7 @@ function addLaborRow() {
     tbody.appendChild(row);
     laborIndex++;
     attachInputListeners(row);
+    populateSelects();
     calculateTotals();
 }
 
@@ -288,7 +304,9 @@ function addMaterialRow() {
     const tbody = document.querySelector('#materialTable tbody');
     const row = document.createElement('tr');
     row.innerHTML = `
-        <td><input type="text" class="form-control form-control-sm" name="materials[${materialIndex}][description]" required></td>
+        <td>
+            <select class="form-select form-select-sm catalog-select" name="materials[${materialIndex}][id]" required></select>
+        </td>
         <td><input type="text" class="form-control form-control-sm" name="materials[${materialIndex}][unidad]" required></td>
         <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="material" name="materials[${materialIndex}][cantidad]" value="0" min="0" required></td>
         <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="material" name="materials[${materialIndex}][precio_unitario]" value="0" min="0" required></td>
@@ -298,6 +316,7 @@ function addMaterialRow() {
     tbody.appendChild(row);
     materialIndex++;
     attachInputListeners(row);
+    populateSelects();
     calculateTotals();
 }
 
@@ -305,7 +324,9 @@ function addTransportRow() {
     const tbody = document.querySelector('#transportTable tbody');
     const row = document.createElement('tr');
     row.innerHTML = `
-        <td><input type="text" class="form-control form-control-sm" name="transport[${transportIndex}][description]" required></td>
+        <td>
+            <select class="form-select form-select-sm catalog-select" name="transport[${transportIndex}][id]" required></select>
+        </td>
         <td><input type="text" class="form-control form-control-sm" name="transport[${transportIndex}][unidad]" required></td>
         <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="transport" name="transport[${transportIndex}][cantidad]" value="0" min="0" required></td>
         <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="transport" name="transport[${transportIndex}][dmt]" value="0" min="0" required></td>
@@ -316,7 +337,46 @@ function addTransportRow() {
     tbody.appendChild(row);
     transportIndex++;
     attachInputListeners(row);
+    populateSelects();
     calculateTotals();
+}
+
+// Catalog loading/caching
+const catalogCache = {};
+async function loadCatalog(name) {
+    if (catalogCache[name]) return catalogCache[name];
+    try {
+        const res = await fetch(`/catalog/${name}/json`);
+        if (!res.ok) return [];
+        const data = await res.json();
+        catalogCache[name] = data;
+        return data;
+    } catch (e) {
+        return [];
+    }
+}
+
+async function populateSelects() {
+    const selects = Array.from(document.querySelectorAll('select.catalog-select'));
+    for (const sel of selects) {
+        if (sel.dataset.populated) continue;
+        const n = sel.name;
+        let name = null;
+        if (n.includes('equipment[')) name = 'equipment';
+        else if (n.includes('labor[')) name = 'labor';
+        else if (n.includes('materials[')) name = 'material';
+        else if (n.includes('transport[')) name = 'transport';
+        if (!name) continue;
+        const items = await loadCatalog(name);
+        sel.innerHTML = `<option value="">${selectPlaceholder}</option>`;
+        items.forEach(it => {
+            const opt = document.createElement('option');
+            opt.value = it.id;
+            opt.textContent = (it.code ? it.code + ' — ' : '') + it.name + (it.unit ? (' ('+it.unit+')') : '');
+            sel.appendChild(opt);
+        });
+        sel.dataset.populated = '1';
+    }
 }
 
 function removeRow(btn) {

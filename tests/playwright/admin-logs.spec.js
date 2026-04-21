@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test');
 const { injectAxe, checkA11y } = require('axe-playwright');
 const fs = require('fs');
 
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = process.env.BASE_URL || 'http://apache:80';
 
 async function login(page) {
     await page.goto(`${BASE_URL}/login`);

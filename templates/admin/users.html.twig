@@ -22,7 +22,11 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0"><i class="bi bi-people-fill"></i> {{ 'admin_users.all_users'|trans }}</h5>
-                    {{ btn.button('admin.create_user'|trans, 'primary', 'bi-bi-person-plus', {'href': path('app_admin_users_create')}) }}
+                    {% if can_create_user is defined and not can_create_user %}
+                        {{ btn.button('admin.create_user'|trans, 'secondary', 'bi-bi-person-plus', {'href': '#', 'class':'disabled', 'title': 'flash.tenant_user_limit_reached'|trans}) }}
+                    {% else %}
+                        {{ btn.button('admin.create_user'|trans, 'primary', 'bi-bi-person-plus', {'href': path('app_admin_users_create')}) }}
+                    {% endif %}
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

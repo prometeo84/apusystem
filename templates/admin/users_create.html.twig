@@ -43,6 +43,18 @@
                                     <small class="text-muted">{{ 'admin.email_username'|trans }}</small>
                                 </div>
 
+                                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    <div class="mb-3">
+                                        <label class="form-label">Tenant</label>
+                                        <select name="tenant_id" class="form-select">
+                                            {% for t in tenants %}
+                                                <option value="{{ t.id }}" {% if t.id == selectedTenantId %}selected{% endif %}>{{ t.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="form-text">{{ 'admin.select_tenant'|trans }}</div>
+                                    </div>
+                                {% endif %}
+
                                 <div class="mb-3">
                                     <label class="form-label">{{ 'admin.phone'|trans }}</label>
                                     <input type="tel" name="phone" class="form-control">
