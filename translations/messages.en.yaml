@@ -138,6 +138,7 @@ common:
   browser: "Browser"
   primary_color_description: "Main color for buttons and links"
   projects: "Projects"
+  new-item-link: "Add new item"
   reset_theme_confirm: "Reset theme to default colors?"
   role: "Role"
   save: "Save"
@@ -152,6 +153,10 @@ common:
   user: "User"
   view_details: "View Details"
   yes: "Yes"
+
+apu:
+  limit_reached: "APU limit reached"
+  limit_near: "You are approaching your APU limit (%current%/%limit%)."
 
   # Plan names (from es catalog)
   plan_trial: "Trial Plan"
@@ -191,8 +196,12 @@ dashboard:
   create_first: "Create the first APU"
   no_projects: "No projects registered"
   plan: "Plan"
+  apu:
+    limit_reached: "APU limit reached"
   plan_label: "Plan"
   quick_actions: "Quick Actions"
+  add_equipment: "Add Equipment"
+  add_transport: "Add Transport"
   export_report: "Export Report"
   no_recent_activity: "No recent activity"
   account_information: "Account Information"
@@ -229,6 +238,7 @@ nav:
   alerts: "Alerts"
   companies: "Companies"
   dashboard: "Dashboard"
+  projects: "Projects"
   errors: "Errors"
   global_admin: "Global Administration"
   logout: "Logout"
@@ -833,6 +843,7 @@ flash:
   auth.reauth_prompt: "For security, please re-enter your password to continue with this action."
   auth.password: "Password"
   auth.confirm: "Confirm"
+  auth.confo: "Confirm"
   generic_error_try_again: "An error occurred. Please try again."
   reset_link_invalid_or_expired: "The reset link is invalid or has expired."
   password_reset_success: "Your password has been reset successfully. You can now sign in."
@@ -992,6 +1003,17 @@ project.placeholder_code: "E.g.: PRY-001"
 project.placeholder_description: "Detailed project description..."
 project.placeholder_client: "Client name"
 project.placeholder_location: "City, Country"
+project.limit_reached: "Project limit reached for your plan. Cannot create more projects."
+project.limit_near: "You are approaching your project limit (%current%/%limit%).
+  Consider upgrading or removing unused projects."
+
+# User notifications
+user.limit_near: "You are approaching the user limit (%current%/%limit%)."
+
+# New UI strings requested
+auth.reauth: "Re-authentication required"
+auth.reauth_prompt: "Please re-enter your password to continue"
+auth.confirm: "Confirm"
 
 # APU (additional)
 apu.col_subtotal: "Subtotal"
@@ -1050,6 +1072,7 @@ plantilla.created_success: "Template created successfully."
 plantilla.updated_success: "Template updated successfully."
 plantilla.deleted_success: "Template deleted."
 plantilla.duplicated_success: "Template duplicated successfully."
+plantilla.delete: "Delete Template"
 plantilla.confirm_delete: "Delete this template and all its items? This action cannot be undone."
 plantilla.confirm_remove_rubro: "Remove this item from the template?"
 

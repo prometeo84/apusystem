@@ -139,6 +139,7 @@ common:
   browser: "Navegador"
   primary_color_description: "Color principal de botones y enlaces"
   projects: "Proyectos"
+  new-item-link: "Agregar nuevo elemento"
   reset_theme_confirm: "¿Restablecer tema a los colores predeterminados?"
   role: "Rol"
   save: "Guardar"
@@ -158,6 +159,10 @@ common:
   user: "Usuario"
   view_details: "Ver Detalles"
   yes: "Sí"
+
+apu:
+  limit_reached: "Límite de APUs alcanzado"
+  limit_near: "Estás cerca del límite de APUs (%current%/%limit%)."
 
 dashboard:
   actions: "Acciones"
@@ -186,12 +191,16 @@ dashboard:
   create_first: "Crear el primer APU"
   no_projects: "No hay proyectos registrados"
   plan: "Plan"
+  apu:
+    limit_reached: "Límite de APUs alcanzado"
   plan_label: "Plan"
   export_report: "Exportar Reporte"
   no_recent_activity: "No hay actividad reciente"
   account_information: "Información de la Cuenta"
   projects: "Proyectos"
   quick_actions: "Acciones Rápidas"
+  add_equipment: "Agregar Equipo"
+  add_transport: "Agregar Transporte"
   recent_activity: "Actividad Reciente"
   recent_projects: "Proyectos Recientes"
   reusable: "Reutilizables"
@@ -230,6 +239,7 @@ nav:
   alerts: "Alertas"
   companies: "Empresas"
   dashboard: "Tablero"
+  projects: "Proyectos"
   errors: "Errores"
   global_admin: "Administración Global"
   logout: "Cerrar Sesión"
@@ -630,6 +640,7 @@ flash:
     continuar con esta acción."
   auth.password: "Contraseña"
   auth.confirm: "Confirmar"
+  auth.confo: "Confirmar"
   password_incorrect: "Contraseña incorrecta."
   recovery_codes_generated: "Se han generado nuevos códigos de recuperación. Revisa tu panel."
   session_revoked: "Sesión revocada exitosamente."
@@ -1003,9 +1014,22 @@ project.placeholder_code: "Ej: PRY-001"
 project.placeholder_description: "Descripción detallada del proyecto..."
 project.placeholder_client: "Nombre del cliente"
 project.placeholder_location: "Ciudad, País"
+project.limit_reached: "Se alcanzó el límite de proyectos para este plan. No se
+  pueden crear más proyectos."
+project.limit_near: "Te estás acercando al límite de proyectos
+  (%current%/%limit%). Considera actualizar el plan o eliminar proyectos sin
+  uso."
+
+# Notificaciones de usuario
+user.limit_near: "Te estás acercando al límite de usuarios (%current%/%limit%)."
+
+# Nuevas cadenas solicitadas
+auth.reauth: "Se requiere re-autenticación"
+auth.reauth_prompt: "Por favor reingrese su contraseña para continuar"
+auth.confirm: "Confirmar"
 
 # Rubros
-rubro.title: "Rubros Personalizados"
+rubro.title: "Rubros"
 rubro.new: "Nuevo Rubro"
 rubro.edit_title: "Editar Rubro"
 rubro.save: "Guardar Rubro"
@@ -1049,6 +1073,7 @@ plantilla.created_success: "Plantilla creada exitosamente."
 plantilla.updated_success: "Plantilla actualizada exitosamente."
 plantilla.deleted_success: "Plantilla eliminada."
 plantilla.duplicated_success: "Plantilla duplicada exitosamente."
+plantilla.delete: "Eliminar Plantilla"
 plantilla.confirm_delete: "¿Eliminar esta plantilla y todos sus rubros? Esta
   acción no se puede deshacer."
 plantilla.confirm_remove_rubro: "¿Eliminar este rubro de la plantilla?"
