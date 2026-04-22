@@ -153,25 +153,39 @@
                 </div>
 
                 <div class="col-md-4 mb-4">
-                    {% if not is_granted('ROLE_SUPER_ADMIN') %}
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0"><i class="bi bi-gear-fill"></i> {{ 'system.quick_actions'|trans }}</h5>
+                    {% import 'partials/_button.html.twig' as btn %}
+
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="bi bi-people"></i> {{ 'admin.super_quick_actions'|trans }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
+                                    {# Superadmins can create admins only for a selected tenant #}
+                                    {{ btn.button('admin.create_admin'|trans, 'primary', 'bi-person-plus', {'href': path('app_admin_users_create', {'role':'ROLE_ADMIN'})}) }}
+                                    {{ btn.button('admin.manage_users'|trans, 'outline-primary', 'bi-bi-people', {'href': path('app_admin_users')}) }}
+                                    {{ btn.button('admin.view_security_logs'|trans, 'outline-secondary', 'bi-bi-file-text', {'href': path('app_admin_logs')}) }}
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="d-grid gap-2">
-                                    {% import 'partials/_button.html.twig' as btn %}
+                    {% else %}
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="bi bi-gear-fill"></i> {{ 'system.quick_actions'|trans }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
                                     {% if can_create_user is defined and not can_create_user %}
                                         {{ btn.button('admin.create_user'|trans, 'secondary', 'bi-person-plus', {'href': '#', 'class':'disabled', 'title': 'flash.tenant_user_limit_reached'|trans}) }}
                                     {% else %}
                                         {{ btn.button('admin.create_user'|trans, 'primary', 'bi-person-plus', {'href': path('app_admin_users_create')}) }}
                                     {% endif %}
-                                {{ btn.button('admin.manage_users'|trans, 'outline-primary', 'bi-bi-people', {'href': path('app_admin_users')}) }}
-                                {{ btn.button('admin.view_security_logs'|trans, 'outline-secondary', 'bi-bi-file-text', {'href': path('app_admin_logs')}) }}
-                                {# Botón 'Configurar Empresa' eliminado según solicitud del usuario #}
+                                    {{ btn.button('admin.manage_users'|trans, 'outline-primary', 'bi-bi-people', {'href': path('app_admin_users')}) }}
+                                    {{ btn.button('admin.view_security_logs'|trans, 'outline-secondary', 'bi-bi-file-text', {'href': path('app_admin_logs')}) }}
+                                </div>
                             </div>
                         </div>
-                    </div>
                     {% endif %}
 
                     {% if not is_granted('ROLE_SUPER_ADMIN') %}

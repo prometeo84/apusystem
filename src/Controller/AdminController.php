@@ -195,10 +195,13 @@ class AdminController extends AbstractController
             $tenants = $this->em->getRepository(Tenant::class)->findBy([], ['name' => 'ASC']);
         }
 
+        $requestedRole = $request->query->get('role');
+
         return $this->render('admin/users_create.html.twig', [
             'user' => $currentUser,
             'tenants' => $tenants,
             'selectedTenantId' => $selectedTenant->getId(),
+            'requestedRole' => $requestedRole,
         ]);
     }
 

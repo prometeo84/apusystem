@@ -53,7 +53,14 @@
                                         </select>
                                         <div class="form-text">{{ 'admin.select_tenant'|trans }}</div>
                                     </div>
-                                {% endif %}
+                                    {% endif %}
+
+                                    {% if requestedRole is defined and requestedRole == 'ROLE_ADMIN' and is_granted('ROLE_SUPER_ADMIN') %}
+                                        <div class="alert alert-info">
+                                            {{ 'admin.creating_admin_info'|trans }}
+                                        </div>
+                                        <input type="hidden" name="role" value="ROLE_ADMIN">
+                                    {% endif %}
 
                                 <div class="mb-3">
                                     <label class="form-label">{{ 'admin.phone'|trans }}</label>
