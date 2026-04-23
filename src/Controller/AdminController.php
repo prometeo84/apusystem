@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Tenant;
 use App\Service\SecurityLogger;
+use App\Validator\Constraints\PasswordStrength;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,17 +14,23 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/admin')]
 #[IsGranted('ROLE_ADMIN')]
 class AdminController extends AbstractController
 {
+    private ValidatorInterface $validator;
+
     public function __construct(
         private EntityManagerInterface $em,
         private SecurityLogger $securityLogger,
         private UserPasswordHasherInterface $passwordHasher,
-        private TranslatorInterface $translator
-    ) {}
+        private TranslatorInterface $translator,
+        ValidatorInterface $validator
+    ) {
+        $this->validator = $validator;
+    }
 
     #[Route('', name: 'app_admin')]
     public function index(): Response
@@ -137,12 +144,31 @@ class AdminController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+                $this->addFlash('error', 'common.error_invalid_csrf');
+                return $this->redirectToRoute('app_admin_users_create');
+            }
+
             $email = $request->request->get('email');
             $username = $request->request->get('username');
             $firstName = $request->request->get('first_name');
             $lastName = $request->request->get('last_name');
             $password = $request->request->get('password');
-            $role = $request->request->get('role', 'user');
+            $requestedRoleInput = $request->request->get('role');
+            // Determine effective role:
+            // - Super admins may create admins when requested
+            // - Admins (non-super) can only create regular users
+            if ($this->isGranted('ROLE_SUPER_ADMIN') && $requestedRoleInput) {
+                $role = $requestedRoleInput;
+            } elseif ($this->isGranted('ROLE_ADMIN')) {
+                $role = 'ROLE_USER';
+            } else {
+                $role = $requestedRoleInput ?: 'ROLE_USER';
+            }
+
+            // locale and timezone (defaults)
+            $locale = $request->request->get('locale', 'en');
+            $timezone = $request->request->get('timezone', $currentUser->getTimezone() ?? 'UTC');
 
             // Validar campos
             if (!$email || !$username || !$firstName || !$lastName || !$password) {
@@ -150,16 +176,16 @@ class AdminController extends AbstractController
                 return $this->redirectToRoute('app_admin_users_create');
             }
 
-            // Verificar límite de usuarios del tenant
-            $userCount = $this->em->getRepository(User::class)->count(['tenant' => $tenant]);
-            if ($userCount >= $tenant->getMaxUsers()) {
+            // Verificar límite de usuarios del tenant seleccionado
+            $userCount = $this->em->getRepository(User::class)->count(['tenant' => $selectedTenant]);
+            if ($userCount >= $selectedTenant->getMaxUsers()) {
                 $this->addFlash('error', 'flash.tenant_user_limit_reached');
                 return $this->redirectToRoute('app_admin_users_create');
             }
 
             // Verificar si el email ya existe en el tenant
             $existingUser = $this->em->getRepository(User::class)
-                ->findOneBy(['tenant' => $tenant, 'email' => $email]);
+                ->findOneBy(['tenant' => $selectedTenant, 'email' => $email]);
 
             if ($existingUser) {
                 $this->addFlash('error', 'flash.email_exists');
@@ -170,10 +196,27 @@ class AdminController extends AbstractController
             $newUser = new User();
             $newUser->setTenant($selectedTenant);
             $newUser->setEmail($email);
+            // If username not provided, derive from email local-part
+            if (!$username) {
+                $username = strtolower(preg_replace('/[^a-z0-9._-]/', '', strtok($email, '@')));
+            }
             $newUser->setUsername($username);
             $newUser->setFirstName($firstName);
             $newUser->setLastName($lastName);
             $newUser->setRole($role);
+
+            // Set presentation locale and timezone
+            $newUser->setLocale($locale);
+            $newUser->setTimezone($timezone);
+
+            // Server-side password strength validation
+            $violations = $this->validator->validate($password, new PasswordStrength());
+            if (count($violations) > 0) {
+                foreach ($violations as $violation) {
+                    $this->addFlash('error', $violation->getMessage());
+                }
+                return $this->redirectToRoute('app_admin_users_create');
+            }
 
             $hashedPassword = $this->passwordHasher->hashPassword($newUser, $password);
             $newUser->setPassword($hashedPassword);
@@ -219,6 +262,11 @@ class AdminController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+                $this->addFlash('error', 'common.error_invalid_csrf');
+                return $this->redirectToRoute('app_admin_users_edit', ['id' => $id]);
+            }
+
             $firstName = $request->request->get('first_name');
             $lastName = $request->request->get('last_name');
             $role = $request->request->get('role');
@@ -247,11 +295,16 @@ class AdminController extends AbstractController
     }
 
     #[Route('/users/{id}/toggle', name: 'app_admin_users_toggle', methods: ['POST'])]
-    public function toggleUser(int $id): Response
+    public function toggleUser(int $id, Request $request): Response
     {
         /** @var User $currentUser */
         $currentUser = $this->getUser();
         $tenant = $currentUser->getTenant();
+
+        if (!$this->isCsrfTokenValid('user_toggle_' . $id, $request->request->get('_token'))) {
+            $this->addFlash('error', 'common.error_invalid_csrf');
+            return $this->redirectToRoute('app_admin_users');
+        }
 
         $userToToggle = $this->em->getRepository(User::class)->find($id);
 
@@ -340,6 +393,11 @@ class AdminController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+                $this->addFlash('error', 'common.error_invalid_csrf');
+                return $this->redirectToRoute('app_admin_tenant', ['tenant_id' => $tenant->getId()]);
+            }
+
             // No permitir editar tenant protegido
             if ($tenant->isProtected()) {
                 $this->addFlash('error', 'flash.cannot_modify_protected_company');

@@ -43,7 +43,12 @@ class CatalogCrudTest extends KernelTestCase
         try {
             $tool->createSchema($meta);
         } catch (\Exception $e) {
-            // Schema probably exists; ignore
+            // Schema probably exists; try to update it to add new columns
+            try {
+                $tool->updateSchema($meta, true);
+            } catch (\Exception) {
+                // Ignore — schema is up to date
+            }
         }
     }
 
@@ -66,7 +71,7 @@ class CatalogCrudTest extends KernelTestCase
         $e->setTenant($tenant)
             ->setCode('EQ-CR-1')
             ->setName('Test Equipment')
-            ->setUnit('u');
+            ->setActive(true);
 
         $em->persist($e);
         $em->flush();
@@ -76,12 +81,15 @@ class CatalogCrudTest extends KernelTestCase
 
         $found = $em->getRepository(Equipment::class)->find($id);
         $this->assertInstanceOf(Equipment::class, $found);
+        $this->assertTrue($found->isActive());
 
         $found->setName('Updated Equipment');
+        $found->setActive(false);
         $em->flush();
 
         $updated = $em->getRepository(Equipment::class)->find($id);
         $this->assertEquals('Updated Equipment', $updated->getName());
+        $this->assertFalse($updated->isActive());
 
         $em->remove($updated);
         $em->flush();
@@ -98,7 +106,8 @@ class CatalogCrudTest extends KernelTestCase
         $o = new Labor();
         $o->setTenant($tenant)
             ->setCode('LB-CR-1')
-            ->setName('Test Labor');
+            ->setDescription('Test Labor')
+            ->setActive(true);
 
         $em->persist($o);
         $em->flush();
@@ -108,12 +117,15 @@ class CatalogCrudTest extends KernelTestCase
 
         $found = $em->getRepository(Labor::class)->find($id);
         $this->assertInstanceOf(Labor::class, $found);
+        $this->assertTrue($found->isActive());
 
-        $found->setName('Updated Labor');
+        $found->setDescription('Updated Labor');
+        $found->setActive(false);
         $em->flush();
 
         $updated = $em->getRepository(Labor::class)->find($id);
-        $this->assertEquals('Updated Labor', $updated->getName());
+        $this->assertEquals('Updated Labor', $updated->getDescription());
+        $this->assertFalse($updated->isActive());
 
         $em->remove($updated);
         $em->flush();
@@ -302,18 +314,15 @@ class CatalogCrudTest extends KernelTestCase
         $em->persist($apu);
 
         $mat = new APUMaterial();
-        $mat->setDescription('Mat child')
-            ->setUnit('u')
-            ->setQuantity('1')
+        $mat->setQuantity('1')
             ->setUnitPrice('10.0');
         $mat->setApuItem($apu);
         $em->persist($mat);
 
         $equip = new APUEquipment();
         $equip->setDescription('Eq child')
-            ->setQuantity(1)
-            ->setTarifa('5.0')
-            ->setCHora('1.0');
+            ->setNumber(1)
+            ->setTarifa('5.0');
         $equip->setApuItem($apu);
         $em->persist($equip);
 
@@ -330,5 +339,143 @@ class CatalogCrudTest extends KernelTestCase
         $this->assertNull($em->getRepository(APUItem::class)->find($apuId));
         $this->assertNull($em->getRepository(APUMaterial::class)->find($matId));
         $this->assertNull($em->getRepository(APUEquipment::class)->find($eqId));
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Tests para visibility/project en Equipment y Labor (new feature)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public function testEquipmentCanBeAssignedToProject(): void
+    {
+        $em = $this->getEntityManager();
+        $tenant = $this->createTenant($em);
+
+        $project = new Projects();
+        $project->setTenant($tenant)
+            ->setName('Visibility Project Equipment')
+            ->setCode('VP-EQ-' . bin2hex(random_bytes(3)))
+            ->setStatus('activo');
+        $em->persist($project);
+        $em->flush();
+
+        $e = new Equipment();
+        $e->setTenant($tenant)
+            ->setCode('EQ-VIS-1')
+            ->setName('Visible Equipment')
+            ->setActive(true)
+            ->setProject($project);
+
+        $em->persist($e);
+        $em->flush();
+
+        $id = $e->getId();
+        $em->clear();
+
+        $found = $em->getRepository(Equipment::class)->find($id);
+        $this->assertNotNull($found);
+        $this->assertNotNull($found->getProject(), 'Equipment must have a project assigned');
+        $this->assertEquals($project->getId(), $found->getProject()->getId());
+
+        // Clear project → visibility = tenant
+        $found->setProject(null);
+        $em->flush();
+        $em->clear();
+
+        $updated = $em->getRepository(Equipment::class)->find($id);
+        $this->assertNull($updated->getProject(), 'Equipment project must be null after clearing');
+
+        $em->remove($updated);
+        $em->flush();
+    }
+
+    public function testLaborCanBeAssignedToProject(): void
+    {
+        $em = $this->getEntityManager();
+        $tenant = $this->createTenant($em);
+
+        $project = new Projects();
+        $project->setTenant($tenant)
+            ->setName('Visibility Project Labor')
+            ->setCode('VP-LB-' . bin2hex(random_bytes(3)))
+            ->setStatus('activo');
+        $em->persist($project);
+        $em->flush();
+
+        $l = new Labor();
+        $l->setTenant($tenant)
+            ->setCode('LB-VIS-1')
+            ->setDescription('Visible Labor')
+            ->setActive(true)
+            ->setProject($project);
+
+        $em->persist($l);
+        $em->flush();
+
+        $id = $l->getId();
+        $em->clear();
+
+        $found = $em->getRepository(Labor::class)->find($id);
+        $this->assertNotNull($found);
+        $this->assertNotNull($found->getProject(), 'Labor must have a project assigned');
+        $this->assertEquals($project->getId(), $found->getProject()->getId());
+
+        // Unassign project
+        $found->setProject(null);
+        $em->flush();
+        $em->clear();
+
+        $updated = $em->getRepository(Labor::class)->find($id);
+        $this->assertNull($updated->getProject(), 'Labor project must be null after clearing');
+
+        $em->remove($updated);
+        $em->flush();
+    }
+
+    public function testEquipmentProjectNullableByDefault(): void
+    {
+        $em = $this->getEntityManager();
+        $tenant = $this->createTenant($em);
+
+        $e = new Equipment();
+        $e->setTenant($tenant)
+            ->setCode('EQ-NOVIS-1')
+            ->setName('No Visibility Equipment')
+            ->setActive(true);
+
+        $em->persist($e);
+        $em->flush();
+
+        $id = $e->getId();
+        $em->clear();
+
+        $found = $em->getRepository(Equipment::class)->find($id);
+        $this->assertNull($found->getProject(), 'Equipment project must be null when not set (tenant visibility)');
+
+        $em->remove($found);
+        $em->flush();
+    }
+
+    public function testLaborProjectNullableByDefault(): void
+    {
+        $em = $this->getEntityManager();
+        $tenant = $this->createTenant($em);
+
+        $l = new Labor();
+        $l->setTenant($tenant)
+            ->setCode('LB-NOVIS-1')
+            ->setDescription('No Visibility Labor')
+            ->setActive(true);
+
+        $em->persist($l);
+        $em->flush();
+
+        $id = $l->getId();
+        $em->clear();
+
+        $found = $em->getRepository(Labor::class)->find($id);
+        $this->assertNull($found->getProject(), 'Labor project must be null when not set (tenant visibility)');
+
+        $em->remove($found);
+        $em->flush();
     }
 }

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'apu_labor')]
+#[ORM\HasLifecycleCallbacks]
 class APULabor
 {
     #[ORM\Id]
@@ -17,18 +18,44 @@ class APULabor
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?APUItem $apuItem = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $description;
+    #[ORM\ManyToOne(targetEntity: Tenant::class)]
+    #[ORM\JoinColumn(name: 'tenant_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Tenant $tenant = null;
 
-    #[ORM\Column(type: 'integer')]
-    private int $quantity;
+    #[ORM\ManyToOne(targetEntity: Projects::class)]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Projects $project = null;
 
+    #[ORM\ManyToOne(targetEntity: Template::class)]
+    #[ORM\JoinColumn(name: 'template_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Template $template = null;
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 4, name: 'work_hours')]
-    private string $workHours; // formerly 'jor_hora'
+    #[ORM\ManyToOne(targetEntity: TemplateItem::class)]
+    #[ORM\JoinColumn(name: 'template_item_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?TemplateItem $templateItem = null;
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, name: 'cost_per_hour')]
-    private string $costPerHour; // formerly 'c_hora' (Costo por hora)
+    #[ORM\ManyToOne(targetEntity: Labor::class)]
+    #[ORM\JoinColumn(name: 'labor_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Labor $labor = null;
+
+    #[ORM\Column(type: 'integer', name: 'number')]
+    private int $number = 0;
+
+    /** B — JOR/HORA: tarifa base del trabajador ($/hora) */
+    #[ORM\Column(type: 'decimal', precision: 14, scale: 4, name: 'jor_hour_b')]
+    private string $jorHourB = '0.0000';
+
+    /** C = A × B — Costo por hora = número × JOR/HORA */
+    #[ORM\Column(type: 'decimal', precision: 14, scale: 4, name: 'cost_per_hour')]
+    private string $costPerHour = '0.0000';
+
+    /** R — Rendimiento u/h: unidades producidas por hora */
+    #[ORM\Column(type: 'decimal', precision: 14, scale: 4, nullable: true, name: 'rendimiento_uh')]
+    private ?string $rendimientoUh = null;
+
+    /** D = C × R — Costo total de la fila */
+    #[ORM\Column(type: 'decimal', precision: 14, scale: 4, nullable: true, name: 'cost_total')]
+    private ?string $costTotal = null;
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
@@ -57,39 +84,82 @@ class APULabor
         return $this;
     }
 
-    public function getDescription(): string
+    public function getTenant(): ?Tenant
     {
-        return $this->description;
+        return $this->tenant;
     }
-
-    public function setDescription(string $description): self
+    public function setTenant(?Tenant $t): self
     {
-        $this->description = $description;
+        $this->tenant = $t;
         return $this;
     }
 
-    public function getQuantity(): int
+    public function getProject(): ?Projects
     {
-        return $this->quantity;
+        return $this->project;
+    }
+    public function setProject(?Projects $p): self
+    {
+        $this->project = $p;
+        return $this;
     }
 
-    public function setQuantity(int $quantity): self
+    public function getTemplate(): ?Template
     {
-        $this->quantity = $quantity;
+        return $this->template;
+    }
+    public function setTemplate(?Template $t): self
+    {
+        $this->template = $t;
+        return $this;
+    }
+
+    public function getTemplateItem(): ?TemplateItem
+    {
+        return $this->templateItem;
+    }
+    public function setTemplateItem(?TemplateItem $ti): self
+    {
+        $this->templateItem = $ti;
+        return $this;
+    }
+
+    public function getLabor(): ?Labor
+    {
+        return $this->labor;
+    }
+    public function setLabor(?Labor $l): self
+    {
+        $this->labor = $l;
+        return $this;
+    }
+
+    public function getNumber(): int
+    {
+        return $this->number;
+    }
+    public function setNumber(int $n): self
+    {
+        $this->number = $n;
         return $this;
     }
 
     public function getJorHora(): string
     {
-        return $this->workHours;
+        return $this->jorHourB;
     }
-
-    /**
-     * @param float|int|string $jorHora
-     */
-    public function setJorHora(float|int|string $jorHora): self
+    public function getJorHourB(): string
     {
-        $this->workHours = (string) $jorHora;
+        return $this->jorHourB;
+    }
+    public function setJorHora(float|int|string $v): self
+    {
+        $this->jorHourB = (string)$v;
+        return $this;
+    }
+    public function setJorHourB(float|int|string $v): self
+    {
+        $this->jorHourB = (string)$v;
         return $this;
     }
 
@@ -97,14 +167,52 @@ class APULabor
     {
         return $this->costPerHour;
     }
-
-    /**
-     * @param float|int|string $cHora
-     */
-    public function setCHora(float|int|string $cHora): self
+    public function getCostPerHour(): string
     {
-        $this->costPerHour = (string) $cHora;
+        return $this->costPerHour;
+    }
+    public function setCHora(float|int|string $v): self
+    {
+        $this->costPerHour = (string)$v;
         return $this;
+    }
+    public function setCostPerHour(float|int|string $v): self
+    {
+        $this->costPerHour = (string)$v;
+        return $this;
+    }
+
+    public function getRendimientoUh(): ?string
+    {
+        return $this->rendimientoUh;
+    }
+    public function setRendimientoUh(float|int|string|null $v): self
+    {
+        $this->rendimientoUh = $v === null ? null : (string)$v;
+        return $this;
+    }
+
+    public function getCostTotal(): ?string
+    {
+        return $this->costTotal;
+    }
+    public function setCostTotal(?string $v): self
+    {
+        $this->costTotal = $v;
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function recalculate(): void
+    {
+        $a = (float)$this->number;
+        $b = (float)$this->jorHourB;
+        $c = $a * $b;
+        $this->costPerHour = number_format($c, 4, '.', '');
+        if ($this->rendimientoUh !== null) {
+            $this->costTotal = number_format($c * (float)$this->rendimientoUh, 4, '.', '');
+        }
     }
 
     public function getCreatedAt(): \DateTimeInterface
@@ -114,6 +222,7 @@ class APULabor
 
     public function getTotalCost(): float
     {
-        return (float) $this->workHours * (float) $this->costPerHour;
+        if ($this->costTotal !== null) return (float)$this->costTotal;
+        return (float)$this->costPerHour * (float)($this->rendimientoUh ?? '1');
     }
 }

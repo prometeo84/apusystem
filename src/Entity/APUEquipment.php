@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'apu_equipment')]
+#[ORM\HasLifecycleCallbacks]
 class APUEquipment
 {
     #[ORM\Id]
@@ -20,14 +21,44 @@ class APUEquipment
     #[ORM\Column(type: 'string', length: 255, name: 'description')]
     private string $description;
 
-    #[ORM\Column(type: 'integer', name: 'quantity')]
-    private int $quantity;
+    #[ORM\ManyToOne(targetEntity: Tenant::class)]
+    #[ORM\JoinColumn(name: 'tenant_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Tenant $tenant = null;
 
+    #[ORM\ManyToOne(targetEntity: Projects::class)]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Projects $project = null;
+
+    #[ORM\ManyToOne(targetEntity: Template::class)]
+    #[ORM\JoinColumn(name: 'template_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Template $template = null;
+
+    #[ORM\ManyToOne(targetEntity: TemplateItem::class)]
+    #[ORM\JoinColumn(name: 'template_item_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?TemplateItem $templateItem = null;
+
+    #[ORM\ManyToOne(targetEntity: Equipment::class)]
+    #[ORM\JoinColumn(name: 'equipment_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Equipment $equipment = null;
+
+    #[ORM\Column(type: 'integer', name: 'number')]
+    private int $number = 0;
+
+    /** B — Tarifa (costo/hora del equipo) */
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, name: 'rate')]
-    private string $rate; // formerly 'tarifa'
+    private string $rate = '0.00';
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 4, name: 'cost_per_hour')]
-    private string $costPerHour; // formerly 'c_hora'
+    /** C = A × B — Costo por hora */
+    #[ORM\Column(type: 'decimal', precision: 14, scale: 4, name: 'cost_per_hour')]
+    private string $costPerHour = '0.0000';
+
+    /** R — Rendimiento u/h */
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 4, nullable: true, name: 'rendimiento_uh')]
+    private ?string $rendimientoUh = null;
+
+    /** D = C × R — Costo total */
+    #[ORM\Column(type: 'decimal', precision: 14, scale: 4, nullable: true, name: 'cost_total')]
+    private ?string $costTotal = null;
 
     #[ORM\Column(type: 'datetime', name: 'created_at')]
     private \DateTimeInterface $createdAt;
@@ -69,14 +100,9 @@ class APUEquipment
 
     public function getQuantity(): int
     {
-        return $this->quantity;
+        return $this->number;
     }
 
-    public function setQuantity(int $quantity): self
-    {
-        $this->quantity = $quantity;
-        return $this;
-    }
     /**
      * @return string
      */
@@ -93,6 +119,59 @@ class APUEquipment
     {
         $this->rate = (string) $rate;
         return $this;
+    }
+
+    public function getNumber(): int
+    {
+        return $this->number;
+    }
+    public function setNumber(int $n): self
+    {
+        $this->number = $n;
+        return $this;
+    }
+
+    public function getRendimientoUh(): ?string
+    {
+        return $this->rendimientoUh;
+    }
+    public function setRendimientoUh(float|int|string|null $v): self
+    {
+        $this->rendimientoUh = $v === null ? null : (string)$v;
+        return $this;
+    }
+
+    /** @deprecated use setRendimientoUh */
+    public function setWorkHours(float|int|string|null $v): self
+    {
+        return $this->setRendimientoUh($v);
+    }
+    public function getWorkHours(): ?string
+    {
+        return $this->rendimientoUh;
+    }
+
+    public function getCostTotal(): ?string
+    {
+        return $this->costTotal;
+    }
+    public function setCostTotal(?string $v): self
+    {
+        $this->costTotal = $v;
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function recalculate(): void
+    {
+        $a = (float)$this->number;
+        $b = (float)$this->rate;
+        $c = $a * $b;
+        $this->costPerHour = number_format($c, 4, '.', '');
+        if ($this->rendimientoUh !== null) {
+            $this->costTotal = number_format($c * (float)$this->rendimientoUh, 4, '.', '');
+        }
     }
 
     /**
@@ -145,6 +224,7 @@ class APUEquipment
 
     public function getTotalCost(): float
     {
-        return (float) $this->rate * (float) $this->costPerHour;
+        if ($this->costTotal !== null) return (float)$this->costTotal;
+        return (float)$this->costPerHour * (float)($this->rendimientoUh ?? '1');
     }
 }

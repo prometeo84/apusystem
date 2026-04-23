@@ -91,7 +91,7 @@ class ItemController extends AbstractController
             if ($code === '' || !preg_match('/^[A-Za-z0-9\-\_\.]+$/', $code)) {
                 $fieldErrors['code'][] = 'code.invalid';
             }
-            if ($name === '' || !preg_match('/^[\p{L}\d\s\-\.\_]+$/u', $name)) {
+            if ($name === '' || !preg_match('/^(?=.*\\p{L})[\\p{L}\\d\\s\\-\\.\\_\\(\\),\\/]+$/u', $name)) {
                 $fieldErrors['name'][] = 'name.invalid';
             }
             if ($unit === null || $unit === '') {
@@ -132,7 +132,7 @@ class ItemController extends AbstractController
     public function edit(int $id, Request $request): Response
     {
         $item = $this->em->getRepository(Item::class)->find($id);
-        if (!$item) {
+        if (!$item || $item->getTenant() !== $this->getUser()->getTenant()) {
             throw $this->createNotFoundException('rubro.not_found');
         }
 
@@ -175,7 +175,7 @@ class ItemController extends AbstractController
     public function deleteConfirm(int $id): Response
     {
         $item = $this->em->getRepository(Item::class)->find($id);
-        if (!$item) {
+        if (!$item || $item->getTenant() !== $this->getUser()->getTenant()) {
             throw $this->createNotFoundException('rubro.not_found');
         }
 
@@ -192,7 +192,7 @@ class ItemController extends AbstractController
         }
 
         $item = $this->em->getRepository(Item::class)->find($id);
-        if ($item) {
+        if ($item && $item->getTenant() === $this->getUser()->getTenant()) {
             $this->em->remove($item);
             $this->em->flush();
             $this->addFlash('success', 'rubro.deleted_success');

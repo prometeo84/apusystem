@@ -16,7 +16,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title mb-4">
-                                <i class="bi bi-shield-check"></i> {{ 'security_2fa.configure_2fa'|trans }}
+                                <i class="bi bi-shield-check"></i> {{ 'security_2fa.enable_2fa_title'|trans }}
                             </h4>
 
                             <div class="row">
@@ -32,7 +32,7 @@
                                     </div>
 
                                     <div class="alert alert-info">
-                                        <strong>{{ 'security_2fa.secret_key'|trans }}:</strong>
+                                        <strong>{{ 'security.secret_key'|trans }}:</strong>
                                         <code>{{ secret }}</code>
                                         <p class="small mb-0 mt-2">
                                             {{ 'security_2fa.manual_key'|trans }}
@@ -49,6 +49,7 @@
                                     </p>
 
                                     <form method="post" action="{{ path('app_security_2fa_enable') }}">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('2fa_enable') }}">
                                         <div class="mb-3">
                                             <label class="form-label">{{ 'security_2fa.verification_code'|trans }}</label>
                                             <input type="text" name="verification_code" class="form-control form-control-lg text-center"
@@ -72,11 +73,11 @@
                             <hr class="my-4">
 
                             <div class="alert alert-primary">
-                                <h6><i class="bi bi-info-circle"></i> {{ 'security_2fa.recommended_apps'|trans }}</h6>
+                                <h6><i class="bi bi-info-circle"></i> {{ 'security.recommended_apps'|trans }}</h6>
                                 <ul class="mb-0">
-                                    <li>{{ 'security_2fa.recommended.google'|trans }}</li>
-                                    <li>{{ 'security_2fa.recommended.microsoft'|trans }}</li>
-                                    <li>{{ 'security_2fa.recommended.authy'|trans }}</li>
+                                    <li>{{ 'security.recommended.google'|trans }}</li>
+                                    <li>{{ 'security.recommended.microsoft'|trans }}</li>
+                                    <li>{{ 'security.recommended.authy'|trans }}</li>
                                 </ul>
                             </div>
 

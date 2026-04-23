@@ -17,14 +17,14 @@
                         <label class="form-label fw-semibold">{{ 'rubro.col_code'|trans }} <span class="text-danger">*</span></label>
                         <input type="text" class="form-control{% if fieldErrors.code is defined %} is-invalid{% endif %}" name="code" maxlength="100" placeholder="Ej: 101.001" required aria-invalid="{{ fieldErrors.code is defined ? 'true' : 'false' }}" value="{{ item is defined ? item.getCode() : '' }}">
                         {% if fieldErrors.code is defined %}
-                            <div class="invalid-feedback">{{ fieldErrors.code[0] }}</div>
+                            <div class="invalid-feedback">{{ fieldErrors.code[0]|trans({}, 'validators') }}</div>
                         {% endif %}
                     </div>
                     <div class="col-md-8 mb-3">
                         <label class="form-label fw-semibold">{{ 'rubro.col_name'|trans }} <span class="text-danger">*</span></label>
                         <input type="text" class="form-control{% if fieldErrors.name is defined %} is-invalid{% endif %}" name="name" maxlength="255" required aria-invalid="{{ fieldErrors.name is defined ? 'true' : 'false' }}" value="{{ item is defined ? item.getName() : '' }}">
                         {% if fieldErrors.name is defined %}
-                            <div class="invalid-feedback">{{ fieldErrors.name[0] }}</div>
+                            <div class="invalid-feedback">{{ fieldErrors.name[0]|trans({}, 'validators') }}</div>
                         {% endif %}
                     </div>
                 </div>
@@ -36,25 +36,21 @@
                     <label class="form-label fw-semibold">{{ 'rubro.col_unit'|trans }} <span class="text-danger">*</span></label>
                         <select class="form-select{% if fieldErrors.unit is defined %} is-invalid{% endif %}" name="unit" required aria-invalid="{{ fieldErrors.unit is defined ? 'true' : 'false' }}">
                         <option value="">{{ 'common.select'|trans }}</option>
-                        <option value="m²">m²</option>
-                        <option value="m³">m³</option>
-                        <option value="m">m (metro lineal)</option>
-                        <option value="kg">kg</option>
-                        <option value="u">u (unidad)</option>
-                        <option value="GLB">GLB (global)</option>
-                        <option value="h">h (hora)</option>
-                        <option value="t">t (tonelada)</option>
+                        {% set unit_map = { 'GLB':'units.GLB', 'h':'units.h', 'kg':'units.kg', 'm':'units.m', 'm²':'units.m2', 'm³':'units.m3', 't':'units.t', 'u':'units.u' } %}
+                        {% for val, key in unit_map %}
+                            <option value="{{ val }}">{{ key|trans }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Visibilidad</label>
+                    <label class="form-label fw-semibold">{{ 'items.visibility.label'|trans }}</label>
                     <select class="form-select" name="visibility" id="visibility-select">
-                        <option value="tenant">{{ 'items.visibility.tenant'|default('Visible para todo el tenant') }}</option>
-                        <option value="project">{{ 'items.visibility.project'|default('Visible solo para proyecto') }}</option>
+                        <option value="tenant">{{ 'items.visibility.tenant'|trans }}</option>
+                        <option value="project">{{ 'items.visibility.project'|trans }}</option>
                     </select>
                 </div>
                 <div class="mb-3" id="project-select-group" style="display:none;">
-                    <label class="form-label fw-semibold">Proyecto (si aplica)</label>
+                    <label class="form-label fw-semibold">{{ 'common.project_optional'|trans }}</label>
                     <select class="form-select" name="project_id">
                         <option value="">{{ 'common.select'|trans }}</option>
                         {% for p in projects %}

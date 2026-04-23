@@ -35,5 +35,5 @@ test('Captura pantalla WebAuthn (credenciales)', async ({ page }) => {
     ]);
 
     // Tomar captura de pantalla completa
-    await page.screenshot({ path: 'test-results/webauthn-credentials.png', fullPage: true });
+    await page.screenshot({ path: 'var/playwright/screenshots/webauthn-credentials.png', fullPage: true });
 });

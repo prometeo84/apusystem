@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Projects;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'transports')]
@@ -28,6 +29,10 @@ class Transport
 
     #[ORM\Column(type: 'boolean')]
     private bool $active = true;
+
+    #[ORM\ManyToOne(targetEntity: Projects::class)]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Projects $project = null;
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
@@ -93,6 +98,16 @@ class Transport
     public function setActive(bool $a): self
     {
         $this->active = $a;
+        return $this;
+    }
+
+    public function getProject(): ?Projects
+    {
+        return $this->project;
+    }
+    public function setProject(?Projects $p): self
+    {
+        $this->project = $p;
         return $this;
     }
 

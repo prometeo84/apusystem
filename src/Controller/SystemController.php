@@ -309,6 +309,11 @@ class SystemController extends AbstractController
     public function createTenant(Request $request): Response
     {
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+                $this->addFlash('error', 'common.error_invalid_csrf');
+                return $this->redirectToRoute('app_system_tenants_create');
+            }
+
             $name = $request->request->get('name');
             $slug = $request->request->get('slug');
             $plan = $request->request->get('plan');
@@ -375,6 +380,11 @@ class SystemController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+                $this->addFlash('error', 'common.error_invalid_csrf');
+                return $this->redirectToRoute('app_system_tenants_edit', ['id' => $id]);
+            }
+
             $name = $request->request->get('name');
             $plan = $request->request->get('plan');
             $maxUsers = (int)$request->request->get('max_users');

@@ -1,27 +1,70 @@
 {% extends 'base.html.twig' %}
-{% block title %}Editar Material{% endblock %}
+{% block title %}{{ 'materials'|trans }} - Catalog{% endblock %}
 {% block body %}
 {% import 'partials/_button.html.twig' as btn %}
 <div class="container-fluid mt-4">
-    <div class="mb-3">
-        <h1><i class="bi bi-box-seam"></i> Editar Material</h1>
+    {% include 'partials/_flashes.html.twig' %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="mb-0"><i class="bi bi-box-seam"></i> {{ 'admin.edit'|trans }} {{ 'materials'|trans }}</h1>
+        {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('catalog_material_index')}) }}
     </div>
     <form method="POST" action="{{ path('catalog_material_edit', {id: item.id}) }}">
         <input type="hidden" name="_token" value="{{ csrf_token('material_edit_' ~ item.id) }}">
         <div class="mb-3">
-            <label class="form-label">Código</label>
+            <label class="form-label">{{ 'common.code'|trans }}</label>
             <input class="form-control" name="code" value="{{ item.code }}" required>
         </div>
         <div class="mb-3">
-            <label class="form-label">Nombre</label>
+            <label class="form-label">{{ 'common.name'|trans }}</label>
             <input class="form-control" name="name" value="{{ item.name }}" required>
         </div>
         <div class="mb-3">
-            <label class="form-label">Unidad</label>
-            <input class="form-control" name="unit" value="{{ item.unit }}">
+            <label class="form-label">{{ 'common.col_unit'|trans }}</label>
+            <select class="form-select" name="unit">
+                <option value="">{{ 'common.select'|trans }}</option>
+                {% set unit_map = { 'GLB':'units.GLB', 'h':'units.h', 'kg':'units.kg', 'm':'units.m', 'm²':'units.m2', 'm³':'units.m3', 't':'units.t', 'u':'units.u' } %}
+                {% for val, key in unit_map %}
+                    <option value="{{ val }}" {{ item.unit == val ? 'selected' : '' }}>{{ key|trans }}</option>
+                {% endfor %}
+            </select>
         </div>
-        {{ btn.button('Guardar', 'primary', 'bi-save', {'type':'submit'}) }}
-        {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('catalog_material_index')}) }}
+        <div class="mb-3">
+            <label class="form-label fw-semibold">{{ 'items.visibility.label'|trans }}</label>
+            <select class="form-select" name="visibility" id="visibility-select">
+                <option value="tenant" {{ item.getProject() is null ? 'selected' : '' }}>{{ 'items.visibility.tenant'|trans }}</option>
+                <option value="project" {{ item.getProject() is not null ? 'selected' : '' }}>{{ 'items.visibility.project'|trans }}</option>
+            </select>
+        </div>
+        <div class="mb-3" id="project-select-group" style="display:{{ item.getProject() is not null ? 'block' : 'none' }};">
+            <label class="form-label fw-semibold">{{ 'common.project_optional'|trans }}</label>
+            <select class="form-select" name="project_id">
+                <option value="">{{ 'common.select'|trans }}</option>
+                {% for p in projects %}
+                    <option value="{{ p.id }}" {{ item.getProject() is not null and item.getProject().getId() == p.id ? 'selected' : '' }}>{{ p.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-4">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" name="active" id="active" value="1" {{ item.active ? 'checked' : '' }}>
+                <label class="form-check-label" for="active">{{ 'common.active'|trans }}</label>
+            </div>
+        </div>
+        {{ btn.button('buttons.save'|trans, 'primary', 'bi-save', {'type':'submit'}) }}
     </form>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        (function(){
+            const vis = document.getElementById('visibility-select');
+            const group = document.getElementById('project-select-group');
+            if (!vis || !group) return;
+            vis.addEventListener('change', function(){
+                group.style.display = vis.value === 'project' ? 'block' : 'none';
+            });
+        })();
+    </script>
 {% endblock %}

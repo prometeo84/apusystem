@@ -1,27 +1,34 @@
 admin:
   active_users: "Usuarios Activos"
-  admin: "Administrador"
+  admin: Administrador
   configure_company: "Configurar Empresa"
   select_company_label: "Seleccionar Empresa:"
   timezone_label: "Zona Horaria"
-  currency_label: "Moneda"
+  currency_label: Moneda
   require_2fa_label: "Requerir autenticación de dos factores para todos los usuarios"
   enable_email_notifications: "Habilitar notificaciones por email"
   save_settings: "Guardar Configuración"
   current_plan: "Plan Actual"
   system_settings: "Configuración del Sistema"
   system_information: "Información del Sistema"
-  users_label: "Usuarios"
-  projects_label: "Proyectos"
-  max_label: "máximo"
+  users_label: Usuarios
+  projects_label: Proyectos
+  max_label: máximo
   confirm_password: "Confirmar Contraseña"
   create_user: "Crear Usuario"
+  create_admin: "Crear Administrador"
   database: "Base de datos"
   email_notification: "El usuario recibirá un correo electrónico con sus credenciales de acceso."
   email_username: "Se usará como nombre de usuario"
+  username_hint: "El nombre de usuario se generará automáticamente a partir del
+    correo si se deja vacío"
+  username_help: "Ingrese un nombre de usuario o deje vacío para usar la parte
+    local del correo"
+  select_tenant: "Seleccionar Empresa"
+  creating_admin_info: "Crear un administrador otorgará permisos elevados. Proceda con precaución."
   events_today: "Eventos Hoy"
-  first_name: "Nombre"
-  last_name: "Apellido"
+  first_name: Nombre
+  last_name: Apellido
   last_update: "Última actualización"
   leave_blank_no_change: "Dejar en blanco para no cambiar"
   manage_users: "Gestionar Usuarios"
@@ -30,231 +37,317 @@ admin:
   no_recent_errors: "No hay errores recientes"
   of_total: "del total"
   panel: "Panel de Administración"
-  percent: "Porcentaje"
-  phone: "Teléfono"
-  address: "Dirección"
-  state_region: "Estado/Región"
-  country: "País"
-  role: "Rol"
-  sessions: "Sesiones"
+  percent: Porcentaje
+  phone: Teléfono
+  address: Dirección
+  state_region: Estado/Región
+  country: País
+  role: Rol
+  sessions: Sesiones
   super_admin: "Super Administrador"
   system_status: "Estado del Sistema"
   total_users: "Total Usuarios"
-  used: "Usado"
-  user: "Usuario"
+  used: Usado
+  user: Usuario
   user_active: "Usuario activo"
   view_logs: "Ver logs"
   view_security_logs: "Ver Logs de Seguridad"
   with_2fa: "Con 2FA"
-
   logs:
     details_title: "Detalles del Evento"
-    details_label: "Detalles"
+    details_label: Detalles
   edit_tenant: "Editar Empresa"
   edit_tenant_form: "Editar Empresa"
   no_tenants_msg: "No hay empresas registradas"
   registered_tenants_section: "Empresas Registradas"
   title_page: "Gestión de la Empresa"
-
+  active_sessions: "Sesiones Activas"
+  no_anomalies: "No se detectaron anomalías"
+  no_sessions: "No hay sesiones activas"
+  no_tokens: "No hay tokens de recuerdo"
+  remember_me_tokens: "Tokens de recuerdo"
+  edit: Editar
+  revoke: Revocar
+  revoke_selected: "Revocar seleccionados"
+  session_anomalies: "Anomalías de sesión"
+  super_quick_actions: "Acciones rápidas"
+  tenant:
+    title: "Configuración de Empresa"
+    info_company: "Información de la Empresa"
+  index:
+    title: Administración
 admin_users:
   all_users: "Todos los Usuarios"
   create_user_title: "Crear Nuevo Usuario"
   edit_user_title: "Editar Usuario"
   no_users_msg: "No hay usuarios registrados"
   title_page: "Gestión de Usuarios"
-
+  activate: Activar
+  deactivate: Desactivar
 roles:
-  user: "Usuario"
-  manager: "Manager"
-  admin: "Administrador"
+  user: Usuario
+  manager: Manager
+  admin: Administrador
   super_admin: "Super Administrador"
-
 auth:
   email_or_username: "Correo Electrónico o Usuario"
   enter_email_username: "Ingrese su correo o usuario"
   enter_password: "Ingrese su contraseña"
   forgot_password: "¿Olvidó su contraseña?"
   login: "Iniciar Sesión"
-  password: "Contraseña"
+  password: Contraseña
   protected_2fa: "Protegido con autenticación 2FA"
   remember_session: "Recordar sesión"
   secure_connection: "Conexión segura con encriptación"
   too_many_attempts: "Demasiados intentos de inicio de sesión. Por favor, intente más tarde."
-
+  logout: "Cerrar Sesión"
+  reauth: "Se requiere re-autenticación"
+  reauth_prompt: "Por favor reingrese su contraseña para continuar"
+  confirm: Confirmar
 buttons:
   back_to_login: "Volver al inicio de sesión"
-  add: "Agregar"
-  cancel: "Cancelar"
-  close: "Cerrar"
-  confirm: "Confirmar"
-  delete: "Eliminar"
-  edit: "Editar"
-  browse: "Examinar"
-  remove: "Eliminar"
-  save: "Guardar"
-  back: "Volver"
-
+  add: Agregar
+  cancel: Cancelar
+  close: Cerrar
+  confirm: Confirmar
+  delete: Eliminar
+  edit: Editar
+  browse: Examinar
+  remove: Eliminar
+  save: Guardar
+  back: Volver
+  back_to_security: "Volver a Seguridad"
 common:
-  account: "Cuenta"
+  account: Cuenta
   account_information: "Información de la Cuenta"
-  action: "Acción"
+  action: Acción
   active_projects: "Proyectos Activos"
   allowed_formats: "JPG, PNG, GIF o WEBP"
-  cancel: "Cancelar"
-  code: "Código"
-  company: "Empresa"
-  configuration: "Configuración"
+  cancel: Cancelar
+  code: Código
+  company: Empresa
+  configuration: Configuración
   current_config: "Configuración Actual"
   current_time: "Hora Actual"
-  date: "Fecha"
-  delete: "Eliminar"
-  edit: "Editar"
+  add_transport: "Agregar transporte"
+  add_material: "Agregar material"
+  add_equipment: "Agregar equipo"
+  add_labor: "Agregar mano de obra"
+  date: Fecha
+  delete: Eliminar
+  edit: Editar
   edit_personal_info: "Editar Información Personal"
   email_not_modifiable: "El email no puede ser modificado"
   example_button: "Botón de Ejemplo"
   example_text: "Ejemplo: Así se verán los elementos con tu tema personalizado"
-  description: "Descripción"
-  export: "Exportar"
-  filter: "Filtrar"
+  description: Descripción
+  export: Exportar
+  filter: Filtrar
   image_profile: "Imagen de Perfil"
-  import: "Importar"
-  important: "Importante"
-  information: "Información"
+  import: Importar
+  important: Importante
+  information: Información
   interface_language: "Idioma de la interfaz del sistema"
   last_access: "Último acceso"
-  created: "Creado"
+  created: Creado
   max_size: "Máximo 2MB"
   member_since: "Miembro desde"
-  never: "Nunca"
-  no: "No"
+  never: Nunca
+  "no": "No"
   no_specified: "No especificado"
-  none: "Ninguno"
+  none: Ninguno
   not_editable: "no editable"
   not_specified: "No especificado"
-  optional: "Opcional"
+  optional: Opcional
   personal_information: "Información Personal"
   preview: "Vista Previa"
   no_file_selected: "No se ha seleccionado ningún archivo"
-  browser: "Navegador"
+  browser: Navegador
   primary_color_description: "Color principal de botones y enlaces"
-  projects: "Proyectos"
+  projects: Proyectos
   new-item-link: "Agregar nuevo elemento"
   reset_theme_confirm: "¿Restablecer tema a los colores predeterminados?"
-  role: "Rol"
-  save: "Guardar"
-  search: "Buscar"
+  role: Rol
+  save: Guardar
+  search: Buscar
+  active: Activo
+  inactive: Inactivo
+  visible_in_apu: "(visible en APU)"
+  project_optional: "Proyecto (si aplica)"
   secondary_color_description: "Color secundario para gradientes"
-  security_label: "Seguridad"
+  security_label: Seguridad
   select_primary: "Seleccionar color primario"
   select_secondary: "Seleccionar color secundario"
   system_description: "Sistema de Análisis de Precios Unitarios"
-  time: "Hora"
-  # Plan names
+  time: Hora
   plan_trial: "Plan de prueba"
   plan_basic: "Plan básico"
   plan_professional: "Plan profesional"
   plan_enterprise: "Plan empresarial"
   timezone_description: "Zona horaria para mostrar fechas y horas"
-  user: "Usuario"
-  view_details: "Ver Detalles"
-  yes: "Sí"
-
+  user: Usuario
+  view_details: "Ver detalles"
+  "yes": Sí
+  select: Seleccionar...
+  back: Volver
+  actions: Acciones
+  view: Ver
+  danger_zone: "Zona de Peligro"
+  admin_only: "Solo administradores pueden realizar esta acción."
+  created_at: Creado
+  name: Nombre
+  col_unit: Unidad
+  no_records: "No hay registros"
+  error_invalid_csrf: "Token de seguridad inválido. Por favor, intente nuevamente."
+  size: Tamaño
 apu:
   limit_reached: "Límite de APUs alcanzado"
   limit_near: "Estás cerca del límite de APUs (%current%/%limit%)."
-
+  create_title: "Crear APU"
+  main_data: "Datos Principales"
+  unit: Unidad
+  equipment: Equipo
+  labor: "Mano de Obra"
+  materials: Materiales
+  transport: Transporte
+  col_description: Descripción
+  col_number: Número
+  col_rate: Tarifa
+  col_cost_hour: C/HORA
+  col_jh: JOR./HORA
+  actions: Acciones
+  col_unit: Unidad
+  col_quantity: Cantidad
+  col_unit_price: "Precio Unit."
+  col_dmt: "DMT (km)"
+  col_rate_km: Tarifa/km
+  col_subtotal: Subtotal
+  cost_summary: "Resumen de Costos"
+  subtotal_equipment: "Subtotal Equipo"
+  subtotal_labor: "Subtotal Mano de Obra"
+  subtotal_materials: "Subtotal Materiales"
+  subtotal_transport: "Subtotal Transporte"
+  total_direct_costs: "Total Costos Directos"
+  utilidad_pct: "Utilidad (%)"
+  precio_calculo: "Precio de Cálculo"
+  precio_ofertado: "Precio Ofertado"
+  save: "Guardar APU"
+  title: "Análisis de Precios Unitarios"
+  header: "APU — Análisis de Precios Unitarios"
+  new_apu: "Nuevo APU"
+  no_apus: "No hay APUs registrados."
+  create_first: "Crear el primer APU"
+  column_description: Descripción
+  column_unit: Unidad
+  column_khu: K(H/U)
+  column_rend: "Rend. u/h"
+  column_total_cost: "Costo Total"
+  column_date: Fecha
+  example_description: "Ej: Excavación manual de zanja"
+  edit: "Editar APU"
+  export_excel: "Exportar Excel"
+  update: "Actualizar APU"
+  edit.title: "Editar Análisis de Precios Unitarios"
+  label:
+    item_description: "Descripción del Rubro"
 dashboard:
-  actions: "Acciones"
+  actions: Acciones
   add_labor: "Agregar Mano de Obra"
   add_material: "Agregar Material"
   analysis: "Análisis de Precios"
-  apus: "APUs"
-  budget: "Presupuesto"
-  client: "Cliente"
-  code: "Código"
+  apus: APUs
+  budget: Presupuesto
+  client: Cliente
+  code: Código
   create_apu: "Crear APU"
   apus_created: "APUs Creados"
   active_projects: "Proyectos Activos"
-  templates_label: "Plantillas"
+  templates_label: Plantillas
   total_budget: "Presupuesto Total"
   create_first_project: "Crear Primer Proyecto"
-  rubros: "Rubros"
-  materials: "Materiales"
+  rubros: Rubros
+  materials: Materiales
   labor: "Mano de Obra"
-  equipment: "Equipos"
-  transport: "Transportes"
+  equipment: Equipos
+  transport: Transportes
   in_progress: "en proceso"
   max_users: "usuarios máx."
-  name: "Nombre"
+  name: Nombre
   new_project: "Nuevo Proyecto"
   no_apus: "No hay APUs registrados"
   create_first: "Crear el primer APU"
   no_projects: "No hay proyectos registrados"
-  plan: "Plan"
+  plan: Plan
   apu:
     limit_reached: "Límite de APUs alcanzado"
-  plan_label: "Plan"
+  plan_label: Plan
   export_report: "Exportar Reporte"
   no_recent_activity: "No hay actividad reciente"
   account_information: "Información de la Cuenta"
-  projects: "Proyectos"
+  projects: Proyectos
   quick_actions: "Acciones Rápidas"
   add_equipment: "Agregar Equipo"
   add_transport: "Agregar Transporte"
   recent_activity: "Actividad Reciente"
   recent_projects: "Proyectos Recientes"
-  reusable: "Reutilizables"
-  stats: "Estadísticas"
-  status: "Estado"
-  templates: "Plantillas"
-  users: "Usuarios"
-  welcome: "Bienvenido"
-
-  # Plan names (from en catalog)
+  reusable: Reutilizables
+  stats: Estadísticas
+  status: Estado
+  templates: Plantillas
+  users: Usuarios
+  welcome: Bienvenido
   plan_trial: "Plan de prueba"
   plan_basic: "Plan básico"
   plan_professional: "Plan profesional"
   plan_enterprise: "Plan empresarial"
-  # Date units
-  month: "mes"
-  months: "meses"
-  year: "año"
-  years: "años"
-
+  month: mes
+  months: meses
+  year: año
+  years: años
 login:
   email: "Correo Electrónico"
-  password: "Contraseña"
-  remember: "Recordarme"
-  submit: "Ingresar"
+  password: Contraseña
+  remember: Recordarme
+  submit: Ingresar
   title: "Iniciar Sesión"
-
 error: "Ha ocurrido un error"
 invalid_data: "Datos inválidos"
+items:
+  visibility:
+    label: Visibilidad
+    tenant: "Visible para la empresa"
+    project: "Visible para el proyecto"
+units:
+  GLB: "GLB (global)"
+  h: "h (hora)"
+  kg: kg
+  m: "m (metro lineal)"
+  m2: m²
+  m3: m³
+  t: "t (tonelada)"
+  u: "u (unidad)"
 success: "Cambios guardados exitosamente"
 unauthorized: "No autorizado"
-system.info: "Info"
-
 nav:
-  admin: "Administración"
-  alerts: "Alertas"
-  companies: "Empresas"
-  dashboard: "Tablero"
-  projects: "Proyectos"
-  errors: "Errores"
+  admin: Administración
+  alerts: Alertas
+  companies: Empresas
+  dashboard: Tablero
+  projects: Proyectos
+  errors: Errores
   global_admin: "Administración Global"
   logout: "Cerrar Sesión"
-  monitoring: "Monitoreo"
+  monitoring: Monitoreo
   profile: "Mi Perfil"
-  security: "Seguridad"
+  security: Seguridad
   security_logs: "Logs de Seguridad"
-  system: "Sistema"
+  system: Sistema
   system_admin: "Administrador del Sistema"
   system_errors: "Errores del Sistema"
   system_management: "Gestión del Sistema"
-  tenants: "Empresas"
-  tests: "Pruebas"
-  tools: "Herramientas"
-
+  tenants: Empresas
+  tests: Pruebas
+  tools: Herramientas
 password:
   back_to_login: "Volver al inicio de sesión"
   change: "Cambiar Contraseña"
@@ -278,9 +371,13 @@ password:
   reset_title: "Restablecer Contraseña"
   security_requirements: "Requisitos de seguridad"
   send_link: "Enviar enlace"
-  title: "Contraseña"
+  title: Contraseña
   reset_expires_in: "El enlace de restablecimiento expira en %minutes% minutos"
-
+  test_emails: "📧 Para pruebas usa: admin@demo.com, admin@abc.com o user@abc.com"
+  reset.title: "Restablecer Contraseña"
+  reset.requirements: "Requisitos de la contraseña:"
+  reset.min_8: "Mínimo 8 caracteres"
+  reset.recommend_chars: "Se recomienda usar letras, números y símbolos"
 emails:
   greeting: "Hola %name%,"
   password_reset_intro: "Has solicitado restablecer tu contraseña. Usa el
@@ -300,24 +397,22 @@ emails:
   error_notification:
     header: "⚠ Error en APU System"
     intro: "Hola %name%, se produjo un error no controlado en el sistema."
-    exception_label: "Excepción"
-    message_label: "Mensaje"
+    exception_label: Excepción
+    message_label: Mensaje
     previous_label: "Causa anterior"
-    file_label: "Archivo"
-    line_label: "Línea"
-    url_label: "URL"
+    file_label: Archivo
+    line_label: Línea
+    url_label: URL
     ip_label: "IP Cliente"
     code_label: "Código de Error"
-    datetime_label: "Fecha/Hora"
-    user_agent_label: "User-Agent"
+    datetime_label: Fecha/Hora
+    user_agent_label: User-Agent
     stack_label: "Stack Trace"
     footer: "APU System · Notificación automática de errores · No responder a este
       correo"
-
+  important: Importante
 mails:
-  important: "IMPORTANTE"
-
-# Cadenas para reportes
+  important: IMPORTANTE
 report:
   budget_title: "PRESUPUESTO DE OBRA"
   project_full_title: "PRESUPUESTO GENERAL DEL PROYECTO"
@@ -332,18 +427,24 @@ report:
   total_general: "TOTAL GENERAL DEL PROYECTO"
   generated_by: "Generado automáticamente — APU System"
   table:
-    col_code: "Código"
-    col_description: "Descripción"
-    col_unit: "Unidad"
-    col_quantity: "Cantidad"
+    col_code: Código
+    col_description: Descripción
+    col_unit: Unidad
+    col_quantity: Cantidad
     col_unit_price: "Precio Unit. USD"
     col_total: "Total USD"
-
+  generate: Reporte
+  full_project: "Reporte Completo del Proyecto"
+  preview_title: "Vista Previa del Presupuesto"
+  download_pdf: "Descargar PDF"
+  download_excel: "Descargar Excel"
+  pdf_error: "Error al generar el PDF."
+  excel_error: "Error al generar el Excel."
 preferences:
-  auto: "Automático"
-  dark: "Oscuro"
-  language: "Idioma"
-  light: "Claro"
+  auto: Automático
+  dark: Oscuro
+  language: Idioma
+  light: Claro
   primary_color: "Color Primario"
   reset_colors: "Restablecer Colores"
   secondary_color: "Color Secundario"
@@ -351,12 +452,11 @@ preferences:
   theme_mode: "Modo de Tema"
   timezone: "Zona Horaria"
   title: "Preferencias de Usuario"
-
 timezone:
   region:
-    America: "América"
-    Europe: "Europa"
-    Asia: "Asia"
+    America: América
+    Europe: Europa
+    Asia: Asia
   America_Guayaquil: "Ecuador (UTC-5)"
   America_New_York: "Nueva York (UTC-5/-4)"
   America_Chicago: "Chicago (UTC-6/-5)"
@@ -373,42 +473,40 @@ timezone:
   Asia_Dubai: "Dubái (UTC+4)"
   Asia_Shanghai: "Shanghai (UTC+8)"
   Asia_Tokyo: "Tokio (UTC+9)"
-
 profile:
   edit_title: "Editar Perfil"
   email: "Correo Electrónico"
-  first_name: "Nombre"
-  last_name: "Apellido"
+  first_name: Nombre
+  last_name: Apellido
   personal_info: "Información Personal"
-  phone: "Teléfono"
-  preferences: "Preferencias"
+  phone: Teléfono
+  preferences: Preferencias
   save: "Guardar Cambios"
   title: "Mi Perfil"
-  username: "Usuario"
-
+  username: Usuario
 security:
   2fa_description: "Agrega una capa adicional de seguridad a tu cuenta requiriendo
     un código de verificación además de tu contraseña"
   two_factor: "Autenticación de Dos Factores"
   2fa_disabled: "2FA Deshabilitado"
   2fa_enabled: "2FA Habilitado"
-  action: "Acción"
+  action: Acción
   active_sessions_desc: "Dispositivos que han iniciado sesión en tu cuenta recientemente."
   change_password: "Cambiar Contraseña"
   configure: "Configurar Seguridad"
-  date: "Fecha"
-  device: "Dispositivo"
+  date: Fecha
+  device: Dispositivo
   devices_recently: "Dispositivos que han iniciado sesión en tu cuenta recientemente"
   disable_2fa: "Deshabilitar 2FA"
-  disabled: "Deshabilitado"
+  disabled: Deshabilitado
   enable_2fa: "Habilitar 2FA"
-  enabled: "Habilitado"
-  event: "Evento"
+  enabled: Habilitado
+  event: Evento
   events: "Eventos de Seguridad"
-  title: "Seguridad"
-  revoke: "Revocar"
+  title: Seguridad
+  revoke: Revocar
   recent_events: "Eventos Recientes"
-  severity: "Severidad"
+  severity: Severidad
   if_lose_device: "Si pierdes tu dispositivo de autenticación, ve a la página de
     inicio de sesión"
   in_your_app: "en tu aplicación de autenticación"
@@ -417,40 +515,76 @@ security:
   min_8_chars: "Mínimo 8 caracteres"
   password_advice: "Se recomienda cambiar tu contraseña regularmente para mantener
     tu cuenta segura."
+  use_auth_app: "Usa una aplicación de autenticación (por ejemplo Google
+    Authenticator, Authy)"
+  recommended_apps: "Aplicaciones Recomendadas"
+  recommended:
+    google: "Google Authenticator: Disponible para iOS y Android"
+    microsoft: "Microsoft Authenticator: Disponible para iOS y Android"
+    authy: "Authy: Disponible para iOS, Android y Desktop"
+  secret_key: "Clave secreta"
+  back_to_security: "Volver a Seguridad"
+  no_active_sessions: "No hay sesiones activas."
+  password_recommendation: "Se recomienda cambiar tu contraseña regularmente para
+    mantener tu cuenta segura."
+  recovery_codes_available: "Códigos de recuperación disponibles"
+  sessions: "Sesiones Activas"
+  2fa:
+    important: Importante
+    once_enabled: "Una vez habilitado el 2FA, necesitarás tu contraseña y un código
+      de verificación para iniciar sesión."
+    disable_instructions: "Para deshabilitar la autenticación de dos factores,
+      ingresa tu código 2FA actual:"
+    code_placeholder: "Código de 6 dígitos"
+  superadmin_verify:
+    code_label: Código
+    expired: "El código ha expirado."
+    expires_in: "El código expira en %minutes% minuto(s) (%time%)."
+    header: "Verificación adicional para superadmin"
+    instruction: "Se ha enviado un código temporal a tu correo. Ingresa el código
+      para completar el inicio de sesión."
+    title: "Verificación de email — Superadmin"
+    verify: Verificar
 security_2fa:
   verify_title: "Verificación de dos factores"
   verify_description: "Ingresa el código de verificación de tu aplicación de
     autenticación o usa un código de recuperación."
+  enable_2fa_title: "Configurar Autenticación de Dos Factores"
+  step_1: "Paso 1"
+  step_2: "Paso 2"
+  scan_with_app: "Escanea el código QR con tu aplicación de autenticación"
+  enter_6_digit: "Ingresa el código de 6 dígitos generado por tu aplicación de autenticación"
+  verify_config: "Verificar configuración"
+  verification_code: "Código de verificación"
+  verify_enable: "Verificar y habilitar"
+  manual_key: "Clave manual"
   enter_code: "Ingresa el código de 6 dígitos"
-  verify_button: "Verificar"
+  verify_button: Verificar
   use_recovery_code: "Usar código de recuperación"
   code_from_app: "Código de 6 dígitos desde tu aplicación de autenticación"
   code_invalidated: "El código se invalidará después de usarse"
   codes_copied: "Códigos copiados al portapapeles"
   configure_2fa: "Configurar Autenticación de Dos Factores"
-  revoke: "Revocar"
+  revoke: Revocar
   no_active_sessions: "No hay sesiones activas."
   title: "Configuración de Seguridad"
   two_factor: "Autenticación de Dos Factores (2FA)"
   use_auth_app: "Usa una aplicación de autenticación como Google Authenticator o Authy"
   back_to_security: "Volver a Seguridad"
-
   superadmin_verify:
     title: "Verificación de email — Superadmin"
     header: "Verificación adicional para superadmin"
     instruction: "Se ha enviado un código temporal a tu correo. Ingresa el código
       para completar el inicio de sesión."
-    code_label: "Código"
-    verify: "Verificar"
+    code_label: Código
+    verify: Verificar
     expires_in: "El código expira en %minutes% minuto(s) (%time%)."
     expired: "El código ha expirado."
-
   regenerate_title: "Regenerar Códigos de Recuperación"
   regenerate_header: "Regenerar códigos de recuperación"
   regenerate_instructions: "Para regenerar tus códigos de recuperación debes
     confirmar tu contraseña actual."
   current_password: "Contraseña actual"
-
   recommended_apps: "Aplicaciones Recomendadas"
   recommended:
     google: "Google Authenticator: Disponible para iOS y Android"
@@ -459,13 +593,30 @@ security_2fa:
   recovery_codes: "Códigos de recuperación disponibles"
   requirements: "Requisitos de seguridad"
   sessions: "Sesiones Activas"
-  severity: "Severidad"
+  severity: Severidad
   secret_key: "Clave secreta"
-
+  copy_codes: "Copiar Códigos"
+  download_codes: "Descargar Códigos"
+  how_to_use: "¿Cómo usar estos códigos?"
+  one_time_use: "Cada código solo se puede usar una vez"
+  print_codes: "Imprimir Códigos"
+  recovery_codes_title: "Códigos de Recuperación"
+  regenerate_button: "Regenerar Códigos"
+  regenerate_confirm: "¿Regenerar códigos de recuperación? Los códigos actuales
+    dejarán de funcionar."
+  save_important: "Guarda estos códigos en un lugar seguro"
+  use_if_lost: "Si pierdes el acceso a tu aplicación de autenticación, puedes usar
+    estos códigos para iniciar sesión"
+  use_recovery_click: "Después de ingresar tu contraseña, haz clic en \"Usar
+    código de recuperación\""
 project:
   status:
-    active: "Activo"
-  continue_button: "Continuar"
+    active: Activo
+    planificacion: Planificación
+    en_proceso: "En Proceso"
+    pausado: Pausado
+    finalizado: Finalizado
+  continue_button: Continuar
   copy_codes: "Copiar Códigos"
   download_codes: "Descargar Códigos"
   enable_2fa_title: "Habilitar Autenticación de Dos Factores"
@@ -489,39 +640,75 @@ project:
     código de recuperación\""
   use_recovery_code: "Usar código de recuperación"
   verification_code: "Código de verificación"
-  verify_button: "Verificar"
+  verify_button: Verificar
   verify_config: "para verificar la configuración"
   verify_description: "Ingresa el código de 6 dígitos desde tu aplicación de autenticación"
   verify_enable: "Verificar y Habilitar"
   verify_title: "Verificación de Dos Factores"
-
+  title: Proyectos
+  new: "Nuevo Proyecto"
+  create_title: "Nuevo Proyecto"
+  edit_title: "Editar Proyecto"
+  general_info: "Información General"
+  dates_budget: "Fechas y Presupuesto"
+  save: "Guardar Proyecto"
+  no_projects: "No hay proyectos registrados aún."
+  col_name: Nombre
+  col_code: Código
+  col_client: Cliente
+  col_location: Ubicación
+  col_status: Estado
+  col_budget: Presupuesto
+  col_date: Fecha
+  start_date: "Fecha de Inicio"
+  end_date: "Fecha de Fin"
+  created_success: "Proyecto creado exitosamente."
+  updated_success: "Proyecto actualizado exitosamente."
+  deleted_success: "Proyecto eliminado."
+  error_invalid_csrf: "Token de seguridad inválido. Por favor, intente nuevamente."
+  not_found: "Proyecto no encontrado."
+  confirm_delete: "¿Está seguro de que desea eliminar este proyecto? Esta acción
+    no se puede deshacer."
+  apus: "APUs del Proyecto"
+  no_apus_yet: "No hay APUs asociados a este proyecto aún."
+  placeholder_name: "Ej: Construcción Bloque A"
+  placeholder_code: "Ej: PRY-001"
+  placeholder_description: "Descripción detallada del proyecto..."
+  placeholder_client: "Nombre del cliente"
+  placeholder_location: "Ciudad, País"
+  limit_reached: "Se alcanzó el límite de proyectos para este plan. No se pueden
+    crear más proyectos."
+  limit_near: "Te estás acercando al límite de proyectos (%current%/%limit%).
+    Considera actualizar el plan o eliminar proyectos sin uso."
+  duplicate: "Duplicar Proyecto"
+  duplicated_success: "Proyecto duplicado exitosamente."
 system:
-  title: "Sistema"
+  title: Sistema
   showing_events: "Mostrando %count% eventos"
-  actions: "Acciones"
-  plan_basic: "Básico"
-  plan_professional: "Profesional"
-  plan_enterprise: "Enterprise"
+  actions: Acciones
+  plan_basic: Básico
+  plan_professional: Profesional
+  plan_enterprise: Enterprise
   category:
-    security: "Seguridad"
-    billing: "Facturación"
-    system: "Sistema"
+    security: Seguridad
+    billing: Facturación
+    system: Sistema
   active_alerts: "Alertas Activas"
-  active_label: "activas"
+  active_label: activas
   active_sessions: "Sesiones Activas"
   active_tenants_list: "Empresas Activas"
   alert_types: "Tipos de Alertas de Seguridad"
-  alerts: "Alertas"
+  alerts: Alertas
   alerts_title: "Alertas del Sistema"
-  all: "Todos"
+  all: Todos
   basic_plan: "Basic: 5 usuarios, 10 proyectos"
-  billing: "Facturación"
-  billing_alerts: "Facturación"
+  billing: Facturación
+  billing_alerts: Facturación
   bot_pattern: "Patrón de bot: Actividad automatizada detectada"
   browser_change: "Cambio de navegador: User-Agent diferente al habitual"
-  cache: "Caché"
+  cache: Caché
   commercial_name: "Nombre comercial de la empresa"
-  company: "Empresa"
+  company: Empresa
   company_code: "Código de Empresa"
   company_code_hint: "Identificador único. Solo letras minúsculas, números y guiones"
   company_code_no_change: "El código de empresa no se puede cambiar una vez creado"
@@ -529,35 +716,35 @@ system:
   tenant_id_label: "ID del Tenant"
   connection_success: "Conexión exitosa"
   create_tenant: "Crear Empresa"
-  critical: "Críticos"
-  critical_alerts: "Críticas"
+  critical: Críticos
+  critical_alerts: Críticas
   critical_events: "Eventos Críticos Recientes"
   database: "Base de Datos"
-  datetime: "Fecha/Hora"
-  disk: "Disco"
+  datetime: Fecha/Hora
+  disk: Disco
   enterprise_plan: "Enterprise: Usuarios y proyectos ilimitados"
   error_log: "Log de Errores"
   error_message: "Mensaje de Error"
   errors: "Errores del Sistema"
-  errors_label: "Errores"
-  event: "Evento"
+  errors_label: Errores
+  event: Evento
   extend_validity: "Extender Vigencia (meses)"
-  hour: "Hora"
+  hour: Hora
   ip_change: "Cambio de IP: El usuario inició sesión desde una IP diferente"
-  level: "Nivel"
+  level: Nivel
   manage_tenants: "Gestionar Empresas"
   max_projects: "Máximo de Proyectos"
   max_users: "Máximo de Usuarios"
-  message: "Mensaje"
-  monitoring: "Monitoreo"
+  message: Mensaje
+  monitoring: Monitoreo
   monitoring_title: "Monitoreo del Sistema"
   expires_label: "Vence:"
-  expired: "EXPIRADO"
-  days: "días"
-  month: "mes"
-  months: "meses"
-  year: "año"
-  years: "años"
+  expired: EXPIRADO
+  days: días
+  month: mes
+  months: meses
+  year: año
+  years: años
   unlimited_time: "Sin límite de tiempo"
   multiple_sessions: "Múltiples sesiones: 3+ sesiones simultáneas desde IPs diferentes"
   new_tenant: "Nueva Empresa"
@@ -568,7 +755,7 @@ system:
   no_modify: "No modificar"
   no_recent_activity: "No hay actividad reciente"
   of_total: "del total"
-  plan: "Plan"
+  plan: Plan
   plan_duration: "Duración del plan antes de expirar"
   plan_expired: "Plan expirado: Requiere renovación inmediata"
   plan_expiring: "Plan próximo a vencer: Menos de 30 días"
@@ -581,25 +768,20 @@ system:
   no_recent_errors: "No hay errores recientes"
   registered_tenants: "Empresas Registradas"
   registered_users: "Usuarios Registrados"
-  registration: "Registro"
-  statistics: "Estadísticas"
+  registration: Registro
+  statistics: Estadísticas
   right_now: "Ahora mismo"
-  security_alerts: "Seguridad"
-  sessions: "Sesiones"
-  severity: "Severidad"
-  size: "Tamaño"
-  status: "Estado"
-  status_active: "Activo"
-  status_inactive: "Inactivo"
-  subdomain: "Subdominio"
+  security_alerts: Seguridad
+  sessions: Sesiones
+  severity: Severidad
+  size: Tamaño
+  status: Estado
+  status_active: Activo
+  status_inactive: Inactivo
+  subdomain: Subdominio
   subdomain_hint: "Solo letras minúsculas, números y guiones"
   subdomain_no_change: "El subdominio no se puede cambiar"
   supervision: "Supervisión del Sistema"
-  system.currency.COP: "Peso Colombiano (COP)"
-  system.currency.USD: "Dólar Americano (USD)"
-  system.currency.MXN: "Peso Mexicano (MXN)"
-  system.currency.PEN: "Nuevo Sol (PEN)"
-  system.currency.CLP: "Peso Chileno (CLP)"
   suspicious_connections: "Conexiones Sospechosas"
   suspicious_ip: "IP sospechosa: IP en lista de amenazas conocidas"
   system_errors: "Errores del Sistema"
@@ -609,14 +791,22 @@ system:
   total_tenants: "Total Empresas"
   total_users: "Total Usuarios"
   user_limit: "Límite de usuarios: Cerca del máximo permitido"
-  users: "Usuarios"
+  users: Usuarios
   users_2fa: "Usuarios 2FA"
-  validity: "Vigencia"
+  validity: Vigencia
   view_all: "Ver todos"
   view_all_errors: "Ver todos los errores"
   view_all_tenants: "Ver todas las empresas"
-  warnings: "Advertencias"
-
+  warnings: Advertencias
+  info: Info
+  created: Creado
+  plan_trial: "Plan Trial"
+  currency:
+    CLP: "Peso Chileno (CLP)"
+    COP: "Peso Colombiano (COP)"
+    MXN: "Peso Mexicano (MXN)"
+    PEN: "Sol Peruano (PEN)"
+    USD: "Dólar Estadounidense (USD)"
 flash:
   test_logs_generated: "Logs de prueba generados exitosamente. Revisa los archivos de log."
   cannot_use_reserved_slug: "No se puede usar este identificador reservado para la empresa."
@@ -635,12 +825,12 @@ flash:
   2fa_disabled: "Autenticación 2FA deshabilitada."
   no_recovery_codes: "No hay códigos de recuperación para mostrar."
   password_policy_not_met: "La contraseña no cumple con la política de contraseñas requerida."
-  auth.reauth: "Re-autenticación"
+  auth.reauth: Re-autenticación
   auth.reauth_prompt: "Por seguridad, por favor reingresa tu contraseña para
     continuar con esta acción."
-  auth.password: "Contraseña"
-  auth.confirm: "Confirmar"
-  auth.confo: "Confirmar"
+  auth.password: Contraseña
+  auth.confirm: Confirmar
+  auth.confo: Confirmar
   password_incorrect: "Contraseña incorrecta."
   recovery_codes_generated: "Se han generado nuevos códigos de recuperación. Revisa tu panel."
   session_revoked: "Sesión revocada exitosamente."
@@ -676,23 +866,23 @@ flash:
   error_deleting_file: "Error al eliminar el archivo: %error%"
   file_marked_reprocess: "Archivo marcado para re-procesamiento"
   error_generic_with_message: "Error: %error%"
-
+  tenant_user_limit_reached: "Se ha alcanzado el límite máximo de usuarios para
+    este plan. Contacte al administrador."
+  tenant_item_limit_reached: "Ha alcanzado el límite de ítems de su plan."
 system_alerts:
   active_alerts_section: "Alertas Activas"
   alert_types_heading: "Tipos de Alertas"
-  billing_section: "Facturación"
+  billing_section: Facturación
   no_active_alerts_msg: "No hay alertas activas"
-  security_section: "Seguridad"
+  security_section: Seguridad
   title_page: "Alertas del Sistema"
-
 system_errors:
-  filter_all: "Todos"
-  filter_critical: "Críticos"
-  filter_errors: "Errores"
-  filter_warnings: "Advertencias"
+  filter_all: Todos
+  filter_critical: Críticos
+  filter_errors: Errores
+  filter_warnings: Advertencias
   no_errors_found: "No se encontraron errores"
   title: "Errores del Sistema"
-
 system_tenants:
   create_new_tenant: "Nueva Empresa"
   create_tenant_form: "Crear Nueva Empresa"
@@ -702,14 +892,13 @@ system_tenants:
   registered_tenants_section: "Empresas Registradas"
   title_page: "Gestión de empresas"
   details_of: "Detalles de %name%"
-  name_label: "Nombre"
-  subdomain_label: "Subdominio"
-  plan_label: "Plan"
-  status_label: "Estado"
-  users_label: "Usuarios"
-  projects_label: "Proyectos"
-  registration_label: "Registro"
-
+  name_label: Nombre
+  subdomain_label: Subdominio
+  plan_label: Plan
+  status_label: Estado
+  users_label: Usuarios
+  projects_label: Proyectos
+  registration_label: Registro
 test:
   valid_emails: "Correos válidos para prueba:"
   back_dashboard: "Volver al Dashboard"
@@ -739,70 +928,17 @@ test:
   security_events: "Eventos de seguridad"
   send_reset_link: "Haz clic en 'Enviar enlace de restablecimiento'"
   steps_to_test: "Pasos para probar"
-  system.info: "Info"
-  system.warnings: "Advertencias"
-
+  system.info: Info
+  system.warnings: Advertencias
   pagination:
-    previous: "Anterior"
-    next: "Siguiente"
-
+    previous: Anterior
+    next: Siguiente
+  warning_message: "Mensaje de advertencia"
 pagination:
-  previous: "Anterior"
-  next: "Siguiente"
+  previous: Anterior
+  next: Siguiente
   page_of: "Página %page% de %total%"
   nav_label: "Navegación de páginas"
-
-  # WebAuthn
-  webauthn.title: "WebAuthn - Credenciales"
-  webauthn.header: "Autenticadores WebAuthn"
-  webauthn.revoke: "Revocar"
-  webauthn.no_credentials: "No hay autenticadores registrados."
-  webauthn.register: "Registrar nuevo autenticador"
-
-  # Revit file_detail
-  revit.details: "Detalles"
-  revit.files: "Archivos Revit"
-  revit.reprocess: "Reprocesar"
-  revit.delete: "Eliminar"
-  revit.label.type: "Tipo"
-  revit.label.status: "Estado"
-  revit.status.completed: "Completado"
-  revit.status.processing: "Procesando"
-  revit.status.pending: "Pendiente"
-  revit.status.error: "Error"
-  revit.label.hash: "Hash (SHA-256)"
-  revit.label.uploaded_by: "Subido por"
-  revit.label.uploaded_at: "Fecha de subida"
-  revit.label.processed_at: "Procesado"
-  revit.metadata: "Metadatos"
-  revit.label.project: "Proyecto"
-  revit.label.elements: "Elementos"
-  revit.processing_result: "Resultado del Procesamiento"
-  revit.processing_error: "Error de Procesamiento"
-  revit.processing.created: "APUs Creados"
-  revit.processing.skipped: "Elementos Omitidos"
-  revit.processing.total: "Total Procesados"
-  revit.showing: "Mostrando %shown% de %total% elementos"
-  # Revit files list
-  revit.upload_new: "Subir Nuevo Archivo"
-  revit.table.file: "Archivo"
-  revit.table.type: "Tipo"
-  revit.label.date: "Fecha"
-  revit.table.actions: "Acciones"
-  revit.view_details: "Ver detalles"
-  revit.total_files: "Total Archivos"
-  revit.completed_files: "Completados"
-  revit.in_progress_files: "En Proceso"
-  revit.error_files: "Con Errores"
-  success_message: "Logs de prueba generados exitosamente. Revisa los archivos de log."
-  system_datetime: "Fecha/Hora Sistema"
-  test_email: "Probar Envío de Email"
-  test_system: "Sistema de Pruebas"
-  timezone_info: "Información de Zona Horaria"
-  verify_email_and_link: "Verifica que el correo fue recibido y prueba el enlace"
-  view_system_logs: "Ver Logs del Sistema"
-  warning_message: "Mensaje de advertencia"
-
 test_mail:
   check_mailpit: "Revisa Mailpit en"
   description: "Para probar el envío de correos, usa la página de recuperación de
@@ -813,314 +949,221 @@ test_mail:
   mailpit_url: "http://localhost:8025"
   recovery_link: "recuperación de contraseña"
   title: "Test de Envío de Email"
-
-auth.logout: "Cerrar Sesión"
-
-revit.confirm_delete: "¿Está seguro de eliminar este archivo?"
-revit.info_general: "Información General"
-revit.label.size: "Tamaño"
-revit.label.version: "Versión"
-revit.label.categories: "Categorías"
-revit.table.category: "Categoría"
-revit.status.pending: "Este archivo está pendiente de procesamiento."
-revit.processing_will_start: "El procesamiento se iniciará automáticamente en breve."
-revit.status.processing: "Este archivo se está procesando actualmente."
-revit.update_to_see_progress: "Actualice la página para ver el progreso."
-revit.info_technical: "Información Técnica"
-revit.processed_elements: "Elementos Procesados"
-revit.table.name: "Nombre"
-revit.table.quantity: "Cantidad"
-revit.table.unit: "Unidad"
-revit.table.status: "Estado"
-revit.table.created: "Creado"
-revit.table.skipped: "Omitido"
-revit.label.stored_filename: "Nombre almacenado"
-revit.label.path: "Ruta"
-revit.label.file_id: "ID del archivo"
-revit.label.name: "Nombre"
-revit.label.type: "Tipo"
-revit.upload.uploading: "Subiendo..."
-revit.upload.selected_file: "Archivo seleccionado"
-revit.upload.unknown: "Desconocido"
-
-# Revit upload how-it-works
-revit.how.title: "¿Cómo funciona?"
-revit.how.step1: "Exporte los datos desde Revit en formato IFC o JSON"
-revit.how.step2: "Suba el archivo usando este formulario"
-revit.how.step3: "El sistema procesará automáticamente:"
-revit.how.step3.item1: "Extracción de elementos (muros, losas, columnas)"
-revit.how.step3.item2: "Cálculo de cantidades y volúmenes"
-revit.how.step3.item3: "Generación de APUs basados en los datos"
-revit.how.step4: "Revise y ajuste los APUs generados"
-
-admin.tenant.title: "Configuración de Empresa"
-admin.tenant.info_company: "Información de la Empresa"
-admin.index.title: "Administración"
-
-apu.edit.title: "Editar Análisis de Precios Unitarios"
-apu.label.item_description: "Descripción del Rubro"
-apu.create_title: "Crear APU"
-apu.main_data: "Datos Principales"
-apu.unit: "Unidad"
-apu.equipment: "Equipo"
-apu.labor: "Mano de Obra"
-apu.materials: "Materiales"
-apu.transport: "Transporte"
-apu.col_description: "Descripción"
-apu.col_number: "Número"
-apu.col_rate: "Tarifa"
-apu.col_cost_hour: "C/HORA"
-apu.col_jh: "JOR./HORA"
-apu.actions: "Acciones"
-apu.col_unit: "Unidad"
-apu.col_quantity: "Cantidad"
-apu.col_unit_price: "Precio Unit."
-apu.col_dmt: "DMT (km)"
-apu.col_rate_km: "Tarifa/km"
-apu.col_subtotal: "Subtotal"
-apu.cost_summary: "Resumen de Costos"
-apu.subtotal_equipment: "Subtotal Equipo"
-apu.subtotal_labor: "Subtotal Mano de Obra"
-apu.subtotal_materials: "Subtotal Materiales"
-apu.subtotal_transport: "Subtotal Transporte"
-apu.total_direct_costs: "Total Costos Directos"
-apu.utilidad_pct: "Utilidad (%)"
-apu.precio_calculo: "Precio de Cálculo"
-apu.precio_ofertado: "Precio Ofertado"
-apu.save: "Guardar APU"
-apu.title: "Análisis de Precios Unitarios"
-apu.header: "APU — Análisis de Precios Unitarios"
-apu.new_apu: "Nuevo APU"
-apu.no_apus: "No hay APUs registrados."
-apu.create_first: "Crear el primer APU"
-apu.column_description: "Descripción"
-apu.column_unit: "Unidad"
-apu.column_khu: "K(H/U)"
-apu.column_rend: "Rend. u/h"
-apu.column_total_cost: "Costo Total"
-apu.column_date: "Fecha"
-apu.example_description: "Ej: Excavación manual de zanja"
-apu.edit: "Editar APU"
-apu.export_excel: "Exportar Excel"
-
-# Units
-units.m2: "m²"
-units.m3: "m³"
-units.m: "m (metro lineal)"
-units.kg: "kg"
-units.u: "u (unidad)"
-units.GLB: "GLB (global)"
-common.select: "Seleccionar..."
-apu.update: "Actualizar APU"
-
-security.2fa.important: "Importante"
-security.2fa.once_enabled: "Una vez habilitado el 2FA, necesitarás tu contraseña
-  y un código de verificación para iniciar sesión."
-security.2fa.disable_instructions: "Para deshabilitar la autenticación de dos
-  factores, ingresa tu código 2FA actual:"
-security.2fa.code_placeholder: "Código de 6 dígitos"
-
-password.reset.title: "Restablecer Contraseña"
-password.reset.requirements: "Requisitos de la contraseña:"
-password.reset.min_8: "Mínimo 8 caracteres"
-password.reset.recommend_chars: "Se recomienda usar letras, números y símbolos"
-email.superadmin_code.greeting: "Hola %name%,"
-email.superadmin_code.message: "Tu código de acceso para la cuenta de administrador es: %code%"
-email.superadmin_code.expires_in: "Expira en %mins% minuto(s) (%datetime%)"
-email.superadmin_code.expired: "El código ha expirado."
-email.superadmin_code.ignore_if_not_requested: "Si no solicitaste este código, ignora este correo."
-email.superadmin_code.title: "Verificación de acceso"
-email.superadmin_code.instruction: "Usa el siguiente código para completar el inicio de sesión de administrador."
-email.superadmin_code.no_request_notice: "Si no solicitaste este código, ignora
-  este correo o contacta al equipo de seguridad."
-email.recovery_code_used.title: "Alerta de seguridad"
-email.recovery_code_used.body: "Se ha utilizado un código de recuperación para
-  acceder a tu cuenta. Si no fuiste tú, por favor contacta al administrador
-  inmediatamente y revoca sesiones activas desde tu panel de seguridad."
-email.recovery_code_used.action_if_you: "Si fuiste tú, puedes ignorar este correo."
-password.test_emails: "📧 Para pruebas usa: admin@demo.com, admin@abc.com o user@abc.com"
-
-# WebAuthn (ampliado)
-webauthn.registered_keys: "Llaves registradas"
-webauthn.register_new_key: "Registrar nueva llave"
-webauthn.register_description: "Registra tu llave de seguridad física, Face ID,
-  Touch ID u otro autenticador compatible con WebAuthn."
-webauthn.registering: "Registrando..."
-webauthn.registered_ok: "Llave registrada correctamente."
-webauthn.revoked_ok: "Llave revocada correctamente."
-webauthn.confirm_revoke: "¿Estás seguro de revocar esta llave? Ya no podrás usarla para iniciar sesión."
-webauthn.error_start: "Error al iniciar el registro."
-webauthn.error_registration: "Error en el registro"
-webauthn.error_revoke: "Error al revocar la llave."
-webauthn.error_admin_hardware: "Los administradores deben usar una llave de seguridad hardware."
-webauthn.error_user_cancelled: "Operación cancelada por el usuario."
-webauthn.registered_at: "Registrada"
-webauthn.format: "Formato"
-webauthn.aaguid: "AAGUID"
-webauthn.actions: "Acciones"
-
-# Common (adicional)
-common.back: "Volver"
-common.view_details: "Ver detalles"
-common.actions: "Acciones"
-common.view: "Ver"
-common.edit: "Editar"
-common.delete: "Eliminar"
-common.danger_zone: "Zona de Peligro"
-common.admin_only: "Solo administradores pueden realizar esta acción."
-common.created_at: "Creado"
-common.user: "Usuario"
-common.company: "Empresa"
-common.description: "Descripción"
-buttons.cancel: "Cancelar"
-buttons.back: "Volver"
-
-flash.tenant_user_limit_reached: "Se ha alcanzado el límite máximo de usuarios
-  para este plan. Contacte al administrador."
-
-# Proyectos
-project.title: "Proyectos"
-project.new: "Nuevo Proyecto"
-project.create_title: "Nuevo Proyecto"
-project.edit_title: "Editar Proyecto"
-project.general_info: "Información General"
-project.dates_budget: "Fechas y Presupuesto"
-project.save: "Guardar Proyecto"
-project.no_projects: "No hay proyectos registrados aún."
-project.col_name: "Nombre"
-project.col_code: "Código"
-project.col_client: "Cliente"
-project.col_location: "Ubicación"
-project.col_status: "Estado"
-project.col_budget: "Presupuesto"
-project.col_date: "Fecha"
-project.start_date: "Fecha de Inicio"
-project.end_date: "Fecha de Fin"
-project.status.planificacion: "Planificación"
-project.status.en_proceso: "En Proceso"
-project.status.pausado: "Pausado"
-project.status.finalizado: "Finalizado"
-project.created_success: "Proyecto creado exitosamente."
-project.updated_success: "Proyecto actualizado exitosamente."
-project.deleted_success: "Proyecto eliminado."
-project.error_invalid_csrf: "Token de seguridad inválido. Por favor, intente nuevamente."
-project.not_found: "Proyecto no encontrado."
-project.confirm_delete: "¿Está seguro de que desea eliminar este proyecto? Esta
-  acción no se puede deshacer."
-project.apus: "APUs del Proyecto"
-project.no_apus_yet: "No hay APUs asociados a este proyecto aún."
-project.placeholder_name: "Ej: Construcción Bloque A"
-project.placeholder_code: "Ej: PRY-001"
-project.placeholder_description: "Descripción detallada del proyecto..."
-project.placeholder_client: "Nombre del cliente"
-project.placeholder_location: "Ciudad, País"
-project.limit_reached: "Se alcanzó el límite de proyectos para este plan. No se
-  pueden crear más proyectos."
-project.limit_near: "Te estás acercando al límite de proyectos
-  (%current%/%limit%). Considera actualizar el plan o eliminar proyectos sin
-  uso."
-
-# Notificaciones de usuario
-user.limit_near: "Te estás acercando al límite de usuarios (%current%/%limit%)."
-
-# Nuevas cadenas solicitadas
-auth.reauth: "Se requiere re-autenticación"
-auth.reauth_prompt: "Por favor reingrese su contraseña para continuar"
-auth.confirm: "Confirmar"
-
-# Rubros
-rubro.title: "Rubros"
-rubro.new: "Nuevo Rubro"
-rubro.edit_title: "Editar Rubro"
-rubro.save: "Guardar Rubro"
-rubro.col_code: "Código"
-rubro.col_name: "Nombre"
-rubro.col_unit: "Unidad"
-rubro.col_type: "Tipo"
-rubro.tipo.general: "General"
-rubro.tipo.personalizado: "Personalizado"
-rubro.no_rubros: "No hay rubros registrados aún."
-rubro.not_found: "Rubro no encontrado."
-rubro.created_success: "Rubro creado exitosamente."
-rubro.updated_success: "Rubro actualizado exitosamente."
-rubro.deleted_success: "Rubro eliminado."
-rubro.confirm_delete: "¿Eliminar este rubro? Esta acción no se puede deshacer."
-
-# Plantillas
-plantilla.title: "Plantillas"
-plantilla.new: "Nueva Plantilla"
-plantilla.edit_title: "Editar Plantilla"
-plantilla.save: "Guardar Plantilla"
-plantilla.duplicate: "Duplicar"
-plantilla.edit: "Editar"
-plantilla.col_name: "Nombre"
-plantilla.rubros: "Rubros"
-plantilla.add_rubro: "Agregar Rubro"
-plantilla.select_rubro: "Seleccionar Rubro"
-plantilla.col_cantidad: "Cantidad"
-plantilla.col_precio_unit: "Precio Unit."
-plantilla.col_total: "Total"
-plantilla.total_presupuesto: "Total Presupuesto"
-plantilla.apu_pending: "Sin APU"
-plantilla.create_apu: "Crear APU"
-plantilla.no_rubros: "No hay rubros en esta plantilla."
-plantilla.no_plantillas: "No hay plantillas en este proyecto."
-plantilla.no_rubros_available: "No hay rubros disponibles. Cree rubros primero."
-plantilla.rubro_already_added: "El rubro ya está en esta plantilla."
-plantilla.rubro_added: "Rubro agregado a la plantilla."
-plantilla.rubro_removed: "Rubro eliminado de la plantilla."
-plantilla.created_success: "Plantilla creada exitosamente."
-plantilla.updated_success: "Plantilla actualizada exitosamente."
-plantilla.deleted_success: "Plantilla eliminada."
-plantilla.duplicated_success: "Plantilla duplicada exitosamente."
-plantilla.delete: "Eliminar Plantilla"
-plantilla.confirm_delete: "¿Eliminar esta plantilla y todos sus rubros? Esta
-  acción no se puede deshacer."
-plantilla.confirm_remove_rubro: "¿Eliminar este rubro de la plantilla?"
-
-# Claves compatibles con prefijo 'template' (inglés)
-template.title: "Plantillas"
-template.new: "Nueva Plantilla"
-template.edit_title: "Editar Plantilla"
-template.save: "Guardar Plantilla"
-template.duplicate: "Duplicar"
-template.edit: "Editar"
-template.col_name: "Nombre"
-template.rubros: "Rubros"
-template.add_rubro: "Agregar Rubro"
-template.select_rubro: "Seleccionar Rubro"
-template.col_cantidad: "Cantidad"
-template.col_precio_unit: "Precio Unit."
-template.col_total: "Total"
-template.total_presupuesto: "Total Presupuesto"
-template.apu_pending: "Sin APU"
-template.create_apu: "Crear APU"
-template.no_rubros: "No hay rubros en esta plantilla."
-template.no_plantillas: "No hay plantillas en este proyecto."
-template.no_rubros_available: "No hay rubros disponibles. Cree rubros primero."
-template.rubro_already_added: "El rubro ya está en esta plantilla."
-template.rubro_added: "Rubro agregado a la plantilla."
-template.rubro_removed: "Rubro eliminado de la plantilla."
-template.created_success: "Plantilla creada exitosamente."
-template.updated_success: "Plantilla actualizada exitosamente."
-template.deleted_success: "Plantilla eliminada."
-template.duplicated_success: "Plantilla duplicada exitosamente."
-template.confirm_delete: "¿Eliminar esta plantilla y todos sus rubros? Esta
-  acción no se puede deshacer."
-template.confirm_remove_rubro: "¿Eliminar este rubro de la plantilla?"
-
-# Proyectos (adicional)
-project.duplicate: "Duplicar Proyecto"
-project.duplicated_success: "Proyecto duplicado exitosamente."
-
-# Reportes
-report.generate: "Reporte"
-report.full_project: "Reporte Completo del Proyecto"
-report.preview_title: "Vista Previa del Presupuesto"
-report.download_pdf: "Descargar PDF"
-report.download_excel: "Descargar Excel"
-report.pdf_error: "Error al generar el PDF."
-report.excel_error: "Error al generar el Excel."
-
-# Common (adicional)
-common.error_invalid_csrf: "Token de seguridad inválido. Por favor, intente nuevamente."
+revit:
+  allowed_formats: "Formatos permitidos: RVT, IFC, JSON"
+  completed_files: "Archivos completados"
+  confirm_delete: "¿Está seguro de eliminar este archivo?"
+  delete: Eliminar
+  details: Detalles
+  error_files: "Archivos con errores"
+  files: Archivos
+  ifc_description: "IFC (Industry Foundation Classes)"
+  in_progress_files: "Archivos en proceso"
+  info_general: "Información General"
+  info_technical: "Información Técnica"
+  json_description: "JSON (datos estructurados)"
+  metadata: Metadatos
+  no_files: "Aún no se han subido archivos"
+  processed_elements: "Elementos Procesados"
+  processing_error: "Error de procesamiento"
+  processing_result: "Resultado del procesamiento"
+  processing_will_start: "El procesamiento se iniciará automáticamente en breve."
+  reprocess: Reprocesar
+  rvt_description: "RVT (formato nativo de Revit)"
+  select_file: "Seleccionar archivo"
+  showing: Mostrando
+  total_files: "Total de archivos"
+  update_to_see_progress: "Actualice la página para ver el progreso."
+  upload_first: "Sube tu primer archivo"
+  upload_header: "Subir Archivo"
+  upload_instruction: "Selecciona un archivo Revit, IFC o JSON para subir"
+  upload_new: "Subir nuevo archivo"
+  upload_title: "Subir Archivo Revit"
+  view_details: "Ver detalles"
+  how:
+    title: "¿Cómo funciona?"
+    step1: "Exporte los datos desde Revit en formato IFC o JSON"
+    step2: "Suba el archivo usando este formulario"
+    step3: "El sistema procesará automáticamente:"
+    step3.item1: "Extracción de elementos (muros, losas, columnas)"
+    step3.item2: "Cálculo de cantidades y volúmenes"
+    step3.item3: "Generación de APUs basados en los datos"
+    step4: "Revise y ajuste los APUs generados"
+  label:
+    categories: Categorías
+    date: Fecha
+    elements: Elementos
+    file_id: "ID del archivo"
+    hash: "Hash (SHA-256)"
+    name: Nombre
+    path: Ruta
+    processed_at: "Procesado en"
+    project: Proyecto
+    size: Tamaño
+    status: Estado
+    stored_filename: "Nombre almacenado"
+    type: Tipo
+    uploaded_at: "Subido en"
+    uploaded_by: "Subido por"
+    version: Versión
+  processing:
+    created: Creados
+    skipped: Omitidos
+    total: Total
+  status:
+    completed: Completado
+    error: Error
+    pending: "Este archivo está pendiente de procesamiento."
+    processing: "Este archivo se está procesando actualmente."
+  table:
+    actions: Acciones
+    category: Categoría
+    created: Creado
+    file: Archivo
+    name: Nombre
+    quantity: Cantidad
+    skipped: Omitido
+    status: Estado
+    type: Tipo
+    unit: Unidad
+  upload:
+    uploading: Subiendo...
+    selected_file: "Archivo seleccionado"
+    unknown: Desconocido
+webauthn:
+  aaguid: AAGUID
+  actions: Acciones
+  confirm_revoke: "¿Estás seguro de revocar esta llave? Ya no podrás usarla para
+    iniciar sesión."
+  error_admin_hardware: "Los administradores deben usar una llave de seguridad hardware."
+  error_registration: "Error en el registro"
+  error_revoke: "Error al revocar la llave."
+  error_start: "Error al iniciar el registro."
+  error_user_cancelled: "Operación cancelada por el usuario."
+  format: Formato
+  header: "Llaves de Seguridad (WebAuthn)"
+  no_credentials: "No hay llaves de seguridad registradas"
+  register: "Registrar llave de seguridad"
+  register_description: "Registra tu llave de seguridad física, Face ID, Touch ID
+    u otro autenticador compatible con WebAuthn."
+  register_new_key: "Registrar nueva llave"
+  registered_at: Registrada
+  registered_keys: "Llaves registradas"
+  registered_ok: "Llave registrada correctamente."
+  registering: Registrando...
+  revoke: Revocar
+  revoked_ok: "Llave revocada correctamente."
+  title: "Credenciales WebAuthn"
+name:
+  invalid: "El nombre contiene caracteres no válidos"
+code:
+  invalid: "El código solo puede contener letras, números, guiones y guiones bajos"
+user:
+  limit_near: "Te estás acercando al límite de usuarios (%current%/%limit%)."
+rubro:
+  title: Rubros
+  new: "Nuevo Rubro"
+  edit_title: "Editar Rubro"
+  save: "Guardar Rubro"
+  col_code: Código
+  col_name: Nombre
+  col_unit: Unidad
+  col_type: Tipo
+  no_rubros: "No hay rubros registrados aún."
+  not_found: "Rubro no encontrado."
+  created_success: "Rubro creado exitosamente."
+  updated_success: "Rubro actualizado exitosamente."
+  deleted_success: "Rubro eliminado."
+  confirm_delete: "¿Eliminar este rubro? Esta acción no se puede deshacer."
+  tipo:
+    general: General
+    personalizado: Personalizado
+plantilla:
+  title: Plantillas
+  new: "Nueva Plantilla"
+  edit_title: "Editar Plantilla"
+  save: "Guardar Plantilla"
+  duplicate: Duplicar
+  edit: Editar
+  col_name: Nombre
+  rubros: Rubros
+  add_rubro: "Agregar Rubro"
+  select_rubro: "Seleccionar Rubro"
+  col_cantidad: Cantidad
+  col_precio_unit: "Precio Unit."
+  col_total: Total
+  total_presupuesto: "Total Presupuesto"
+  apu_pending: "Sin APU"
+  create_apu: "Crear APU"
+  no_rubros: "No hay rubros en esta plantilla."
+  no_plantillas: "No hay plantillas en este proyecto."
+  no_rubros_available: "No hay rubros disponibles. Cree rubros primero."
+  rubro_already_added: "El rubro ya está en esta plantilla."
+  rubro_added: "Rubro agregado a la plantilla."
+  rubro_removed: "Rubro eliminado de la plantilla."
+  created_success: "Plantilla creada exitosamente."
+  updated_success: "Plantilla actualizada exitosamente."
+  deleted_success: "Plantilla eliminada."
+  duplicated_success: "Plantilla duplicada exitosamente."
+  delete: "Eliminar Plantilla"
+  confirm_delete: "¿Eliminar esta plantilla y todos sus rubros? Esta acción no se
+    puede deshacer."
+  confirm_remove_rubro: "¿Eliminar este rubro de la plantilla?"
+template:
+  title: Plantillas
+  new: "Nueva Plantilla"
+  edit_title: "Editar Plantilla"
+  save: "Guardar Plantilla"
+  duplicate: Duplicar
+  edit: Editar
+  col_name: Nombre
+  rubros: Rubros
+  add_rubro: "Agregar Rubro"
+  select_rubro: "Seleccionar Rubro"
+  col_cantidad: Cantidad
+  col_precio_unit: "Precio Unit."
+  col_total: Total
+  total_presupuesto: "Total Presupuesto"
+  apu_pending: "Sin APU"
+  create_apu: "Crear APU"
+  no_rubros: "No hay rubros en esta plantilla."
+  no_plantillas: "No hay plantillas en este proyecto."
+  no_rubros_available: "No hay rubros disponibles. Cree rubros primero."
+  rubro_already_added: "El rubro ya está en esta plantilla."
+  rubro_added: "Rubro agregado a la plantilla."
+  rubro_removed: "Rubro eliminado de la plantilla."
+  created_success: "Plantilla creada exitosamente."
+  updated_success: "Plantilla actualizada exitosamente."
+  deleted_success: "Plantilla eliminada."
+  duplicated_success: "Plantilla duplicada exitosamente."
+  confirm_delete: "¿Eliminar esta plantilla y todos sus rubros? Esta acción no se
+    puede deshacer."
+  confirm_remove_rubro: "¿Eliminar este rubro de la plantilla?"
+catalog:
+  confirm_delete: "¿Está seguro de que desea eliminar este elemento? Esta acción
+    no se puede deshacer."
+  created_success: "Elemento creado exitosamente."
+  updated_success: "Elemento actualizado exitosamente."
+labor:
+  new: "Nueva Mano de Obra"
+  updated_success: "Elemento actualizado exitosamente."
+item:
+  edit_title: "Editar Ítem"
+email:
+  superadmin_code:
+    greeting: "Hola %name%,"
+    message: "Tu código de acceso para la cuenta de administrador es: %code%"
+    expires_in: "Expira en %mins% minuto(s) (%datetime%)"
+    expired: "El código ha expirado."
+    ignore_if_not_requested: "Si no solicitaste este código, ignora este correo."
+    title: "Verificación de acceso"
+    instruction: "Usa el siguiente código para completar el inicio de sesión de
+      administrador."
+    no_request_notice: "Si no solicitaste este código, ignora este correo o contacta
+      al equipo de seguridad."
+  recovery_code_used:
+    title: "Alerta de seguridad"
+    body: "Se ha utilizado un código de recuperación para acceder a tu cuenta. Si no
+      fuiste tú, por favor contacta al administrador inmediatamente y revoca
+      sesiones activas desde tu panel de seguridad."
+    action_if_you: "Si fuiste tú, puedes ignorar este correo."

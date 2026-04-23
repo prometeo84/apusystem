@@ -9,6 +9,7 @@
     <p>{{ 'security_2fa.regenerate_instructions'|trans }}</p>
 
     <form method="post">
+      <input type="hidden" name="_token" value="{{ csrf_token('regenerate_recovery') }}">
       <div class="mb-3">
         <label class="form-label">{{ 'security_2fa.current_password'|trans }}</label>
         <input name="current_password" type="password" class="form-control" required />

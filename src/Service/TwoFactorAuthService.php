@@ -144,7 +144,7 @@ class TwoFactorAuthService
             return false;
         }
 
-        $user->setTotpSecret($secret);
+        $user->setTotpSecret($this->encryptionService->encrypt($secret));
         $user->setTotpEnabled(true);
 
         $this->em->flush();

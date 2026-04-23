@@ -51,6 +51,12 @@
                     <i class="bi bi-shield-lock"></i> {{ 'nav.security_logs'|trans }}
                 </a>
 
+                {# Link to create admin users for superadmins #}
+                <a class="nav-link {% if app.request.get('_route') starts with 'app_admin_users' %}active{% endif %}"
+                   href="{{ path('app_admin_users_create', {'role':'ROLE_ADMIN'}) }}">
+                    <i class="bi bi-person-plus"></i> {{ 'admin.create_admin'|trans }}
+                </a>
+
                 <hr class="my-2">
 
                 <small class="text-muted text-uppercase px-3 mb-2 d-block">{{ 'nav.tools'|trans }}</small>
@@ -73,16 +79,19 @@
                     <i class="bi bi-folder"></i> {{ 'dashboard.projects'|trans }}
                 </a>
 
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a class="nav-link {% if app.request.get('_route') starts with 'app_template' %}active{% endif %}"
+                       href="{% if app.request.get('projectId') %}{{ path('app_template_index', {projectId: app.request.get('projectId')}) }}{% else %}{{ path('app_project_index') }}{% endif %}">
+                        <i class="bi bi-layout-text-window-reverse"></i> {{ 'dashboard.templates'|trans }}
+                    </a>
+                {% endif %}
+
                 <a class="nav-link {% if app.request.get('_route') starts with 'app_item' %}active{% endif %}"
                    href="{{ path('app_item_index') }}">
                     <i class="bi bi-tags"></i> {{ 'dashboard.rubros'|trans }}
                 </a>
 
                 {% if is_granted('ROLE_ADMIN') %}
-                    <a class="nav-link {% if app.request.get('_route') starts with 'app_template' %}active{% endif %}"
-                       href="{% if app.request.get('projectId') %}{{ path('app_template_index', {projectId: app.request.get('projectId')}) }}{% else %}{{ path('app_project_index') }}{% endif %}">
-                        <i class="bi bi-layout-text-window-reverse"></i> {{ 'dashboard.templates'|trans }}
-                    </a>
                     <a class="nav-link {% if app.request.get('_route') starts with 'catalog_material' %}active{% endif %}"
                        href="{{ path('catalog_material_index') }}">
                         <i class="bi bi-box-seam"></i> {{ 'dashboard.materials'|trans }}
@@ -112,6 +121,10 @@
                     <a class="nav-link {% if app.request.get('_route') starts with 'app_admin' %}active{% endif %}"
                        href="{{ path('app_admin') }}">
                         <i class="bi bi-gear"></i> {{ 'nav.admin'|trans }}
+                    </a>
+                    <a class="nav-link {% if app.request.get('_route') starts with 'app_admin_users' %}active{% endif %}"
+                       href="{{ path('app_admin_users_create') }}">
+                        <i class="bi bi-person-plus"></i> {{ 'admin.create_user'|trans }}
                     </a>
                 {% endif %}
             {% endif %}

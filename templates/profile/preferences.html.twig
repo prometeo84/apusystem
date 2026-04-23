@@ -103,10 +103,10 @@
                                 <div class="mb-3">
                                     <label for="theme_primary_color" class="form-label">{{ 'preferences.primary_color'|trans }}</label>
                                     <div class="input-group">
-                                        <input type="color" name="theme_primary_color" id="theme_primary_color"
-                                               class="form-control form-control-color"
-                                               value="{{ user.themePrimaryColor }}"
-                                               title="Seleccionar color primario">
+                                             <input type="color" name="theme_primary_color" id="theme_primary_color"
+                                                 class="form-control form-control-color"
+                                                 value="{{ user.themePrimaryColor }}"
+                                                 title="{{ 'common.select_primary'|trans }}">
                                         <input type="text" class="form-control" id="primaryColorHex"
                                                value="{{ user.themePrimaryColor }}" readonly>
                                     </div>

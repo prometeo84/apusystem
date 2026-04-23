@@ -1,8 +1,6 @@
 doctrine:
     dbal:
-        url: '%env(resolve:DATABASE_URL)%'
-        driver: 'pdo_mysql'
-        server_version: '8.0'
+        url: "%env(resolve:DATABASE_URL)%"
         charset: utf8mb4
         default_table_options:
             charset: utf8mb4
@@ -19,21 +17,22 @@ doctrine:
             App:
                 type: attribute
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Entity'
-                prefix: 'App\Entity'
+                dir: "%kernel.project_dir%/src/Entity"
+                prefix: "App\\Entity"
                 alias: App
 
 when@test:
     doctrine:
         dbal:
+            url: "%env(resolve:DATABASE_URL)%"
             # "TEST_TOKEN" is typically set by ParaTest
-            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+            dbname_suffix: ""
 
 when@prod:
     doctrine:
         orm:
             auto_generate_proxy_classes: false
-            proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
+            proxy_dir: "%kernel.build_dir%/doctrine/orm/Proxies"
             query_cache_driver:
                 type: pool
                 pool: doctrine.system_cache_pool

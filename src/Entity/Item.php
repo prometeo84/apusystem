@@ -32,7 +32,7 @@ class Item
     #[Assert\NotBlank(message: 'name.required')]
     #[Assert\Length(max: 255)]
     // Require at least one letter to avoid accepting numeric-only names
-    #[Assert\Regex(pattern: '/^(?=.*\\p{L})[\\p{L}\\d\\s\\-\\._]+$/u', message: 'name.invalid')]
+    #[Assert\Regex(pattern: '/^(?=.*\p{L})[\p{L}\d\s\-\._\(\),\/]+$/u', message: 'name.invalid')]
     private string $name;
 
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]

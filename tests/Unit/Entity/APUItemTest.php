@@ -13,8 +13,9 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 
 /**
- * Tests unitarios para APUItem (incluyendo utilidadPct y precioOfertado).
- * Cubre: UC-A1 (Campos), UC-A2 (Cálculo costos), UC-A3 (Utilidad/Precio)
+ * Tests unitarios para APUItem.
+ * Fórmulas: C = A×B; D = C×R (equipo/mano de obra)
+ * UC-A1 (Campos), UC-A2 (Cálculo costos), UC-A3 (Utilidad/Precio)
  */
 class APUItemTest extends TestCase
 {
@@ -65,18 +66,18 @@ class APUItemTest extends TestCase
     {
         $item = $this->buildAPUItem();
 
+        // A=1, B=50 $/h => C=50; R=8 u/h => D=400
         $equip = new APUEquipment();
         $equip->setDescription('Retroexcavadora');
-        $equip->setQuantity(1);
-        $equip->setTarifa('50.00');
-        $equip->setCHora('8.0000');
+        $equip->setNumber(1);
+        $equip->setRate(50.00);
+        $equip->setRendimientoUh(8.0);
         $item->addEquipment($equip);
 
         $item->calculateCosts();
 
-        // equipmentCost = tarifa * cHora = 50 * 8 = 400
-        $this->assertSame('400', $item->getEquipmentCost());
-        $this->assertSame('400', $item->getTotalCost());
+        $this->assertEqualsWithDelta(400.0, (float)$item->getEquipmentCost(), 0.01);
+        $this->assertEqualsWithDelta(400.0, (float)$item->getTotalCost(), 0.01);
     }
 
     #[Test]
@@ -84,17 +85,16 @@ class APUItemTest extends TestCase
     {
         $item = $this->buildAPUItem();
 
+        // A=2, B=3.75 $/h => C=7.50; R=4 u/h => D=30
         $labor = new APULabor();
-        $labor->setDescription('Peón');
-        $labor->setQuantity(2);
-        $labor->setJorHora('3.75');
-        $labor->setCHora('8.0000');
+        $labor->setNumber(2);
+        $labor->setJorHora(3.75);
+        $labor->setRendimientoUh(4.0);
         $item->addLabor($labor);
 
         $item->calculateCosts();
 
-        // laborCost = jorHora * cHora = 3.75 * 8 = 30
-        $this->assertSame('30', $item->getLaborCost());
+        $this->assertEqualsWithDelta(30.0, (float)$item->getLaborCost(), 0.01);
     }
 
     #[Test]
@@ -102,16 +102,14 @@ class APUItemTest extends TestCase
     {
         $item = $this->buildAPUItem();
 
+        // cantidad=10.5, precio=8.50 => total=89.25
         $mat = new APUMaterial();
-        $mat->setDescription('Cemento Portland');
-        $mat->setUnit('saco');
-        $mat->setQuantity('10.5');
-        $mat->setUnitPrice('8.50');
+        $mat->setQuantity(10.5);
+        $mat->setUnitPrice(8.50);
         $item->addMaterial($mat);
 
         $item->calculateCosts();
 
-        // materialCost = cantidad * precio = 10.5 * 8.50 = 89.25
         $this->assertEqualsWithDelta(89.25, (float)$item->getMaterialCost(), 0.001);
     }
 
@@ -120,24 +118,42 @@ class APUItemTest extends TestCase
     {
         $item = $this->buildAPUItem();
 
+        // Equipo: A=1, B=20, R=5 => D=100
         $equip = new APUEquipment();
         $equip->setDescription('Compresor');
-        $equip->setQuantity(1);
-        $equip->setTarifa('20.00');
-        $equip->setCHora('5.0000');
+        $equip->setNumber(1);
+        $equip->setRate(20.00);
+        $equip->setRendimientoUh(5.0);
         $item->addEquipment($equip);
 
+        // Material: 2 × 15 = 30
         $mat = new APUMaterial();
-        $mat->setDescription('Arena fina');
-        $mat->setUnit('m³');
-        $mat->setQuantity('2.0');
-        $mat->setUnitPrice('15.00');
+        $mat->setQuantity(2.0);
+        $mat->setUnitPrice(15.00);
         $item->addMaterial($mat);
 
         $item->calculateCosts();
 
-        // total = 100 (equipo) + 30 (materiales) = 130
         $this->assertEqualsWithDelta(130.0, (float)$item->getTotalCost(), 0.001);
+    }
+
+    #[Test]
+    public function calculateCostsCalculationPriceSeGuarda(): void
+    {
+        $item = $this->buildAPUItem();
+        $item->setProfitPct('20.00');
+
+        $mat = new APUMaterial();
+        $mat->setQuantity(100.0);
+        $mat->setUnitPrice(1.00);
+        $item->addMaterial($mat);
+
+        $item->calculateCosts();
+
+        // totalCost=100, profitPct=20% => calculationPrice=120
+        $this->assertEqualsWithDelta(120.0, $item->getCalculationPrice(), 0.001);
+        $this->assertNotNull($item->getCalculationPriceStored());
+        $this->assertEqualsWithDelta(120.0, (float)$item->getCalculationPriceStored(), 0.001);
     }
 
     // ---- UtilidadPct y PrecioOfertado ----
@@ -178,16 +194,14 @@ class APUItemTest extends TestCase
         $item = $this->buildAPUItem();
 
         $mat = new APUMaterial();
-        $mat->setDescription('Bloques de concreto');
-        $mat->setUnit('u');
-        $mat->setQuantity('100.0');
-        $mat->setUnitPrice('1.00');
+        $mat->setQuantity(100.0);
+        $mat->setUnitPrice(1.00);
         $item->addMaterial($mat);
         $item->calculateCosts(); // totalCost = 100
 
         $item->setProfitPct('20.00');
+        $item->calculateCosts(); // must re-run to update calculationPriceStored
 
-        // precioCalculo = 100 * (1 + 20/100) = 120
         $this->assertEqualsWithDelta(120.0, $item->getCalculationPrice(), 0.001);
     }
 
@@ -197,14 +211,11 @@ class APUItemTest extends TestCase
         $item = $this->buildAPUItem();
 
         $mat = new APUMaterial();
-        $mat->setDescription('Test mat');
-        $mat->setUnit('u');
-        $mat->setQuantity('1.0');
-        $mat->setUnitPrice('50.00');
+        $mat->setQuantity(1.0);
+        $mat->setUnitPrice(50.00);
         $item->addMaterial($mat);
         $item->calculateCosts();
 
-        // Sin utilidadPct debería retornar totalCost
         $this->assertEqualsWithDelta(50.0, $item->getCalculationPrice(), 0.001);
     }
 
@@ -215,10 +226,8 @@ class APUItemTest extends TestCase
         $item->setProfitPct(null);
 
         $mat = new APUMaterial();
-        $mat->setDescription('Test');
-        $mat->setUnit('u');
-        $mat->setQuantity('1.0');
-        $mat->setUnitPrice('100.00');
+        $mat->setQuantity(1.0);
+        $mat->setUnitPrice(100.00);
         $item->addMaterial($mat);
         $item->calculateCosts();
 
@@ -234,17 +243,17 @@ class APUItemTest extends TestCase
     {
         $item = $this->buildAPUItem();
 
+        // cantidad=5, dmt=10, tarifa=0.50 => 5×10×0.5=25
         $transport = new APUTransport();
         $transport->setDescription('Volqueta');
         $transport->setUnit('m³');
-        $transport->setQuantity('5.0');
-        $transport->setDmt('10.0');
-        $transport->setTarifaKm('0.50');
+        $transport->setQuantity(5.0);
+        $transport->setDmt(10.0);
+        $transport->setTarifaKm(0.50);
         $item->addTransport($transport);
 
         $item->calculateCosts();
 
-        // transportCost = cantidad * dmt * tarifaKm = 5 * 10 * 0.5 = 25
         $this->assertEqualsWithDelta(25.0, (float)$item->getTransportCost(), 0.001);
     }
 
@@ -257,9 +266,9 @@ class APUItemTest extends TestCase
 
         $equip = new APUEquipment();
         $equip->setDescription('Grúa');
-        $equip->setQuantity(1);
-        $equip->setTarifa('100.00');
-        $equip->setCHora('4.0000');
+        $equip->setNumber(1);
+        $equip->setRate(100.00);
+        $equip->setRendimientoUh(4.0);
         $item->addEquipment($equip);
 
         $this->assertCount(1, $item->getEquipment());
@@ -278,3 +287,9 @@ class APUItemTest extends TestCase
         $this->assertSame($user, $item->getCreatedBy());
     }
 }
+
+
+/**
+ * Tests unitarios para APUItem (incluyendo utilidadPct y precioOfertado).
+ * Cubre: UC-A1 (Campos), UC-A2 (Cálculo costos), UC-A3 (Utilidad/Precio)
+ */

@@ -3,6 +3,7 @@
 namespace App\Controller\Catalog;
 
 use App\Entity\Equipment;
+use App\Entity\Projects;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,15 +47,25 @@ class EquipmentController extends AbstractController
             $e->setTenant($this->getUser()->getTenant());
             $e->setCode(trim($request->request->get('code', '')));
             $e->setName(trim($request->request->get('name', '')));
-            $e->setUnit(trim($request->request->get('unit', '')) ?: null);
+            $e->setActive($request->request->get('active') === '1');
+            // visibility / project
+            $visibility = $request->request->get('visibility');
+            if ($visibility === 'project') {
+                $pid = (int)$request->request->get('project_id');
+                $proj = $this->em->getRepository(Projects::class)->find($pid);
+                if ($proj && $proj->getTenant() === $this->getUser()->getTenant()) $e->setProject($proj);
+            } else {
+                $e->setProject(null);
+            }
 
             $this->em->persist($e);
             $this->em->flush();
             $this->addFlash('success', 'catalog.created_success');
-            return $this->redirectToRoute('catalog_equipment_index');
+            return $this->redirectToRoute('catalog_equipment_create');
         }
 
-        return $this->render('catalog/equipment/create.html.twig');
+        $projects = $this->em->getRepository(Projects::class)->findBy(['tenant' => $this->getUser()->getTenant()], ['name' => 'ASC']);
+        return $this->render('catalog/equipment/create.html.twig', ['projects' => $projects]);
     }
 
     #[Route('/{id}/edit', name: 'catalog_equipment_edit', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
@@ -62,7 +73,7 @@ class EquipmentController extends AbstractController
     public function edit(int $id, Request $request): Response
     {
         $e = $this->em->getRepository(Equipment::class)->find($id);
-        if (!$e) {
+        if (!$e || $e->getTenant() !== $this->getUser()->getTenant()) {
             throw $this->createNotFoundException('catalog.not_found');
         }
 
@@ -74,13 +85,22 @@ class EquipmentController extends AbstractController
 
             $e->setCode(trim($request->request->get('code', '')));
             $e->setName(trim($request->request->get('name', '')));
-            $e->setUnit(trim($request->request->get('unit', '')) ?: null);
+            $e->setActive($request->request->get('active') === '1');
+            $visibility = $request->request->get('visibility');
+            if ($visibility === 'project') {
+                $pid = (int)$request->request->get('project_id');
+                $proj = $this->em->getRepository(Projects::class)->find($pid);
+                if ($proj && $proj->getTenant() === $this->getUser()->getTenant()) $e->setProject($proj);
+            } else {
+                $e->setProject(null);
+            }
             $this->em->flush();
             $this->addFlash('success', 'catalog.updated_success');
             return $this->redirectToRoute('catalog_equipment_index');
         }
 
-        return $this->render('catalog/equipment/edit.html.twig', ['item' => $e]);
+        $projects = $this->em->getRepository(Projects::class)->findBy(['tenant' => $this->getUser()->getTenant()], ['name' => 'ASC']);
+        return $this->render('catalog/equipment/edit.html.twig', ['item' => $e, 'projects' => $projects]);
     }
 
     #[Route('/{id}/delete', name: 'catalog_equipment_delete_confirm', requirements: ['id' => '\\d+'], methods: ['GET'])]
@@ -88,7 +108,7 @@ class EquipmentController extends AbstractController
     public function deleteConfirm(int $id): Response
     {
         $e = $this->em->getRepository(Equipment::class)->find($id);
-        if (!$e) throw $this->createNotFoundException('catalog.not_found');
+        if (!$e || $e->getTenant() !== $this->getUser()->getTenant()) throw $this->createNotFoundException('catalog.not_found');
         return $this->render('catalog/equipment/delete_confirm.html.twig', ['item' => $e]);
     }
 
@@ -101,7 +121,7 @@ class EquipmentController extends AbstractController
             return $this->redirectToRoute('catalog_equipment_index');
         }
         $e = $this->em->getRepository(Equipment::class)->find($id);
-        if ($e) {
+        if ($e && $e->getTenant() === $this->getUser()->getTenant()) {
             $this->em->remove($e);
             $this->em->flush();
             $this->addFlash('success', 'catalog.deleted_success');

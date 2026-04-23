@@ -18,8 +18,19 @@ test('User POST with equipment should not persist components', async ({ page }) 
 
     // Get current APUs count so we can detect the newly created row later
     await page.goto('/apu/');
-    await page.waitForSelector('table');
-    const initialCount = await page.locator('table tbody tr').count();
+    // Use main content table, not the hidden Symfony toolbar table
+    await page
+        .waitForSelector('main table, .table-responsive table, #apu-list, [data-entity="apu"]', {
+            timeout: 15000,
+        })
+        .catch(() => {});
+    const initialCount = await page
+        .locator('main table tbody tr, .table tbody tr')
+        .first()
+        .locator('xpath=ancestor::tbody')
+        .locator('tr')
+        .count()
+        .catch(() => 0);
 
     // Open create page to obtain CSRF token and session cookies
     await page.goto('/apu/create');
@@ -79,10 +90,15 @@ test('User POST with equipment should not persist components', async ({ page }) 
 
     // Navigate to index and verify new row count increased
     await page.goto('/apu/');
-    await page.waitForSelector('table');
+    await page
+        .waitForSelector('main table, .table-responsive table', { timeout: 10000 })
+        .catch(() => {});
     await page.waitForLoadState('networkidle');
 
-    const finalCount = await page.locator('table tbody tr').count();
+    const finalCount = await page
+        .locator('main table tbody tr, .table tbody tr')
+        .count()
+        .catch(() => 0);
     if (finalCount !== initialCount + 1) {
         const tableText = await page.locator('table').allInnerTexts();
         throw new Error(
@@ -91,7 +107,7 @@ test('User POST with equipment should not persist components', async ({ page }) 
     }
 
     // Assume newest row is first in table body
-    const newRow = page.locator('table tbody tr').first();
+    const newRow = page.locator('main table tbody tr, .table tbody tr').first();
     await expect(newRow).toBeVisible({ timeout: 5000 });
     const editLink = newRow.locator('xpath=.//a[contains(@href, "/edit")]').first();
     const href = await editLink.getAttribute('href');

@@ -29,20 +29,21 @@
                 <div class="mb-3">
                     <label class="form-label fw-semibold">{{ 'rubro.col_unit'|trans }} <span class="text-danger">*</span></label>
                     <select class="form-select" name="unit" required>
-                        {% for u in ['m²','m³','m','kg','u','GLB','h','t'] %}
-                            <option value="{{ u }}" {{ item.unit == u ? 'selected' : '' }}>{{ u }}</option>
+                        {% set unit_map = { 'GLB':'units.GLB', 'h':'units.h', 'kg':'units.kg', 'm':'units.m', 'm²':'units.m2', 'm³':'units.m3', 't':'units.t', 'u':'units.u' } %}
+                        {% for val, key in unit_map %}
+                            <option value="{{ val }}" {{ item.unit == val ? 'selected' : '' }}>{{ key|trans }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Visibilidad</label>
+                    <label class="form-label fw-semibold">{{ 'items.visibility.label'|trans }}</label>
                     <select class="form-select" name="visibility" id="visibility-select">
-                        <option value="tenant" {{ item.project is null ? 'selected' : '' }}>{{ 'items.visibility.tenant'|default('Visible para todo el tenant') }}</option>
-                        <option value="project" {{ item.project is not null ? 'selected' : '' }}>{{ 'items.visibility.project'|default('Visible solo para proyecto') }}</option>
+                        <option value="tenant" {{ item.project is null ? 'selected' : '' }}>{{ 'items.visibility.tenant'|trans }}</option>
+                        <option value="project" {{ item.project is not null ? 'selected' : '' }}>{{ 'items.visibility.project'|trans }}</option>
                     </select>
                 </div>
                 <div class="mb-3" id="project-select-group" style="display:{{ item.project is not null ? 'block' : 'none' }};">
-                    <label class="form-label fw-semibold">Proyecto (si aplica)</label>
+                    <label class="form-label fw-semibold">{{ 'common.project_optional'|trans }}</label>
                     <select class="form-select" name="project_id">
                         <option value="">{{ 'common.select'|trans }}</option>
                         {% for p in projects %}

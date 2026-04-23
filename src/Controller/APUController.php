@@ -225,10 +225,31 @@ class APUController extends AbstractController
             if (isset($data['equipment'])) {
                 foreach ($data['equipment'] as $equipData) {
                     $equipment = new APUEquipment();
-                    $equipment->setDescription($equipData['description']);
-                    $equipment->setQuantity((int)$equipData['numero']);
-                    $equipment->setTarifa((float)$equipData['tarifa']);
-                    $equipment->setCHora((float)($equipData['c_hora'] ?? ($equipData['numero'] * $equipData['tarifa'])));
+                    if (!empty($equipData['equipment_id'])) {
+                        $eq = $this->em->getRepository(\App\Entity\Equipment::class)->find((int)$equipData['equipment_id']);
+                        $equipment->setEquipment($eq);
+                    }
+                    $equipment->setNumber((int)$equipData['numero']);
+                    $equipment->setRate((float)$equipData['tarifa']);
+                    $equipment->setRendimientoUh(!empty($equipData['rendimiento']) ? (float)$equipData['rendimiento'] : null);
+                    // C = A×B is computed by recalculate() inside calculateCosts()
+                    // set tenant/project/template/template_item when available
+                    $tenant = $apuItem->getTenant();
+                    if ($tenant !== null) {
+                        $equipment->setTenant($tenant);
+                    }
+                    if (!empty($data['project_id'])) {
+                        $proj = $this->em->getRepository(\App\Entity\Projects::class)->find((int)$data['project_id']);
+                        if ($proj) $equipment->setProject($proj);
+                    }
+                    if (!empty($data['template_id'])) {
+                        $tpl = $this->em->getRepository(\App\Entity\Template::class)->find((int)$data['template_id']);
+                        if ($tpl) $equipment->setTemplate($tpl);
+                    }
+                    if (!empty($equipData['template_item_id'])) {
+                        $ti = $this->em->getRepository(\App\Entity\TemplateItem::class)->find((int)$equipData['template_item_id']);
+                        if ($ti) $equipment->setTemplateItem($ti);
+                    }
                     $apuItem->addEquipment($equipment);
                 }
             }
@@ -236,10 +257,32 @@ class APUController extends AbstractController
             if (isset($data['labor'])) {
                 foreach ($data['labor'] as $laborData) {
                     $labor = new APULabor();
-                    $labor->setDescription($laborData['description']);
-                    $labor->setQuantity((int)$laborData['numero']);
+                    // link to catalog labor if provided
+                    if (!empty($laborData['labor_id'])) {
+                        $labEntity = $this->em->getRepository(\App\Entity\Labor::class)->find((int)$laborData['labor_id']);
+                        $labor->setLabor($labEntity);
+                    }
+                    $labor->setNumber((int)$laborData['numero']);
                     $labor->setJorHora((float)$laborData['jor_hora']);
-                    $labor->setCHora((float)($laborData['c_hora'] ?? ($laborData['numero'] * $laborData['jor_hora'])));
+                    $labor->setRendimientoUh(!empty($laborData['rendimiento']) ? (float)$laborData['rendimiento'] : null);
+                    // C = A×B is computed by recalculate() inside calculateCosts()
+                    // set tenant/project/template/template_item when available
+                    $tenant = $apuItem->getTenant();
+                    if ($tenant !== null) {
+                        $labor->setTenant($tenant);
+                    }
+                    if (!empty($data['project_id'])) {
+                        $proj = $this->em->getRepository(\App\Entity\Projects::class)->find((int)$data['project_id']);
+                        if ($proj) $labor->setProject($proj);
+                    }
+                    if (!empty($data['template_id'])) {
+                        $tpl = $this->em->getRepository(\App\Entity\Template::class)->find((int)$data['template_id']);
+                        if ($tpl) $labor->setTemplate($tpl);
+                    }
+                    if (!empty($laborData['template_item_id'])) {
+                        $ti = $this->em->getRepository(\App\Entity\TemplateItem::class)->find((int)$laborData['template_item_id']);
+                        if ($ti) $labor->setTemplateItem($ti);
+                    }
                     $apuItem->addLabor($labor);
                 }
             }
@@ -247,10 +290,33 @@ class APUController extends AbstractController
             if (isset($data['materials'])) {
                 foreach ($data['materials'] as $materialData) {
                     $material = new APUMaterial();
-                    $material->setDescription($materialData['description']);
-                    $material->setUnit($materialData['unidad']);
+                    // If frontend provided catalog id, link to Material entity
+                    if (!empty($materialData['id'])) {
+                        $matEntity = $this->em->getRepository(\App\Entity\Material::class)->find((int)$materialData['id']);
+                        $material->setMaterial($matEntity);
+                        if (empty($materialData['unidad']) && $matEntity !== null) {
+                            $materialData['unidad'] = $matEntity->getUnit();
+                        }
+                    }
                     $material->setQuantity((float)$materialData['cantidad']);
                     $material->setUnitPrice((float)$materialData['precio_unitario']);
+                    // set tenant/project/template/template_item when available
+                    $tenant = $apuItem->getTenant();
+                    if ($tenant !== null) {
+                        $material->setTenant($tenant);
+                    }
+                    if (!empty($data['project_id'])) {
+                        $proj = $this->em->getRepository(\App\Entity\Projects::class)->find((int)$data['project_id']);
+                        if ($proj) $material->setProject($proj);
+                    }
+                    if (!empty($data['template_id'])) {
+                        $tpl = $this->em->getRepository(\App\Entity\Template::class)->find((int)$data['template_id']);
+                        if ($tpl) $material->setTemplate($tpl);
+                    }
+                    if (!empty($materialData['template_item_id'])) {
+                        $ti = $this->em->getRepository(\App\Entity\TemplateItem::class)->find((int)$materialData['template_item_id']);
+                        if ($ti) $material->setTemplateItem($ti);
+                    }
                     $apuItem->addMaterial($material);
                 }
             }
@@ -258,11 +324,30 @@ class APUController extends AbstractController
             if (isset($data['transport'])) {
                 foreach ($data['transport'] as $transportData) {
                     $transport = new APUTransport();
-                    $transport->setDescription($transportData['description']);
-                    $transport->setUnit($transportData['unidad']);
-                    $transport->setQuantity((float)$transportData['cantidad']);
-                    $transport->setDmt((float)$transportData['dmt']);
-                    $transport->setTarifaKm((float)$transportData['tarifa_km']);
+                    if (!empty($transportData['id'])) {
+                        $trEntity = $this->em->getRepository(\App\Entity\Transport::class)->find((int)$transportData['id']);
+                        $transport->setTransport($trEntity);
+                        if ($trEntity) {
+                            $transport->setDescription($trEntity->getName());
+                            $transport->setUnit($trEntity->getUnit() ?? '');
+                        }
+                    } else {
+                        $transport->setDescription($transportData['description'] ?? '');
+                        $transport->setUnit($transportData['unidad'] ?? '');
+                    }
+                    $transport->setQuantity((float)($transportData['cantidad'] ?? 0));
+                    $transport->setDmt((float)($transportData['dmt'] ?? 0));
+                    $transport->setTarifaKm((float)($transportData['tarifa_km'] ?? 0));
+                    $tenant = $apuItem->getTenant();
+                    if ($tenant !== null) $transport->setTenant($tenant);
+                    if (!empty($data['project_id'])) {
+                        $proj = $this->em->getRepository(\App\Entity\Projects::class)->find((int)$data['project_id']);
+                        if ($proj) $transport->setProject($proj);
+                    }
+                    if (!empty($data['template_id'])) {
+                        $tpl = $this->em->getRepository(\App\Entity\Template::class)->find((int)$data['template_id']);
+                        if ($tpl) $transport->setTemplate($tpl);
+                    }
                     $apuItem->addTransport($transport);
                 }
             }
@@ -315,10 +400,29 @@ class APUController extends AbstractController
             if (isset($data['labor'])) {
                 foreach ($data['labor'] as $laborData) {
                     $labor = new APULabor();
-                    $labor->setDescription($laborData['description']);
-                    $labor->setQuantity((int)$laborData['numero']);
+                    if (!empty($laborData['labor_id'])) {
+                        $labEntity = $this->em->getRepository(\App\Entity\Labor::class)->find((int)$laborData['labor_id']);
+                        $labor->setLabor($labEntity);
+                    }
+                    $labor->setNumber((int)$laborData['numero']);
                     $labor->setJorHora((float)$laborData['jor_hora']);
                     $labor->setCHora((float)($laborData['c_hora'] ?? ((float)$laborData['numero'] * (float)$laborData['jor_hora'])));
+                    $tenant = $apuItem->getTenant();
+                    if ($tenant !== null) {
+                        $labor->setTenant($tenant);
+                    }
+                    if (!empty($data['project_id'])) {
+                        $proj = $this->em->getRepository(\App\Entity\Projects::class)->find((int)$data['project_id']);
+                        if ($proj) $labor->setProject($proj);
+                    }
+                    if (!empty($data['template_id'])) {
+                        $tpl = $this->em->getRepository(\App\Entity\Template::class)->find((int)$data['template_id']);
+                        if ($tpl) $labor->setTemplate($tpl);
+                    }
+                    if (!empty($laborData['template_item_id'])) {
+                        $ti = $this->em->getRepository(\App\Entity\TemplateItem::class)->find((int)$laborData['template_item_id']);
+                        if ($ti) $labor->setTemplateItem($ti);
+                    }
                     $apuItem->addLabor($labor);
                 }
             }
@@ -326,10 +430,31 @@ class APUController extends AbstractController
             if (isset($data['materials'])) {
                 foreach ($data['materials'] as $materialData) {
                     $material = new APUMaterial();
-                    $material->setDescription($materialData['description']);
-                    $material->setUnit($materialData['unidad']);
+                    if (!empty($materialData['id'])) {
+                        $matEntity = $this->em->getRepository(\App\Entity\Material::class)->find((int)$materialData['id']);
+                        $material->setMaterial($matEntity);
+                        if (empty($materialData['unidad']) && $matEntity !== null) {
+                            $materialData['unidad'] = $matEntity->getUnit();
+                        }
+                    }
                     $material->setQuantity((float)$materialData['cantidad']);
                     $material->setUnitPrice((float)$materialData['precio_unitario']);
+                    $tenant = $apuItem->getTenant();
+                    if ($tenant !== null) {
+                        $material->setTenant($tenant);
+                    }
+                    if (!empty($data['project_id'])) {
+                        $proj = $this->em->getRepository(\App\Entity\Projects::class)->find((int)$data['project_id']);
+                        if ($proj) $material->setProject($proj);
+                    }
+                    if (!empty($data['template_id'])) {
+                        $tpl = $this->em->getRepository(\App\Entity\Template::class)->find((int)$data['template_id']);
+                        if ($tpl) $material->setTemplate($tpl);
+                    }
+                    if (!empty($materialData['template_item_id'])) {
+                        $ti = $this->em->getRepository(\App\Entity\TemplateItem::class)->find((int)$materialData['template_item_id']);
+                        if ($ti) $material->setTemplateItem($ti);
+                    }
                     $apuItem->addMaterial($material);
                 }
             }
@@ -337,11 +462,30 @@ class APUController extends AbstractController
             if (isset($data['transport'])) {
                 foreach ($data['transport'] as $transportData) {
                     $transport = new APUTransport();
-                    $transport->setDescription($transportData['description']);
-                    $transport->setUnit($transportData['unidad']);
-                    $transport->setQuantity((float)$transportData['cantidad']);
-                    $transport->setDmt((float)$transportData['dmt']);
-                    $transport->setTarifaKm((float)$transportData['tarifa_km']);
+                    if (!empty($transportData['id'])) {
+                        $trEntity = $this->em->getRepository(\App\Entity\Transport::class)->find((int)$transportData['id']);
+                        $transport->setTransport($trEntity);
+                        if ($trEntity) {
+                            $transport->setDescription($trEntity->getName());
+                            $transport->setUnit($trEntity->getUnit() ?? '');
+                        }
+                    } else {
+                        $transport->setDescription($transportData['description'] ?? '');
+                        $transport->setUnit($transportData['unidad'] ?? '');
+                    }
+                    $transport->setQuantity((float)($transportData['cantidad'] ?? 0));
+                    $transport->setDmt((float)($transportData['dmt'] ?? 0));
+                    $transport->setTarifaKm((float)($transportData['tarifa_km'] ?? 0));
+                    $tenant = $apuItem->getTenant();
+                    if ($tenant !== null) $transport->setTenant($tenant);
+                    if (!empty($data['project_id'])) {
+                        $proj = $this->em->getRepository(\App\Entity\Projects::class)->find((int)$data['project_id']);
+                        if ($proj) $transport->setProject($proj);
+                    }
+                    if (!empty($data['template_id'])) {
+                        $tpl = $this->em->getRepository(\App\Entity\Template::class)->find((int)$data['template_id']);
+                        if ($tpl) $transport->setTemplate($tpl);
+                    }
                     $apuItem->addTransport($transport);
                 }
             }

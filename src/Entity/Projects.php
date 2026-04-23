@@ -17,20 +17,20 @@ class Projects
     #[ORM\Column(type: 'bigint', options: ['unsigned' => true])]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Tenant::class)]
+    #[ORM\ManyToOne(targetEntity: Tenant::class, inversedBy: 'projects')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Tenant $tenant = null;
 
     #[ORM\Column(name: 'name', type: 'string', length: 255)]
     #[Assert\NotBlank(message: 'name.required')]
     #[Assert\Length(max: 255)]
-    #[Assert\Regex(pattern: '/^[\\p{L}\\s]+$/u', message: 'name.invalid')]
+    #[Assert\Regex(pattern: '/^[\p{L}\p{N}\s\-\.]+$/u', message: 'name.invalid')]
     private ?string $name = null;
 
     #[ORM\Column(name: 'code', type: 'string', length: 100)]
     #[Assert\NotBlank(message: 'code.required')]
     #[Assert\Length(max: 100)]
-    #[Assert\Regex(pattern: '/^[A-Za-z0-9]+$/', message: 'code.invalid')]
+    #[Assert\Regex(pattern: '/^[A-Za-z0-9\-\_]+$/', message: 'code.invalid')]
     private ?string $code = null;
 
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]

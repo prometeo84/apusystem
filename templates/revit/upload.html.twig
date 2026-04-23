@@ -30,7 +30,7 @@
             <div class="card">
                 <div class="card-body">
                     <form method="POST" enctype="multipart/form-data" id="uploadForm">
-                        <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('revit_upload') }}">
                         <div class="mb-3">
                             <label for="revit_file" class="form-label">{{ 'revit.select_file'|trans }}</label>
                             <input type="file"

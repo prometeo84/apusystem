@@ -3,21 +3,36 @@
 namespace App\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Yaml\Yaml;
 
 class QuotaTest extends TestCase
 {
+    private static function flattenKeys(array $data, string $prefix = ''): array
+    {
+        $result = [];
+        foreach ($data as $key => $value) {
+            $fullKey = $prefix !== '' ? "$prefix.$key" : (string) $key;
+            if (is_array($value)) {
+                $result = array_merge($result, self::flattenKeys($value, $fullKey));
+            } else {
+                $result[$fullKey] = $value;
+            }
+        }
+        return $result;
+    }
+
     public function testLimitTranslationKeysExist(): void
     {
         $root = __DIR__ . '/../../';
-        $en = @file_get_contents($root . 'translations/messages.en.yaml');
-        $es = @file_get_contents($root . 'translations/messages.es.yaml');
-
-        $this->assertNotFalse($en);
-        $this->assertNotFalse($es);
+        $en = self::flattenKeys(Yaml::parseFile($root . 'translations/messages.en.yaml'));
+        $es = self::flattenKeys(Yaml::parseFile($root . 'translations/messages.es.yaml'));
 
         $required = ['project.limit_reached', 'project.limit_near', 'user.limit_near'];
         foreach ($required as $k) {
-            $this->assertTrue(strpos($en, $k) !== false || strpos($es, $k) !== false, "Missing translation key $k in EN or ES");
+            $this->assertTrue(
+                isset($en[$k]) || isset($es[$k]),
+                "Missing translation key $k in EN or ES"
+            );
         }
     }
 

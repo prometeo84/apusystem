@@ -91,10 +91,12 @@
                                             {{ btn.button('', 'outline-primary', 'bi-calculator', {'href': path('app_apu_edit', {id: pr.apuItem.id}), 'class':'btn-sm', 'title': 'apu.edit'|trans}) }}
                                         {% endif %}
                                     {% else %}
-                                        {% if can_create_apu is defined and not can_create_apu %}
-                                            {{ btn.button('', 'outline-secondary', 'bi-calculator-fill', {'href': '#', 'class':'btn-sm disabled', 'title': 'apu.limit_reached'|trans}) }}
-                                        {% else %}
-                                            {{ btn.button('', 'warning', 'bi-calculator-fill', {'href': path('app_apu_create_for_rubro', {plantillaRubroId: pr.id}), 'class':'btn-sm', 'title': 'template.create_apu'|trans}) }}
+                                        {% if not is_granted('ROLE_ADMIN') %}
+                                            {% if can_create_apu is defined and not can_create_apu %}
+                                                {{ btn.button('', 'outline-secondary', 'bi-calculator-fill', {'href': '#', 'class':'btn-sm disabled', 'title': 'apu.limit_reached'|trans}) }}
+                                            {% else %}
+                                                {{ btn.button('', 'warning', 'bi-calculator-fill', {'href': path('app_apu_create_for_rubro', {plantillaRubroId: pr.id}), 'class':'btn-sm', 'title': 'template.create_apu'|trans}) }}
+                                            {% endif %}
                                         {% endif %}
                                     {% endif %}
                                                                                 <form method="POST" action="{{ path('app_template_remove_item', {projectId: project.id, id: template.id, prId: pr.id}) }}" class="d-inline"

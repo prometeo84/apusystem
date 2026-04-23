@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'apu_materials')]
+#[ORM\HasLifecycleCallbacks]
 class APUMaterial
 {
     #[ORM\Id]
@@ -17,17 +18,34 @@ class APUMaterial
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?APUItem $apuItem = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $description;
+    #[ORM\ManyToOne(targetEntity: Tenant::class)]
+    #[ORM\JoinColumn(name: 'tenant_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Tenant $tenant = null;
 
-    #[ORM\Column(type: 'string', length: 50)]
-    private string $unit;
+    #[ORM\ManyToOne(targetEntity: Projects::class)]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Projects $project = null;
 
-    #[ORM\Column(type: 'decimal', precision: 15, scale: 4)]
+    #[ORM\ManyToOne(targetEntity: Template::class)]
+    #[ORM\JoinColumn(name: 'template_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Template $template = null;
+
+    #[ORM\ManyToOne(targetEntity: TemplateItem::class)]
+    #[ORM\JoinColumn(name: 'template_item_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?TemplateItem $templateItem = null;
+
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Material::class)]
+    #[ORM\JoinColumn(name: 'material_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?\App\Entity\Material $material = null;
+
+    #[ORM\Column(type: 'decimal', precision: 14, scale: 4)]
     private string $quantity;
 
-    #[ORM\Column(type: 'decimal', precision: 15, scale: 2)]
+    #[ORM\Column(type: 'decimal', precision: 14, scale: 4)]
     private string $unitPrice;
+
+    #[ORM\Column(type: 'decimal', precision: 14, scale: 4, nullable: true)]
+    private ?string $costTotal = null;
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
@@ -58,18 +76,8 @@ class APUMaterial
 
     public function getDescription(): string
     {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): self
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    public function getUnit(): string
-    {
-        return $this->unit;
+        if ($this->material !== null) return $this->material->getName();
+        return '';
     }
 
     /**
@@ -78,12 +86,61 @@ class APUMaterial
      */
     public function getUnidad(): string
     {
-        return $this->unit;
+        if ($this->material !== null) return $this->material->getUnit();
+        return '';
+    }
+    public function getMaterial(): ?\App\Entity\Material
+    {
+        return $this->material;
     }
 
-    public function setUnit(string $unit): self
+    public function getTenant(): ?Tenant
     {
-        $this->unit = $unit;
+        return $this->tenant;
+    }
+
+    public function setTenant(?Tenant $t): self
+    {
+        $this->tenant = $t;
+        return $this;
+    }
+
+    public function getProject(): ?Projects
+    {
+        return $this->project;
+    }
+
+    public function setProject(?Projects $p): self
+    {
+        $this->project = $p;
+        return $this;
+    }
+
+    public function getTemplate(): ?Template
+    {
+        return $this->template;
+    }
+
+    public function setTemplate(?Template $t): self
+    {
+        $this->template = $t;
+        return $this;
+    }
+
+    public function getTemplateItem(): ?TemplateItem
+    {
+        return $this->templateItem;
+    }
+
+    public function setTemplateItem(?TemplateItem $ti): self
+    {
+        $this->templateItem = $ti;
+        return $this;
+    }
+
+    public function setMaterial(?\App\Entity\Material $m): self
+    {
+        $this->material = $m;
         return $this;
     }
 
@@ -133,6 +190,17 @@ class APUMaterial
         return $this;
     }
 
+    public function getCostTotal(): ?string
+    {
+        return $this->costTotal;
+    }
+
+    public function setCostTotal(?string $v): self
+    {
+        $this->costTotal = $v;
+        return $this;
+    }
+
     public function getCreatedAt(): \DateTimeInterface
     {
         return $this->createdAt;
@@ -140,6 +208,20 @@ class APUMaterial
 
     public function getTotalCost(): float
     {
+        // prefer persisted total if available
+        if ($this->costTotal !== null) {
+            return (float) $this->costTotal;
+        }
         return (float) $this->quantity * (float) $this->unitPrice;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function calculatePersistedTotal(): void
+    {
+        $q = (float) $this->quantity;
+        $p = (float) $this->unitPrice;
+        $total = $q * $p;
+        $this->costTotal = number_format($total, 4, '.', '');
     }
 }

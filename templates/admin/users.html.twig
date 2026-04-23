@@ -75,9 +75,9 @@
                                         </td>
                                         <td>
                                             {% if user.totpEnabled %}
-                                                <i class="bi bi-shield-check text-success" title="2FA Habilitado"></i>
+                                                <i class="bi bi-shield-check text-success" title="{{ 'security.2fa_enabled'|trans }}"></i>
                                             {% else %}
-                                                <i class="bi bi-shield-x text-muted" title="2FA Deshabilitado"></i>
+                                                <i class="bi bi-shield-x text-muted" title="{{ 'security.2fa_disabled'|trans }}"></i>
                                             {% endif %}
                                         </td>
                                         <td>
@@ -90,10 +90,14 @@
                                         <td>
                                             <div class="btn-group btn-group-sm">
                                                 {{ btn.button('common.edit'|trans, 'outline-primary', 'bi-pencil', {'href': path('app_admin_users_edit', {id: user.id})}) }}
-                                                <form method="post" action="{{ path('app_admin_users_toggle', {id: user.id}) }}" style="display: inline;">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
-                                                    {{ btn.button('', user.isActive ? 'outline-warning' : 'outline-success', 'bi-' ~ (user.isActive ? 'pause-fill' : 'play-fill'), {'type':'submit','title': user.isActive ? 'Desactivar' : 'Activar'}) }}
-                                                </form>
+                                                {% if user.id == app.user.id %}
+                                                    {{ btn.button('', user.isActive ? 'outline-secondary disabled' : 'outline-secondary disabled', 'bi-' ~ (user.isActive ? 'pause-fill' : 'play-fill'), {'type':'button','title': 'flash.cannot_deactivate_self'|trans}) }}
+                                                {% else %}
+                                                    <form method="post" action="{{ path('app_admin_users_toggle', {id: user.id}) }}" style="display: inline;">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token('user_toggle_' ~ user.id) }}">
+                                                        {{ btn.button('', user.isActive ? 'outline-warning' : 'outline-success', 'bi-' ~ (user.isActive ? 'pause-fill' : 'play-fill'), {'type':'submit','title': user.isActive ? ('admin_users.deactivate'|trans) : ('admin_users.activate'|trans)}) }}
+                                                    </form>
+                                                {% endif %}
                                             </div>
                                         </td>
                                     </tr>

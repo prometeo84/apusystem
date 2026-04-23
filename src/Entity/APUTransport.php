@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'apu_transport')]
+#[ORM\HasLifecycleCallbacks]
 class APUTransport
 {
     #[ORM\Id]
@@ -16,6 +17,26 @@ class APUTransport
     #[ORM\ManyToOne(targetEntity: APUItem::class, inversedBy: 'transport')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?APUItem $apuItem = null;
+
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Transport::class)]
+    #[ORM\JoinColumn(name: 'transport_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?\App\Entity\Transport $transport = null;
+
+    #[ORM\ManyToOne(targetEntity: Tenant::class)]
+    #[ORM\JoinColumn(name: 'tenant_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Tenant $tenant = null;
+
+    #[ORM\ManyToOne(targetEntity: Projects::class)]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Projects $project = null;
+
+    #[ORM\ManyToOne(targetEntity: Template::class)]
+    #[ORM\JoinColumn(name: 'template_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Template $template = null;
+
+    #[ORM\ManyToOne(targetEntity: TemplateItem::class)]
+    #[ORM\JoinColumn(name: 'template_item_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?TemplateItem $templateItem = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $description;
@@ -31,6 +52,9 @@ class APUTransport
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, name: 'rate_per_km')]
     private string $ratePerKm; // formerly 'tarifa_km'
+
+    #[ORM\Column(type: 'decimal', precision: 14, scale: 4, nullable: true, name: 'cost_total')]
+    private ?string $costTotal = null;
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
@@ -56,6 +80,52 @@ class APUTransport
         if ($apuItem !== null && !$apuItem->getTransport()->contains($this)) {
             $apuItem->addTransport($this);
         }
+        return $this;
+    }
+
+    public function getTransport(): ?\App\Entity\Transport
+    {
+        return $this->transport;
+    }
+    public function setTransport(?\App\Entity\Transport $t): self
+    {
+        $this->transport = $t;
+        return $this;
+    }
+    public function getTenant(): ?Tenant
+    {
+        return $this->tenant;
+    }
+    public function setTenant(?Tenant $t): self
+    {
+        $this->tenant = $t;
+        return $this;
+    }
+    public function getProject(): ?Projects
+    {
+        return $this->project;
+    }
+    public function setProject(?Projects $p): self
+    {
+        $this->project = $p;
+        return $this;
+    }
+    public function getTemplate(): ?Template
+    {
+        return $this->template;
+    }
+    public function setTemplate(?Template $t): self
+    {
+        $this->template = $t;
+        return $this;
+    }
+    public function getTemplateItem(): ?TemplateItem
+    {
+        return $this->templateItem;
+    }
+    public function setTemplateItem(?TemplateItem $ti): self
+    {
+        $this->templateItem = $ti;
         return $this;
     }
 
@@ -111,39 +181,45 @@ class APUTransport
     {
         return $this->ratePerKm;
     }
-
-    /**
-     * @param float|int|string $ratePerKm
-     */
     public function setRatePerKm(float|int|string $ratePerKm): self
     {
-        $this->ratePerKm = (string) $ratePerKm;
+        $this->ratePerKm = (string)$ratePerKm;
         return $this;
     }
 
-    // Backwards-compatible aliases (Spanish names)
-    /** @param float|int|string $dmt */
     public function setDmt(float|int|string $dmt): self
     {
         return $this->setAvgDistance($dmt);
     }
-
-    /** @param float|int|string $tarifaKm */
     public function setTarifaKm(float|int|string $tarifaKm): self
     {
         return $this->setRatePerKm($tarifaKm);
     }
-
-    /** @return string */
     public function getDmt(): string
     {
         return $this->getAvgDistance();
     }
-
-    /** @return string */
     public function getTarifaKm(): string
     {
         return $this->getRatePerKm();
+    }
+
+    public function getCostTotal(): ?string
+    {
+        return $this->costTotal;
+    }
+    public function setCostTotal(?string $v): self
+    {
+        $this->costTotal = $v;
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function recalculate(): void
+    {
+        $total = (float)$this->quantity * (float)$this->avgDistance * (float)$this->ratePerKm;
+        $this->costTotal = number_format($total, 4, '.', '');
     }
 
     public function getCreatedAt(): \DateTimeInterface
@@ -153,6 +229,7 @@ class APUTransport
 
     public function getTotalCost(): float
     {
-        return (float) $this->quantity * (float) $this->avgDistance * (float) $this->ratePerKm;
+        if ($this->costTotal !== null) return (float)$this->costTotal;
+        return (float)$this->quantity * (float)$this->avgDistance * (float)$this->ratePerKm;
     }
 }

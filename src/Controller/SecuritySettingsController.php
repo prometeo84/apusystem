@@ -84,6 +84,12 @@ class SecuritySettingsController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
+            // Validar CSRF
+            if (!$this->isCsrfTokenValid('2fa_enable', $request->request->get('_token'))) {
+                $this->addFlash('error', 'common.error_invalid_csrf');
+                return $this->redirectToRoute('app_security_2fa_enable');
+            }
+
             // POST: Validar el código con el secret de la sesión
             $secret = $request->getSession()->get('totp_secret');
             $code = $request->request->get('verification_code');
@@ -136,6 +142,11 @@ class SecuritySettingsController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
+        if (!$this->isCsrfTokenValid('2fa_disable', $request->request->get('_token'))) {
+            $this->addFlash('error', 'common.error_invalid_csrf');
+            return $this->redirectToRoute('app_security');
+        }
+
         if (!$user->isTotpEnabled()) {
             $this->addFlash('info', 'flash.2fa_not_enabled');
             return $this->redirectToRoute('app_security');
@@ -170,6 +181,10 @@ class SecuritySettingsController extends AbstractController
 
         // Limpiar de la sesión después de mostrar
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('recovery_codes_dismiss', $request->request->get('_token'))) {
+                $this->addFlash('error', 'common.error_invalid_csrf');
+                return $this->redirectToRoute('app_security');
+            }
             $request->getSession()->remove('recovery_codes');
             return $this->redirectToRoute('app_security');
         }
@@ -187,6 +202,11 @@ class SecuritySettingsController extends AbstractController
         $user = $this->getUser();
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('regenerate_recovery', $request->request->get('_token'))) {
+                $this->addFlash('error', 'common.error_invalid_csrf');
+                return $this->redirectToRoute('app_security');
+            }
+
             $password = $request->request->get('current_password');
             if (!$this->passwordHasher->isPasswordValid($user, $password)) {
                 $this->addFlash('error', 'flash.password_incorrect');

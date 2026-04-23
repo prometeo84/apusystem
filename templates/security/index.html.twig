@@ -191,6 +191,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="post" action="{{ path('app_security_2fa_disable') }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('2fa_disable') }}">
                 <div class="modal-body">
                     <p>{{ 'security.2fa.disable_instructions'|trans }}</p>
                     <input type="text" name="verification_code" class="form-control"

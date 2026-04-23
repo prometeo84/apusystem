@@ -27,6 +27,11 @@ class RevitUploadController extends AbstractController
     public function upload(Request $request): Response
     {
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('revit_upload', $request->request->get('_token'))) {
+                $this->addFlash('error', 'common.error_invalid_csrf');
+                return $this->redirectToRoute('app_revit_upload');
+            }
+
             /** @var UploadedFile|null $file */
             $file = $request->files->get('revit_file');
 
@@ -107,10 +112,15 @@ class RevitUploadController extends AbstractController
     }
 
     #[Route('/file/{id}/delete', name: 'app_revit_file_delete', methods: ['POST'])]
-    public function deleteFile(int $id): Response
+    public function deleteFile(int $id, Request $request): Response
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
+
+        if (!$this->isCsrfTokenValid('revit_delete_' . $id, $request->request->get('_token'))) {
+            $this->addFlash('error', 'common.error_invalid_csrf');
+            return $this->redirectToRoute('app_revit_files');
+        }
 
         $file = $this->em->getRepository(RevitFile::class)->find($id);
 
@@ -129,10 +139,15 @@ class RevitUploadController extends AbstractController
     }
 
     #[Route('/file/{id}/reprocess', name: 'app_revit_file_reprocess', methods: ['POST'])]
-    public function reprocessFile(int $id): Response
+    public function reprocessFile(int $id, Request $request): Response
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
+
+        if (!$this->isCsrfTokenValid('revit_reprocess_' . $id, $request->request->get('_token'))) {
+            $this->addFlash('error', 'common.error_invalid_csrf');
+            return $this->redirectToRoute('app_revit_file_detail', ['id' => $id]);
+        }
 
         $file = $this->em->getRepository(RevitFile::class)->find($id);
 

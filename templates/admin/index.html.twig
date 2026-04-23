@@ -10,41 +10,28 @@
         {% include 'partials/_navbar.html.twig' with {'title': 'admin.panel'|trans} %}
 
         <div class="container-fluid p-4 content-wrapper">
-            <div class="row">
-                {% if not is_granted('ROLE_SUPER_ADMIN') %}
-                <div class="col-md-3 mb-4">
-                    <div class="card text-white bg-primary">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="card-title mb-0">{{ 'admin.total_users'|trans }}</h6>
-                                    <h2 class="mb-0">{{ totalUsers }}</h2>
-                                </div>
-                                <div>
-                                    <i class="bi bi-people-fill" style="font-size: 3rem; opacity: 0.5;"></i>
+                <div class="col-md-4 mb-4">
+                    {% import 'partials/_button.html.twig' as btn %}
+
+                    {# Quick actions are hidden for superadmins by design; show for regular admins only #}
+                    {% if not is_granted('ROLE_SUPER_ADMIN') %}
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="bi bi-gear-fill"></i> {{ 'system.quick_actions'|trans }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
+                                    {% if can_create_user is defined and not can_create_user %}
+                                        {{ btn.button('admin.create_user'|trans, 'secondary', 'bi-person-plus', {'href': '#', 'class':'disabled', 'title': 'flash.tenant_user_limit_reached'|trans}) }}
+                                    {% else %}
+                                        {{ btn.button('admin.create_user'|trans, 'primary', 'bi-person-plus', {'href': path('app_admin_users_create')}) }}
+                                    {% endif %}
+                                    {{ btn.button('admin.manage_users'|trans, 'outline-primary', 'bi-bi-people', {'href': path('app_admin_users')}) }}
+                                    {{ btn.button('admin.view_security_logs'|trans, 'outline-secondary', 'bi-bi-file-text', {'href': path('app_admin_logs')}) }}
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer bg-transparent border-0">
-                            <a href="{{ path('app_admin_users') }}" class="text-white text-decoration-none">
-                                {{ 'system.view_all'|trans }} <i class="bi bi-arrow-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-
-                <div class="col-md-3 mb-4">
-                    <div class="card text-white bg-success">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="card-title mb-0">{{ 'admin.active_users'|trans }}</h6>
-                                    <h2 class="mb-0">{{ activeUsers }}</h2>
-                                </div>
-                                <div>
-                                    <i class="bi bi-person-check-fill" style="font-size: 3rem; opacity: 0.5;"></i>
-                                </div>
+                    {% endif %}
                             </div>
                         </div>
                         <div class="card-footer bg-transparent border-0">

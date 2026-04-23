@@ -15,23 +15,9 @@ class DoctrineTokenProvider implements TokenProviderInterface
 
     public function createNewToken(PersistentTokenInterface $token): void
     {
-        // Extract username/user identifier from the token (compat across Symfony versions)
-        if (method_exists($token, 'getUserIdentifier')) {
-            $username = $token->getUserIdentifier();
-        } elseif (method_exists($token, 'getUser')) {
-            $username = $token->getUser();
-        } elseif (method_exists($token, 'getUsername')) {
-            $username = $token->getUsername();
-        } else {
-            throw new \RuntimeException('Cannot determine username from PersistentToken');
-        }
+        $username = $token->getUserIdentifier();
 
-        // Support both modern and legacy user provider method names
-        if (method_exists($this->userProvider, 'loadUserByIdentifier')) {
-            $user = $this->userProvider->loadUserByIdentifier($username);
-        } else {
-            $user = $this->userProvider->loadUserByUsername($username);
-        }
+        $user = $this->userProvider->loadUserByIdentifier($username);
         $entity = new RememberMeToken($user, $token->getSeries(), $token->getTokenValue(), $token->getLastUsed());
         $this->em->persist($entity);
         $this->em->flush();
@@ -66,11 +52,7 @@ class DoctrineTokenProvider implements TokenProviderInterface
     public function removeUserTokens(string $username): void
     {
         $repo = $this->em->getRepository(RememberMeToken::class);
-        if (method_exists($this->userProvider, 'loadUserByIdentifier')) {
-            $user = $this->userProvider->loadUserByIdentifier($username);
-        } else {
-            $user = $this->userProvider->loadUserByUsername($username);
-        }
+        $user = $this->userProvider->loadUserByIdentifier($username);
         $tokens = $repo->findBy(['user' => $user]);
         foreach ($tokens as $t) {
             $this->em->remove($t);

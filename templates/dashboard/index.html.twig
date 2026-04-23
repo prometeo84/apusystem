@@ -11,13 +11,6 @@
         {% include 'partials/_navbar.html.twig' with {'title': 'Dashboard'} %}
 
         <div class="container-fluid p-4 content-wrapper">
-            {% for message in app.flashes('success') %}
-                <div class="alert alert-success alert-dismissible fade show">
-                    <i class="bi bi-check-circle-fill"></i> {{ message|trans }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
-
             <div class="row mb-4">
                 <div class="col-12">
                     <h2>{{ 'dashboard.welcome'|trans }}, {{ user.firstName }}! 👋</h2>
@@ -169,13 +162,7 @@
                         </div>
                         <div class="card-body">
                             <div class="d-grid gap-2">
-                                {% if is_granted('ROLE_ADMIN') %}
-                                    {% if can_create_project is defined and not can_create_project %}
-                                        {{ btn.button('dashboard.new_project'|trans, 'secondary', 'bi-folder-plus', {'href': '#', 'class':'disabled'}) }}
-                                    {% else %}
-                                        {{ btn.button('dashboard.new_project'|trans, 'primary', 'bi-folder-plus', {'href': path('app_project_create')}) }}
-                                    {% endif %}
-                                {% endif %}
+                                {# 'New Project' button removed from Quick Actions to avoid duplication with header button. Use header or central CTA instead. #}
                                 {# Mostrar creación de APU sólo a usuarios (no admins) #}
                                 {% if is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN') %}
                                     {% if can_create_apu is defined and not can_create_apu %}

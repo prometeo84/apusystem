@@ -58,8 +58,8 @@ class SessionController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $sessionIds = $request->request->all('session_ids', []);
-        $tokenIds = $request->request->all('token_ids', []);
+        $sessionIds = $request->request->all('session_ids');
+        $tokenIds = $request->request->all('token_ids');
 
         foreach ($sessionIds as $id) {
             $s = $this->em->getRepository(LoginSession::class)->find((int)$id);

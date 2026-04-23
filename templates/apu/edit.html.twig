@@ -152,7 +152,15 @@
                     <tbody>
                         {% for mat in apu_item.materials %}
                         <tr>
-                            <td><input type="text" class="form-control form-control-sm" name="materials[{{ loop.index0 }}][description]" value="{{ mat.description }}" required></td>
+                            <td>
+                                <select class="form-select form-select-sm catalog-select" name="materials[{{ loop.index0 }}][id]" required>
+                                    {% if mat.material %}
+                                        <option value="{{ mat.material.id }}" selected>{{ mat.material.code }} — {{ mat.material.name }}{{ mat.material.unit ? (' (' ~ mat.material.unit ~ ')') : '' }}</option>
+                                    {% else %}
+                                        <option value="">{{ mat.description }}</option>
+                                    {% endif %}
+                                </select>
+                            </td>
                             <td><input type="text" class="form-control form-control-sm" name="materials[{{ loop.index0 }}][unidad]" value="{{ mat.unidad }}" required></td>
                             <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="material" name="materials[{{ loop.index0 }}][cantidad]" value="{{ mat.cantidad }}" min="0" required></td>
                             <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="material" name="materials[{{ loop.index0 }}][precio_unitario]" value="{{ mat.precioUnitario }}" min="0" required></td>

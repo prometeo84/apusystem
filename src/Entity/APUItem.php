@@ -16,7 +16,7 @@ class APUItem
     #[ORM\Column(type: 'bigint', options: ['unsigned' => true])]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Tenant::class)]
+    #[ORM\ManyToOne(targetEntity: Tenant::class, inversedBy: 'apuItems')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Tenant $tenant;
 
@@ -37,6 +37,10 @@ class APUItem
 
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private ?string $totalCost = null;
+
+    /** Precio de cálculo = total_cost × (1 + profit_pct/100) — persisted to avoid recalculation in reports */
+    #[ORM\Column(name: 'calculation_price', type: 'decimal', precision: 15, scale: 2, nullable: true)]
+    private ?string $calculationPriceStored = null;
 
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private ?string $equipmentCost = null;
@@ -368,42 +372,49 @@ class APUItem
     }
 
     /**
-     * Calcular costos totales automáticamente
+     * Calcular costos totales automáticamente.
+     * Formulas:
+     *   Equipment: C = A×B (number × rate); D = C×R (costPerHour × rendimientoUh)
+     *   Labor:     C = A×B (number × jorHourB); D = C×R (costPerHour × rendimientoUh)
+     *   Material:  D = Cantidad × PrecioUnitario
+     *   Transport: D = Cantidad × DMT × TarifaKm
      */
     public function calculateCosts(): self
     {
-        $this->equipmentCost = null;
-        $this->laborCost = null;
-        $this->materialCost = null;
-        $this->transportCost = null;
-
         $equipmentSum = 0.0;
-        foreach ($this->equipment as $equipment) {
-            // equipment entity uses english-named getters `getRate` / `getCostPerHour`
-            $equipmentSum += (float) $equipment->getRate() * (float) $equipment->getCostPerHour();
+        foreach ($this->equipment as $equip) {
+            // Trigger lifecycle callback to recalculate C and D
+            $equip->recalculate();
+            $equipmentSum += $equip->getTotalCost();
         }
 
         $laborSum = 0.0;
         foreach ($this->labor as $labor) {
-            $laborSum += (float) $labor->getJorHora() * (float) $labor->getCHora();
+            $labor->recalculate();
+            $laborSum += $labor->getTotalCost();
         }
 
         $materialSum = 0.0;
         foreach ($this->materials as $material) {
-            $materialSum += (float) $material->getQuantity() * (float) $material->getUnitPrice();
+            $materialSum += (float)$material->getQuantity() * (float)$material->getUnitPrice();
         }
 
         $transportSum = 0.0;
         foreach ($this->transport as $transport) {
-            $transportSum += (float) $transport->getQuantity() * (float) $transport->getAvgDistance() * (float) $transport->getRatePerKm();
+            $transport->recalculate();
+            $transportSum += $transport->getTotalCost();
         }
 
-        $this->equipmentCost = (string) $equipmentSum;
-        $this->laborCost = (string) $laborSum;
-        $this->materialCost = (string) $materialSum;
-        $this->transportCost = (string) $transportSum;
+        $this->equipmentCost  = number_format($equipmentSum,  2, '.', '');
+        $this->laborCost      = number_format($laborSum,      2, '.', '');
+        $this->materialCost   = number_format($materialSum,   2, '.', '');
+        $this->transportCost  = number_format($transportSum,  2, '.', '');
 
-        $this->totalCost = (string) ($equipmentSum + $laborSum + $materialSum + $transportSum);
+        $total = $equipmentSum + $laborSum + $materialSum + $transportSum;
+        $this->totalCost = number_format($total, 2, '.', '');
+
+        $pct = (float)($this->profitPct ?? '0');
+        $this->calculationPriceStored = number_format($total * (1 + $pct / 100), 2, '.', '');
 
         return $this;
     }
@@ -449,9 +460,22 @@ class APUItem
     /** Calculation price = totalCost * (1 + profitPct/100) */
     public function getCalculationPrice(): float
     {
+        if ($this->calculationPriceStored !== null) {
+            return (float) $this->calculationPriceStored;
+        }
         $base = (float) ($this->totalCost ?? 0);
         $pct  = (float) ($this->profitPct ?? 0);
         return $base * (1 + $pct / 100);
+    }
+
+    public function getCalculationPriceStored(): ?string
+    {
+        return $this->calculationPriceStored;
+    }
+    public function setCalculationPriceStored(?string $v): self
+    {
+        $this->calculationPriceStored = $v;
+        return $this;
     }
 
     /**

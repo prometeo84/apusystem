@@ -42,6 +42,11 @@ class ProfileController extends AbstractController
         $user = $this->getUser();
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+                $this->addFlash('error', 'common.error_invalid_csrf');
+                return $this->redirectToRoute('app_profile_edit');
+            }
+
             $firstName = $request->request->get('first_name');
             $lastName = $request->request->get('last_name');
             $phone = $request->request->get('phone');
@@ -116,6 +121,11 @@ class ProfileController extends AbstractController
         $user = $this->getUser();
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+                $this->addFlash('error', 'common.error_invalid_csrf');
+                return $this->redirectToRoute('app_profile_change_password');
+            }
+
             $currentPassword = $request->request->get('current_password');
             $newPassword = $request->request->get('new_password');
             $confirmPassword = $request->request->get('confirm_password');
@@ -166,6 +176,11 @@ class ProfileController extends AbstractController
         $user = $this->getUser();
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+                $this->addFlash('error', 'common.error_invalid_csrf');
+                return $this->redirectToRoute('app_profile_preferences');
+            }
+
             $locale = $request->request->get('locale');
             $timezone = $request->request->get('timezone');
             $themePrimaryColor = $request->request->get('theme_primary_color');
@@ -209,8 +224,13 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/reset-theme', name: 'app_profile_reset_theme', methods: ['POST'])]
-    public function resetTheme(): Response
+    public function resetTheme(Request $request): Response
     {
+        if (!$this->isCsrfTokenValid('submit', $request->request->get('_token'))) {
+            $this->addFlash('error', 'common.error_invalid_csrf');
+            return $this->redirectToRoute('app_profile_preferences');
+        }
+
         /** @var User $user */
         $user = $this->getUser();
 

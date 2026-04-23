@@ -43,6 +43,12 @@
                                     <small class="text-muted">{{ 'admin.email_username'|trans }}</small>
                                 </div>
 
+                                <div class="mb-3">
+                                    <label class="form-label">Username</label>
+                                    <input type="text" name="username" class="form-control" placeholder="{{ 'admin.username_hint'|trans }}">
+                                    <div class="form-text">{{ 'admin.username_help'|trans }}</div>
+                                </div>
+
                                 {% if is_granted('ROLE_SUPER_ADMIN') %}
                                     <div class="mb-3">
                                         <label class="form-label">Tenant</label>
@@ -68,27 +74,75 @@
                                 </div>
 
                                 <div class="mb-3">
+                                    <label class="form-label">{{ 'preferences.language'|trans }}</label>
+                                    {# Default creation locale to English by requirement #}
+                                    {% set createLocale = 'en' %}
+                                    <select name="locale" class="form-select">
+                                        <option value="es" {% if createLocale == 'es' %}selected{% endif %}>🇪🇸 Español</option>
+                                        <option value="en" {% if createLocale == 'en' %}selected{% endif %}>🇺🇸 English</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">{{ 'preferences.timezone'|trans }}</label>
+                                    {% set createTz = user.timezone is defined and user.timezone ? user.timezone : 'UTC' %}
+                                    {% set tzKey = ('timezone.' ~ createTz|replace({'/':'_'})) %}
+                                    {% set tzLabel = tzKey|trans %}
+                                    <select name="timezone" class="form-select">
+                                        <option value="{{ createTz }}" selected>{{ tzLabel == tzKey ? createTz : tzLabel }}</option>
+                                        {% if createTz != 'America/Guayaquil' %}
+                                            <option value="America/Guayaquil">{{ 'timezone.America_Guayaquil'|trans }}</option>
+                                        {% endif %}
+                                        {% if createTz != 'America/New_York' %}
+                                            <option value="America/New_York">{{ 'timezone.America_New_York'|trans }}</option>
+                                        {% endif %}
+                                        {% if createTz != 'Europe/Madrid' %}
+                                            <option value="Europe/Madrid">{{ 'timezone.Europe_Madrid'|trans }}</option>
+                                        {% endif %}
+                                        {% if createTz != 'Europe/London' %}
+                                            <option value="Europe/London">{{ 'timezone.Europe_London'|trans }}</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
                                     <label class="form-label">{{ 'password.new'|trans }}</label>
-                                    <input type="password" name="password" class="form-control" required minlength="8">
+                                    <div class="input-group">
+                                        <input type="password" id="password" name="password" class="form-control" required minlength="8">
+                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                            <i class="bi bi-eye" id="toggleIcon"></i>
+                                        </button>
+                                    </div>
                                     <small class="text-muted">{{ 'admin.min_8_chars'|trans }}</small>
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="form-label">{{ 'admin.confirm_password'|trans }}</label>
-                                    <input type="password" name="password_confirm" class="form-control" required minlength="8">
+                                    <div class="input-group">
+                                        <input type="password" id="password_confirm" name="password_confirm" class="form-control" required minlength="8">
+                                        <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirm">
+                                            <i class="bi bi-eye" id="toggleIconConfirm"></i>
+                                        </button>
+                                    </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">{{ 'admin.role'|trans }}</label>
-                                    <select name="role" class="form-select" required>
-                                        <option value="ROLE_USER">{{ 'admin.user'|trans }}</option>
-                                        <option value="ROLE_MANAGER">Manager</option>
-                                        {% if is_granted('ROLE_SUPER_ADMIN') %}
-                                            <option value="ROLE_ADMIN">{{ 'admin.admin'|trans }}</option>
-                                            <option value="ROLE_SUPER_ADMIN">{{ 'admin.super_admin'|trans }}</option>
-                                        {% endif %}
-                                    </select>
-                                </div>
+                                {% if is_granted('ROLE_ADMIN') and not is_granted('ROLE_SUPER_ADMIN') %}
+                                    <div class="mb-3">
+                                        <label class="form-label">{{ 'admin.role'|trans }}</label>
+                                        <div class="form-control-plaintext">{{ 'admin.user'|trans }}</div>
+                                        <input type="hidden" name="role" value="ROLE_USER">
+                                    </div>
+                                {% else %}
+                                    <div class="mb-3">
+                                        <label class="form-label">{{ 'admin.role'|trans }}</label>
+                                        <select name="role" class="form-select" required>
+                                            <option value="ROLE_USER">{{ 'admin.user'|trans }}</option>
+                                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                                <option value="ROLE_ADMIN">{{ 'admin.admin'|trans }}</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                {% endif %}
 
                                 <div class="form-check mb-3">
                                     <input type="checkbox" name="is_active" class="form-check-input" id="isActive" checked>
@@ -114,5 +168,56 @@
             </div>
         </div>
     </div>
+                        {% block javascripts %}
+                            {{ parent() }}
+                            <script>
+                                if (!window.__apu_toggle_initialized) {
+                                    window.__apu_toggle_initialized = true;
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        // Password field
+                                        const togglePassword = document.getElementById('togglePassword');
+                                        const passwordInput = document.getElementById('password');
+                                        const toggleIcon = document.getElementById('toggleIcon');
+
+                                        if (togglePassword && passwordInput && toggleIcon) {
+                                            togglePassword.addEventListener('click', function () {
+                                                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                                                passwordInput.setAttribute('type', type);
+
+                                                if (type === 'text') {
+                                                    toggleIcon.classList.remove('bi-eye');
+                                                    toggleIcon.classList.add('bi-eye-slash');
+                                                } else {
+                                                    toggleIcon.classList.remove('bi-eye-slash');
+                                                    toggleIcon.classList.add('bi-eye');
+                                                }
+                                                passwordInput.focus();
+                                            });
+                                        }
+
+                                        // Confirm password field
+                                        const togglePasswordConfirm = document.getElementById('togglePasswordConfirm');
+                                        const passwordConfirmInput = document.getElementById('password_confirm');
+                                        const toggleIconConfirm = document.getElementById('toggleIconConfirm');
+
+                                        if (togglePasswordConfirm && passwordConfirmInput && toggleIconConfirm) {
+                                            togglePasswordConfirm.addEventListener('click', function () {
+                                                const type = passwordConfirmInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                                                passwordConfirmInput.setAttribute('type', type);
+
+                                                if (type === 'text') {
+                                                    toggleIconConfirm.classList.remove('bi-eye');
+                                                    toggleIconConfirm.classList.add('bi-eye-slash');
+                                                } else {
+                                                    toggleIconConfirm.classList.remove('bi-eye-slash');
+                                                    toggleIconConfirm.classList.add('bi-eye');
+                                                }
+                                                passwordConfirmInput.focus();
+                                            });
+                                        }
+                                    });
+                                }
+                            </script>
+                        {% endblock %}
 </div>
 {% endblock %}

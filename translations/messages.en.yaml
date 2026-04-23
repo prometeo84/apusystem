@@ -1,259 +1,361 @@
 admin:
   active_users: "Active Users"
-  admin: "Administrator"
+  admin: Administrator
   configure_company: "Configure Company"
   select_company_label: "Select Company:"
-  timezone_label: "Timezone"
-  currency_label: "Currency"
+  timezone_label: Timezone
+  currency_label: Currency
   require_2fa_label: "Require two-factor authentication for all users"
   enable_email_notifications: "Enable email notifications"
   save_settings: "Save Settings"
   current_plan: "Current Plan"
   system_settings: "System Settings"
   system_information: "System Information"
-  users_label: "Users"
-  projects_label: "Projects"
-  max_label: "maximum"
+  users_label: Users
+  projects_label: Projects
+  max_label: max
   confirm_password: "Confirm Password"
   create_user: "Create User"
-  database: "Database"
+  create_admin: "Create Administrator"
+  database: Database
   email_notification: "The user will receive an email with their access credentials."
   email_username: "Will be used as username"
+  username_hint: "Username will be auto-generated from email if left empty"
+  username_help: "Enter a username or leave empty to use the email local part"
+  select_tenant: "Select Company"
+  creating_admin_info: "Creating an administrator will grant elevated permissions.
+    Proceed with caution."
   events_today: "Events Today"
   first_name: "First Name"
   last_name: "Last Name"
   last_update: "Last update"
-  leave_blank_no_change: "Leave blank to not change"
+  leave_blank_no_change: "Leave blank to keep unchanged"
   manage_users: "Manage Users"
   min_8_chars: "Minimum 8 characters"
-  never: "Never"
   new_user: "New User"
   no_recent_errors: "No recent errors"
   of_total: "of total"
-  panel: "Administration Panel"
-  percent: "Percent"
-  phone: "Phone"
-  address: "Address"
-  state_region: "State/Region"
-  country: "Country"
-  role: "Role"
-  sessions: "Sessions"
+  panel: "Admin Panel"
+  percent: Percentage
+  phone: Phone
+  address: Address
+  state_region: State/Region
+  country: Country
+  role: Role
+  sessions: Sessions
   super_admin: "Super Administrator"
   system_status: "System Status"
   total_users: "Total Users"
-  user: "User"
+  used: Used
+  user: User
   user_active: "Active user"
   view_logs: "View logs"
   view_security_logs: "View Security Logs"
   with_2fa: "With 2FA"
   logs:
     details_title: "Event Details"
-    details_label: "Details"
+    details_label: Details
   edit_tenant: "Edit Company"
   edit_tenant_form: "Edit Company"
   no_tenants_msg: "No companies registered"
   registered_tenants_section: "Registered Companies"
   title_page: "Company Management"
-
+  active_sessions: "Active Sessions"
+  no_anomalies: "No anomalies detected"
+  no_sessions: "No active sessions"
+  no_tokens: "No remember-me tokens"
+  remember_me_tokens: "Remember-me tokens"
+  edit: Edit
+  revoke: Revoke
+  revoke_selected: "Revoke selected"
+  session_anomalies: "Session anomalies"
+  super_quick_actions: "Quick actions"
+  tenant:
+    title: "Company Settings"
+    info_company: "Company Information"
+  index:
+    title: Administration
 admin_users:
   all_users: "All Users"
   create_user_title: "Create New User"
   edit_user_title: "Edit User"
   no_users_msg: "No registered users"
   title_page: "User Management"
-
+  activate: Activate
+  deactivate: Deactivate
 roles:
-  user: "User"
-  manager: "Manager"
-  admin: "Administrator"
+  user: User
+  manager: Manager
+  admin: Administrator
   super_admin: "Super Administrator"
-
 auth:
   email_or_username: "Email or Username"
   enter_email_username: "Enter your email or username"
   enter_password: "Enter your password"
   forgot_password: "Forgot your password?"
-  login: "Login"
-  password: "Password"
+  login: "Sign In"
+  password: Password
   protected_2fa: "Protected with 2FA authentication"
   remember_session: "Remember session"
   secure_connection: "Secure connection with encryption"
-  too_many_attempts: "Too many login attempts. Please try again later."
-
+  too_many_attempts: "Too many login attempts. Please try later."
+  logout: Logout
+  reauth: "Re-authentication required"
+  reauth_prompt: "Please re-enter your password to continue"
+  confirm: Confirm
 buttons:
   back_to_login: "Back to login"
-  add: "Add"
-  cancel: "Cancel"
-  close: "Close"
-  confirm: "Confirm"
-  delete: "Delete"
-  edit: "Edit"
-  browse: "Browse"
-  remove: "Remove"
-  save: "Save"
-  back: "Back"
-
+  add: Add
+  cancel: Cancel
+  close: Close
+  confirm: Confirm
+  delete: Delete
+  edit: Edit
+  browse: Browse
+  remove: Remove
+  save: Save
+  back: Back
+  back_to_security: "Back to Security"
 common:
-  account: "Account"
+  account: Account
   account_information: "Account Information"
-  action: "Action"
+  action: Action
   active_projects: "Active Projects"
   allowed_formats: "JPG, PNG, GIF or WEBP"
-  cancel: "Cancel"
-  code: "Code"
-  company: "Company"
-  configuration: "Configuration"
+  cancel: Cancel
+  code: Code
+  company: Company
+  configuration: Configuration
   current_config: "Current Configuration"
   current_time: "Current Time"
-  date: "Date"
-  delete: "Delete"
-  edit: "Edit"
+  add_transport: "Add transport"
+  add_material: "Add material"
+  add_equipment: "Add equipment"
+  add_labor: "Add labor"
+  date: Date
+  delete: Delete
+  edit: Edit
   edit_personal_info: "Edit Personal Information"
   email_not_modifiable: "Email cannot be modified"
   example_button: "Example Button"
   example_text: "Example: This is how elements will look with your custom theme"
-  description: "Description"
-  export: "Export"
-  filter: "Filter"
+  description: Description
+  export: Export
+  filter: Filter
   image_profile: "Profile Picture"
-  import: "Import"
-  important: "Important"
-  information: "Information"
+  import: Import
+  important: Important
+  information: Information
   interface_language: "System interface language"
   last_access: "Last access"
-  created: "Created"
+  created: Created
   max_size: "Maximum 2MB"
   member_since: "Member since"
-  never: "Never"
-  no: "No"
+  never: Never
+  "no": "No"
   no_specified: "Not specified"
-  none: "None"
+  none: None
   not_editable: "not editable"
   not_specified: "Not specified"
-  optional: "Optional"
+  optional: Optional
   personal_information: "Personal Information"
-  preview: "Preview"
+  preview: Preview
   no_file_selected: "No file selected"
-  browser: "Browser"
+  browser: Browser
   primary_color_description: "Main color for buttons and links"
-  projects: "Projects"
+  projects: Projects
   new-item-link: "Add new item"
   reset_theme_confirm: "Reset theme to default colors?"
-  role: "Role"
-  save: "Save"
-  search: "Search"
+  role: Role
+  save: Save
+  search: Search
+  active: Active
+  inactive: Inactive
+  visible_in_apu: "(visible in APU)"
+  project_optional: "Project (if applicable)"
   secondary_color_description: "Secondary color for gradients"
-  security_label: "Security"
+  security_label: Security
   select_primary: "Select primary color"
   select_secondary: "Select secondary color"
   system_description: "Unit Price Analysis System"
-  time: "Time"
-  timezone_description: "Timezone for displaying dates and times"
-  user: "User"
-  view_details: "View Details"
-  yes: "Yes"
-
-apu:
-  limit_reached: "APU limit reached"
-  limit_near: "You are approaching your APU limit (%current%/%limit%)."
-
-  # Plan names (from es catalog)
+  time: Time
   plan_trial: "Trial Plan"
   plan_basic: "Basic Plan"
   plan_professional: "Professional Plan"
   plan_enterprise: "Enterprise Plan"
-  # Date units
-  month: "month"
-  months: "months"
-  year: "year"
-  years: "years"
-
+  timezone_description: "Timezone for displaying dates and times"
+  user: User
+  view_details: "View details"
+  "yes": "Yes"
+  select: Select...
+  back: Back
+  actions: Actions
+  view: View
+  danger_zone: "Danger Zone"
+  admin_only: "Only administrators can perform this action."
+  created_at: Created
+  name: Name
+  col_unit: Unit
+  no_records: "No records"
+  error_invalid_csrf: "Invalid security token. Please try again."
+  size: Size
+apu:
+  limit_reached: "APU limit reached"
+  limit_near: "You are approaching your APU limit (%current%/%limit%)."
+  plan_trial: "Trial Plan"
+  plan_basic: "Basic Plan"
+  plan_professional: "Professional Plan"
+  plan_enterprise: "Enterprise Plan"
+  month: month
+  months: months
+  year: year
+  years: years
+  create_title: "Create APU"
+  main_data: "Main Data"
+  unit: Unit
+  equipment: Equipment
+  labor: Labor
+  materials: Materials
+  transport: Transport
+  col_description: Description
+  col_number: Number
+  col_rate: Rate
+  col_cost_hour: C/HOUR
+  col_jh: JOR./HOUR
+  actions: Actions
+  col_unit: Unit
+  col_quantity: Quantity
+  col_unit_price: "Unit Price"
+  col_dmt: "DMT (km)"
+  col_rate_km: Rate/km
+  col_subtotal: Subtotal
+  cost_summary: "Cost Summary"
+  subtotal_equipment: "Equipment Subtotal"
+  subtotal_labor: "Labor Subtotal"
+  subtotal_materials: "Materials Subtotal"
+  subtotal_transport: "Transport Subtotal"
+  total_direct_costs: "Total Direct Costs"
+  labor_new: "New Labor"
+  utilidad_pct: "Profit Margin (%)"
+  precio_calculo: "Calculation Price"
+  precio_ofertado: "Offered Price"
+  save: "Save APU"
+  title: "Unit Price Analysis"
+  header: "APU — Unit Price Analysis"
+  new_apu: "New APU"
+  no_apus: "No APUs registered yet."
+  create_first: "Create the first APU"
+  column_description: Description
+  column_unit: Unit
+  column_khu: K(H/U)
+  column_rend: "Yield u/h"
+  column_total_cost: "Total Cost"
+  column_date: Date
+  example_description: "E.g.: Manual trench excavation"
+  edit: "Edit APU"
+  export_excel: "Export Excel"
+  update: "Update APU"
+  edit.title: "Edit Unit Price Analysis"
+  label:
+    item_description: "Item Description"
 dashboard:
-  actions: "Actions"
+  actions: Actions
   add_labor: "Add Labor"
   add_material: "Add Material"
   analysis: "Price Analysis"
-  apus: "APUs"
-  budget: "Budget"
-  client: "Client"
-  code: "Code"
+  apus: APUs
+  budget: Budget
+  client: Client
+  code: Code
   create_apu: "Create APU"
   apus_created: "APUs Created"
   active_projects: "Active Projects"
-  templates_label: "Templates"
+  templates_label: Templates
   total_budget: "Total Budget"
   create_first_project: "Create First Project"
-  rubros: "Items"
-  materials: "Materials"
-  labor: "Labor"
-  equipment: "Equipment"
-  transport: "Transport"
+  rubros: Items
+  materials: Materials
+  labor: Labor
+  equipment: Equipment
+  transport: Transport
   in_progress: "in progress"
   max_users: "max users"
-  name: "Name"
+  name: Name
   new_project: "New Project"
   no_apus: "No APUs registered"
   create_first: "Create the first APU"
   no_projects: "No projects registered"
-  plan: "Plan"
+  plan: Plan
   apu:
     limit_reached: "APU limit reached"
-  plan_label: "Plan"
+  plan_label: Plan
   quick_actions: "Quick Actions"
   add_equipment: "Add Equipment"
   add_transport: "Add Transport"
   export_report: "Export Report"
   no_recent_activity: "No recent activity"
   account_information: "Account Information"
-
-  # Plan names
   plan_trial: "Trial Plan"
   plan_basic: "Basic Plan"
   plan_professional: "Professional Plan"
   plan_enterprise: "Enterprise Plan"
-  projects: "Projects"
+  projects: Projects
   recent_activity: "Recent Activity"
   recent_projects: "Recent Projects"
-  reusable: "Reusable"
-  stats: "Statistics"
-  status: "Status"
-  templates: "Templates"
-  users: "Users"
-  welcome: "Welcome"
-
+  reusable: Reusable
+  stats: Statistics
+  status: Status
+  templates: Templates
+  users: Users
+  welcome: Welcome
+  month: month
+  months: months
+  year: year
+  years: years
 login:
-  email: "Email"
-  password: "Password"
+  email: Email
+  password: Password
   remember: "Remember me"
   submit: "Sign In"
-  title: "Login"
-
+  title: Login
 error: "An error occurred"
 invalid_data: "Invalid data"
+items:
+  visibility:
+    label: Visibility
+    tenant: "Visible to tenant"
+    project: "Visible to project"
+units:
+  GLB: "GLB (global)"
+  h: "h (hour)"
+  kg: kg
+  m: "m (linear meter)"
+  m2: m²
+  m3: m³
+  t: "t (ton)"
+  u: "u (unit)"
 success: "Changes saved successfully"
-unauthorized: "Unauthorized"
-
+unauthorized: Unauthorized
 nav:
-  admin: "Administration"
-  alerts: "Alerts"
-  companies: "Companies"
-  dashboard: "Dashboard"
-  projects: "Projects"
-  errors: "Errors"
+  admin: Administration
+  alerts: Alerts
+  companies: Companies
+  dashboard: Dashboard
+  projects: Projects
+  errors: Errors
   global_admin: "Global Administration"
-  logout: "Logout"
-  monitoring: "Monitoring"
+  logout: Logout
+  monitoring: Monitoring
   profile: "My Profile"
-  security: "Security"
+  security: Security
   security_logs: "Security Logs"
-  system: "System"
+  system: System
   system_admin: "System Administrator"
   system_errors: "System Errors"
   system_management: "System Management"
-  tenants: "Companies"
-  tests: "Tests"
-  tools: "Tools"
-
+  tenants: Companies
+  tests: Tests
+  tools: Tools
 password:
   back_to_login: "Back to login"
   change: "Change Password"
@@ -277,9 +379,13 @@ password:
   reset_title: "Reset Password"
   security_requirements: "Security requirements"
   send_link: "Send link"
-  title: "Password"
+  title: Password
   reset_expires_in: "Reset link expires in %minutes% minutes"
-
+  test_emails: "📧 For testing use: admin@demo.com, admin@abc.com or user@abc.com"
+  reset.title: "Reset Password"
+  reset.requirements: "Password requirements:"
+  reset.min_8: "Minimum 8 characters"
+  reset.recommend_chars: "We recommend using letters, numbers and symbols"
 emails:
   greeting: "Hello %name%,"
   password_reset_intro: "You requested a password reset. Use the button below to continue:"
@@ -295,29 +401,26 @@ emails:
   enable_2fa: "Enable two-factor authentication (2FA) for extra security."
   automated_notice: "This is an automated message, please do not reply."
   rights_reserved: "All rights reserved."
-
   error_notification:
     header: "⚠ Error in APU System"
     intro: "Hello %name%, an unhandled error occurred in the system."
-    exception_label: "Exception"
-    message_label: "Message"
+    exception_label: Exception
+    message_label: Message
     previous_label: "Previous cause"
-    file_label: "File"
-    line_label: "Line"
-    url_label: "URL"
+    file_label: File
+    line_label: Line
+    url_label: URL
     ip_label: "Client IP"
     code_label: "Error Code"
-    datetime_label: "Date/Time"
-    user_agent_label: "User-Agent"
+    datetime_label: Date/Time
+    user_agent_label: User-Agent
     stack_label: "Stack Trace"
     footer: "APU System · Automated error notification · Do not reply to this email"
-
+  important: Important
 mails:
-  important: "IMPORTANT"
-# Report strings
-
+  important: IMPORTANT
 report:
-  budget_title: "BUDGET"
+  budget_title: BUDGET
   project_full_title: "PROJECT GENERAL BUDGET"
   project_label: "Project:"
   code_label: "Code:"
@@ -330,31 +433,36 @@ report:
   total_general: "TOTAL GENERAL OF THE PROJECT"
   generated_by: "Automatically generated — APU System"
   table:
-    col_code: "Code"
-    col_description: "Description"
-    col_unit: "Unit"
-    col_quantity: "Quantity"
+    col_code: Code
+    col_description: Description
+    col_unit: Unit
+    col_quantity: Quantity
     col_unit_price: "Unit Price USD"
     col_total: "Total USD"
-
+  generate: Report
+  full_project: "Full Project Report"
+  preview_title: "Budget Preview"
+  download_pdf: "Download PDF"
+  download_excel: "Download Excel"
+  pdf_error: "Error generating PDF."
+  excel_error: "Error generating Excel."
 preferences:
-  auto: "Auto"
-  dark: "Dark"
-  language: "Language"
-  light: "Light"
+  auto: Auto
+  dark: Dark
+  language: Language
+  light: Light
   primary_color: "Primary Color"
   reset_colors: "Reset Colors"
   secondary_color: "Secondary Color"
   theme: "Color Theme"
   theme_mode: "Theme Mode"
-  timezone: "Timezone"
+  timezone: Timezone
   title: "User Preferences"
-
 timezone:
   region:
-    America: "Americas"
-    Europe: "Europe"
-    Asia: "Asia"
+    America: Americas
+    Europe: Europe
+    Asia: Asia
   America_Guayaquil: "Ecuador (UTC-5)"
   America_New_York: "New York (UTC-5/-4)"
   America_Chicago: "Chicago (UTC-6/-5)"
@@ -371,109 +479,146 @@ timezone:
   Asia_Dubai: "Dubai (UTC+4)"
   Asia_Shanghai: "Shanghai (UTC+8)"
   Asia_Tokyo: "Tokyo (UTC+9)"
-
 profile:
   edit_title: "Edit Profile"
-  email: "Email"
+  email: Email
   first_name: "First Name"
   last_name: "Last Name"
   personal_info: "Personal Information"
-  phone: "Phone"
-  preferences: "Preferences"
+  phone: Phone
+  preferences: Preferences
   save: "Save Changes"
   title: "My Profile"
-  username: "Username"
-
+  username: Username
 security:
   2fa_description: "Add an extra layer of security to your account by requiring a
     verification code in addition to your password"
   two_factor: "Two-Factor Authentication"
   2fa_disabled: "2FA Disabled"
   2fa_enabled: "2FA Enabled"
+  action: Action
+  active_sessions_desc: "Devices that have recently logged into your account."
   change_password: "Change Password"
   configure: "Configure Security"
+  date: Date
+  device: Device
   devices_recently: "Devices that have recently logged into your account"
   disable_2fa: "Disable 2FA"
-  disabled: "Disabled"
+  disabled: Disabled
   enable_2fa: "Enable 2FA"
-  enabled: "Enabled"
+  enabled: Enabled
+  event: Event
   events: "Security Events"
+  title: Security
+  revoke: Revoke
+  recent_events: "Recent Security Events"
+  severity: Severity
   if_lose_device: "If you lose your authentication device, go to the login page"
   in_your_app: "in your authentication app"
-  last_update: "Last update"
-  action: "Action"
-  active_sessions_desc: "Devices that have recently logged into your account"
-  date: "Date"
-  device: "Device"
-  event: "Event"
   last_activity: "Last activity"
-  password_recommendation: "It is recommended to change your password regularly to
-    keep your account secure"
-  recovery_codes_available: "Recovery codes available"
+  last_update: "Last update"
+  min_8_chars: "Minimum 8 characters"
+  password_advice: "It is recommended to change your password regularly to keep
+    your account secure."
+  use_auth_app: "Use an authentication app (e.g., Google Authenticator, Authy)"
+  recommended_apps: "Recommended Apps"
+  recommended:
+    google: "Google Authenticator: Available for iOS and Android"
+    microsoft: "Microsoft Authenticator: Available for iOS and Android"
+    authy: "Authy: Available for iOS, Android and Desktop"
+  recovery_codes: "Recovery codes available"
+  requirements: "Security requirements"
+  secret_key: "Secret key"
   sessions: "Active Sessions"
-  security_2fa:
-    verify_title: "Two-factor verification"
-    verify_description: "Enter the verification code from your authenticator app or
-      use a recovery code."
-    enter_code: "Enter the 6-digit code"
-    verify_button: "Verify"
-    use_recovery_code: "Use recovery code"
-    code_from_app: "6-digit code from your authentication app"
-    code_invalidated: "The code will be invalidated after use"
-    codes_copied: "Codes copied to clipboard"
-    configure_2fa: "Configure Two-Factor Authentication"
-    revoke: "Revoke"
-    no_active_sessions: "No active sessions."
-    title: "Security Settings"
-    two_factor: "Two-Factor Authentication (2FA)"
-    use_auth_app: "Use an authentication app like Google Authenticator or Authy"
-    back_to_security: "Back to Security"
-  recent_events: "Recent Security Events"
-  severity: "Severity"
-
+  back_to_security: "Back to Security"
+  no_active_sessions: "No active sessions."
+  password_recommendation: "It is recommended to change your password regularly to
+    keep your account secure."
+  recovery_codes_available: "Recovery codes available"
+  2fa:
+    important: Important
+    once_enabled: "Once 2FA is enabled you will need your password and a
+      verification code to sign in."
+    disable_instructions: "To disable two-factor authentication, enter your current 2FA code:"
+    code_placeholder: "6-digit code"
+  superadmin_verify:
+    code_label: Code
+    expired: "The code has expired."
+    expires_in: "The code expires in %minutes% minute(s) (%time%)."
+    header: "Additional verification for superadmin"
+    instruction: "A temporary code has been sent to your email. Enter the code to
+      complete sign-in."
+    title: "Email verification — Superadmin"
+    verify: Verify
+security_2fa:
+  verify_title: "Two-Factor Verification"
+  verify_description: "Enter the verification code from your authenticator app or
+    use a recovery code."
+  enable_2fa_title: "Configure Two-Factor Authentication"
+  step_1: "Step 1"
+  step_2: "Step 2"
+  scan_with_app: "Scan the QR code with your authenticator app"
+  enter_6_digit: "Enter the 6-digit code generated by your authenticator app"
+  verify_config: "Verify configuration"
+  verification_code: "Verification code"
+  verify_enable: "Verify and enable"
+  manual_key: "Manual entry key"
+  enter_code: "Enter the 6-digit code"
+  verify_button: Verify
+  use_recovery_code: "Use recovery code"
+  code_from_app: "6-digit code from your authentication app"
+  code_invalidated: "The code will be invalidated after use"
+  codes_copied: "Codes copied to clipboard"
+  configure_2fa: "Configure Two-Factor Authentication"
+  revoke: Revoke
+  no_active_sessions: "No active sessions."
+  title: "Security Settings"
+  two_factor: "Two-Factor Authentication (2FA)"
+  use_auth_app: "Use an authenticator app like Google Authenticator or Authy"
+  back_to_security: "Back to Security"
   superadmin_verify:
     title: "Email verification — Superadmin"
     header: "Additional verification for superadmin"
     instruction: "A temporary code has been sent to your email. Enter the code to
       complete sign-in."
-    code_label: "Code"
-    verify: "Verify"
+    code_label: Code
+    verify: Verify
     expires_in: "The code expires in %minutes% minute(s) (%time%)."
     expired: "The code has expired."
-
-    superadmin_verify:
-      title: "Email verification — Superadmin"
-      header: "Additional verification for superadmin"
-      instruction: "A temporary code has been sent to your email. Enter the code to
-        complete sign-in."
-      code_label: "Code"
-      verify: "Verify"
-      expires_in: "The code expires in %minutes% minute(s) (%time%)."
-      expired: "The code has expired."
-    regenerate_title: "Regenerate Recovery Codes"
-    regenerate_header: "Regenerate recovery codes"
-    regenerate_instructions: "To regenerate your recovery codes you must confirm your current password."
-    current_password: "Current password"
-
-    recommended_apps: "Recommended Apps"
-    min_8_chars: "Minimum 8 characters"
-    password_advice: "We recommend changing your password regularly to keep your
-      account secure."
-    recent_events: "Recent Security Events"
-    recommendation: "It is recommended to use uppercase, lowercase, numbers and symbols"
-    recommended:
-      authy: "Authy: Available for iOS, Android and Desktop"
-      google: "Google Authenticator: Available for iOS and Android"
-      microsoft: "Microsoft Authenticator: Available for iOS and Android"
-    recovery_codes: "Recovery codes available"
-    requirements: "Security requirements"
-    secret_key: "Secret key"
-    severity: "Severity"
-
+  regenerate_title: "Regenerate Recovery Codes"
+  regenerate_header: "Regenerate recovery codes"
+  regenerate_instructions: "To regenerate your recovery codes you must confirm your current password."
+  current_password: "Current password"
+  recommended_apps: "Recommended Apps"
+  recommended:
+    google: "Google Authenticator: Available for iOS and Android"
+    microsoft: "Microsoft Authenticator: Available for iOS and Android"
+    authy: "Authy: Available for iOS, Android and Desktop"
+  recovery_codes: "Recovery codes available"
+  requirements: "Security requirements"
+  sessions: "Active Sessions"
+  severity: Severity
+  secret_key: "Secret key"
+  copy_codes: "Copy Codes"
+  download_codes: "Download Codes"
+  how_to_use: "How to use these codes?"
+  one_time_use: "Each code can only be used once"
+  print_codes: "Print Codes"
+  recovery_codes_title: "Recovery Codes"
+  regenerate_button: "Regenerate Codes"
+  regenerate_confirm: "Regenerate recovery codes? Current codes will stop working."
+  save_important: "Save these codes in a safe place"
+  use_if_lost: "If you lose access to your authentication app, you can use these
+    codes to log in"
+  use_recovery_click: "After entering your password, click on \"Use recovery code\""
 project:
   status:
-    active: "Active"
-  continue_button: "Continue"
+    active: Active
+    planificacion: Planning
+    en_proceso: "In Progress"
+    pausado: "On Hold"
+    finalizado: Completed
+  continue_button: Continue
   copy_codes: "Copy Codes"
   download_codes: "Download Codes"
   enable_2fa_title: "Enable Two-Factor Authentication"
@@ -495,47 +640,81 @@ project:
   use_recovery_click: "After entering your password, click on \"Use recovery code\""
   use_recovery_code: "Use recovery code"
   verification_code: "Verification code"
-  verify_button: "Verify"
+  verify_button: Verify
   verify_config: "to verify the configuration"
   verify_description: "Enter the 6-digit code from your authentication app"
   verify_enable: "Verify and Enable"
   verify_title: "Two-Factor Verification"
-
+  title: Projects
+  new: "New Project"
+  create_title: "New Project"
+  edit_title: "Edit Project"
+  general_info: "General Information"
+  dates_budget: "Dates & Budget"
+  save: "Save Project"
+  no_projects: "No projects registered yet."
+  col_name: Name
+  col_code: Code
+  col_client: Client
+  col_location: Location
+  col_status: Status
+  col_budget: Budget
+  col_date: Date
+  start_date: "Start Date"
+  end_date: "End Date"
+  created_success: "Project created successfully."
+  updated_success: "Project updated successfully."
+  deleted_success: "Project deleted."
+  error_invalid_csrf: "Invalid security token. Please try again."
+  not_found: "Project not found."
+  confirm_delete: "Are you sure you want to delete this project? This action cannot be undone."
+  apus: "Project APUs"
+  no_apus_yet: "No APUs associated with this project yet."
+  placeholder_name: "E.g.: Building A Construction"
+  placeholder_code: "E.g.: PRY-001"
+  placeholder_description: "Detailed project description..."
+  placeholder_client: "Client name"
+  placeholder_location: "City, Country"
+  limit_reached: "Project limit reached for your plan. Cannot create more projects."
+  limit_near: "You are approaching your project limit (%current%/%limit%).
+    Consider upgrading or removing unused projects."
+  duplicate: "Duplicate Project"
+  duplicated_success: "Project duplicated successfully."
 system:
-  title: "System"
+  title: System
   showing_events: "Showing %count% events"
-  actions: "Actions"
+  actions: Actions
   expires_label: "Expires:"
-  expired: "EXPIRED"
-  days: "days"
-  month: "month"
-  months: "months"
-  year: "year"
-  years: "years"
+  expired: EXPIRED
+  days: days
+  month: month
+  months: months
+  year: year
+  years: years
   unlimited_time: "No time limit"
-  plan_basic: "Basic"
-  plan_professional: "Professional"
-  plan_enterprise: "Enterprise"
+  plan_basic: Basic
+  plan_professional: Professional
+  plan_enterprise: Enterprise
   category:
-    security: "Security"
-    billing: "Billing"
-    system: "System"
+    security: Security
+    billing: Billing
+    system: System
   active_alerts: "Active Alerts"
-  active_label: "active"
+  active_label: active
   active_sessions: "Active Sessions"
   active_tenants_list: "Active Companies"
   alert_types: "Security Alert Types"
-  alerts: "Alerts"
+  alerts: Alerts
   alerts_title: "System Alerts"
-  all: "All"
+  all: All
   basic_plan: "Basic: 5 users, 10 projects"
-  billing: "Billing"
-  billing_alerts: "Billing"
+  billing: Billing
+  billing_alerts: Billing
   bot_pattern: "Bot pattern: Automated activity detected"
   browser_change: "Browser change: Different User-Agent than usual"
-  cache: "Cache"
+  cache: Cache
   commercial_name: "Company's commercial name"
-  company: "Company"
+  company: Company
   company_code: "Company Code"
   company_code_hint: "Unique identifier. Only lowercase letters, numbers and hyphens"
   company_code_no_change: "Company code cannot be changed once created"
@@ -543,27 +722,27 @@ system:
   tenant_id_label: "Tenant ID"
   connection_success: "Connection successful"
   create_tenant: "Create Company"
-  critical: "Critical"
-  critical_alerts: "Critical"
+  critical: Critical
+  critical_alerts: Critical
   critical_events: "Recent Critical Events"
-  database: "Database"
-  datetime: "Date/Time"
-  disk: "Disk"
+  database: Database
+  datetime: Date/Time
+  disk: Disk
   enterprise_plan: "Enterprise: Unlimited users and projects"
   error_log: "Error Log"
   error_message: "Error Message"
   errors: "System Errors"
-  errors_label: "Errors"
-  event: "Event"
+  errors_label: Errors
+  event: Event
   extend_validity: "Extend Validity (months)"
-  hour: "Hour"
+  hour: Hour
   ip_change: "IP Change: User logged in from a different IP"
-  level: "Level"
+  level: Level
   manage_tenants: "Manage Companies"
   max_projects: "Maximum Projects"
   max_users: "Maximum Users"
-  message: "Message"
-  monitoring: "Monitoring"
+  message: Message
+  monitoring: Monitoring
   monitoring_title: "System Monitoring"
   multiple_sessions: "Multiple sessions: 3+ simultaneous sessions from different IPs"
   new_tenant: "New Company"
@@ -574,10 +753,10 @@ system:
   no_modify: "Do not modify"
   no_recent_activity: "No recent activity"
   of_total: "of total"
-  plan: "Plan"
+  plan: Plan
   plan_duration: "Plan duration before expiring"
   plan_expired: "Expired plan: Requires immediate renewal"
-  plan_expiring: "Plan expiring soon: Less than 15 days"
+  plan_expiring: "Plan expiring soon: Less than 30 days"
   plan_info: "Plan Information"
   plan_validity: "Plan Validity (months)"
   professional_plan: "Professional: 25 users, 100 projects"
@@ -587,25 +766,20 @@ system:
   no_recent_errors: "No recent errors"
   registered_tenants: "Registered Companies"
   registered_users: "Registered Users"
-  registration: "Registration"
-  statistics: "Statistics"
+  registration: Registration
+  statistics: Statistics
   right_now: "Right now"
-  security_alerts: "Security"
-  sessions: "Sessions"
-  severity: "Severity"
-  size: "Size"
-  status: "Status"
-  status_active: "Active"
-  status_inactive: "Inactive"
-  subdomain: "Subdomain"
+  security_alerts: Security
+  sessions: Sessions
+  severity: Severity
+  size: Size
+  status: Status
+  status_active: Active
+  status_inactive: Inactive
+  subdomain: Subdomain
   subdomain_hint: "Only lowercase letters, numbers and hyphens"
   subdomain_no_change: "Subdomain cannot be changed"
   supervision: "System Supervision"
-  system.currency.COP: "Colombian Peso (COP)"
-  system.currency.USD: "US Dollar (USD)"
-  system.currency.MXN: "Mexican Peso (MXN)"
-  system.currency.PEN: "Peruvian Sol (PEN)"
-  system.currency.CLP: "Chilean Peso (CLP)"
   suspicious_connections: "Suspicious Connections"
   suspicious_ip: "Suspicious IP: IP on known threat list"
   system_errors: "System Errors"
@@ -615,188 +789,22 @@ system:
   total_tenants: "Total Companies"
   total_users: "Total Users"
   user_limit: "User limit: Near maximum allowed"
-  users: "Users"
+  users: Users
   users_2fa: "Users 2FA"
-  validity: "Validity"
+  validity: Validity
   view_all: "View all"
   view_all_errors: "View all errors"
   view_all_tenants: "View all companies"
-  warnings: "Warnings"
-
-system_alerts:
-  active_alerts_section: "Active Alerts"
-  alert_types_heading: "Alert Types"
-  billing_section: "Billing"
-  no_active_alerts_msg: "No active alerts"
-  security_section: "Security"
-  title_page: "System Alerts"
-
-system_errors:
-  filter_all: "All"
-  filter_critical: "Critical"
-  filter_errors: "Errors"
-  filter_warnings: "Warnings"
-  no_errors_found: "No errors found"
-  title: "System Errors"
-
-system_tenants:
-  create_new_tenant: "New Company"
-  create_tenant_form: "Create New Company"
-  edit_tenant: "Edit Company"
-  edit_tenant_form: "Edit Company"
-  no_tenants_msg: "No companies registered"
-  registered_tenants_section: "Registered Companies"
-  title_page: "Companies Management"
-  details_of: "Details for %name%"
-  name_label: "Name"
-  subdomain_label: "Subdomain"
-  plan_label: "Plan"
-  status_label: "Status"
-  users_label: "Users"
-  projects_label: "Projects"
-  registration_label: "Registration"
-
-test:
-  valid_emails: "Valid emails for testing:"
-  back_dashboard: "Back to Dashboard"
-  critical_message: "Critical message with exception"
-  test_system: "Test System"
-  system_datetime: "System DateTime"
-  test_email: "Test Email"
-  timezone_info: "Timezone Information"
-  verify_email_and_link: "Verify email and link"
-  current_time: "Current Time"
-  current_timezone: "Current Timezone"
-  debug_message: "Debug message"
-  error_message: "Error message"
-  errors_only: "Errors only"
-  generate_error: "Generate Uncaught Error"
-  info_message: "Informational message"
-  log_files: "Log Files"
-  logs_generated: "Generated Logs:"
-  logs_saved: "The logs have been saved in"
-  logs_title: "Logs and Errors Test"
-  main_log: "Main log"
-  other_tests: "Other Available Tests"
-  php_errors: "PHP errors"
-  security_events: "Security events"
-  send_reset_link: "Click 'Send reset link'"
-  steps_to_test: "Steps to test"
-  system.info: "Info"
-  system.warnings: "Warnings"
-
-  pagination:
-    previous: "Previous"
-    next: "Next"
-
-pagination:
-  previous: "Previous"
-  next: "Next"
-  page_of: "Page %page% of %total%"
-  nav_label: "Page navigation"
-
-  # WebAuthn
-  webauthn.title: "WebAuthn - Credentials"
-  webauthn.header: "WebAuthn Authenticators"
-  webauthn.revoke: "Revoke"
-  webauthn.no_credentials: "No registered authenticators."
-  webauthn.register: "Register new authenticator"
-
-  # Revit file_detail
-  revit.details: "Details"
-  revit.files: "Revit Files"
-  revit.reprocess: "Reprocess"
-  revit.delete: "Delete"
-  revit.label.type: "Type"
-  revit.label.status: "Status"
-  revit.status.completed: "Completed"
-  revit.status.processing: "Processing"
-  revit.status.pending: "Pending"
-  revit.status.error: "Error"
-  revit.label.hash: "Hash (SHA-256)"
-  revit.label.uploaded_by: "Uploaded by"
-  revit.label.uploaded_at: "Uploaded at"
-  revit.label.processed_at: "Processed at"
-  revit.metadata: "Metadata"
-  revit.label.project: "Project"
-  revit.label.elements: "Elements"
-  revit.processing_result: "Processing Result"
-  revit.processing_error: "Processing Error"
-  revit.processing.created: "APUs Created"
-  revit.processing.skipped: "Skipped Elements"
-  revit.processing.total: "Total Processed"
-  revit.showing: "Showing %shown% of %total% elements"
-  # Revit files list
-  revit.upload_new: "Upload New File"
-  revit.table.file: "File"
-  revit.table.type: "Type"
-  revit.label.date: "Date"
-  revit.table.actions: "Actions"
-  revit.view_details: "View details"
-  revit.total_files: "Total Files"
-  revit.completed_files: "Completed"
-  revit.in_progress_files: "In Progress"
-  revit.error_files: "With Errors"
-  success_message: "Test logs generated successfully. Check the log files."
-  system_datetime: "System Date/Time"
-  test_email: "Test Email Sending"
-  test_system: "Test System"
-  timezone_info: "Timezone Information"
-  verify_email_and_link: "Verify that the email was received and test the link"
-  view_system_logs: "View System Logs"
-  warning_message: "Warning message"
-
-test_mail:
-  check_mailpit: "Check Mailpit at"
-  description: "To test email sending, use the password recovery page"
-  enter_email: "Enter a valid email"
-  goto_password_recovery: "Go to Password Recovery"
-  goto_recovery: "Go to the"
-  mailpit_url: "http://localhost:8025"
-  recovery_link: "password recovery"
-  title: "Email Sending Test"
-
-auth.logout: "Logout"
-
-revit.confirm_delete: "Are you sure you want to delete this file?"
-revit.info_general: "General Information"
-revit.label.size: "Size"
-revit.label.version: "Version"
-revit.label.categories: "Categories"
-revit.table.category: "Category"
-revit.status.pending: "This file is pending processing."
-revit.processing_will_start: "Processing will start automatically shortly."
-revit.status.processing: "This file is currently being processed."
-revit.update_to_see_progress: "Refresh the page to see progress."
-revit.info_technical: "Technical Information"
-revit.processed_elements: "Processed Elements"
-revit.table.name: "Name"
-revit.table.quantity: "Quantity"
-revit.table.unit: "Unit"
-revit.table.status: "Status"
-revit.table.created: "Created"
-revit.table.skipped: "Skipped"
-revit.label.stored_filename: "Stored name"
-revit.label.path: "Path"
-revit.label.file_id: "File ID"
-revit.label.name: "Name"
-revit.label.type: "Type"
-revit.upload.uploading: "Uploading..."
-revit.upload.selected_file: "Selected file"
-revit.upload.unknown: "Unknown"
-
-# Revit upload how-it-works
-revit.how.title: "How it works"
-revit.how.step1: "Export data from Revit in IFC or JSON format"
-revit.how.step2: "Upload the file using this form"
-revit.how.step3: "The system will process automatically:"
-revit.how.step3.item1: "Extraction of elements (walls, slabs, columns)"
-revit.how.step3.item2: "Calculation of quantities and volumes"
-revit.how.step3.item3: "Generation of APUs based on the data"
-revit.how.step4: "Review and adjust the generated APUs"
-
-admin.tenant.title: "Company Settings"
-
+  warnings: Warnings
+  info: Info
+  created: Created
+  plan_trial: "Trial Plan"
+  currency:
+    CLP: "Chilean Peso (CLP)"
+    COP: "Colombian Peso (COP)"
+    MXN: "Mexican Peso (MXN)"
+    PEN: "Peruvian Sol (PEN)"
+    USD: "US Dollar (USD)"
 flash:
   test_logs_generated: "Test logs generated successfully. Check log files."
   cannot_use_reserved_slug: "You cannot use this reserved identifier for the company."
@@ -814,6 +822,12 @@ flash:
   code_incorrect: "Verification code incorrect."
   2fa_disabled: "2FA authentication disabled."
   no_recovery_codes: "No recovery codes to display."
+  password_policy_not_met: "Your password does not meet the required password policy."
+  auth.reauth: Re-authenticate
+  auth.reauth_prompt: "For security, please re-enter your password to continue with this action."
+  auth.password: Password
+  auth.confirm: Confirm
+  auth.confo: Confirm
   password_incorrect: "Incorrect password."
   recovery_codes_generated: "New recovery codes generated. Check your panel."
   session_revoked: "Session revoked successfully."
@@ -838,12 +852,6 @@ flash:
   theme_reset: "Theme reset to default colors."
   enter_email: "Please enter your email address."
   password_reset_instructions_sent: "If the email exists, you will receive instructions to reset your password."
-  password_policy_not_met: "Your password does not meet the required password policy."
-  auth.reauth: "Re-authenticate"
-  auth.reauth_prompt: "For security, please re-enter your password to continue with this action."
-  auth.password: "Password"
-  auth.confirm: "Confirm"
-  auth.confo: "Confirm"
   generic_error_try_again: "An error occurred. Please try again."
   reset_link_invalid_or_expired: "The reset link is invalid or has expired."
   password_reset_success: "Your password has been reset successfully. You can now sign in."
@@ -854,270 +862,297 @@ flash:
   error_deleting_file: "Error deleting file: %error%"
   file_marked_reprocess: "File marked for re-processing"
   error_generic_with_message: "Error: %error%"
-admin.tenant.info_company: "Company Information"
-admin.index.title: "Administration"
-
-apu.edit.title: "Edit Unit Price Analysis"
-apu.label.item_description: "Item Description"
-apu.create_title: "Create APU"
-apu.main_data: "Main Data"
-apu.unit: "Unit"
-apu.equipment: "Equipment"
-apu.labor: "Labor"
-apu.materials: "Materials"
-apu.transport: "Transport"
-apu.col_description: "Description"
-apu.col_number: "Number"
-apu.col_rate: "Rate"
-apu.col_cost_hour: "Cost/Hour"
-apu.col_jh: "JH/HOUR"
-apu.actions: "Actions"
-apu.col_unit: "Unit"
-apu.col_quantity: "Quantity"
-apu.col_unit_price: "Unit Price"
-apu.col_dmt: "DMT (km)"
-apu.col_rate_km: "Rate/km"
-apu.save: "Save APU"
-
-# Units
-units.m2: "m²"
-units.m3: "m³"
-units.m: "m (linear meter)"
-units.kg: "kg"
-units.u: "u (unit)"
-units.GLB: "GLB (global)"
-common.select: "Select..."
-apu.update: "Update APU"
-apu.title: "Unit Price Analysis"
-apu.header: "APU — Unit Price Analysis"
-apu.new_apu: "New APU"
-apu.no_apus: "No APUs registered yet."
-apu.create_first: "Create the first APU"
-apu.column_description: "Description"
-apu.column_unit: "Unit"
-apu.column_khu: "K(H/U)"
-apu.column_rend: "Yield u/h"
-apu.column_total_cost: "Total Cost"
-apu.column_date: "Date"
-apu.example_description: "E.g.: Manual trench excavation"
-apu.edit: "Edit APU"
-apu.export_excel: "Export Excel"
-
-security.2fa.important: "Important"
-security.2fa.once_enabled: "Once 2FA is enabled you will need your password and
-  a verification code to sign in."
-security.2fa.disable_instructions: "To disable two-factor authentication, enter your current 2FA code:"
-security.2fa.code_placeholder: "6-digit code"
-
-password.reset.title: "Reset Password"
-password.reset.requirements: "Password requirements:"
-password.reset.min_8: "Minimum 8 characters"
-password.reset.recommend_chars: "We recommend using letters, numbers and symbols"
-email.superadmin_code.greeting: "Hello %name%,"
-email.superadmin_code.message: "Your access code for the administrator account is: %code%"
-email.superadmin_code.expires_in: "Expires in %mins% minute(s) (%datetime%)"
-email.superadmin_code.expired: "The code has expired."
-email.superadmin_code.ignore_if_not_requested: "If you did not request this code, please ignore this email."
-email.superadmin_code.title: "Access verification"
-email.superadmin_code.instruction: "Use the following code to complete the administrator sign-in."
-email.superadmin_code.no_request_notice: "If you did not request this code,
-  please ignore this email or contact the security team."
-email.recovery_code_used.title: "Security Alert"
-email.recovery_code_used.body: "A recovery code was used to access your account.
-  If this wasn't you, please contact your administrator immediately and revoke
-  active sessions from your security panel."
-email.recovery_code_used.action_if_you: "If this was you, you can ignore this email."
-password.test_emails: "📧 For testing use: admin@demo.com, admin@abc.com or user@abc.com"
-
-# WebAuthn (extended)
-webauthn.registered_keys: "Registered keys"
-webauthn.register_new_key: "Register new key"
-webauthn.register_description: "Register your physical security key, Face ID,
-  Touch ID or other WebAuthn-compatible authenticator."
-webauthn.registering: "Registering..."
-webauthn.registered_ok: "Key registered successfully."
-webauthn.revoked_ok: "Key revoked successfully."
-webauthn.confirm_revoke: "Are you sure you want to revoke this key? You will no
-  longer be able to use it to sign in."
-webauthn.error_start: "Error starting registration."
-webauthn.error_registration: "Registration error"
-webauthn.error_revoke: "Error revoking key."
-webauthn.error_admin_hardware: "Administrators must use a hardware security key."
-webauthn.error_user_cancelled: "Operation cancelled by user."
-webauthn.registered_at: "Registered"
-webauthn.format: "Format"
-webauthn.aaguid: "AAGUID"
-webauthn.actions: "Actions"
-
-# Common (additional)
-common.back: "Back"
-common.view_details: "View details"
-common.actions: "Actions"
-common.view: "View"
-common.edit: "Edit"
-common.delete: "Delete"
-common.danger_zone: "Danger Zone"
-common.admin_only: "Only administrators can perform this action."
-common.created_at: "Created"
-common.user: "User"
-common.company: "Company"
-common.description: "Description"
-buttons.cancel: "Cancel"
-buttons.back: "Back"
-
-flash.tenant_user_limit_reached: "The maximum user limit for this plan has been
-  reached. Please contact the administrator."
-
-# Projects
-project.title: "Projects"
-project.new: "New Project"
-project.create_title: "New Project"
-project.edit_title: "Edit Project"
-project.general_info: "General Information"
-project.dates_budget: "Dates & Budget"
-project.save: "Save Project"
-project.no_projects: "No projects registered yet."
-project.col_name: "Name"
-project.col_code: "Code"
-project.col_client: "Client"
-project.col_location: "Location"
-project.col_status: "Status"
-project.col_budget: "Budget"
-project.col_date: "Date"
-project.start_date: "Start Date"
-project.end_date: "End Date"
-project.status.planificacion: "Planning"
-project.status.en_proceso: "In Progress"
-project.status.pausado: "On Hold"
-project.status.finalizado: "Completed"
-project.created_success: "Project created successfully."
-project.updated_success: "Project updated successfully."
-project.deleted_success: "Project deleted."
-project.error_invalid_csrf: "Invalid security token. Please try again."
-project.not_found: "Project not found."
-project.confirm_delete: "Are you sure you want to delete this project? This action cannot be undone."
-project.apus: "Project APUs"
-project.no_apus_yet: "No APUs associated with this project yet."
-project.placeholder_name: "E.g.: Building A Construction"
-project.placeholder_code: "E.g.: PRY-001"
-project.placeholder_description: "Detailed project description..."
-project.placeholder_client: "Client name"
-project.placeholder_location: "City, Country"
-project.limit_reached: "Project limit reached for your plan. Cannot create more projects."
-project.limit_near: "You are approaching your project limit (%current%/%limit%).
-  Consider upgrading or removing unused projects."
-
-# User notifications
-user.limit_near: "You are approaching the user limit (%current%/%limit%)."
-
-# New UI strings requested
-auth.reauth: "Re-authentication required"
-auth.reauth_prompt: "Please re-enter your password to continue"
-auth.confirm: "Confirm"
-
-# APU (additional)
-apu.col_subtotal: "Subtotal"
-apu.cost_summary: "Cost Summary"
-apu.subtotal_equipment: "Equipment Subtotal"
-apu.subtotal_labor: "Labor Subtotal"
-apu.subtotal_materials: "Materials Subtotal"
-apu.subtotal_transport: "Transport Subtotal"
-apu.total_direct_costs: "Total Direct Costs"
-apu.utilidad_pct: "Profit Margin (%)"
-apu.precio_calculo: "Calculation Price"
-apu.precio_ofertado: "Offered Price"
-
-# Rubros
-rubro.title: "Custom Items"
-rubro.new: "New Item"
-rubro.edit_title: "Edit Item"
-rubro.save: "Save Item"
-rubro.col_code: "Code"
-rubro.col_name: "Name"
-rubro.col_unit: "Unit"
-rubro.col_type: "Type"
-rubro.tipo.general: "General"
-rubro.tipo.personalizado: "Custom"
-rubro.no_rubros: "No items registered yet."
-rubro.not_found: "Item not found."
-rubro.created_success: "Item created successfully."
-rubro.updated_success: "Item updated successfully."
-rubro.deleted_success: "Item deleted."
-rubro.confirm_delete: "Delete this item? This action cannot be undone."
-
-# Templates (Plantillas)
-plantilla.title: "Templates"
-plantilla.new: "New Template"
-plantilla.edit_title: "Edit Template"
-plantilla.save: "Save Template"
-plantilla.duplicate: "Duplicate"
-plantilla.edit: "Edit"
-plantilla.col_name: "Name"
-plantilla.rubros: "Items"
-plantilla.add_rubro: "Add Item"
-plantilla.select_rubro: "Select Item"
-plantilla.col_cantidad: "Quantity"
-plantilla.col_precio_unit: "Unit Price"
-plantilla.col_total: "Total"
-plantilla.total_presupuesto: "Budget Total"
-plantilla.apu_pending: "No APU"
-plantilla.create_apu: "Create APU"
-plantilla.no_rubros: "No items in this template."
-plantilla.no_plantillas: "No templates in this project."
-plantilla.no_rubros_available: "No items available. Create items first."
-plantilla.rubro_already_added: "Item already in this template."
-plantilla.rubro_added: "Item added to template."
-plantilla.rubro_removed: "Item removed from template."
-plantilla.created_success: "Template created successfully."
-plantilla.updated_success: "Template updated successfully."
-plantilla.deleted_success: "Template deleted."
-plantilla.duplicated_success: "Template duplicated successfully."
-plantilla.delete: "Delete Template"
-plantilla.confirm_delete: "Delete this template and all its items? This action cannot be undone."
-plantilla.confirm_remove_rubro: "Remove this item from the template?"
-
-# Backwards-compatible keys using English 'template' prefix
-template.title: "Templates"
-template.new: "New Template"
-template.edit_title: "Edit Template"
-template.save: "Save Template"
-template.duplicate: "Duplicate"
-template.edit: "Edit"
-template.col_name: "Name"
-template.rubros: "Items"
-template.add_rubro: "Add Item"
-template.select_rubro: "Select Item"
-template.col_cantidad: "Quantity"
-template.col_precio_unit: "Unit Price"
-template.col_total: "Total"
-template.total_presupuesto: "Budget Total"
-template.apu_pending: "No APU"
-template.create_apu: "Create APU"
-template.no_rubros: "No items in this template."
-template.no_plantillas: "No templates in this project."
-template.no_rubros_available: "No items available. Create items first."
-template.rubro_already_added: "Item already in this template."
-template.rubro_added: "Item added to template."
-template.rubro_removed: "Item removed from template."
-template.created_success: "Template created successfully."
-template.updated_success: "Template updated successfully."
-template.deleted_success: "Template deleted."
-template.duplicated_success: "Template duplicated successfully."
-template.confirm_delete: "Delete this template and all its items? This action cannot be undone."
-template.confirm_remove_rubro: "Remove this item from the template?"
-
-# Projects (additional)
-project.duplicate: "Duplicate Project"
-project.duplicated_success: "Project duplicated successfully."
-
-# Reports
-report.generate: "Report"
-report.full_project: "Full Project Report"
-report.preview_title: "Budget Preview"
-report.download_pdf: "Download PDF"
-report.download_excel: "Download Excel"
-report.pdf_error: "Error generating PDF."
-report.excel_error: "Error generating Excel."
-
-# Common (additional)
-common.error_invalid_csrf: "Invalid security token. Please try again."
+  tenant_user_limit_reached: "The maximum user limit for this plan has been
+    reached. Please contact the administrator."
+  tenant_item_limit_reached: "You have reached the item limit for your plan."
+system_alerts:
+  active_alerts_section: "Active Alerts"
+  alert_types_heading: "Alert Types"
+  billing_section: Billing
+  no_active_alerts_msg: "No active alerts"
+  security_section: Security
+  title_page: "System Alerts"
+system_errors:
+  filter_all: All
+  filter_critical: Critical
+  filter_errors: Errors
+  filter_warnings: Warnings
+  no_errors_found: "No errors found"
+  title: "System Errors"
+system_tenants:
+  create_new_tenant: "New Company"
+  create_tenant_form: "Create New Company"
+  edit_tenant: "Edit Company"
+  edit_tenant_form: "Edit Company"
+  no_tenants_msg: "No companies registered"
+  registered_tenants_section: "Registered Companies"
+  title_page: "Companies Management"
+  details_of: "Details for %name%"
+  name_label: Name
+  subdomain_label: Subdomain
+  plan_label: Plan
+  status_label: Status
+  users_label: Users
+  projects_label: Projects
+  registration_label: Registration
+test:
+  valid_emails: "Valid emails for testing:"
+  back_dashboard: "Back to Dashboard"
+  critical_message: "Critical message with exception"
+  test_system: "Test System"
+  system_datetime: "System DateTime"
+  test_email: "Test Email"
+  timezone_info: "Timezone Information"
+  verify_email_and_link: "Verify email and link"
+  current_time: "Current Time"
+  current_timezone: "Current Timezone"
+  debug_message: "Debug message"
+  error_message: "Error message"
+  errors_only: "Errors only"
+  generate_error: "Generate Uncaught Error"
+  info_message: "Informational message"
+  log_files: "Log Files"
+  logs_generated: "Generated Logs:"
+  logs_saved: "The logs have been saved in"
+  logs_title: "Logs and Errors Test"
+  main_log: "Main log"
+  other_tests: "Other Available Tests"
+  other_tests_description: "Quick links for testing: generate an uncaught error,
+    send a test email, recover a password or view system logs."
+  php_errors: "PHP errors"
+  security_events: "Security events"
+  send_reset_link: "Click 'Send reset link'"
+  steps_to_test: "Steps to test"
+  system.info: Info
+  system.warnings: Warnings
+  pagination:
+    previous: Previous
+    next: Next
+  warning_message: "Warning message"
+pagination:
+  previous: Previous
+  next: Next
+  page_of: "Page %page% of %total%"
+  nav_label: "Page navigation"
+test_mail:
+  check_mailpit: "Check Mailpit at"
+  description: "To test email sending, use the password recovery page"
+  enter_email: "Enter a valid email"
+  goto_password_recovery: "Go to Password Recovery"
+  goto_recovery: "Go to the"
+  mailpit_url: "http://localhost:8025"
+  recovery_link: "password recovery"
+  title: "Email Sending Test"
+revit:
+  allowed_formats: "Allowed formats: RVT, IFC, JSON"
+  completed_files: "Completed files"
+  confirm_delete: "Are you sure you want to delete this file?"
+  delete: Delete
+  details: Details
+  error_files: "Files with errors"
+  files: Files
+  ifc_description: "IFC (Industry Foundation Classes)"
+  in_progress_files: "Files in progress"
+  info_general: "General Information"
+  info_technical: "Technical Information"
+  json_description: "JSON (structured data)"
+  metadata: Metadata
+  no_files: "No files uploaded yet"
+  processed_elements: "Processed Elements"
+  processing_error: "Processing error"
+  processing_result: "Processing result"
+  processing_will_start: "Processing will start automatically shortly."
+  reprocess: Reprocess
+  rvt_description: "RVT (Revit native format)"
+  select_file: "Select file"
+  showing: Showing
+  total_files: "Total files"
+  update_to_see_progress: "Refresh the page to see progress."
+  upload_first: "Upload your first file"
+  upload_header: "Upload File"
+  upload_instruction: "Select a Revit, IFC or JSON file to upload"
+  upload_new: "Upload new file"
+  upload_title: "Upload Revit File"
+  view_details: "View details"
+  how:
+    title: "How it works"
+    step1: "Export data from Revit in IFC or JSON format"
+    step2: "Upload the file using this form"
+    step3: "The system will process automatically:"
+    step3.item1: "Extraction of elements (walls, slabs, columns)"
+    step3.item2: "Calculation of quantities and volumes"
+    step3.item3: "Generation of APUs based on the data"
+    step4: "Review and adjust the generated APUs"
+  label:
+    categories: Categories
+    date: Date
+    elements: Elements
+    file_id: "File ID"
+    hash: "Hash (SHA-256)"
+    name: Name
+    path: Path
+    processed_at: "Processed at"
+    project: Project
+    size: Size
+    status: Status
+    stored_filename: "Stored name"
+    type: Type
+    uploaded_at: "Uploaded at"
+    uploaded_by: "Uploaded by"
+    version: Version
+  processing:
+    created: Created
+    skipped: Skipped
+    total: Total
+  status:
+    completed: Completed
+    error: Error
+    pending: "This file is pending processing."
+    processing: "This file is currently being processed."
+  table:
+    actions: Actions
+    category: Category
+    created: Created
+    file: File
+    name: Name
+    quantity: Quantity
+    skipped: Skipped
+    status: Status
+    type: Type
+    unit: Unit
+  upload:
+    uploading: Uploading...
+    selected_file: "Selected file"
+    unknown: Unknown
+webauthn:
+  aaguid: AAGUID
+  actions: Actions
+  confirm_revoke: "Are you sure you want to revoke this key? You will no longer be
+    able to use it to sign in."
+  error_admin_hardware: "Administrators must use a hardware security key."
+  error_registration: "Registration error"
+  error_revoke: "Error revoking key."
+  error_start: "Error starting registration."
+  error_user_cancelled: "Operation cancelled by user."
+  format: Format
+  header: "Security Keys (WebAuthn)"
+  no_credentials: "No security keys registered"
+  register: "Register security key"
+  register_description: "Register your physical security key, Face ID, Touch ID or
+    other WebAuthn-compatible authenticator."
+  register_new_key: "Register new key"
+  registered_at: Registered
+  registered_keys: "Registered keys"
+  registered_ok: "Key registered successfully."
+  registering: Registering...
+  revoke: Revoke
+  revoked_ok: "Key revoked successfully."
+  title: "WebAuthn Credentials"
+name:
+  invalid: "The name contains invalid characters"
+code:
+  invalid: "The code can only contain letters, numbers, hyphens and underscores"
+user:
+  limit_near: "You are approaching the user limit (%current%/%limit%)."
+rubro:
+  title: "Custom Items"
+  new: "New Item"
+  edit_title: "Edit Item"
+  save: "Save Item"
+  col_code: Code
+  col_name: Name
+  col_unit: Unit
+  col_type: Type
+  no_rubros: "No items registered yet."
+  not_found: "Item not found."
+  created_success: "Item created successfully."
+  updated_success: "Item updated successfully."
+  deleted_success: "Item deleted."
+  confirm_delete: "Delete this item? This action cannot be undone."
+  tipo:
+    general: General
+    personalizado: Custom
+plantilla:
+  title: Templates
+  new: "New Template"
+  edit_title: "Edit Template"
+  save: "Save Template"
+  duplicate: Duplicate
+  edit: Edit
+  col_name: Name
+  rubros: Items
+  add_rubro: "Add Item"
+  select_rubro: "Select Item"
+  col_cantidad: Quantity
+  col_precio_unit: "Unit Price"
+  col_total: Total
+  total_presupuesto: "Budget Total"
+  apu_pending: "No APU"
+  create_apu: "Create APU"
+  no_rubros: "No items in this template."
+  no_plantillas: "No templates in this project."
+  no_rubros_available: "No items available. Create items first."
+  rubro_already_added: "Item already in this template."
+  rubro_added: "Item added to template."
+  rubro_removed: "Item removed from template."
+  created_success: "Template created successfully."
+  updated_success: "Template updated successfully."
+  deleted_success: "Template deleted."
+  duplicated_success: "Template duplicated successfully."
+  delete: "Delete Template"
+  confirm_delete: "Delete this template and all its items? This action cannot be undone."
+  confirm_remove_rubro: "Remove this item from the template?"
+template:
+  title: Templates
+  new: "New Template"
+  edit_title: "Edit Template"
+  save: "Save Template"
+  duplicate: Duplicate
+  edit: Edit
+  col_name: Name
+  rubros: Items
+  add_rubro: "Add Item"
+  select_rubro: "Select Item"
+  col_cantidad: Quantity
+  col_precio_unit: "Unit Price"
+  col_total: Total
+  total_presupuesto: "Budget Total"
+  apu_pending: "No APU"
+  create_apu: "Create APU"
+  no_rubros: "No items in this template."
+  no_plantillas: "No templates in this project."
+  no_rubros_available: "No items available. Create items first."
+  rubro_already_added: "Item already in this template."
+  rubro_added: "Item added to template."
+  rubro_removed: "Item removed from template."
+  created_success: "Template created successfully."
+  updated_success: "Template updated successfully."
+  deleted_success: "Template deleted."
+  duplicated_success: "Template duplicated successfully."
+  confirm_delete: "Delete this template and all its items? This action cannot be undone."
+  confirm_remove_rubro: "Remove this item from the template?"
+catalog:
+  confirm_delete: "Are you sure you want to delete this item? This action cannot be undone."
+  created_success: "Item created successfully."
+  updated_success: "Item updated successfully."
+labor:
+  new: "New Labor"
+item:
+  edit_title: "Edit Item"
+email:
+  superadmin_code:
+    greeting: "Hello %name%,"
+    message: "Your access code for the administrator account is: %code%"
+    expires_in: "Expires in %mins% minute(s) (%datetime%)"
+    expired: "The code has expired."
+    ignore_if_not_requested: "If you did not request this code, please ignore this email."
+    title: "Access verification"
+    instruction: "Use the following code to complete the administrator sign-in."
+    no_request_notice: "If you did not request this code, please ignore this email
+      or contact the security team."
+  recovery_code_used:
+    title: "Security Alert"
+    body: "A recovery code was used to access your account. If this wasn't you,
+      please contact your administrator immediately and revoke active sessions
+      from your security panel."
+    action_if_you: "If this was you, you can ignore this email."

@@ -1,13 +1,14 @@
 {% extends 'base.html.twig' %}
-{% block title %}Mano de Obra - Catalog{% endblock %}
+{% block title %}{{ 'labor'|trans }} - Catalog{% endblock %}
 {% block body %}
 {% import 'partials/_button.html.twig' as btn %}
 <div class="container-fluid mt-4">
+    {% include 'partials/_flashes.html.twig' %}
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1><i class="bi bi-people"></i> Mano de Obra</h1>
+    <h1><i class="bi bi-people"></i> {{ 'labor'|trans }}</h1>
         {% if is_granted('ROLE_ADMIN') %}
             <div class="d-flex align-items-center gap-2">
-                {{ btn.button('Nueva Mano de Obra', 'primary', 'bi-plus-circle', {'href': path('catalog_labor_create')}) }}
+                {{ btn.button('common.add_labor'|trans, 'primary', 'bi-plus-circle', {'href': path('catalog_labor_create')}) }}
                 {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_dashboard')}) }}
             </div>
         {% endif %}
@@ -17,18 +18,24 @@
             <table class="table table-hover mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Código</th>
-                        <th>Nombre</th>
-                        <th>Unidad</th>
-                        <th class="text-center">Acciones</th>
+                        <th>{{ 'common.code'|trans }}</th>
+                        <th>{{ 'common.description'|trans }}</th>
+                        <th class="text-center">{{ 'common.active'|trans }}</th>
+                        <th class="text-center">{{ 'common.actions'|trans }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for it in items %}
                     <tr>
                         <td><code>{{ it.code }}</code></td>
-                        <td>{{ it.name }}</td>
-                        <td>{{ it.unit }}</td>
+                        <td>{{ it.description }}</td>
+                        <td class="text-center">
+                            {% if it.active %}
+                                <span class="badge bg-success">{{ 'common.active'|trans }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ 'common.inactive'|trans }}</span>
+                            {% endif %}
+                        </td>
                         <td class="text-center">
                             {% if is_granted('ROLE_ADMIN') %}
                                 {{ btn.button('', 'secondary', 'bi-pencil', {'href': path('catalog_labor_edit', {id: it.id}), 'class':'btn-sm'}) }}
@@ -39,7 +46,7 @@
                         </td>
                     </tr>
                     {% else %}
-                    <tr><td colspan="4" class="text-center text-muted">No hay registros</td></tr>
+                    <tr><td colspan="4" class="text-center text-muted">{{ 'common.no_records'|trans|default('No records') }}</td></tr>
                     {% endfor %}
                 </tbody>
             </table>

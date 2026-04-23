@@ -59,6 +59,7 @@
                             </div>
 
                             <form method="post" class="text-center" onsubmit="return confirm('{{ 'security_2fa.regenerate_confirm'|trans }}')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('recovery_codes_dismiss') }}">
                                 {{ btn.button('security_2fa.regenerate_button'|trans, 'warning', 'bi-bi-arrow-clockwise', {'type':'submit'}) }}
                             </form>
 

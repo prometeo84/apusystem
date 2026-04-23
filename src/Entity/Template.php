@@ -16,7 +16,7 @@ class Template
     #[ORM\Column(type: 'bigint', options: ['unsigned' => true])]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Tenant::class)]
+    #[ORM\ManyToOne(targetEntity: Tenant::class, inversedBy: 'templates')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Tenant $tenant;
 

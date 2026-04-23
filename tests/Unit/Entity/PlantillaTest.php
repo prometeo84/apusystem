@@ -57,8 +57,6 @@ class PlantillaTest extends TestCase
         $item->setProductivityUh('1.0');
 
         $mat = new APUMaterial();
-        $mat->setDescription('Material Test');
-        $mat->setUnit('u');
         $mat->setQuantity('1.0');
         $mat->setUnitPrice((string)$costPerUnit);
         $item->addMaterial($mat);

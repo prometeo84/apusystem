@@ -76,8 +76,6 @@ class CRUDLifecycleTest extends TestCase
         $item->setProductivityUh('1.0');
 
         $mat = new APUMaterial();
-        $mat->setDescription('Cemento Portland');
-        $mat->setUnit('kg');
         $mat->setQuantity('1.0');
         $mat->setUnitPrice((string)$costPerUnit);
         $item->addMaterial($mat);
@@ -191,16 +189,12 @@ class CRUDLifecycleTest extends TestCase
 
         // Material: $10
         $mat = new APUMaterial();
-        $mat->setDescription('Material A');
-        $mat->setUnit('u');
         $mat->setQuantity('1.0');
         $mat->setUnitPrice('10.00');
         $item->addMaterial($mat);
 
         // Material 2: $15
         $mat2 = new APUMaterial();
-        $mat2->setDescription('Material B');
-        $mat2->setUnit('u');
         $mat2->setQuantity('1.0');
         $mat2->setUnitPrice('15.00');
         $item->addMaterial($mat2);
