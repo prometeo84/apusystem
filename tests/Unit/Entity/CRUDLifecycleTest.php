@@ -224,7 +224,6 @@ class CRUDLifecycleTest extends TestCase
 
         $pr->setItem($rubro);
         $pr->setApuItem($apuItem);
-        $pr->setQuantity('10.0');
         $plantilla->addItem($pr);
 
         $this->assertCount(1, $plantilla->getItems());
@@ -247,12 +246,10 @@ class CRUDLifecycleTest extends TestCase
         $pr1 = new TemplateItem();
 
         $pr1->setItem($rubro1);
-        $pr1->setQuantity('1.0');
 
         $pr2 = new TemplateItem();
 
         $pr2->setItem($rubro2);
-        $pr2->setQuantity('2.0');
 
         $plantilla->addItem($pr1);
         $plantilla->addItem($pr2);
@@ -282,7 +279,6 @@ class CRUDLifecycleTest extends TestCase
 
         $prOrig->setItem($rubro);
         $prOrig->setApuItem($apuItem);
-        $prOrig->setQuantity('5.0');
         $original->addItem($prOrig);
 
         // Simular clonación: nuevo proyecto + nueva plantilla con mismos rubros
@@ -296,21 +292,10 @@ class CRUDLifecycleTest extends TestCase
 
         $prClone->setItem($rubro);
         $prClone->setApuItem($apuItem);
-        $prClone->setQuantity('5.0');
         $clone->addItem($prClone);
 
-        // Usuario B modifica su clon: cambia cantidad
-        $prClone->setQuantity('20.0');
-
         // Proyecto A permanece intacto
-        $this->assertSame(
-            '5.0',
-            $prOrig->getQuantity(),
-            'Proyecto A no debe cambiar al modificar el clon'
-        );
-
-        // Clon tiene la cantidad modificada
-        $this->assertSame('20.0', $prClone->getQuantity());
+        $this->assertSame($rubro, $prOrig->getItem(), 'Proyecto A no debe cambiar al modificar el clon');
 
         // Son entidades distintas
         $this->assertNotSame($original, $clone);
@@ -346,24 +331,22 @@ class CRUDLifecycleTest extends TestCase
         $plantilla->setProject($project);
         $plantilla->setName('Presupuesto Calc');
 
-        // Rubro 1: APU costo unitario = $100, cantidad = 5 → subtotal = $500
+        // Rubro 1: APU precio total = $500
         $rubro1  = $this->buildRubro($tenant, 'R-A');
-        $apu1    = $this->buildAPUItem($tenant, 100.0);
+        $apu1    = $this->buildAPUItem($tenant, 500.0);
         $pr1     = new TemplateItem();
 
         $pr1->setItem($rubro1);
         $pr1->setApuItem($apu1);
-        $pr1->setQuantity('5.0');
         $plantilla->addItem($pr1);
 
-        // Rubro 2: APU costo unitario = $200, cantidad = 3 → subtotal = $600
+        // Rubro 2: APU precio total = $600
         $rubro2  = $this->buildRubro($tenant, 'R-B');
-        $apu2    = $this->buildAPUItem($tenant, 200.0);
+        $apu2    = $this->buildAPUItem($tenant, 600.0);
         $pr2     = new TemplateItem();
 
         $pr2->setItem($rubro2);
         $pr2->setApuItem($apu2);
-        $pr2->setQuantity('3.0');
         $plantilla->addItem($pr2);
 
         $total = $plantilla->getTotalBudget();
@@ -372,7 +355,7 @@ class CRUDLifecycleTest extends TestCase
             1100.0,
             $total,
             0.01,
-            'Total presupuesto debe ser suma de subtotales de rubros'
+            'Total presupuesto debe ser suma de costos de APUs'
         );
     }
 }

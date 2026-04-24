@@ -26,10 +26,6 @@ class TemplateItem
     #[ORM\JoinColumn(name: 'apu_item_id', nullable: true, onDelete: 'SET NULL')]
     private ?APUItem $apuItem = null;
 
-    /** Quantity of the item in the template */
-    #[ORM\Column(name: 'quantity', type: 'decimal', precision: 15, scale: 4)]
-    private string $quantity = '1.0000';
-
     /** Display order in the template */
     // Use quoted column name because `order` is a reserved keyword in MySQL
     #[ORM\Column(name: '`order`', type: 'integer')]
@@ -81,16 +77,6 @@ class TemplateItem
         return $this;
     }
 
-    public function getQuantity(): string
-    {
-        return $this->quantity;
-    }
-    public function setQuantity(string $quantity): self
-    {
-        $this->quantity = $quantity;
-        return $this;
-    }
-
     public function getOrder(): int
     {
         return $this->order;
@@ -106,18 +92,25 @@ class TemplateItem
         return $this->createdAt;
     }
 
-    /** Total cost of this item = quantity × APU unit price */
+    /** Total cost = APU unit price (quantity removed; APU total already represents full cost) */
     public function getTotalCost(): float
     {
         if ($this->apuItem === null) {
             return 0.0;
         }
-        return (float) $this->quantity * (float) $this->apuItem->getTotalCost();
+        return $this->getUnitPrice();
     }
 
-    /** Unit price of the APU (calculation price with profit) */
+    /** Unit price of the APU: offeredPrice if set, otherwise calculationPrice */
     public function getUnitPrice(): float
     {
-        return $this->apuItem ? (float) $this->apuItem->getTotalCost() : 0.0;
+        if ($this->apuItem === null) {
+            return 0.0;
+        }
+        $offered = $this->apuItem->getOfferedPrice();
+        if ($offered !== null && $offered !== '') {
+            return (float) $offered;
+        }
+        return $this->apuItem->getCalculationPrice();
     }
 }

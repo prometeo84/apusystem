@@ -34,6 +34,10 @@ class APULabor
     #[ORM\JoinColumn(name: 'template_item_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     private ?TemplateItem $templateItem = null;
 
+    #[ORM\ManyToOne(targetEntity: APURubro::class, inversedBy: 'labor')]
+    #[ORM\JoinColumn(name: 'apu_rubro_id', nullable: true, onDelete: 'CASCADE')]
+    private ?APURubro $apuRubro = null;
+
     #[ORM\ManyToOne(targetEntity: Labor::class)]
     #[ORM\JoinColumn(name: 'labor_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     private ?Labor $labor = null;
@@ -131,6 +135,16 @@ class APULabor
     public function setLabor(?Labor $l): self
     {
         $this->labor = $l;
+        return $this;
+    }
+
+    public function getApuRubro(): ?APURubro
+    {
+        return $this->apuRubro;
+    }
+    public function setApuRubro(?APURubro $r): self
+    {
+        $this->apuRubro = $r;
         return $this;
     }
 

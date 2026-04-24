@@ -37,6 +37,10 @@ class APUEquipment
     #[ORM\JoinColumn(name: 'template_item_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     private ?TemplateItem $templateItem = null;
 
+    #[ORM\ManyToOne(targetEntity: APURubro::class, inversedBy: 'equipment')]
+    #[ORM\JoinColumn(name: 'apu_rubro_id', nullable: true, onDelete: 'CASCADE')]
+    private ?APURubro $apuRubro = null;
+
     #[ORM\ManyToOne(targetEntity: Equipment::class)]
     #[ORM\JoinColumn(name: 'equipment_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     private ?Equipment $equipment = null;
@@ -73,6 +77,17 @@ class APUEquipment
         return $this->id;
     }
 
+    public function getTenant(): ?Tenant
+    {
+        return $this->tenant;
+    }
+
+    public function setTenant(?Tenant $t): self
+    {
+        $this->tenant = $t;
+        return $this;
+    }
+
     public function getApuItem(): ?APUItem
     {
         return $this->apuItem;
@@ -84,6 +99,27 @@ class APUEquipment
         if ($apuItem !== null && !$apuItem->getEquipment()->contains($this)) {
             $apuItem->addEquipment($this);
         }
+        return $this;
+    }
+
+    public function getEquipment(): ?Equipment
+    {
+        return $this->equipment;
+    }
+
+    public function setEquipment(?Equipment $equipment): self
+    {
+        $this->equipment = $equipment;
+        return $this;
+    }
+
+    public function getApuRubro(): ?APURubro
+    {
+        return $this->apuRubro;
+    }
+    public function setApuRubro(?APURubro $r): self
+    {
+        $this->apuRubro = $r;
         return $this;
     }
 

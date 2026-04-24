@@ -6,6 +6,7 @@ use App\Entity\Template;
 use App\Entity\TemplateItem;
 use App\Entity\Projects;
 use App\Entity\Item;
+use App\Entity\APUItem;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,7 +105,7 @@ class TemplateController extends AbstractController
         }
 
         // APU create availability based on optional config limit
-        $apuCount = $this->em->getRepository(\App\Entity\Apu::class)->count(['tenant' => $this->getUser()->getTenant()]);
+        $apuCount = $this->em->getRepository(APUItem::class)->count(['tenant' => $this->getUser()->getTenant()]);
         $maxApus = $this->getParameter('limits.apus_per_tenant');
         $canCreateApu = true;
         if ($maxApus !== null && (int)$maxApus > 0) {
@@ -190,13 +191,11 @@ class TemplateController extends AbstractController
             }
         }
 
-        $cantidad = $request->request->get('quantity', '1.00');
         $orden = $template->getItems()->count();
 
         $pr = new TemplateItem();
         $pr->setTemplate($template);
         $pr->setItem($item);
-        $pr->setQuantity($cantidad);
         $pr->setOrder($orden);
 
         $this->em->persist($pr);
@@ -233,6 +232,37 @@ class TemplateController extends AbstractController
         return $this->redirectToRoute('app_template_show', ['projectId' => $projectId, 'id' => $id]);
     }
 
+    #[Route('/{id}/unlink-apu/{prId}', name: 'app_template_unlink_apu', requirements: ['id' => '\\d+', 'prId' => '\\d+'], methods: ['POST'])]
+    public function unlinkApu(int $projectId, int $id, int $prId, Request $request): Response
+    {
+        $project = $this->getProject($projectId);
+        $template = $this->em->getRepository(Template::class)->findOneBy([
+            'id' => $id,
+            'project' => $project,
+        ]);
+        if (!$template) {
+            throw $this->createNotFoundException();
+        }
+
+        if (!$this->isCsrfTokenValid('unlink_apu_' . $prId, $request->request->get('_token'))) {
+            $this->addFlash('error', 'common.error_invalid_csrf');
+            return $this->redirectToRoute('app_template_show', ['projectId' => $projectId, 'id' => $id]);
+        }
+
+        $pr = $this->em->getRepository(TemplateItem::class)->find($prId);
+        if ($pr && $pr->getTemplate()->getId() === $template->getId()) {
+            $apu = $pr->getApuItem();
+            if ($apu) {
+                $pr->setApuItem(null);
+                $this->em->remove($apu);
+                $this->em->flush();
+                $this->addFlash('success', 'flash.apu_deleted');
+            }
+        }
+
+        return $this->redirectToRoute('app_template_show', ['projectId' => $projectId, 'id' => $id]);
+    }
+
     #[Route('/{id}/duplicate', name: 'app_template_duplicate', requirements: ['id' => '\\d+'], methods: ['POST'])]
     public function duplicate(int $projectId, int $id, Request $request): Response
     {
@@ -261,7 +291,6 @@ class TemplateController extends AbstractController
             $newPr = new TemplateItem();
             $newPr->setTemplate($copy);
             $newPr->setItem($pr->getItem());
-            $newPr->setQuantity($pr->getQuantity());
             $newPr->setOrder($pr->getOrder());
             // APU no se duplica — queda pendiente de asignar
             $this->em->persist($newPr);

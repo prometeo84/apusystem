@@ -33,151 +33,60 @@
 
     {% include 'partials/_flashes.html.twig' %}
 
-    <div class="row">
-        {# Lista de rubros de la plantilla #}
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-list-ol"></i> {{ 'plantilla.rubros'|trans }}</span>
-                    <strong class="fs-5">${{ template.totalBudget|number_format(2, '.', ',') }}</strong>
-                </div>
-                {% if template.items|length > 0 %}
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0 align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>#</th>
-                                <th>{{ 'rubro.col_code'|trans }}</th>
-                                <th>{{ 'rubro.col_name'|trans }}</th>
-                                <th class="text-center">{{ 'rubro.col_unit'|trans }}</th>
-                                <th class="text-end">{{ 'plantilla.col_cantidad'|trans }}</th>
-                                <th class="text-end">{{ 'plantilla.col_precio_unit'|trans }}</th>
-                                <th class="text-end">{{ 'plantilla.col_total'|trans }}</th>
-                                <th class="text-center">{{ 'common.actions'|trans }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for pr in template.items %}
-                            <tr>
-                                <td class="text-muted">{{ loop.index }}</td>
-                                <td><code>{{ pr.item.code }}</code></td>
-                                <td>
-                                    <strong>{{ pr.item.name }}</strong>
-                                    {% if pr.apuItem %}
-                                        <br><small class="text-success"><i class="bi bi-check-circle"></i> APU</small>
-                                    {% else %}
-                                        <br><small class="text-warning"><i class="bi bi-exclamation-circle"></i> {{ 'plantilla.apu_pending'|trans }}</small>
-                                    {% endif %}
-                                </td>
-                                <td class="text-center"><span class="badge bg-secondary">{{ pr.item.unit }}</span></td>
-                                <td class="text-end">{{ pr.quantity|number_format(2) }}</td>
-                                <td class="text-end">
-                                    {% if pr.apuItem %}
-                                        ${{ pr.unitPrice|number_format(2) }}
-                                    {% else %}
-                                        <span class="text-muted">—</span>
-                                    {% endif %}
-                                </td>
-                                <td class="text-end fw-bold">
-                                    {% if pr.apuItem %}
-                                        ${{ pr.totalCost|number_format(2) }}
-                                    {% else %}
-                                        <span class="text-muted">—</span>
-                                    {% endif %}
-                                </td>
-                                <td class="text-center">
-                                    {% if pr.apuItem %}
-                                        {% if not is_granted('ROLE_ADMIN') %}
-                                            {{ btn.button('', 'outline-primary', 'bi-calculator', {'href': path('app_apu_edit', {id: pr.apuItem.id}), 'class':'btn-sm', 'title': 'apu.edit'|trans}) }}
-                                        {% endif %}
-                                    {% else %}
-                                        {% if not is_granted('ROLE_ADMIN') %}
-                                            {% if can_create_apu is defined and not can_create_apu %}
-                                                {{ btn.button('', 'outline-secondary', 'bi-calculator-fill', {'href': '#', 'class':'btn-sm disabled', 'title': 'apu.limit_reached'|trans}) }}
-                                            {% else %}
-                                                {{ btn.button('', 'warning', 'bi-calculator-fill', {'href': path('app_apu_create_for_rubro', {plantillaRubroId: pr.id}), 'class':'btn-sm', 'title': 'template.create_apu'|trans}) }}
-                                            {% endif %}
-                                        {% endif %}
-                                    {% endif %}
-                                                                                <form method="POST" action="{{ path('app_template_remove_item', {projectId: project.id, id: template.id, prId: pr.id}) }}" class="d-inline"
-                                          onsubmit="return confirm('{{ 'plantilla.confirm_remove_rubro'|trans }}')">
-                                                                                <input type="hidden" name="_token" value="{{ csrf_token('remove_rubro_' ~ pr.id) }}">
-                                        {{ btn.button('', 'outline-danger', 'bi-trash', {'type':'submit', 'class':'btn-sm'}) }}
-                                    </form>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr class="table-primary fw-bold">
-                                <td colspan="6" class="text-end">{{ 'plantilla.total_presupuesto'|trans }}</td>
-                                <td class="text-end fs-5">${{ template.totalBudget|number_format(2, '.', ',') }}</td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                {% else %}
-                <div class="card-body text-center py-4">
-                    <i class="bi bi-list-check display-4 text-muted"></i>
-                    <p class="text-muted mt-2">{{ 'plantilla.no_rubros'|trans }}</p>
-                </div>
+    {# ── Sección: APUs (solo APUs creados) ── #}
+    {% set apus_list = template.items|filter(pr => pr.apuItem is not null) %}
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <div>
+                <i class="bi bi-calculator"></i> {{ 'plantilla.apus'|trans }} <span class="badge bg-white text-primary ms-1">{{ apus_list|length }}</span>
+            </div>
+            <div class="d-flex gap-2 align-items-center">
+                {% if not is_granted('ROLE_ADMIN') %}
+                    {{ btn.button('apu.create'|trans, 'outline-light', 'bi-plus-lg', {'href': path('app_apu_create_for_template', {templateId: template.id}), 'class':'btn-sm'}) }}
                 {% endif %}
             </div>
         </div>
-
-        {# Panel derecho: agregar rubro #}
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <i class="bi bi-plus-circle"></i> {{ 'plantilla.add_rubro'|trans }}
-                </div>
-                <div class="card-body">
-                    {% if itemsAvailable|length > 0 %}
-                        <form method="POST" action="{{ path('app_template_add_item', {projectId: project.id, id: template.id}) }}">
-                            <input type="hidden" name="_token" value="{{ csrf_token('add_rubro_' ~ template.id) }}">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">{{ 'plantilla.select_rubro'|trans }}</label>
-                            <select class="form-select" name="item_id" required>
-                                <option value="">{{ 'common.select'|trans }}</option>
-                                    {% for item in itemsAvailable %}
-                                        {% if item.id not in itemsAdded %}
-                                        <option value="{{ item.id }}">{{ item.code }} — {{ item.name }} ({{ item.unit }})</option>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                    <thead class="table">
+                        <tr>
+                            <th style="width:3.5rem">#</th>
+                            <th>{{ 'apu.column_description'|trans }}</th>
+                            <th class="text-center">{{ 'common.actions'|trans }}</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                            {% for pr in apus_list %}
+                            <tr>
+                                <td class="text-muted" style="width:3.5rem">{{ loop.index }}</td>
+                                <td><strong>{{ pr.apuItem.description ?: pr.item.name }}</strong></td>
+                                <td class="text-center">
+                                    <div class="d-flex gap-1 justify-content-center">
+                                        {% if not is_granted('ROLE_ADMIN') %}
+                                            {{ btn.button('', 'outline-primary', 'bi-pencil', {'href': path('app_apu_edit', {id: pr.apuItem.id}), 'class':'btn-sm', 'title': 'apu.edit'|trans}) }}
                                         {% endif %}
-                                    {% endfor %}
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">{{ 'plantilla.col_cantidad'|trans }}</label>
-                            <input type="number" class="form-control" name="quantity" value="1.00" step="0.01" min="0.01" required>
-                        </div>
-                        {{ btn.button('plantilla.add_rubro'|trans, 'primary', 'bi-plus', {'type':'submit', 'class':'w-100'}) }}
-                    </form>
-                    {% else %}
-                    <p class="text-muted small">{{ 'plantilla.no_rubros_available'|trans }}</p>
-                    {% if can_create_item is defined and not can_create_item %}
-                        {{ btn.button('rubro.new'|trans, 'outline-secondary', 'bi-tag-fill', {'href': '#', 'class':'w-100 disabled', 'title': 'flash.tenant_item_limit_reached'|trans}) }}
-                    {% else %}
-                        {{ btn.button('rubro.new'|trans, 'outline-primary', 'bi-tag-fill', {'href': path('app_item_create'), 'class':'w-100'}) }}
-                    {% endif %}
-                    {% endif %}
-                </div>
-            </div>
-
-            {# Peligro: eliminar #}
-            <div class="card mt-3">
-                <div class="card-header text-danger fw-semibold">
-                    <i class="bi bi-exclamation-triangle"></i> {{ 'common.danger_zone'|trans }}
-                </div>
-                <div class="card-body">
-                                        <form method="POST" action="{{ path('app_template_delete', {projectId: project.id, id: template.id}) }}"
-                                                    onsubmit="return confirm('{{ 'plantilla.confirm_delete'|trans }}')">
-                                                <input type="hidden" name="_token" value="{{ csrf_token('plantilla_delete_' ~ template.id) }}">
-                                                {{ btn.button('plantilla.delete'|trans, 'danger', 'bi-trash', {'type':'submit', 'class':'w-100'}) }}
-                    </form>
-                </div>
-            </div>
+                                        <form method="POST" action="{{ path('app_template_unlink_apu', {projectId: project.id, id: template.id, prId: pr.id}) }}" class="d-inline"
+                                              onsubmit="return confirm('{{ 'plantilla.confirm_remove_rubro'|trans }}')">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('unlink_apu_' ~ pr.id) }}">
+                                            {{ btn.button('', 'outline-danger', 'bi-trash', {'type':'submit', 'class':'btn-sm', 'title': 'Remove APU'}) }}
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="table-primary fw-bold">
+                        <td></td>
+                        <td></td>
+                        <td class="text-center">{{ 'plantilla.total_presupuesto'|trans }}: <span class="fs-5">${{ template.totalBudget|number_format(2, '.', ',') }}</span></td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
+
+    {# Add/remove UI removed as requested #}
 </div>
 {% endblock %}

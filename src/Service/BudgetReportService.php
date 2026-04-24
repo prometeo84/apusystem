@@ -62,7 +62,7 @@ class BudgetReportService
                 htmlspecialchars($pr->getItem()->getCode()),
                 htmlspecialchars($pr->getItem()->getName()),
                 htmlspecialchars($pr->getItem()->getUnit()),
-                number_format((float)$pr->getQuantity(), 2),
+                '—',
                 $precioUnit,
                 $subtotal
             );
@@ -165,10 +165,11 @@ HTML;
      */
     public function generateExcel(Template $plantilla): string
     {
+        $t = fn(string $key) => $this->translator->trans($key);
         $proyecto = $plantilla->getProject();
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Presupuesto');
+        $sheet->setTitle($t('report.excel_sheet_title'));
 
         // Anchos de columna
         foreach (['A' => 5, 'B' => 12, 'C' => 42, 'D' => 10, 'E' => 12, 'F' => 16, 'G' => 16] as $col => $width) {
@@ -177,7 +178,7 @@ HTML;
 
         // Título
         $sheet->mergeCells('A1:G1');
-        $sheet->setCellValue('A1', 'PRESUPUESTO DE OBRA - ' . strtoupper($proyecto->getName()));
+        $sheet->setCellValue('A1', $t('report.excel_budget_prefix') . strtoupper($proyecto->getName()));
         file_put_contents(__DIR__ . '/../../var/log/budget_debug.log', "style:A1\n", FILE_APPEND);
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
         $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
@@ -192,9 +193,9 @@ HTML;
 
         // Metadatos
         $meta = [
-            ['Proyecto:', $proyecto->getName(), 'Código:', $proyecto->getCode()],
-            ['Cliente:',  $proyecto->getClient() ?? '—', 'Ubicación:', $proyecto->getLocation() ?? '—'],
-            ['Fecha:',    $plantilla->getCreatedAt()->format('d/m/Y'), 'Estado:', $proyecto->getStatus()],
+            [$t('report.excel_meta_project'), $proyecto->getName(), $t('report.excel_meta_code'), $proyecto->getCode()],
+            [$t('report.excel_meta_client'), $proyecto->getClient() ?? '—', $t('report.excel_meta_location'), $proyecto->getLocation() ?? '—'],
+            [$t('report.excel_meta_date'), $plantilla->getCreatedAt()->format('d/m/Y'), $t('report.excel_meta_status'), $proyecto->getStatus()],
         ];
         $row = 3;
         foreach ($meta as $m) {
@@ -211,7 +212,7 @@ HTML;
         $row++;
 
         // Cabeceras tabla
-        $headers = ['#', 'Código', 'Descripción del Rubro', 'Unidad', 'Cantidad', 'Precio Unit. USD', 'Total USD'];
+        $headers = [$t('report.table.col_number'), $t('report.table.col_code'), $t('report.table.col_rubro_description'), $t('report.table.col_unit'), $t('report.table.col_quantity'), $t('report.table.col_unit_price'), $t('report.table.col_total')];
         $cols = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
         foreach ($headers as $i => $h) {
             $this->safeSetCellValue($sheet, $cols[$i] . $row, $h);
@@ -231,7 +232,8 @@ HTML;
             $this->safeSetCellValue($sheet, 'B' . $row, $pr->getItem()->getCode());
             $this->safeSetCellValue($sheet, 'C' . $row, $pr->getItem()->getName());
             $this->safeSetCellValue($sheet, 'D' . $row, $pr->getItem()->getUnit());
-            $this->safeSetCellValue($sheet, 'E' . $row, (float)$pr->getQuantity());
+            // Quantity removed from TemplateItem structure — leave cell empty
+            $this->safeSetCellValue($sheet, 'E' . $row, '');
             $this->safeSetCellValue($sheet, 'F' . $row, $apu ? $pr->getUnitPrice() : 0);
             $this->safeSetCellValue($sheet, 'G' . $row, $apu ? $pr->getTotalCost() : 0);
 
@@ -241,7 +243,7 @@ HTML;
         }
 
         // Total
-        $this->safeSetCellValue($sheet, 'F' . $row, 'TOTAL PRESUPUESTO');
+        $this->safeSetCellValue($sheet, 'F' . $row, $t('report.total_label'));
         $this->safeSetCellValue($sheet, 'G' . $row, $plantilla->getTotalBudget());
         $totalStyle = $sheet->getStyle('A' . $row . ':G' . $row);
         $totalStyle->getFont()->setBold(true)->setSize(12);
@@ -291,7 +293,7 @@ HTML;
                     htmlspecialchars($pr->getItem()->getCode()),
                     htmlspecialchars($pr->getItem()->getName()),
                     htmlspecialchars($pr->getItem()->getUnit()),
-                    number_format((float)$pr->getQuantity(), 2),
+                    '—',
                     $precioUnit,
                     $subtotal
                 );
@@ -300,19 +302,27 @@ HTML;
             $sections .= sprintf(
                 '<h3 style="margin:20px 0 6px;font-size:13px;color:#1a56db;border-bottom:2px solid #1a56db;padding-bottom:4px;">%s</h3>
                  <table class="budget">
-                   <thead><tr><th>#</th><th>Código</th><th>Descripción</th>
-                   <th style="text-align:center">Unidad</th>
-                   <th style="text-align:right">Cantidad</th>
-                   <th style="text-align:right">Precio Unit.</th>
-                   <th style="text-align:right">Total</th></tr></thead>
+                   <thead><tr><th>%s</th><th>%s</th><th>%s</th>
+                   <th style="text-align:center">%s</th>
+                   <th style="text-align:right">%s</th>
+                   <th style="text-align:right">%s</th>
+                   <th style="text-align:right">%s</th></tr></thead>
                    <tbody>%s</tbody>
                    <tfoot><tr class="total-row">
-                     <td colspan="6" style="text-align:right">Subtotal %s</td>
+                     <td colspan="6" style="text-align:right">%s %s</td>
                      <td style="text-align:right">$%s</td>
                    </tr></tfoot>
                  </table>',
                 htmlspecialchars($plantilla->getName()),
+                $this->translator->trans('report.table.col_number'),
+                $this->translator->trans('report.table.col_code'),
+                $this->translator->trans('report.table.col_description'),
+                $this->translator->trans('report.table.col_unit'),
+                $this->translator->trans('report.table.col_quantity'),
+                $this->translator->trans('report.table.col_unit_price'),
+                $this->translator->trans('report.table.col_total'),
                 $rows,
+                $this->translator->trans('report.subtotal_template'),
                 htmlspecialchars($plantilla->getName()),
                 number_format($totalPlantilla, 2)
             );
@@ -416,9 +426,10 @@ HTML;
      */
     public function generateProjectExcel(Projects $proyecto): string
     {
+        $t = fn(string $key) => $this->translator->trans($key);
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Presupuesto');
+        $sheet->setTitle($t('report.excel_sheet_title'));
 
         foreach (['A' => 5, 'B' => 12, 'C' => 42, 'D' => 10, 'E' => 12, 'F' => 16, 'G' => 16] as $col => $width) {
             $sheet->getColumnDimension($col)->setWidth($width);
@@ -426,15 +437,15 @@ HTML;
 
         // Título
         $sheet->mergeCells('A1:G1');
-        $this->safeSetCellValue($sheet, 'A1', 'PRESUPUESTO GENERAL — ' . strtoupper($proyecto->getName()));
+        $this->safeSetCellValue($sheet, 'A1', $t('report.excel_project_prefix') . strtoupper($proyecto->getName()));
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
         $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('A1')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FF1a56db');
         $sheet->getStyle('A1')->getFont()->getColor()->setARGB('FFFFFFFF');
 
         $meta = [
-            ['Proyecto:', $proyecto->getName(), 'Código:', $proyecto->getCode()],
-            ['Cliente:', $proyecto->getClient() ?? '—', 'Estado:', $proyecto->getStatus()],
+            [$t('report.excel_meta_project'), $proyecto->getName(), $t('report.excel_meta_code'), $proyecto->getCode()],
+            [$t('report.excel_meta_client'), $proyecto->getClient() ?? '—', $t('report.excel_meta_status'), $proyecto->getStatus()],
         ];
         $row = 2;
         foreach ($meta as $m) {
@@ -462,7 +473,7 @@ HTML;
             $row++;
 
             // Cabecera
-            $headers = ['#', 'Código', 'Descripción del Rubro', 'Unidad', 'Cantidad', 'Precio Unit. USD', 'Total USD'];
+            $headers = [$t('report.table.col_number'), $t('report.table.col_code'), $t('report.table.col_rubro_description'), $t('report.table.col_unit'), $t('report.table.col_quantity'), $t('report.table.col_unit_price'), $t('report.table.col_total')];
             $cols = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
             foreach ($headers as $i => $h) {
                 $this->safeSetCellValue($sheet, $cols[$i] . $row, $h);
@@ -481,7 +492,8 @@ HTML;
                 $this->safeSetCellValue($sheet, 'B' . $row, $pr->getItem()->getCode());
                 $this->safeSetCellValue($sheet, 'C' . $row, $pr->getItem()->getName());
                 $this->safeSetCellValue($sheet, 'D' . $row, $pr->getItem()->getUnit());
-                $this->safeSetCellValue($sheet, 'E' . $row, (float)$pr->getQuantity());
+                // Quantity removed from TemplateItem structure — leave cell empty
+                $this->safeSetCellValue($sheet, 'E' . $row, '');
                 $this->safeSetCellValue($sheet, 'F' . $row, $apu ? $pr->getUnitPrice() : 0);
                 $this->safeSetCellValue($sheet, 'G' . $row, $apu ? $pr->getTotalCost() : 0);
                 $sheet->getStyle('E' . $row . ':G' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
@@ -492,7 +504,7 @@ HTML;
             $subtotal = $plantilla->getTotalBudget();
             $totalProyecto += $subtotal;
 
-            $this->safeSetCellValue($sheet, 'F' . $row, 'Subtotal ' . $plantilla->getName());
+            $this->safeSetCellValue($sheet, 'F' . $row, $t('report.subtotal_template') . ' ' . $plantilla->getName());
             $this->safeSetCellValue($sheet, 'G' . $row, $subtotal);
             $sheet->getStyle('A' . $row . ':G' . $row)->getFont()->setBold(true);
             $sheet->getStyle('A' . $row . ':G' . $row)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFe0e7ff');
@@ -507,7 +519,7 @@ HTML;
         // Total general
         $row += 2;
         $sheet->mergeCells('A' . $row . ':F' . $row);
-        $this->safeSetCellValue($sheet, 'A' . $row, 'TOTAL GENERAL DEL PROYECTO');
+        $this->safeSetCellValue($sheet, 'A' . $row, $t('report.total_general'));
         $this->safeSetCellValue($sheet, 'G' . $row, $totalProyecto);
         $sheet->getStyle('A' . $row . ':G' . $row)->getFont()->setBold(true)->setSize(13);
         $sheet->getStyle('A' . $row . ':G' . $row)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FF1a56db');

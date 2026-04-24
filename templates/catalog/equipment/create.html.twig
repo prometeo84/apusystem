@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
-{% block title %}Nuevo Equipo{% endblock %}
+{% block title %}{{ 'common.new_equipment'|trans }}{% endblock %}
 {% block body %}
 {% import 'partials/_button.html.twig' as btn %}
 <div class="container-fluid mt-4">
 	{% include 'partials/_flashes.html.twig' %}
 	<div class="d-flex justify-content-between align-items-center mb-3">
-		<h1 class="mb-0"><i class="bi bi-hdd"></i> Nuevo Equipo</h1>
+		<h1 class="mb-0"><i class="bi bi-hdd"></i>{{ 'common.new_equipment'|trans }}</h1>
 		{{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('catalog_equipment_index')}) }}
 	</div>
 	<div class="card mx-auto" style="max-width:600px;">
@@ -42,7 +42,7 @@
 						{% endfor %}
 					</select>
 				</div>
-				{{ btn.button('Guardar', 'primary', 'bi-save', {'type':'submit'}) }}
+				{{ btn.button('buttons.save'|trans, 'primary', 'bi-save', {'type':'submit'}) }}
 			</form>
 		</div>
 	</div>

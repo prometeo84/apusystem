@@ -5,6 +5,7 @@ admin:
   select_company_label: "Select Company:"
   timezone_label: Timezone
   currency_label: Currency
+  create: "Create"
   require_2fa_label: "Require two-factor authentication for all users"
   enable_email_notifications: "Enable email notifications"
   save_settings: "Save Settings"
@@ -131,6 +132,7 @@ common:
   add_transport: "Add transport"
   add_material: "Add material"
   add_equipment: "Add equipment"
+  new_equipment: "New Equipment"
   add_labor: "Add labor"
   date: Date
   delete: Delete
@@ -202,6 +204,7 @@ common:
 apu:
   limit_reached: "APU limit reached"
   limit_near: "You are approaching your APU limit (%current%/%limit%)."
+  create: "Create APU"
   plan_trial: "Trial Plan"
   plan_basic: "Basic Plan"
   plan_professional: "Professional Plan"
@@ -222,6 +225,7 @@ apu:
   col_rate: Rate
   col_cost_hour: C/HOUR
   col_jh: JOR./HOUR
+  col_c_hora: C/Hour
   actions: Actions
   col_unit: Unit
   col_quantity: Quantity
@@ -234,6 +238,8 @@ apu:
   subtotal_labor: "Labor Subtotal"
   subtotal_materials: "Materials Subtotal"
   subtotal_transport: "Transport Subtotal"
+  subtotal_rubro: "Item Subtotal"
+  remove_rubro: "Remove item"
   total_direct_costs: "Total Direct Costs"
   labor_new: "New Labor"
   utilidad_pct: "Profit Margin (%)"
@@ -245,6 +251,11 @@ apu:
   new_apu: "New APU"
   no_apus: "No APUs registered yet."
   create_first: "Create the first APU"
+  add_section: "Add section"
+  add_rubro: "+ Add Item"
+  rubro_name_placeholder: "Item name"
+  rubro_no_catalog: "No catalog item"
+  indirect_cost_pct: "Indirect Costs (%)"
   column_description: Description
   column_unit: Unit
   column_khu: K(H/U)
@@ -256,6 +267,18 @@ apu:
   export_excel: "Export Excel"
   update: "Update APU"
   edit.title: "Edit Unit Price Analysis"
+  excel_title: "UNIT PRICE ANALYSIS"
+  excel_description: "Description:"
+  excel_unit: "Unit:"
+  excel_khu: "K(H/U):"
+  excel_rend: "Yield u/h:"
+  excel_col_total: "Total"
+  excel_col_p_unitario: "Unit Price"
+  excel_subtotal_equipment: "Equipment Subtotal:"
+  excel_subtotal_labor: "Labor Subtotal:"
+  excel_subtotal_materials: "Materials Subtotal:"
+  excel_subtotal_transport: "Transport Subtotal:"
+  excel_total_cost: "TOTAL COST:"
   label:
     item_description: "Item Description"
 dashboard:
@@ -439,6 +462,18 @@ report:
     col_quantity: Quantity
     col_unit_price: "Unit Price USD"
     col_total: "Total USD"
+    col_rubro_description: "Item Description"
+    col_number: "#"
+  excel_sheet_title: "Budget"
+  excel_budget_prefix: "WORK BUDGET — "
+  excel_project_prefix: "GENERAL BUDGET — "
+  excel_meta_project: "Project:"
+  excel_meta_code: "Code:"
+  excel_meta_client: "Client:"
+  excel_meta_location: "Location:"
+  excel_meta_date: "Date:"
+  excel_meta_status: "Status:"
+  subtotal_template: "Subtotal"
   generate: Report
   full_project: "Full Project Report"
   preview_title: "Budget Preview"
@@ -1089,6 +1124,9 @@ plantilla:
   total_presupuesto: "Budget Total"
   apu_pending: "No APU"
   create_apu: "Create APU"
+  rubros_pendientes: "Items without APU assigned"
+  no_apus: "No APUs in this template yet."
+  add_rubro_hint: "Select an item to add to the template, then create its APU."
   no_rubros: "No items in this template."
   no_plantillas: "No templates in this project."
   no_rubros_available: "No items available. Create items first."
@@ -1102,8 +1140,10 @@ plantilla:
   delete: "Delete Template"
   confirm_delete: "Delete this template and all its items? This action cannot be undone."
   confirm_remove_rubro: "Remove this item from the template?"
+  apus: APUs
 template:
   title: Templates
+  apus: APUs
   new: "New Template"
   edit_title: "Edit Template"
   save: "Save Template"
@@ -1119,6 +1159,9 @@ template:
   total_presupuesto: "Budget Total"
   apu_pending: "No APU"
   create_apu: "Create APU"
+  no_apus: "No APUs in this template yet."
+  rubros_pendientes: "Items without APU assigned"
+  add_rubro_hint: "Select an item to add to the template, then create its APU."
   no_rubros: "No items in this template."
   no_plantillas: "No templates in this project."
   no_rubros_available: "No items available. Create items first."

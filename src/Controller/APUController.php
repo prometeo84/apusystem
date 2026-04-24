@@ -7,7 +7,14 @@ use App\Entity\APUEquipment;
 use App\Entity\APULabor;
 use App\Entity\APUMaterial;
 use App\Entity\APUTransport;
+use App\Entity\APURubro;
+use App\Entity\Item;
 use App\Entity\TemplateItem;
+use App\Entity\Template;
+use App\Entity\Equipment;
+use App\Entity\Labor;
+use App\Entity\Material;
+use App\Entity\Transport;
 use App\Service\ExcelReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -71,7 +78,10 @@ class APUController extends AbstractController
             return $this->handleCreate($request);
         }
 
-        return $this->render('apu/create.html.twig');
+        return $this->render('apu/create.html.twig', [
+            'catalog_data'  => $this->getCatalogData(),
+            'items_catalog' => $this->getItemsCatalog(),
+        ]);
     }
 
     #[Route('/{id}/edit', name: 'app_apu_edit', methods: ['GET', 'POST'])]
@@ -91,8 +101,10 @@ class APUController extends AbstractController
         }
 
         return $this->render('apu/edit.html.twig', [
-            'apu_item'     => $apuItem,
-            'templateItem' => $templateItem,
+            'apu_item'      => $apuItem,
+            'templateItem'  => $templateItem,
+            'catalog_data'  => $this->getCatalogData(),
+            'items_catalog' => $this->getItemsCatalog(),
         ]);
     }
 
@@ -153,6 +165,9 @@ class APUController extends AbstractController
                     'rubroNombre' => $pr->getItem()->getName(),
                     'rubroUnidad' => $pr->getItem()->getUnit(),
                     'apu_item' => $apuItem,
+                    'catalog_data' => $this->getCatalogData(),
+                    'items_catalog' => $this->getItemsCatalog(),
+                    'projectId' => $pr->getTemplate()->getProject()->getId(),
                 ]);
             }
 
@@ -174,6 +189,90 @@ class APUController extends AbstractController
             'plantillaRubroId' => $plantillaRubroId,
             'rubroNombre' => $pr->getItem()->getName(),
             'rubroUnidad' => $pr->getItem()->getUnit(),
+            'catalog_data' => $this->getCatalogData(),
+            'items_catalog' => $this->getItemsCatalog(),
+            'projectId' => $pr->getTemplate()->getProject()->getId(),
+        ]);
+    }
+
+    /** Crear APU vinculado a una Plantilla (seleccionando el TemplateItem) */
+    #[Route('/create-for-template/{templateId}', name: 'app_apu_create_for_template', requirements: ['templateId' => '\\d+'], methods: ['GET', 'POST'])]
+    public function createForTemplate(int $templateId, Request $request): Response
+    {
+        $template = $this->em->getRepository(Template::class)->find($templateId);
+
+        if (!$template || $template->getTenant()->getId() !== $this->getUser()->getTenant()->getId()) {
+            throw $this->createNotFoundException();
+        }
+
+        // Administradores no pueden crear APUs via UI
+        if ($this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('Admins cannot create APUs');
+        }
+
+        // TemplateItems disponibles para vincular (sin APU todavía)
+        $pendingItems = $this->em->getRepository(TemplateItem::class)->findBy(['template' => $template, 'apuItem' => null]);
+
+        if ($request->isMethod('POST')) {
+            $templateItemId = $request->request->get('template_item_id');
+            $pr = null;
+            if ($templateItemId) {
+                $pr = $this->em->getRepository(TemplateItem::class)->find((int) $templateItemId);
+            }
+
+            // If no specific template_item_id provided, try to use the first pending TemplateItem
+            if (!$pr) {
+                if (count($pendingItems) > 0) {
+                    $pr = $pendingItems[0];
+                } else {
+                    $this->addFlash('error', 'rubro.not_found');
+                    return $this->redirectToRoute('app_apu_create_for_template', ['templateId' => $templateId]);
+                }
+            }
+            if ($pr->getTemplate()->getId() !== $template->getId()) {
+                $this->addFlash('error', 'rubro.not_found');
+                return $this->redirectToRoute('app_apu_create_for_template', ['templateId' => $templateId]);
+            }
+
+            $apuItem = $this->buildApuFromRequest($request);
+            $apuItem->setDescription($apuItem->getDescription() ?: $pr->getItem()->getName());
+            $apuItem->setUnit($apuItem->getUnit() ?: $pr->getItem()->getUnit());
+
+            // Enforce APU limit
+            $tenant = $this->getUser()->getTenant();
+            $repo = $this->em->getRepository(APUItem::class);
+            $current = $repo->count(['tenant' => $tenant]);
+            $maxApus = $this->getParameter('limits.apus_per_tenant');
+            if ($maxApus !== null && (int)$maxApus > 0 && $current >= (int)$maxApus) {
+                $this->addFlash('error', 'apu.limit_reached');
+                return $this->render('apu/create.html.twig', [
+                    'templateId' => $templateId,
+                    'template_items' => $pendingItems,
+                    'apu_item' => $apuItem,
+                    'catalog_data' => $this->getCatalogData(),
+                    'items_catalog' => $this->getItemsCatalog(),
+                    'projectId' => $template->getProject()->getId(),
+                ]);
+            }
+
+            $this->em->persist($apuItem);
+            $pr->setApuItem($apuItem);
+            $this->em->flush();
+
+            $this->addFlash('success', 'flash.apu_created');
+
+            return $this->redirectToRoute('app_template_show', [
+                'projectId' => $template->getProject()->getId(),
+                'id' => $template->getId(),
+            ]);
+        }
+
+        return $this->render('apu/create.html.twig', [
+            'templateId' => $templateId,
+            'template_items' => $pendingItems,
+            'catalog_data' => $this->getCatalogData(),
+            'items_catalog' => $this->getItemsCatalog(),
+            'projectId' => $template->getProject()->getId(),
         ]);
     }
 
@@ -193,7 +292,7 @@ class APUController extends AbstractController
         $maxApus = $this->getParameter('limits.apus_per_tenant');
         if ($maxApus !== null && (int)$maxApus > 0 && $current >= (int)$maxApus) {
             $this->addFlash('error', 'apu.limit_reached');
-            return $this->render('apu/create.html.twig', ['apu_item' => $apuItem]);
+            return $this->render('apu/create.html.twig', ['apu_item' => $apuItem, 'catalog_data' => $this->getCatalogData(), 'items_catalog' => $this->getItemsCatalog()]);
         }
 
         $this->em->persist($apuItem);
@@ -204,297 +303,111 @@ class APUController extends AbstractController
         return $this->redirectToRoute('app_apu_index');
     }
 
+    private function getItemsCatalog(): array
+    {
+        $tenant = $this->getUser()->getTenant();
+        $items = $this->em->getRepository(Item::class)->findBy(
+            ['tenant' => $tenant, 'active' => true],
+            ['code' => 'ASC']
+        );
+        return array_map(fn(Item $it) => [
+            'id'   => $it->getId(),
+            'code' => $it->getCode(),
+            'name' => $it->getName(),
+            'unit' => $it->getUnit(),
+        ], $items);
+    }
+
+    private function getCatalogData(): array
+    {
+        $tenant = $this->getUser()->getTenant();
+
+        $mapEquipment = fn(array $items) => array_map(fn(Equipment $e) => [
+            'id'   => $e->getId(),
+            'code' => $e->getCode(),
+            'name' => $e->getName(),
+            'unit' => $e->getUnit(),
+        ], $items);
+
+        $mapLabor = fn(array $items) => array_map(fn(Labor $e) => [
+            'id'   => $e->getId(),
+            'code' => $e->getCode(),
+            'name' => $e->getDescription(),
+            'unit' => $e->getUnit(),
+        ], $items);
+
+        $mapMaterial = fn(array $items) => array_map(fn(Material $e) => [
+            'id'   => $e->getId(),
+            'code' => $e->getCode(),
+            'name' => $e->getName(),
+            'unit' => $e->getUnit(),
+        ], $items);
+
+        $mapTransport = fn(array $items) => array_map(fn(Transport $e) => [
+            'id'   => $e->getId(),
+            'code' => $e->getCode(),
+            'name' => $e->getName(),
+            'unit' => $e->getUnit(),
+        ], $items);
+
+        return [
+            'equipment' => $mapEquipment($this->em->getRepository(Equipment::class)->findBy(['tenant' => $tenant, 'active' => true], ['code' => 'ASC'])),
+            'labor'     => $mapLabor($this->em->getRepository(Labor::class)->findBy(['tenant' => $tenant, 'active' => true], ['code' => 'ASC'])),
+            'material'  => $mapMaterial($this->em->getRepository(Material::class)->findBy(['tenant' => $tenant, 'active' => true], ['code' => 'ASC'])),
+            'transport' => $mapTransport($this->em->getRepository(Transport::class)->findBy(['tenant' => $tenant, 'active' => true], ['code' => 'ASC'])),
+        ];
+    }
+
     private function buildApuFromRequest(Request $request): APUItem
     {
         $data = $request->request->all();
+        $tenant = $this->getUser()->getTenant();
 
         $apuItem = new APUItem();
-        $apuItem->setTenant($this->getUser()->getTenant());
+        $apuItem->setTenant($tenant);
         $apuItem->setCreatedBy($this->getUser());
-        $apuItem->setDescription($data['description']);
-        $apuItem->setUnit($data['unit']);
-        $apuItem->setKhu((float)$data['khu']);
-        $apuItem->setProductivityUh((float)$data['rendimiento_uh']);
-        $apuItem->setProfitPct(isset($data['utilidad_pct']) ? (string)(float)$data['utilidad_pct'] : null);
+        $apuItem->setDescription($data['description'] ?? '');
+        $apuItem->setUnit($data['unit'] ?? 'u');
+        $apuItem->setKhu(isset($data['khu']) && $data['khu'] !== '' ? $data['khu'] : '1.0000');
+        $apuItem->setProductivityUh(isset($data['rendimiento_uh']) && $data['rendimiento_uh'] !== '' ? $data['rendimiento_uh'] : '1.0000');
+        $apuItem->setProfitPct(isset($data['utilidad_pct']) && $data['utilidad_pct'] !== '' ? (string)(float)$data['utilidad_pct'] : null);
+        $apuItem->setIndirectCostPct(isset($data['indirect_cost_pct']) && $data['indirect_cost_pct'] !== '' ? (string)(float)$data['indirect_cost_pct'] : null);
         $apuItem->setOfferedPrice(isset($data['precio_ofertado']) && $data['precio_ofertado'] !== '' ? (string)(float)$data['precio_ofertado'] : null);
 
-        // Sólo usuarios con ROLE_ADMIN pueden agregar componentes (equipment, labor, materials, transport)
-        $allowComponents = $this->isGranted('ROLE_ADMIN');
-
-        if ($allowComponents) {
-            if (isset($data['equipment'])) {
-                foreach ($data['equipment'] as $equipData) {
-                    $equipment = new APUEquipment();
-                    if (!empty($equipData['equipment_id'])) {
-                        $eq = $this->em->getRepository(\App\Entity\Equipment::class)->find((int)$equipData['equipment_id']);
-                        $equipment->setEquipment($eq);
-                    }
-                    $equipment->setNumber((int)$equipData['numero']);
-                    $equipment->setRate((float)$equipData['tarifa']);
-                    $equipment->setRendimientoUh(!empty($equipData['rendimiento']) ? (float)$equipData['rendimiento'] : null);
-                    // C = A×B is computed by recalculate() inside calculateCosts()
-                    // set tenant/project/template/template_item when available
-                    $tenant = $apuItem->getTenant();
-                    if ($tenant !== null) {
-                        $equipment->setTenant($tenant);
-                    }
-                    if (!empty($data['project_id'])) {
-                        $proj = $this->em->getRepository(\App\Entity\Projects::class)->find((int)$data['project_id']);
-                        if ($proj) $equipment->setProject($proj);
-                    }
-                    if (!empty($data['template_id'])) {
-                        $tpl = $this->em->getRepository(\App\Entity\Template::class)->find((int)$data['template_id']);
-                        if ($tpl) $equipment->setTemplate($tpl);
-                    }
-                    if (!empty($equipData['template_item_id'])) {
-                        $ti = $this->em->getRepository(\App\Entity\TemplateItem::class)->find((int)$equipData['template_item_id']);
-                        if ($ti) $equipment->setTemplateItem($ti);
-                    }
-                    $apuItem->addEquipment($equipment);
-                }
-            }
-
-            if (isset($data['labor'])) {
-                foreach ($data['labor'] as $laborData) {
-                    $labor = new APULabor();
-                    // link to catalog labor if provided
-                    if (!empty($laborData['labor_id'])) {
-                        $labEntity = $this->em->getRepository(\App\Entity\Labor::class)->find((int)$laborData['labor_id']);
-                        $labor->setLabor($labEntity);
-                    }
-                    $labor->setNumber((int)$laborData['numero']);
-                    $labor->setJorHora((float)$laborData['jor_hora']);
-                    $labor->setRendimientoUh(!empty($laborData['rendimiento']) ? (float)$laborData['rendimiento'] : null);
-                    // C = A×B is computed by recalculate() inside calculateCosts()
-                    // set tenant/project/template/template_item when available
-                    $tenant = $apuItem->getTenant();
-                    if ($tenant !== null) {
-                        $labor->setTenant($tenant);
-                    }
-                    if (!empty($data['project_id'])) {
-                        $proj = $this->em->getRepository(\App\Entity\Projects::class)->find((int)$data['project_id']);
-                        if ($proj) $labor->setProject($proj);
-                    }
-                    if (!empty($data['template_id'])) {
-                        $tpl = $this->em->getRepository(\App\Entity\Template::class)->find((int)$data['template_id']);
-                        if ($tpl) $labor->setTemplate($tpl);
-                    }
-                    if (!empty($laborData['template_item_id'])) {
-                        $ti = $this->em->getRepository(\App\Entity\TemplateItem::class)->find((int)$laborData['template_item_id']);
-                        if ($ti) $labor->setTemplateItem($ti);
-                    }
-                    $apuItem->addLabor($labor);
-                }
-            }
-
-            if (isset($data['materials'])) {
-                foreach ($data['materials'] as $materialData) {
-                    $material = new APUMaterial();
-                    // If frontend provided catalog id, link to Material entity
-                    if (!empty($materialData['id'])) {
-                        $matEntity = $this->em->getRepository(\App\Entity\Material::class)->find((int)$materialData['id']);
-                        $material->setMaterial($matEntity);
-                        if (empty($materialData['unidad']) && $matEntity !== null) {
-                            $materialData['unidad'] = $matEntity->getUnit();
-                        }
-                    }
-                    $material->setQuantity((float)$materialData['cantidad']);
-                    $material->setUnitPrice((float)$materialData['precio_unitario']);
-                    // set tenant/project/template/template_item when available
-                    $tenant = $apuItem->getTenant();
-                    if ($tenant !== null) {
-                        $material->setTenant($tenant);
-                    }
-                    if (!empty($data['project_id'])) {
-                        $proj = $this->em->getRepository(\App\Entity\Projects::class)->find((int)$data['project_id']);
-                        if ($proj) $material->setProject($proj);
-                    }
-                    if (!empty($data['template_id'])) {
-                        $tpl = $this->em->getRepository(\App\Entity\Template::class)->find((int)$data['template_id']);
-                        if ($tpl) $material->setTemplate($tpl);
-                    }
-                    if (!empty($materialData['template_item_id'])) {
-                        $ti = $this->em->getRepository(\App\Entity\TemplateItem::class)->find((int)$materialData['template_item_id']);
-                        if ($ti) $material->setTemplateItem($ti);
-                    }
-                    $apuItem->addMaterial($material);
-                }
-            }
-
-            if (isset($data['transport'])) {
-                foreach ($data['transport'] as $transportData) {
-                    $transport = new APUTransport();
-                    if (!empty($transportData['id'])) {
-                        $trEntity = $this->em->getRepository(\App\Entity\Transport::class)->find((int)$transportData['id']);
-                        $transport->setTransport($trEntity);
-                        if ($trEntity) {
-                            $transport->setDescription($trEntity->getName());
-                            $transport->setUnit($trEntity->getUnit() ?? '');
-                        }
-                    } else {
-                        $transport->setDescription($transportData['description'] ?? '');
-                        $transport->setUnit($transportData['unidad'] ?? '');
-                    }
-                    $transport->setQuantity((float)($transportData['cantidad'] ?? 0));
-                    $transport->setDmt((float)($transportData['dmt'] ?? 0));
-                    $transport->setTarifaKm((float)($transportData['tarifa_km'] ?? 0));
-                    $tenant = $apuItem->getTenant();
-                    if ($tenant !== null) $transport->setTenant($tenant);
-                    if (!empty($data['project_id'])) {
-                        $proj = $this->em->getRepository(\App\Entity\Projects::class)->find((int)$data['project_id']);
-                        if ($proj) $transport->setProject($proj);
-                    }
-                    if (!empty($data['template_id'])) {
-                        $tpl = $this->em->getRepository(\App\Entity\Template::class)->find((int)$data['template_id']);
-                        if ($tpl) $transport->setTemplate($tpl);
-                    }
-                    $apuItem->addTransport($transport);
-                }
-            }
+        // Procesar rubros (nueva estructura jerárquica)
+        if (!empty($data['rubros']) && is_array($data['rubros'])) {
+            $this->populateRubros($apuItem, $data['rubros'], $tenant);
         }
 
         $apuItem->calculateCosts();
-
         return $apuItem;
     }
 
     private function handleUpdate(Request $request, APUItem $apuItem, ?TemplateItem $templateItem = null): Response
     {
         $data = $request->request->all();
+        $tenant = $apuItem->getTenant();
 
-        $apuItem->setDescription($data['description']);
-        $apuItem->setUnit($data['unit']);
-        $apuItem->setKhu((float)$data['khu']);
-        $apuItem->setProductivityUh((float)$data['rendimiento_uh']);
-        $apuItem->setProfitPct(isset($data['utilidad_pct']) ? (string)(float)$data['utilidad_pct'] : null);
+        $apuItem->setDescription($data['description'] ?? $apuItem->getDescription());
+        if (!empty($data['unit'])) {
+            $apuItem->setUnit($data['unit']);
+        }
+        $apuItem->setProfitPct(isset($data['utilidad_pct']) && $data['utilidad_pct'] !== '' ? (string)(float)$data['utilidad_pct'] : null);
+        $apuItem->setIndirectCostPct(isset($data['indirect_cost_pct']) && $data['indirect_cost_pct'] !== '' ? (string)(float)$data['indirect_cost_pct'] : null);
         $apuItem->setOfferedPrice(isset($data['precio_ofertado']) && $data['precio_ofertado'] !== '' ? (string)(float)$data['precio_ofertado'] : null);
 
-        // Sólo los administradores pueden modificar/replace los componentes.
-        if ($this->isGranted('ROLE_ADMIN')) {
-            // Eliminar elementos antiguos
-            foreach ($apuItem->getEquipment() as $equipment) {
-                $apuItem->removeEquipment($equipment);
-            }
-            foreach ($apuItem->getLabor() as $labor) {
-                $apuItem->removeLabor($labor);
-            }
-            foreach ($apuItem->getMaterials() as $material) {
-                $apuItem->removeMaterial($material);
-            }
-            foreach ($apuItem->getTransport() as $transport) {
-                $apuItem->removeTransport($transport);
-            }
+        // Eliminar rubros anteriores (cascade remove los componentes)
+        foreach ($apuItem->getRubros() as $rubro) {
+            $apuItem->removeRubro($rubro);
+        }
 
-            // Agregar nuevos elementos
-            if (isset($data['equipment'])) {
-                foreach ($data['equipment'] as $equipData) {
-                    $equipment = new APUEquipment();
-                    $equipment->setDescription($equipData['description']);
-                    $equipment->setQuantity((int)$equipData['numero']);
-                    $equipment->setTarifa((float)$equipData['tarifa']);
-                    $equipment->setCHora((float)($equipData['c_hora'] ?? ((float)$equipData['numero'] * (float)$equipData['tarifa'])));
-                    $apuItem->addEquipment($equipment);
-                }
-            }
-
-            if (isset($data['labor'])) {
-                foreach ($data['labor'] as $laborData) {
-                    $labor = new APULabor();
-                    if (!empty($laborData['labor_id'])) {
-                        $labEntity = $this->em->getRepository(\App\Entity\Labor::class)->find((int)$laborData['labor_id']);
-                        $labor->setLabor($labEntity);
-                    }
-                    $labor->setNumber((int)$laborData['numero']);
-                    $labor->setJorHora((float)$laborData['jor_hora']);
-                    $labor->setCHora((float)($laborData['c_hora'] ?? ((float)$laborData['numero'] * (float)$laborData['jor_hora'])));
-                    $tenant = $apuItem->getTenant();
-                    if ($tenant !== null) {
-                        $labor->setTenant($tenant);
-                    }
-                    if (!empty($data['project_id'])) {
-                        $proj = $this->em->getRepository(\App\Entity\Projects::class)->find((int)$data['project_id']);
-                        if ($proj) $labor->setProject($proj);
-                    }
-                    if (!empty($data['template_id'])) {
-                        $tpl = $this->em->getRepository(\App\Entity\Template::class)->find((int)$data['template_id']);
-                        if ($tpl) $labor->setTemplate($tpl);
-                    }
-                    if (!empty($laborData['template_item_id'])) {
-                        $ti = $this->em->getRepository(\App\Entity\TemplateItem::class)->find((int)$laborData['template_item_id']);
-                        if ($ti) $labor->setTemplateItem($ti);
-                    }
-                    $apuItem->addLabor($labor);
-                }
-            }
-
-            if (isset($data['materials'])) {
-                foreach ($data['materials'] as $materialData) {
-                    $material = new APUMaterial();
-                    if (!empty($materialData['id'])) {
-                        $matEntity = $this->em->getRepository(\App\Entity\Material::class)->find((int)$materialData['id']);
-                        $material->setMaterial($matEntity);
-                        if (empty($materialData['unidad']) && $matEntity !== null) {
-                            $materialData['unidad'] = $matEntity->getUnit();
-                        }
-                    }
-                    $material->setQuantity((float)$materialData['cantidad']);
-                    $material->setUnitPrice((float)$materialData['precio_unitario']);
-                    $tenant = $apuItem->getTenant();
-                    if ($tenant !== null) {
-                        $material->setTenant($tenant);
-                    }
-                    if (!empty($data['project_id'])) {
-                        $proj = $this->em->getRepository(\App\Entity\Projects::class)->find((int)$data['project_id']);
-                        if ($proj) $material->setProject($proj);
-                    }
-                    if (!empty($data['template_id'])) {
-                        $tpl = $this->em->getRepository(\App\Entity\Template::class)->find((int)$data['template_id']);
-                        if ($tpl) $material->setTemplate($tpl);
-                    }
-                    if (!empty($materialData['template_item_id'])) {
-                        $ti = $this->em->getRepository(\App\Entity\TemplateItem::class)->find((int)$materialData['template_item_id']);
-                        if ($ti) $material->setTemplateItem($ti);
-                    }
-                    $apuItem->addMaterial($material);
-                }
-            }
-
-            if (isset($data['transport'])) {
-                foreach ($data['transport'] as $transportData) {
-                    $transport = new APUTransport();
-                    if (!empty($transportData['id'])) {
-                        $trEntity = $this->em->getRepository(\App\Entity\Transport::class)->find((int)$transportData['id']);
-                        $transport->setTransport($trEntity);
-                        if ($trEntity) {
-                            $transport->setDescription($trEntity->getName());
-                            $transport->setUnit($trEntity->getUnit() ?? '');
-                        }
-                    } else {
-                        $transport->setDescription($transportData['description'] ?? '');
-                        $transport->setUnit($transportData['unidad'] ?? '');
-                    }
-                    $transport->setQuantity((float)($transportData['cantidad'] ?? 0));
-                    $transport->setDmt((float)($transportData['dmt'] ?? 0));
-                    $transport->setTarifaKm((float)($transportData['tarifa_km'] ?? 0));
-                    $tenant = $apuItem->getTenant();
-                    if ($tenant !== null) $transport->setTenant($tenant);
-                    if (!empty($data['project_id'])) {
-                        $proj = $this->em->getRepository(\App\Entity\Projects::class)->find((int)$data['project_id']);
-                        if ($proj) $transport->setProject($proj);
-                    }
-                    if (!empty($data['template_id'])) {
-                        $tpl = $this->em->getRepository(\App\Entity\Template::class)->find((int)$data['template_id']);
-                        if ($tpl) $transport->setTemplate($tpl);
-                    }
-                    $apuItem->addTransport($transport);
-                }
-            }
+        // Procesar rubros (nueva estructura jerárquica)
+        if (!empty($data['rubros']) && is_array($data['rubros'])) {
+            $this->populateRubros($apuItem, $data['rubros'], $tenant);
         }
 
         $apuItem->calculateCosts();
-
         $this->em->flush();
-
         $this->addFlash('success', 'flash.apu_updated');
 
         if ($templateItem) {
@@ -506,5 +419,111 @@ class APUController extends AbstractController
         }
 
         return $this->redirectToRoute('app_apu_index');
+    }
+
+    /**
+     * Populates APURubro objects from form data array.
+     * Expected structure: rubros[N][name], rubros[N][item_id],
+     *   rubros[N][equipment][M][id|numero|tarifa],
+     *   rubros[N][labor][M][id|numero|jor_hora],
+     *   rubros[N][materials][M][id|cantidad|precio_unitario],
+     *   rubros[N][transport][M][id|cantidad|dmt|tarifa_km]
+     */
+    private function populateRubros(APUItem $apuItem, array $rubrosData, $tenant): void
+    {
+        $position = 0;
+        foreach ($rubrosData as $rubroData) {
+            $rubro = new APURubro();
+            $rubro->setName($rubroData['name'] ?? 'Rubro');
+            $rubro->setPosition($position++);
+            $rubro->setUnit(!empty($rubroData['unit']) ? $rubroData['unit'] : null);
+            $rubro->setKhu(isset($rubroData['khu']) && $rubroData['khu'] !== '' ? (float)$rubroData['khu'] : null);
+            $rubro->setProductivityUh(isset($rubroData['rendimiento_uh']) && $rubroData['rendimiento_uh'] !== '' ? (float)$rubroData['rendimiento_uh'] : null);
+
+            if (!empty($rubroData['item_id'])) {
+                $item = $this->em->getRepository(Item::class)->find((int)$rubroData['item_id']);
+                if ($item && $item->getTenant()?->getId() === $tenant->getId()) {
+                    $rubro->setItem($item);
+                    if (empty($rubroData['name'])) {
+                        $rubro->setName($item->getName());
+                    }
+                }
+            }
+
+            // Equipment
+            foreach ($rubroData['equipment'] ?? [] as $equipData) {
+                $equip = new APUEquipment();
+                $equip->setTenant($tenant);
+                if (!empty($equipData['id'])) {
+                    $eq = $this->em->getRepository(Equipment::class)->find((int)$equipData['id']);
+                    if ($eq) {
+                        $equip->setEquipment($eq);
+                        $equip->setDescription($eq->getName());
+                    }
+                }
+                $equip->setNumber((int)($equipData['numero'] ?? 1));
+                $equip->setRate((float)($equipData['tarifa'] ?? 0));
+                $equip->setRendimientoUh(isset($equipData['rend_uh']) && $equipData['rend_uh'] !== '' ? (float)$equipData['rend_uh'] : null);
+                $equip->setApuRubro($rubro);
+                $rubro->addEquipment($equip);
+                $apuItem->addEquipment($equip);
+            }
+
+            // Labor
+            foreach ($rubroData['labor'] ?? [] as $laborData) {
+                $labor = new APULabor();
+                $labor->setTenant($tenant);
+                if (!empty($laborData['id'])) {
+                    $labEntity = $this->em->getRepository(Labor::class)->find((int)$laborData['id']);
+                    if ($labEntity) $labor->setLabor($labEntity);
+                }
+                $labor->setNumber((int)($laborData['numero'] ?? 1));
+                $labor->setJorHora((float)($laborData['jor_hora'] ?? 0));
+                $labor->setRendimientoUh(isset($laborData['rend_uh']) && $laborData['rend_uh'] !== '' ? (float)$laborData['rend_uh'] : null);
+                $labor->setApuRubro($rubro);
+                $rubro->addLabor($labor);
+                $apuItem->addLabor($labor);
+            }
+
+            // Materials
+            foreach ($rubroData['materials'] ?? [] as $materialData) {
+                $material = new APUMaterial();
+                $material->setTenant($tenant);
+                if (!empty($materialData['id'])) {
+                    $matEntity = $this->em->getRepository(Material::class)->find((int)$materialData['id']);
+                    if ($matEntity) $material->setMaterial($matEntity);
+                }
+                $material->setQuantity((float)($materialData['cantidad'] ?? 0));
+                $material->setUnitPrice((float)($materialData['precio_unitario'] ?? 0));
+                $material->setApuRubro($rubro);
+                $rubro->addMaterial($material);
+                $apuItem->addMaterial($material);
+            }
+
+            // Transport
+            foreach ($rubroData['transport'] ?? [] as $transportData) {
+                $transport = new APUTransport();
+                $transport->setTenant($tenant);
+                if (!empty($transportData['id'])) {
+                    $trEntity = $this->em->getRepository(Transport::class)->find((int)$transportData['id']);
+                    if ($trEntity) {
+                        $transport->setTransport($trEntity);
+                        $transport->setDescription($trEntity->getName());
+                        $transport->setUnit($trEntity->getUnit() ?? '');
+                    }
+                } else {
+                    $transport->setDescription($transportData['description'] ?? '');
+                    $transport->setUnit($transportData['unidad'] ?? '');
+                }
+                $transport->setQuantity((float)($transportData['cantidad'] ?? 0));
+                $transport->setDmt((float)($transportData['dmt'] ?? 0));
+                $transport->setTarifaKm((float)($transportData['tarifa_km'] ?? 0));
+                $transport->setApuRubro($rubro);
+                $rubro->addTransport($transport);
+                $apuItem->addTransport($transport);
+            }
+
+            $apuItem->addRubro($rubro);
+        }
     }
 }

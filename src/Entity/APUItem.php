@@ -58,9 +58,17 @@ class APUItem
     #[ORM\Column(name: 'profit_pct', type: 'decimal', precision: 5, scale: 2, nullable: true)]
     private ?string $profitPct = null;
 
+    /** Indirect costs percentage (gastos generales, imprevistos, etc.) */
+    #[ORM\Column(name: 'indirect_cost_pct', type: 'decimal', precision: 5, scale: 2, nullable: true)]
+    private ?string $indirectCostPct = null;
+
     /** Final offered price (USD) defined manually or equal to the calculation price */
     #[ORM\Column(name: 'offered_price', type: 'decimal', precision: 15, scale: 2, nullable: true)]
     private ?string $offeredPrice = null;
+
+    #[ORM\OneToMany(targetEntity: APURubro::class, mappedBy: 'apuItem', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['position' => 'ASC', 'id' => 'ASC'])]
+    private Collection $rubros;
 
     #[ORM\OneToMany(targetEntity: APUEquipment::class, mappedBy: 'apuItem', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $equipment;
@@ -83,6 +91,7 @@ class APUItem
     public function __construct()
     {
         $this->uuid = $this->generateUuid();
+        $this->rubros = new ArrayCollection();
         $this->equipment = new ArrayCollection();
         $this->labor = new ArrayCollection();
         $this->materials = new ArrayCollection();
@@ -254,6 +263,34 @@ class APUItem
         return $this;
     }
 
+    public function getIndirectCostPct(): ?string
+    {
+        return $this->indirectCostPct;
+    }
+    public function setIndirectCostPct(?string $v): self
+    {
+        $this->indirectCostPct = $v;
+        return $this;
+    }
+
+    public function getRubros(): Collection
+    {
+        return $this->rubros;
+    }
+    public function addRubro(APURubro $rubro): self
+    {
+        if (!$this->rubros->contains($rubro)) {
+            $this->rubros->add($rubro);
+            $rubro->setApuItem($this);
+        }
+        return $this;
+    }
+    public function removeRubro(APURubro $rubro): self
+    {
+        $this->rubros->removeElement($rubro);
+        return $this;
+    }
+
     public function getEquipment(): Collection
     {
         return $this->equipment;
@@ -382,27 +419,42 @@ class APUItem
     public function calculateCosts(): self
     {
         $equipmentSum = 0.0;
-        foreach ($this->equipment as $equip) {
-            // Trigger lifecycle callback to recalculate C and D
-            $equip->recalculate();
-            $equipmentSum += $equip->getTotalCost();
-        }
-
-        $laborSum = 0.0;
-        foreach ($this->labor as $labor) {
-            $labor->recalculate();
-            $laborSum += $labor->getTotalCost();
-        }
-
-        $materialSum = 0.0;
-        foreach ($this->materials as $material) {
-            $materialSum += (float)$material->getQuantity() * (float)$material->getUnitPrice();
-        }
-
+        $laborSum     = 0.0;
+        $materialSum  = 0.0;
         $transportSum = 0.0;
+
+        // Calcular desde los rubros (nueva estructura)
+        foreach ($this->rubros as $rubro) {
+            $rubro->calculateCosts();
+            $equipmentSum += (float)$rubro->getEquipmentCost();
+            $laborSum     += (float)$rubro->getLaborCost();
+            $materialSum  += (float)$rubro->getMaterialCost();
+            $transportSum += (float)$rubro->getTransportCost();
+        }
+
+        // Calcular componentes directos (estructura legada — sin rubro asignado)
+        foreach ($this->equipment as $equip) {
+            if ($equip->getApuRubro() === null) {
+                $equip->recalculate();
+                $equipmentSum += $equip->getTotalCost();
+            }
+        }
+        foreach ($this->labor as $labor) {
+            if ($labor->getApuRubro() === null) {
+                $labor->recalculate();
+                $laborSum += $labor->getTotalCost();
+            }
+        }
+        foreach ($this->materials as $material) {
+            if ($material->getApuRubro() === null) {
+                $materialSum += (float)$material->getQuantity() * (float)$material->getUnitPrice();
+            }
+        }
         foreach ($this->transport as $transport) {
-            $transport->recalculate();
-            $transportSum += $transport->getTotalCost();
+            if ($transport->getApuRubro() === null) {
+                $transport->recalculate();
+                $transportSum += $transport->getTotalCost();
+            }
         }
 
         $this->equipmentCost  = number_format($equipmentSum,  2, '.', '');
@@ -410,11 +462,17 @@ class APUItem
         $this->materialCost   = number_format($materialSum,   2, '.', '');
         $this->transportCost  = number_format($transportSum,  2, '.', '');
 
-        $total = $equipmentSum + $laborSum + $materialSum + $transportSum;
-        $this->totalCost = number_format($total, 2, '.', '');
+        $directCosts = $equipmentSum + $laborSum + $materialSum + $transportSum;
+        $this->totalCost = number_format($directCosts, 2, '.', '');
 
-        $pct = (float)($this->profitPct ?? '0');
-        $this->calculationPriceStored = number_format($total * (1 + $pct / 100), 2, '.', '');
+        $indirectPct = (float)($this->indirectCostPct ?? '0');
+        $profitPct   = (float)($this->profitPct ?? '0');
+        $this->calculationPriceStored = number_format(
+            $directCosts * (1 + $indirectPct / 100) * (1 + $profitPct / 100),
+            2,
+            '.',
+            ''
+        );
 
         return $this;
     }

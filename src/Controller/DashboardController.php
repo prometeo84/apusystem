@@ -54,16 +54,9 @@ class DashboardController extends AbstractController
                 $totalPlantillas = (int) $qb->getQuery()->getSingleScalarResult();
             }
 
-            // APUs vinculadas a proyectos del admin
-            $totalApus = 0;
-            if (count($projectIds) > 0) {
-                $qb2 = $this->em->createQueryBuilder()
-                    ->select('count(a.id)')
-                    ->from(\App\Entity\Apu::class, 'a')
-                    ->where('a.project IN (:ids)')
-                    ->setParameter('ids', $projectIds);
-                $totalApus = (int) $qb2->getQuery()->getSingleScalarResult();
-            }
+            // APUs vinculadas al tenant del admin
+            $totalApus = $this->em->getRepository(\App\Entity\APUItem::class)
+                ->count(['tenant' => $tenant]);
 
             $stats = [
                 'total_proyectos' => $totalProyectos,
@@ -77,7 +70,7 @@ class DashboardController extends AbstractController
                     ->count(['tenant' => $tenant]),
                 'proyectos_activos' => $this->em->getRepository(\App\Entity\Projects::class)
                     ->count(['tenant' => $tenant, 'status' => 'en_proceso']),
-                'total_apus' => $this->em->getRepository(\App\Entity\Apu::class)
+                'total_apus' => $this->em->getRepository(\App\Entity\APUItem::class)
                     ->count(['tenant' => $tenant]),
                 'total_plantillas' => $this->em->getRepository(\App\Entity\Template::class)
                     ->count(['tenant' => $tenant]),

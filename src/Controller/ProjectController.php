@@ -311,7 +311,7 @@ class ProjectController extends AbstractController
                 $newPr = new TemplateItem();
                 $newPr->setTemplate($newPlantilla);
                 $newPr->setItem($pr->getItem());
-                $newPr->setQuantity($pr->getQuantity());
+                // TemplateItem no longer stores a quantity; preserve order only
                 $newPr->setOrder($pr->getOrder());
                 $this->em->persist($newPr);
             }

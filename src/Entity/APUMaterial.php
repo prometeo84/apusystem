@@ -34,6 +34,10 @@ class APUMaterial
     #[ORM\JoinColumn(name: 'template_item_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     private ?TemplateItem $templateItem = null;
 
+    #[ORM\ManyToOne(targetEntity: APURubro::class, inversedBy: 'materials')]
+    #[ORM\JoinColumn(name: 'apu_rubro_id', nullable: true, onDelete: 'CASCADE')]
+    private ?APURubro $apuRubro = null;
+
     #[ORM\ManyToOne(targetEntity: \App\Entity\Material::class)]
     #[ORM\JoinColumn(name: 'material_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     private ?\App\Entity\Material $material = null;
@@ -141,6 +145,16 @@ class APUMaterial
     public function setMaterial(?\App\Entity\Material $m): self
     {
         $this->material = $m;
+        return $this;
+    }
+
+    public function getApuRubro(): ?APURubro
+    {
+        return $this->apuRubro;
+    }
+    public function setApuRubro(?APURubro $r): self
+    {
+        $this->apuRubro = $r;
         return $this;
     }
 

@@ -20,8 +20,10 @@
             {{ btn.button('common.edit'|trans, 'primary', 'bi-pencil', {'href': path('app_project_edit', {id: project.id}), 'class':'btn-gradient'}) }}
             {% endif %}
 
-            {# Enlace al reporte completo (siempre en el DOM para detección por E2E). El controlador protege el acceso. #}
-            {{ btn.button('report.full_project'|trans, 'success', 'bi-file-earmark-bar-graph', {'href': path('app_report_project_full', {id: project.id}), 'title': 'report.full_project'|trans}) }}
+            {# Enlace al reporte completo (solo para administradores). El controlador también protege el acceso. #}
+            {% if is_granted('ROLE_ADMIN') %}
+                {{ btn.button('report.full_project'|trans, 'success', 'bi-file-earmark-bar-graph', {'href': path('app_report_project_full', {id: project.id}), 'title': 'report.full_project'|trans}) }}
+            {% endif %}
 
             {# Formulario de duplicado (presente en DOM; POST requiere ROLE_ADMIN en controlador) #}
             <form method="POST" action="{{ path('app_project_duplicate', {id: project.id}) }}" class="d-inline">

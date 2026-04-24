@@ -38,6 +38,10 @@ class APUTransport
     #[ORM\JoinColumn(name: 'template_item_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     private ?TemplateItem $templateItem = null;
 
+    #[ORM\ManyToOne(targetEntity: APURubro::class, inversedBy: 'transport')]
+    #[ORM\JoinColumn(name: 'apu_rubro_id', nullable: true, onDelete: 'CASCADE')]
+    private ?APURubro $apuRubro = null;
+
     #[ORM\Column(type: 'string', length: 255)]
     private string $description;
 
@@ -126,6 +130,16 @@ class APUTransport
     public function setTemplateItem(?TemplateItem $ti): self
     {
         $this->templateItem = $ti;
+        return $this;
+    }
+
+    public function getApuRubro(): ?APURubro
+    {
+        return $this->apuRubro;
+    }
+    public function setApuRubro(?APURubro $r): self
+    {
+        $this->apuRubro = $r;
         return $this;
     }
 

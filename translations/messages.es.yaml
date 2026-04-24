@@ -132,6 +132,7 @@ common:
   add_transport: "Agregar transporte"
   add_material: "Agregar material"
   add_equipment: "Agregar equipo"
+  new_equipment: "Nuevo Equipo"
   add_labor: "Agregar mano de obra"
   date: Fecha
   delete: Eliminar
@@ -203,6 +204,7 @@ common:
 apu:
   limit_reached: "Límite de APUs alcanzado"
   limit_near: "Estás cerca del límite de APUs (%current%/%limit%)."
+  create: "Crear APU"
   create_title: "Crear APU"
   main_data: "Datos Principales"
   unit: Unidad
@@ -215,6 +217,7 @@ apu:
   col_rate: Tarifa
   col_cost_hour: C/HORA
   col_jh: JOR./HORA
+  col_c_hora: C/Hora
   actions: Acciones
   col_unit: Unidad
   col_quantity: Cantidad
@@ -227,6 +230,8 @@ apu:
   subtotal_labor: "Subtotal Mano de Obra"
   subtotal_materials: "Subtotal Materiales"
   subtotal_transport: "Subtotal Transporte"
+  subtotal_rubro: "Subtotal Rubro"
+  remove_rubro: "Eliminar rubro"
   total_direct_costs: "Total Costos Directos"
   utilidad_pct: "Utilidad (%)"
   precio_calculo: "Precio de Cálculo"
@@ -237,6 +242,11 @@ apu:
   new_apu: "Nuevo APU"
   no_apus: "No hay APUs registrados."
   create_first: "Crear el primer APU"
+  add_section: "Agregar sección"
+  add_rubro: "+ Agregar Rubro"
+  rubro_name_placeholder: "Nombre del rubro"
+  rubro_no_catalog: "Sin rubro del catálogo"
+  indirect_cost_pct: "Costos Indirectos (%)"
   column_description: Descripción
   column_unit: Unidad
   column_khu: K(H/U)
@@ -248,6 +258,18 @@ apu:
   export_excel: "Exportar Excel"
   update: "Actualizar APU"
   edit.title: "Editar Análisis de Precios Unitarios"
+  excel_title: "ANÁLISIS DE PRECIOS UNITARIOS"
+  excel_description: "Descripción:"
+  excel_unit: "Unidad:"
+  excel_khu: "K(H/U):"
+  excel_rend: "Rend. u/h:"
+  excel_col_total: "Total"
+  excel_col_p_unitario: "P. Unitario"
+  excel_subtotal_equipment: "Subtotal Equipo:"
+  excel_subtotal_labor: "Subtotal Mano de Obra:"
+  excel_subtotal_materials: "Subtotal Materiales:"
+  excel_subtotal_transport: "Subtotal Transporte:"
+  excel_total_cost: "COSTO TOTAL:"
   label:
     item_description: "Descripción del Rubro"
 dashboard:
@@ -433,6 +455,18 @@ report:
     col_quantity: Cantidad
     col_unit_price: "Precio Unit. USD"
     col_total: "Total USD"
+    col_rubro_description: "Descripción del Rubro"
+    col_number: "#"
+  excel_sheet_title: "Presupuesto"
+  excel_budget_prefix: "PRESUPUESTO DE OBRA — "
+  excel_project_prefix: "PRESUPUESTO GENERAL — "
+  excel_meta_project: "Proyecto:"
+  excel_meta_code: "Código:"
+  excel_meta_client: "Cliente:"
+  excel_meta_location: "Ubicación:"
+  excel_meta_date: "Fecha:"
+  excel_meta_status: "Estado:"
+  subtotal_template: "Subtotal"
   generate: Reporte
   full_project: "Reporte Completo del Proyecto"
   preview_title: "Vista Previa del Presupuesto"
@@ -1094,7 +1128,10 @@ plantilla:
   col_total: Total
   total_presupuesto: "Total Presupuesto"
   apu_pending: "Sin APU"
+  rubros_pendientes: "Rubros sin APU asignado"
   create_apu: "Crear APU"
+  no_apus: "No hay APUs en esta plantilla aún."
+  add_rubro_hint: "Seleccione un rubro para agregar a la plantilla y luego cree su APU."
   no_rubros: "No hay rubros en esta plantilla."
   no_plantillas: "No hay plantillas en este proyecto."
   no_rubros_available: "No hay rubros disponibles. Cree rubros primero."
@@ -1111,6 +1148,7 @@ plantilla:
   confirm_remove_rubro: "¿Eliminar este rubro de la plantilla?"
 template:
   title: Plantillas
+  apus: APUs
   new: "Nueva Plantilla"
   edit_title: "Editar Plantilla"
   save: "Guardar Plantilla"

@@ -30,9 +30,6 @@
                     <thead>
                         <tr>
                             <th>{{ 'apu.column_description'|trans }}</th>
-                            <th>{{ 'apu.column_unit'|trans }}</th>
-                            <th>{{ 'apu.column_khu'|trans }}</th>
-                            <th>{{ 'apu.column_rend'|trans }}</th>
                             <th class="text-end">{{ 'apu.column_total_cost'|trans }}</th>
                             <th>{{ 'apu.column_date'|trans }}</th>
                             <th class="text-center">{{ 'apu.actions'|trans }}</th>
@@ -42,15 +39,14 @@
                         {% for item in apu_items %}
                             <tr>
                                 <td>{{ item.description }}</td>
-                                <td><span class="badge bg-secondary">{{ item.unit }}</span></td>
-                                <td>{{ item.khu|number_format(4) }}</td>
-                                <td>{{ item.rendimientoUh|number_format(4) }}</td>
                                 <td class="text-end">
                                     <strong>${{ item.totalCost|number_format(2) }}</strong>
                                 </td>
                                 <td>{{ item.createdAt|date('d/m/Y') }}</td>
                                 <td class="text-center">
-                                    {{ btn.button('', 'outline-primary', 'bi-pencil', {'href': path('app_apu_edit', {id: item.id}), 'title': 'apu.edit'|trans, 'class':'btn-sm'}) }}
+                                    {% if is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN') %}
+                                        {{ btn.button('', 'outline-primary', 'bi-pencil', {'href': path('app_apu_edit', {id: item.id}), 'title': 'apu.edit'|trans, 'class':'btn-sm'}) }}
+                                    {% endif %}
                                     {{ btn.button('', 'outline-success', 'bi-file-earmark-excel', {'href': path('app_apu_export_excel', {id: item.id}), 'title': 'apu.export_excel'|trans, 'class':'btn-sm'}) }}
                                 </td>
                             </tr>

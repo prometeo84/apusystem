@@ -5,593 +5,646 @@
 
 {% block body %}
 <div class="container mt-4">
-    <style>
-        .apu-submit-floating { position: static; }
-        @media (max-width: 768px) {
-            .apu-submit-floating {
-                position: fixed !important;
-                left: 12px !important;
-                right: 12px !important;
-                bottom: 12px !important;
-                display: flex !important;
-                justify-content: flex-end !important;
-                gap: .5rem !important;
-                z-index: 2147483647 !important;
-                pointer-events: auto !important;
-            }
-            .apu-submit-floating .btn { pointer-events: auto !important; }
-            .main-content { padding-bottom: 180px !important; }
-        }
-    </style>
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1><i class="bi bi-calculator"></i> {{ 'apu.header'|trans }}</h1>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-calculator"></i> {{ 'apu.header'|trans }}</h1>
+    {% if templateId is defined and projectId is defined %}
+        {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_template_show', {'projectId': projectId, 'id': templateId})}) }}
+    {% else %}
         {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_apu_index')}) }}
-    </div>
+    {% endif %}
+</div>
 
-    <form method="POST" id="apuForm">
-        <input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
-        <div class="card mb-3">
-            <div class="card-header bg-primary text-white">
-                {{ 'apu.main_data'|trans }}
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="mb-3">
-                            <label class="form-label">{{ 'apu.column_description'|trans }}</label>
-                            <input type="text" class="form-control" name="description"
-                                   placeholder="{{ 'apu.example_description'|trans }}" required>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
-                            <label class="form-label">{{ 'apu.unit'|trans }}</label>
-                            <select class="form-select" name="unit" required>
-                                <option value="">{{ 'common.select'|trans }}</option>
-                                <option value="m²">{{ 'units.m2'|trans }}</option>
-                                <option value="m³">{{ 'units.m3'|trans }}</option>
-                                <option value="m">{{ 'units.m'|trans }}</option>
-                                <option value="kg">{{ 'units.kg'|trans }}</option>
-                                <option value="u">{{ 'units.u'|trans }}</option>
-                                <option value="GLB">{{ 'units.GLB'|trans }}</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+<form method="POST" id="apuForm">
+<input type="hidden" name="_token" value="{{ csrf_token('submit') }}">
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">K(H/U)</label>
-                            <input type="number" step="0.0001" class="form-control" name="khu" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Rend. u/h</label>
-                            <input type="number" step="0.0001" class="form-control" name="rendimiento_uh" required>
-                        </div>
-                    </div>
-                </div>
+{# ---------- DATOS PRINCIPALES ---------- #}
+<div class="card mb-3">
+    <div class="card-header bg-primary text-white">{{ 'apu.main_data'|trans }}</div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <label class="form-label">{{ 'apu.column_description'|trans }}</label>
+                <input type="text" class="form-control" name="description"
+                       placeholder="{{ 'apu.example_description'|trans }}" required>
             </div>
+            {# Unidad: hidden si viene del rubro, invisible si es standalone (default 'u') #}
+            <input type="hidden" name="unit" value="{{ rubroUnidad|default('u') }}">
         </div>
-
-        <!-- Sección EQUIPO -->
-        <div class="card mb-3">
-                <div class="card-header bg-warning">
-                <i class="bi bi-tools"></i> {{ 'apu.equipment'|trans }}
-                {# Sólo mostrar controles para añadir componentes a usuarios con permisos administrativos #}
-                {% if not (is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN')) %}
-                    {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addEquipmentRow()','class':'btn-sm float-end'}) }}
-                {% endif %}
-            </div>
-            <div class="card-body">
-                <table class="table table-sm" id="equipmentTable">
-                    <thead>
-                        <tr>
-                            <th style="width: 35%">{{ 'apu.col_description'|trans }}</th>
-                            <th style="width: 8%">{{ 'apu.col_number'|trans }}</th>
-                            <th style="width: 15%">{{ 'apu.col_rate'|trans }}</th>
-                            <th style="width: 12%" title="C = A×B">C $/h</th>
-                            <th style="width: 12%" title="Rendimiento u/h">Rend.</th>
-                            <th style="width: 10%" class="text-end" title="D = C×R">{{ 'apu.col_subtotal'|trans }}</th>
-                            <th style="width: 8%">{{ 'apu.actions'|trans }}</th>
-                        </tr>
-                    </thead>
-        <div class="card mb-3">
-                <div class="card-header bg-info text-white">
-                <i class="bi bi-people"></i> {{ 'apu.labor'|trans }}
-                {% if not (is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN')) %}
-                    {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addLaborRow()','class':'btn-sm float-end'}) }}
-                {% endif %}
-            </div>
-            <div class="card-body">
-                <table class="table table-sm" id="laborTable">
-                    <thead>
-                        <tr>
-                            <th style="width: 35%">{{ 'apu.col_description'|trans }}</th>
-                            <th style="width: 8%">{{ 'apu.col_number'|trans }}</th>
-                            <th style="width: 15%">{{ 'apu.col_jh'|trans }}</th>
-                            <th style="width: 12%" title="C = A×B">C $/h</th>
-                            <th style="width: 12%" title="Rendimiento u/h">Rend.</th>
-                            <th style="width: 10%" class="text-end" title="D = C×R">{{ 'apu.col_subtotal'|trans }}</th>
-                            <th style="width: 8%">{{ 'apu.actions'|trans }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Filas dinámicas -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Sección MATERIALES -->
-        <div class="card mb-3">
-                <div class="card-header bg-success text-white">
-                <i class="bi bi-box-seam"></i> {{ 'apu.materials'|trans }}
-                {% if not (is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN')) %}
-                    {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addMaterialRow()','class':'btn-sm float-end'}) }}
-                {% endif %}
-            </div>
-            <div class="card-body">
-                <table class="table table-sm" id="materialTable">
-                    <thead>
-                        <tr>
-                            <th style="width: 40%">{{ 'apu.col_description'|trans }}</th>
-                            <th style="width: 15%">{{ 'apu.col_unit'|trans }}</th>
-                            <th style="width: 15%">{{ 'apu.col_quantity'|trans }}</th>
-                            <th style="width: 15%">{{ 'apu.col_unit_price'|trans }}</th>
-                            <th style="width: 15%" class="text-end">{{ 'apu.col_subtotal'|trans }}</th>
-                            <th style="width: 10%">{{ 'apu.actions'|trans }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Filas dinámicas -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Sección TRANSPORTE -->
-        <div class="card mb-3">
-                <div class="card-header bg-secondary text-white">
-                <i class="bi bi-truck"></i> {{ 'apu.transport'|trans }}
-                {% if not (is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN')) %}
-                    {{ btn.button('buttons.add'|trans, 'light', 'bi-plus', {'type':'button','onclick':'addTransportRow()','class':'btn-sm float-end'}) }}
-                {% endif %}
-            </div>
-            <div class="card-body">
-                <table class="table table-sm" id="transportTable">
-                    <thead>
-                        <tr>
-                            <th style="width: 25%">{{ 'common.description'|trans }}</th>
-                            <th style="width: 10%">{{ 'apu.col_unit'|trans }}</th>
-                            <th style="width: 15%">{{ 'apu.col_quantity'|trans }}</th>
-                            <th style="width: 15%">{{ 'apu.col_dmt'|trans }}</th>
-                            <th style="width: 15%">{{ 'apu.col_rate_km'|trans }}</th>
-                            <th style="width: 10%" class="text-end">{{ 'apu.col_subtotal'|trans }}</th>
-                            <th style="width: 10%">{{ 'apu.actions'|trans }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Filas dinámicas -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Panel de Resumen de Costos -->
-        <div class="card mb-3 border-primary shadow-sm">
-            <div class="card-header bg-primary text-white fw-bold">
-                <i class="bi bi-calculator-fill"></i> {{ 'apu.cost_summary'|trans }}
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <table class="table table-sm mb-0">
-                            <tbody>
-                                <tr>
-                                    <td>{{ 'apu.subtotal_equipment'|trans }}</td>
-                                    <td class="text-end fw-semibold" id="summaryEquipment">$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>{{ 'apu.subtotal_labor'|trans }}</td>
-                                    <td class="text-end fw-semibold" id="summaryLabor">$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>{{ 'apu.subtotal_materials'|trans }}</td>
-                                    <td class="text-end fw-semibold" id="summaryMaterials">$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>{{ 'apu.subtotal_transport'|trans }}</td>
-                                    <td class="text-end fw-semibold" id="summaryTransport">$0.00</td>
-                                </tr>
-                                <tr class="table-primary">
-                                    <td><strong>{{ 'apu.total_direct_costs'|trans }}</strong></td>
-                                    <td class="text-end fw-bold fs-5" id="summaryTotal">$0.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-6">
-                        <table class="table table-sm mb-0">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <label class="form-label mb-0">{{ 'apu.utilidad_pct'|trans }}</label>
-                                    </td>
-                                    <td class="text-end" style="width: 45%">
-                                        <div class="input-group input-group-sm">
-                                              <input type="number" class="form-control text-end" id="utilidadPct"
-                                                  name="utilidad_pct" value="20" min="0" max="100" step="0.1" style="pointer-events: auto;">
-                                            <span class="input-group-text">%</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>{{ 'apu.precio_calculo'|trans }}</td>
-                                    <td class="text-end fw-semibold" id="summaryPrecioCalculo">$0.00</td>
-                                </tr>
-                                <tr class="table-success">
-                                    <td><strong>{{ 'apu.precio_ofertado'|trans }} (USD)</strong></td>
-                                    <td class="text-end">
-                                        <div class="input-group input-group-sm">
-                                            <span class="input-group-text">$</span>
-                                              <input type="number" class="form-control text-end fw-bold" id="precioOfertado"
-                                                  name="precio_ofertado" step="0.01" min="0" placeholder="0.00" style="pointer-events: auto;">
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-    </form>
-    <div class="d-flex gap-2 justify-content-end mt-3 apu-submit-floating">
-        {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_apu_index')}) }}
-        {{ btn.button('apu.save'|trans, 'primary', 'bi-save', {'type':'submit','form':'apuForm','class':'btn-gradient'}) }}
     </div>
 </div>
 
+{# ---------- RUBROS ---------- #}
+<div id="rubros-container">
+    {# Los rubros se agregan dinámicamente vía JS #}
+</div>
+
+<div class="mb-3">
+    <button type="button" class="btn btn-outline-primary" onclick="addRubro()">
+        <i class="bi bi-plus-circle"></i> {{ 'apu.add_rubro'|trans }}
+    </button>
+</div>
+
+{# ---------- PANEL DE TOTALES ---------- #}
+<div class="card mb-3 border-primary shadow-sm">
+    <div class="card-header bg-primary text-white fw-bold">
+        <i class="bi bi-calculator-fill"></i> {{ 'apu.cost_summary'|trans }}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-sm mb-0">
+                    <tbody>
+                        <tr>
+                            <td>{{ 'apu.subtotal_equipment'|trans }}</td>
+                            <td class="text-end fw-semibold" id="summaryEquipment">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'apu.subtotal_labor'|trans }}</td>
+                            <td class="text-end fw-semibold" id="summaryLabor">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'apu.subtotal_materials'|trans }}</td>
+                            <td class="text-end fw-semibold" id="summaryMaterials">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'apu.subtotal_transport'|trans }}</td>
+                            <td class="text-end fw-semibold" id="summaryTransport">$0.00</td>
+                        </tr>
+                        <tr class="table-primary">
+                            <td><strong>{{ 'apu.total_direct_costs'|trans }}</strong></td>
+                            <td class="text-end fw-bold fs-5" id="summaryTotal">$0.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-sm mb-0">
+                    <tbody>
+                        <tr>
+                            <td><label class="form-label mb-0">{{ 'apu.indirect_cost_pct'|trans|default('Costos Indirectos') }}</label></td>
+                            <td class="text-end" style="width:45%">
+        {# No agregar campos en Main Data cuando se crea desde plantilla. #}
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'apu.precio_calculo'|trans }}</td>
+                            <td class="text-end fw-semibold" id="summaryPrecioCalculo">$0.00</td>
+                        </tr>
+                        <tr class="table-success">
+                            <td><strong>{{ 'apu.precio_ofertado'|trans }} (USD)</strong></td>
+                            <td class="text-end">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control text-end fw-bold" id="precioOfertado"
+                                           name="precio_ofertado" step="0.01" min="0" placeholder="0.00">
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</form>
+
+<div class="d-flex gap-2 justify-content-end mt-3 mb-5">
+    {{ btn.button('buttons.back'|trans, 'secondary', 'bi-arrow-left', {'href': path('app_apu_index')}) }}
+    {{ btn.button('apu.save'|trans, 'primary', 'bi-save', {'type':'submit','form':'apuForm'}) }}
+</div>
+
+</div>{# /container #}
+
 <script>
-let equipmentIndex = 0;
-let laborIndex = 0;
-let materialIndex = 0;
-let transportIndex = 0;
-const selectPlaceholder = '{{ "common.select"|trans }}';
+// ============================================================
+// Catalog Data (injected from PHP controller)
+// ============================================================
+const catalogData = {{ catalog_data|json_encode|raw }};
+const itemsCatalog = {{ items_catalog|json_encode|raw }};
 
-function addEquipmentRow() {
-    const tbody = document.querySelector('#equipmentTable tbody');
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>
-            <select class="form-select form-select-sm catalog-select" name="equipment[${equipmentIndex}][id]" required></select>
-        </td>
-        <td><input type="number" class="form-control form-control-sm calc-equip" name="equipment[${equipmentIndex}][numero]" value="1" min="0" step="1" required></td>
-        <td><input type="number" step="0.01" class="form-control form-control-sm calc-equip" name="equipment[${equipmentIndex}][tarifa]" value="0" min="0" required></td>
-        <td><input type="number" step="0.0001" class="form-control form-control-sm" name="equipment[${equipmentIndex}][c_hora]" value="0" readonly tabindex="-1" style="background:#f8f9fa"></td>
-        <td><input type="number" step="0.0001" class="form-control form-control-sm calc-equip" name="equipment[${equipmentIndex}][rendimiento]" value="1" min="0" required></td>
-        <td class="fw-semibold text-end row-subtotal">$0.00</td>
-        <td>{{ btn.button('', 'danger', 'bi-trash', {'type':'button','onclick':'removeRow(this)','class':'btn-sm'}) }}</td>
-    `;
-    tbody.appendChild(row);
-    equipmentIndex++;
-    attachEquipInputListeners(row);
-    populateSelects();
-    calculateTotals();
-}
+// ============================================================
+// Rubro counter
+// ============================================================
+let rubroIndex = 0;
 
-function addLaborRow() {
-    const tbody = document.querySelector('#laborTable tbody');
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>
-            <select class="form-select form-select-sm catalog-select" name="labor[${laborIndex}][id]" required></select>
-        </td>
-        <td><input type="number" class="form-control form-control-sm calc-labor" name="labor[${laborIndex}][numero]" value="1" min="0" step="1" required></td>
-        <td><input type="number" step="0.0001" class="form-control form-control-sm calc-labor" name="labor[${laborIndex}][jor_hora]" value="0" min="0" required></td>
-        <td><input type="number" step="0.0001" class="form-control form-control-sm" name="labor[${laborIndex}][c_hora]" value="0" readonly tabindex="-1" style="background:#f8f9fa"></td>
-        <td><input type="number" step="0.0001" class="form-control form-control-sm calc-labor" name="labor[${laborIndex}][rendimiento]" value="1" min="0" required></td>
-        <td class="fw-semibold text-end row-subtotal">$0.00</td>
-        <td>{{ btn.button('', 'danger', 'bi-trash', {'type':'button','onclick':'removeRow(this)','class':'btn-sm'}) }}</td>
-    `;
-    tbody.appendChild(row);
-    laborIndex++;
-    attachLaborInputListeners(row);
-    populateSelects();
-    calculateTotals();
-}
+function addRubro(preData) {
+    const idx = rubroIndex++;
+    const container = document.getElementById('rubros-container');
+    const div = document.createElement('div');
+    div.className = 'card mb-3 rubro-card';
+    div.dataset.rubroIdx = idx;
 
-function addMaterialRow() {
-    const tbody = document.querySelector('#materialTable tbody');
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>
-            <select class="form-select form-select-sm catalog-select" name="materials[${materialIndex}][id]" required></select>
-        </td>
-        <td><input type="text" class="form-control form-control-sm" name="materials[${materialIndex}][unidad]" required></td>
-        <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="material" name="materials[${materialIndex}][cantidad]" value="0" min="0" required></td>
-        <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="material" name="materials[${materialIndex}][precio_unitario]" value="0" min="0" required></td>
-        <td class="fw-semibold text-end row-subtotal">$0.00</td>
-        <td>{{ btn.button('', 'danger', 'bi-trash', {'type':'button','onclick':'removeRow(this)','class':'btn-sm'}) }}</td>
-    `;
-    tbody.appendChild(row);
-    materialIndex++;
-    attachInputListeners(row);
-    populateSelects();
-    calculateTotals();
-}
+    const name   = preData?.name   || '';
+    const itemId = preData?.item_id || '';
 
-function addTransportRow() {
-    const tbody = document.querySelector('#transportTable tbody');
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>
-            <select class="form-select form-select-sm catalog-select" name="transport[${transportIndex}][id]" required></select>
-        </td>
-        <td><input type="text" class="form-control form-control-sm" name="transport[${transportIndex}][unidad]" required></td>
-        <td><input type="number" step="0.0001" class="form-control form-control-sm calc-input" data-section="transport" name="transport[${transportIndex}][cantidad]" value="0" min="0" required></td>
-        <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="transport" name="transport[${transportIndex}][dmt]" value="0" min="0" required></td>
-        <td><input type="number" step="0.01" class="form-control form-control-sm calc-input" data-section="transport" name="transport[${transportIndex}][tarifa_km]" value="0" min="0" required></td>
-        <td class="fw-semibold text-end row-subtotal">$0.00</td>
-        <td>{{ btn.button('', 'danger', 'bi-trash', {'type':'button','onclick':'removeRow(this)','class':'btn-sm'}) }}</td>
-    `;
-    tbody.appendChild(row);
-    transportIndex++;
-    attachInputListeners(row);
-    populateSelects();
-    calculateTotals();
-}
+    // Build items catalog options
+    let itemOptions = '<option value="">— {{ "apu.rubro_no_catalog"|trans }} —</option>';
+    itemsCatalog.forEach(it => {
+        const sel = (itemId && parseInt(itemId) === it.id) ? ' selected' : '';
+        itemOptions += `<option value="${it.id}"${sel}>${it.code} - ${it.name}</option>`;
+    });
 
-// Catalog loading/caching
-const catalogCache = {};
-async function loadCatalog(name) {
-    if (catalogCache[name]) return catalogCache[name];
-    try {
-        const res = await fetch(`/catalog/${name}/json`);
-        if (!res.ok) return [];
-        const data = await res.json();
-        catalogCache[name] = data;
-        return data;
-    } catch (e) {
-        return [];
-    }
-}
+    div.innerHTML = `
+    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-2 flex-grow-1">
+            <i class="bi bi-layers"></i>
+            <input type="text" class="form-control form-control-sm bg-secondary border-light text-white fw-semibold"
+                   name="rubros[${idx}][name]" value="${escHtml(name)}"
+                   placeholder="{{ 'apu.rubro_name_placeholder'|trans }}" required style="max-width:260px">
+            <select class="form-select form-select-sm" name="rubros[${idx}][item_id]"
+                    style="max-width:300px" onchange="onRubroItemChange(this,${idx})">
+                ${itemOptions}
+            </select>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-light ms-2" onclick="removeRubro(this)" title="{{ 'apu.remove_rubro'|trans }}">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label class="form-label small text-muted mb-1">{{ 'apu.unit'|trans }}</label>
+                <select class="form-select form-select-sm" name="rubros[${idx}][unit]">
+                    <option value="">{{ 'common.select'|trans }}</option>
+                    <option value="GLB"${preData?.unit==='GLB'?' selected':''}>GLB</option>
+                    <option value="h"${preData?.unit==='h'?' selected':''}>h</option>
+                    <option value="kg"${preData?.unit==='kg'?' selected':''}>kg</option>
+                    <option value="m"${preData?.unit==='m'?' selected':''}>m</option>
+                    <option value="m\u00b2"${preData?.unit==='m\u00b2'?' selected':''}>m\u00b2</option>
+                    <option value="m\u00b3"${preData?.unit==='m\u00b3'?' selected':''}>m\u00b3</option>
+                    <option value="t"${preData?.unit==='t'?' selected':''}>t</option>
+                    <option value="u"${preData?.unit==='u'?' selected':''}>u</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small text-muted mb-1">{{ 'apu.column_khu'|trans }}</label>
+                <input type="number" step="0.0001" class="form-control form-control-sm"
+                       name="rubros[${idx}][khu]" value="${preData?.khu||1}" min="0">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small text-muted mb-1">{{ 'apu.column_rend'|trans }}</label>
+                <input type="number" step="0.0001" class="form-control form-control-sm"
+                       name="rubros[${idx}][rendimiento_uh]" value="${preData?.rendimiento_uh||1}" min="0">
+            </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mb-3 p-2 bg-light rounded border">
+            <span class="text-muted small fw-semibold me-1">{{ 'apu.add_section'|trans }}:</span>
+            <button type="button" class="btn btn-outline-warning btn-sm" onclick="showRubroSection(${idx},'equipment')">
+                <i class="bi bi-tools"></i> {{ 'apu.equipment'|trans }}
+            </button>
+            <button type="button" class="btn btn-outline-info btn-sm" onclick="showRubroSection(${idx},'labor')">
+                <i class="bi bi-people"></i> {{ 'apu.labor'|trans }}
+            </button>
+            <button type="button" class="btn btn-outline-success btn-sm" onclick="showRubroSection(${idx},'materials')">
+                <i class="bi bi-box-seam"></i> {{ 'apu.materials'|trans }}
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="showRubroSection(${idx},'transport')">
+                <i class="bi bi-truck"></i> {{ 'apu.transport'|trans }}
+            </button>
+        </div>
 
-async function populateSelects() {
-    const selects = Array.from(document.querySelectorAll('select.catalog-select'));
-    for (const sel of selects) {
-        if (sel.dataset.populated) continue;
-        const n = sel.name;
-        let name = null;
-        if (n.includes('equipment[')) name = 'equipment';
-        else if (n.includes('labor[')) name = 'labor';
-        else if (n.includes('materials[')) name = 'material';
-        else if (n.includes('transport[')) name = 'transport';
-        if (!name) continue;
-        const items = await loadCatalog(name);
-        sel.innerHTML = `<option value="">${selectPlaceholder}</option>`;
-        items.forEach(it => {
-            const opt = document.createElement('option');
-            opt.value = it.id;
-            opt.textContent = (it.code ? it.code + ' — ' : '') + it.name + (it.unit ? (' ('+it.unit+')') : '');
-            sel.appendChild(opt);
+        <!-- Equipment section -->
+        <div class="rubro-section" id="rubro-${idx}-equipment" style="display:none">
+            <div class="card mb-2">
+                <div class="card-header bg-warning d-flex justify-content-between align-items-center py-1">
+                    <span><i class="bi bi-tools"></i> {{ 'apu.equipment'|trans }}</span>
+                    <div class="d-flex gap-1">
+                        <button type="button" class="btn btn-sm btn-light" onclick="addSectionRow(${idx},'equipment')"><i class="bi bi-plus"></i> {{ 'buttons.add'|trans }}</button>
+                        <button type="button" class="btn btn-sm btn-outline-dark" onclick="hideRubroSection(${idx},'equipment')"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                </div>
+                <div class="card-body p-1">
+                    <table class="table table-sm mb-0">
+                        <thead><tr>
+                            <th style="width:28%">{{ 'apu.col_description'|trans }}</th>
+                            <th style="width:8%">{{ 'apu.col_number'|trans }}</th>
+                            <th style="width:11%">{{ 'apu.col_rate'|trans }}</th>
+                            <th style="width:11%">{{ 'apu.col_c_hora'|trans }}</th>
+                            <th style="width:11%">{{ 'apu.column_rend'|trans }}</th>
+                            <th style="width:10%" class="text-end">{{ 'apu.col_subtotal'|trans }}</th>
+                            <th style="width:8%"></th>
+                        </tr></thead>
+                        <tbody id="rubro-${idx}-equipment-tbody"></tbody>
+                        <tfoot><tr class="table-warning fw-bold">
+                            <td colspan="5">{{ 'apu.subtotal_equipment'|trans }}</td>
+                            <td class="text-end" id="rubro-${idx}-equipment-total">$0.00</td>
+                            <td></td>
+                        </tr></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Labor section -->
+        <div class="rubro-section" id="rubro-${idx}-labor" style="display:none">
+            <div class="card mb-2">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center py-1">
+                    <span><i class="bi bi-people"></i> {{ 'apu.labor'|trans }}</span>
+                    <div class="d-flex gap-1">
+                        <button type="button" class="btn btn-sm btn-light" onclick="addSectionRow(${idx},'labor')"><i class="bi bi-plus"></i> {{ 'buttons.add'|trans }}</button>
+                        <button type="button" class="btn btn-sm btn-outline-light" onclick="hideRubroSection(${idx},'labor')"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                </div>
+                <div class="card-body p-1">
+                    <table class="table table-sm mb-0">
+                        <thead><tr>
+                            <th style="width:30%">{{ 'apu.col_description'|trans }}</th>
+                            <th style="width:8%">{{ 'apu.col_number'|trans }}</th>
+                            <th style="width:12%">{{ 'apu.col_jh'|trans }}</th>
+                            <th style="width:12%">{{ 'apu.col_c_hora'|trans }}</th>
+                            <th style="width:12%">{{ 'apu.column_rend'|trans }}</th>
+                            <th style="width:10%" class="text-end">{{ 'apu.col_subtotal'|trans }}</th>
+                            <th style="width:8%"></th>
+                        </tr></thead>
+                        <tbody id="rubro-${idx}-labor-tbody"></tbody>
+                        <tfoot><tr class="table-info fw-bold">
+                            <td colspan="5">{{ 'apu.subtotal_labor'|trans }}</td>
+                            <td class="text-end" id="rubro-${idx}-labor-total">$0.00</td>
+                            <td></td>
+                        </tr></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Materials section -->
+        <div class="rubro-section" id="rubro-${idx}-materials" style="display:none">
+            <div class="card mb-2">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center py-1">
+                    <span><i class="bi bi-box-seam"></i> {{ 'apu.materials'|trans }}</span>
+                    <div class="d-flex gap-1">
+                        <button type="button" class="btn btn-sm btn-light" onclick="addSectionRow(${idx},'materials')"><i class="bi bi-plus"></i> {{ 'buttons.add'|trans }}</button>
+                        <button type="button" class="btn btn-sm btn-outline-light" onclick="hideRubroSection(${idx},'materials')"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                </div>
+                <div class="card-body p-1">
+                    <table class="table table-sm mb-0">
+                        <thead><tr>
+                            <th style="width:40%">{{ 'apu.col_description'|trans }}</th>
+                            <th style="width:12%">{{ 'apu.col_unit'|trans }}</th>
+                            <th style="width:12%">{{ 'apu.col_quantity'|trans }}</th>
+                            <th style="width:12%">{{ 'apu.col_unit_price'|trans }}</th>
+                            <th style="width:12%" class="text-end">{{ 'apu.col_subtotal'|trans }}</th>
+                            <th style="width:8%"></th>
+                        </tr></thead>
+                        <tbody id="rubro-${idx}-materials-tbody"></tbody>
+                        <tfoot><tr class="table-success fw-bold">
+                            <td colspan="4">{{ 'apu.subtotal_materials'|trans }}</td>
+                            <td class="text-end" id="rubro-${idx}-materials-total">$0.00</td>
+                            <td></td>
+                        </tr></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transport section -->
+        <div class="rubro-section" id="rubro-${idx}-transport" style="display:none">
+            <div class="card mb-2">
+                <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center py-1">
+                    <span><i class="bi bi-truck"></i> {{ 'apu.transport'|trans }}</span>
+                    <div class="d-flex gap-1">
+                        <button type="button" class="btn btn-sm btn-light" onclick="addSectionRow(${idx},'transport')"><i class="bi bi-plus"></i> {{ 'buttons.add'|trans }}</button>
+                        <button type="button" class="btn btn-sm btn-outline-light" onclick="hideRubroSection(${idx},'transport')"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                </div>
+                <div class="card-body p-1">
+                    <table class="table table-sm mb-0">
+                        <thead><tr>
+                            <th style="width:35%">{{ 'common.description'|trans }}</th>
+                            <th style="width:10%">{{ 'apu.col_unit'|trans }}</th>
+                            <th style="width:10%">{{ 'apu.col_quantity'|trans }}</th>
+                            <th style="width:12%">{{ 'apu.col_dmt'|trans }}</th>
+                            <th style="width:13%">{{ 'apu.col_rate_km'|trans }}</th>
+                            <th style="width:12%" class="text-end">{{ 'apu.col_subtotal'|trans }}</th>
+                            <th style="width:8%"></th>
+                        </tr></thead>
+                        <tbody id="rubro-${idx}-transport-tbody"></tbody>
+                        <tfoot><tr class="table-secondary fw-bold">
+                            <td colspan="5">{{ 'apu.subtotal_transport'|trans }}</td>
+                            <td class="text-end" id="rubro-${idx}-transport-total">$0.00</td>
+                            <td></td>
+                        </tr></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subtotal Rubro -->
+        <div class="d-flex justify-content-end mt-2">
+            <span class="badge bg-dark fs-6">{{ 'apu.subtotal_rubro'|trans }}: <span id="rubro-${idx}-subtotal">$0.00</span></span>
+        </div>
+    </div>`;
+
+    container.appendChild(div);
+
+    // Pre-populate rows if preData is provided (for edit mode)
+    if (preData) {
+        ['equipment','labor','materials','transport'].forEach(sec => {
+            if (preData[sec] && preData[sec].length > 0) {
+                showRubroSection(idx, sec);
+                preData[sec].forEach(rowData => addSectionRow(idx, sec, rowData));
+            }
         });
-        sel.dataset.populated = '1';
     }
+
+    calculateGrandTotals();
+}
+
+function removeRubro(btn) {
+    btn.closest('.rubro-card').remove();
+    calculateGrandTotals();
+}
+
+function onRubroItemChange(sel, idx) {
+    const nameInput = sel.closest('.card-header').querySelector(`input[name="rubros[${idx}][name]"]`);
+    if (sel.value) {
+        const opt = sel.options[sel.selectedIndex];
+        nameInput.value = opt.text.split(' - ').slice(1).join(' - ') || opt.text;
+    }
+}
+
+function showRubroSection(idx, section) {
+    document.getElementById(`rubro-${idx}-${section}`).style.display = '';
+}
+function hideRubroSection(idx, section) {
+    document.getElementById(`rubro-${idx}-${section}`).style.display = 'none';
+}
+
+// ============================================================
+// Row counters per rubro per section
+// ============================================================
+const rowCounters = {};
+function nextRowIdx(rubroIdx, section) {
+    const key = `${rubroIdx}-${section}`;
+    rowCounters[key] = (rowCounters[key] || 0) + 1;
+    return rowCounters[key] - 1;
+}
+
+// ============================================================
+// Add a row to a rubro section
+// ============================================================
+function addSectionRow(rubroIdx, section, preData) {
+    const rowIdx = nextRowIdx(rubroIdx, section);
+    const tbody = document.getElementById(`rubro-${rubroIdx}-${section}-tbody`);
+    const row = document.createElement('tr');
+    const prefix = `rubros[${rubroIdx}][${section}][${rowIdx}]`;
+
+    if (section === 'equipment') {
+        row.innerHTML = buildEquipmentRow(prefix, preData);
+    } else if (section === 'labor') {
+        row.innerHTML = buildLaborRow(prefix, preData);
+    } else if (section === 'materials') {
+        row.innerHTML = buildMaterialRow(prefix, preData);
+    } else if (section === 'transport') {
+        row.innerHTML = buildTransportRow(prefix, preData);
+    }
+
+    tbody.appendChild(row);
+    populateRowSelects(row, section, preData);
+    attachRowListeners(row, rubroIdx, section);
+    recalcRow(row, section);
+    calculateGrandTotals();
+}
+
+// ============================================================
+// Row HTML builders
+// ============================================================
+function buildEquipmentRow(prefix, d) {
+    return `
+    <td><select class="form-select form-select-sm" name="${prefix}[id]" required></select></td>
+    <td><input type="number" class="form-control form-control-sm row-calc" name="${prefix}[numero]" value="${d?.numero||1}" min="0" step="1" required></td>
+    <td><input type="number" step="0.0001" class="form-control form-control-sm row-calc" name="${prefix}[tarifa]" value="${d?.tarifa||0}" min="0" required></td>
+    <td class="fw-semibold text-end row-chora-eq">$0.00</td>
+    <td><input type="number" step="0.0001" class="form-control form-control-sm row-calc" name="${prefix}[rend_uh]" value="${d?.rend_uh||1}" min="0" required></td>
+    <td class="fw-semibold text-end row-subtotal">$0.00</td>
+    <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)"><i class="bi bi-trash"></i></button></td>`;
+}
+function buildLaborRow(prefix, d) {
+    return `
+    <td><select class="form-select form-select-sm" name="${prefix}[id]" required></select></td>
+    <td><input type="number" class="form-control form-control-sm row-calc" name="${prefix}[numero]" value="${d?.numero||1}" min="0" step="1" required></td>
+    <td><input type="number" step="0.0001" class="form-control form-control-sm row-calc" name="${prefix}[jor_hora]" value="${d?.jor_hora||0}" min="0" required></td>
+    <td class="fw-semibold text-end row-chora">$0.00</td>
+    <td><input type="number" step="0.0001" class="form-control form-control-sm row-calc" name="${prefix}[rend_uh]" value="${d?.rend_uh||1}" min="0" required></td>
+    <td class="fw-semibold text-end row-subtotal">$0.00</td>
+    <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)"><i class="bi bi-trash"></i></button></td>`;
+}
+function buildMaterialRow(prefix, d) {
+    const unitOpts = ['GLB','h','kg','m','m²','m³','t','u'].map(u =>
+        `<option value="${u}"${d?.unidad===u?' selected':''}>${u}</option>`).join('');
+    return `
+    <td><select class="form-select form-select-sm" name="${prefix}[id]" required></select></td>
+    <td><select class="form-select form-select-sm" name="${prefix}[unidad]"><option value="">—</option>${unitOpts}</select></td>
+    <td><input type="number" step="0.0001" class="form-control form-control-sm row-calc" name="${prefix}[cantidad]" value="${d?.cantidad||0}" min="0" required></td>
+    <td><input type="number" step="0.0001" class="form-control form-control-sm row-calc" name="${prefix}[precio_unitario]" value="${d?.precio_unitario||0}" min="0" required></td>
+    <td class="fw-semibold text-end row-subtotal">$0.00</td>
+    <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)"><i class="bi bi-trash"></i></button></td>`;
+}
+function buildTransportRow(prefix, d) {
+    return `
+    <td><select class="form-select form-select-sm" name="${prefix}[id]" required></select></td>
+    <td><select class="form-select form-select-sm" name="${prefix}[unidad]">
+        <option value="">—</option>
+        <option value="km"${d?.unidad==='km'?' selected':''}>km</option>
+        <option value="m³"${d?.unidad==='m³'?' selected':''}>m³</option>
+        <option value="t"${d?.unidad==='t'?' selected':''}>t</option>
+        <option value="u"${d?.unidad==='u'?' selected':''}>u</option>
+    </select></td>
+    <td><input type="number" step="0.0001" class="form-control form-control-sm row-calc" name="${prefix}[cantidad]" value="${d?.cantidad||0}" min="0"></td>
+    <td><input type="number" step="0.0001" class="form-control form-control-sm row-calc" name="${prefix}[dmt]" value="${d?.dmt||0}" min="0"></td>
+    <td><input type="number" step="0.0001" class="form-control form-control-sm row-calc" name="${prefix}[tarifa_km]" value="${d?.tarifa_km||0}" min="0"></td>
+    <td class="fw-semibold text-end row-subtotal">$0.00</td>
+    <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)"><i class="bi bi-trash"></i></button></td>`;
+}
+
+// ============================================================
+// Populate selects for a single row
+// ============================================================
+function populateRowSelects(row, section, preData) {
+    const sel = row.querySelector('select[name$="[id]"]');
+    if (!sel) return;
+
+    let items = [];
+    if (section === 'equipment') items = catalogData.equipment || [];
+    else if (section === 'labor')    items = catalogData.labor    || [];
+    else if (section === 'materials')items = catalogData.material || [];
+    else if (section === 'transport')items = catalogData.transport|| [];
+
+    sel.innerHTML = '<option value="">— {{ "common.select"|trans }} —</option>';
+    items.forEach(it => {
+        const opt = document.createElement('option');
+        opt.value = it.id;
+        opt.textContent = `${it.code} - ${it.name}`;
+        if (preData && preData.id && parseInt(preData.id) === it.id) opt.selected = true;
+        sel.appendChild(opt);
+    });
+}
+
+// ============================================================
+// Row listeners
+// ============================================================
+function attachRowListeners(row, rubroIdx, section) {
+    row.querySelectorAll('.row-calc, select[name$="[id]"]').forEach(input => {
+        input.addEventListener('input', () => {
+            recalcRow(row, section);
+            calculateGrandTotals();
+        });
+        input.addEventListener('change', () => {
+            recalcRow(row, section);
+            calculateGrandTotals();
+        });
+    });
+}
+
+function recalcRow(row, section) {
+    const subtotalCell = row.querySelector('.row-subtotal');
+    if (!subtotalCell) return;
+    let val = 0;
+    const v = n => parseFloat(row.querySelector(`[name$="[${n}]"]`)?.value || 0);
+    if (section === 'equipment') {
+        const cHoraEq = v('numero') * v('tarifa');
+        const cHoraEqCell = row.querySelector('.row-chora-eq');
+        if (cHoraEqCell) cHoraEqCell.textContent = '$' + cHoraEq.toFixed(2);
+        const rend = v('rend_uh');
+        val = cHoraEq * (rend > 0 ? rend : 1);
+    } else if (section === 'labor') {
+        const cHora = v('numero') * v('jor_hora');
+        const cHoraCell = row.querySelector('.row-chora');
+        if (cHoraCell) cHoraCell.textContent = '$' + cHora.toFixed(2);
+        const rend = v('rend_uh');
+        val = cHora * (rend > 0 ? rend : 1);
+    } else if (section === 'materials') {
+        val = v('cantidad') * v('precio_unitario');
+    } else if (section === 'transport') {
+        val = v('cantidad') * v('dmt') * v('tarifa_km');
+    }
+    subtotalCell.textContent = '$' + val.toFixed(2);
 }
 
 function removeRow(btn) {
-    btn.closest('tr').remove();
-    calculateTotals();
+    const row = btn.closest('tr');
+    const tbody = row.closest('tbody');
+    row.remove();
+    // Find rubro card and section to update totals
+    const sectionDiv = tbody.closest('.rubro-section');
+    const rubroCard  = sectionDiv?.closest('.rubro-card');
+    if (rubroCard) calculateGrandTotals();
 }
 
-function attachEquipInputListeners(row) {
-    row.querySelectorAll('.calc-equip').forEach(input => {
-        input.addEventListener('input', () => { updateEquipRow(row); calculateTotals(); });
-    });
-}
-function updateEquipRow(row) {
-    const n = parseFloat(row.querySelector('[name*="[numero]"]')?.value) || 0;
-    const b = parseFloat(row.querySelector('[name*="[tarifa]"]')?.value) || 0;
-    const r = parseFloat(row.querySelector('[name*="[rendimiento]"]')?.value) || 1;
-    const c = n * b;
-    const d = c * r;
-    const cInput = row.querySelector('[name*="[c_hora]"]');
-    if (cInput) cInput.value = c.toFixed(4);
-    const cell = row.querySelector('.row-subtotal');
-    if (cell) cell.textContent = '$' + d.toFixed(2);
-}
+// ============================================================
+// Grand total calculation
+// ============================================================
+function calculateGrandTotals() {
+    let totalEquip = 0, totalLabor = 0, totalMat = 0, totalTrans = 0;
 
-function attachLaborInputListeners(row) {
-    row.querySelectorAll('.calc-labor').forEach(input => {
-        input.addEventListener('input', () => { updateLaborRow(row); calculateTotals(); });
-    });
-}
-function updateLaborRow(row) {
-    const n = parseFloat(row.querySelector('[name*="[numero]"]')?.value) || 0;
-    const b = parseFloat(row.querySelector('[name*="[jor_hora]"]')?.value) || 0;
-    const r = parseFloat(row.querySelector('[name*="[rendimiento]"]')?.value) || 1;
-    const c = n * b;
-    const d = c * r;
-    const cInput = row.querySelector('[name*="[c_hora]"]');
-    if (cInput) cInput.value = c.toFixed(4);
-    const cell = row.querySelector('.row-subtotal');
-    if (cell) cell.textContent = '$' + d.toFixed(2);
-}
+    document.querySelectorAll('.rubro-card').forEach(card => {
+        const idx = card.dataset.rubroIdx;
+        let rubroTotal = 0;
 
-function attachInputListeners(row) {
-    row.querySelectorAll('.calc-input').forEach(input => {
-        input.addEventListener('input', () => {
-            updateRowSubtotal(row);
-            calculateTotals();
+        // equipment
+        let sectionTotal = 0;
+        card.querySelectorAll(`#rubro-${idx}-equipment-tbody .row-subtotal`).forEach(td => {
+            sectionTotal += parseFloat(td.textContent.replace('$','')) || 0;
         });
+        setEl(`rubro-${idx}-equipment-total`, sectionTotal);
+        totalEquip  += sectionTotal;
+        rubroTotal  += sectionTotal;
+
+        // labor
+        sectionTotal = 0;
+        card.querySelectorAll(`#rubro-${idx}-labor-tbody .row-subtotal`).forEach(td => {
+            sectionTotal += parseFloat(td.textContent.replace('$','')) || 0;
+        });
+        setEl(`rubro-${idx}-labor-total`, sectionTotal);
+        totalLabor  += sectionTotal;
+        rubroTotal  += sectionTotal;
+
+        // materials
+        sectionTotal = 0;
+        card.querySelectorAll(`#rubro-${idx}-materials-tbody .row-subtotal`).forEach(td => {
+            sectionTotal += parseFloat(td.textContent.replace('$','')) || 0;
+        });
+        setEl(`rubro-${idx}-materials-total`, sectionTotal);
+        totalMat    += sectionTotal;
+        rubroTotal  += sectionTotal;
+
+        // transport
+        sectionTotal = 0;
+        card.querySelectorAll(`#rubro-${idx}-transport-tbody .row-subtotal`).forEach(td => {
+            sectionTotal += parseFloat(td.textContent.replace('$','')) || 0;
+        });
+        setEl(`rubro-${idx}-transport-total`, sectionTotal);
+        totalTrans  += sectionTotal;
+        rubroTotal  += sectionTotal;
+
+        setEl(`rubro-${idx}-subtotal`, rubroTotal);
     });
+
+    const direct = totalEquip + totalLabor + totalMat + totalTrans;
+    const indirectPct = parseFloat(document.getElementById('indirectCostPct')?.value || 0);
+    const utilidadPct = parseFloat(document.getElementById('utilidadPct')?.value || 0);
+    const precioCalculo = direct * (1 + indirectPct/100) * (1 + utilidadPct/100);
+
+    setEl('summaryEquipment', totalEquip);
+    setEl('summaryLabor', totalLabor);
+    setEl('summaryMaterials', totalMat);
+    setEl('summaryTransport', totalTrans);
+    setEl('summaryTotal', direct);
+    setEl('summaryPrecioCalculo', precioCalculo);
+    const ofertadoInput = document.getElementById('precioOfertado');
+    if (ofertadoInput) ofertadoInput.value = precioCalculo.toFixed(2);
 }
 
-function updateRowSubtotal(row) {
-    const inputs = row.querySelectorAll('.calc-input');
-    let subtotal = 0;
-    if (inputs.length >= 2) {
-        const vals = Array.from(inputs).map(i => parseFloat(i.value) || 0);
-        subtotal = vals[0] * vals[1];
-        if (inputs.length === 3) subtotal = vals[0] * vals[1] * vals[2]; // transport: cantidad * dmt * tarifa_km
-    }
-    const subtotalCell = row.querySelector('.row-subtotal');
-    if (subtotalCell) subtotalCell.textContent = '$' + subtotal.toFixed(2);
-    const hiddenInput = row.querySelector('.row-hidden-total');
-    if (hiddenInput) hiddenInput.value = subtotal.toFixed(4);
+function setEl(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '$' + (typeof val === 'number' ? val.toFixed(2) : val);
 }
 
-function sectionTotal(tableId) {
-    let total = 0;
-    document.querySelectorAll(`#${tableId} tbody .row-subtotal`).forEach(cell => {
-        total += parseFloat(cell.textContent.replace('$', '')) || 0;
-    });
-    return total;
-}
-
-function calculateTotals() {
-    const eq = sectionTotal('equipmentTable');
-    const lb = sectionTotal('laborTable');
-    const mt = sectionTotal('materialTable');
-    const tr = sectionTotal('transportTable');
-    const total = eq + lb + mt + tr;
-    const utilidad = parseFloat(document.getElementById('utilidadPct').value) || 0;
-    const precioCalculo = total * (1 + utilidad / 100);
-
-    document.getElementById('summaryEquipment').textContent = '$' + eq.toFixed(2);
-    document.getElementById('summaryLabor').textContent = '$' + lb.toFixed(2);
-    document.getElementById('summaryMaterials').textContent = '$' + mt.toFixed(2);
-    document.getElementById('summaryTransport').textContent = '$' + tr.toFixed(2);
-    document.getElementById('summaryTotal').textContent = '$' + total.toFixed(2);
-    document.getElementById('summaryPrecioCalculo').textContent = '$' + precioCalculo.toFixed(2);
-
-    // Sugerir precio ofertado = precio de cálculo redondeado
-    const precioOfertadoInput = document.getElementById('precioOfertado');
-    if (!precioOfertadoInput.dataset.manuallySet) {
-        precioOfertadoInput.value = precioCalculo.toFixed(2);
-    }
-}
-
-document.getElementById('utilidadPct').addEventListener('input', calculateTotals);
-document.getElementById('precioOfertado').addEventListener('input', function() {
-    this.dataset.manuallySet = '1';
-});
-
-// Agregar al menos una fila inicial en cada sección
-addEquipmentRow();
-addLaborRow();
-addMaterialRow();
-addTransportRow();
-
-// Move floating submit container to body to avoid stacking-context overlay issues
-document.addEventListener('DOMContentLoaded', function() {
-    try {
-        const el = document.querySelector('.apu-submit-floating');
-        if (el && el.parentElement && el.parentElement.tagName.toLowerCase() !== 'body') {
-            document.body.appendChild(el);
-        }
-    } catch (e) {
-        console.error('move submit to body failed', e);
-    }
-});
-
-// Disable pointer-events on elements that overlap the floating submit area on mobile
+// ============================================================
+// Decimal guard: solo permite dígitos y punto en inputs numéricos
+// ============================================================
 (function() {
-    let disabled = [];
-    function clearDisabled() {
-        disabled.forEach(el => {
-            try { el.style.pointerEvents = el.dataset._oldPointer || ''; delete el.dataset._oldPointer; } catch(e){}
-        });
-        disabled = [];
-    }
-    function disableOverlapping() {
-        clearDisabled();
-        if (window.innerWidth > 768) return;
-        const btn = document.querySelector('.apu-submit-floating');
-        if (!btn) return;
-        const rect = btn.getBoundingClientRect();
-        const cols = 3, rows = 2;
-        const seen = new Set();
-        for (let i=0;i<cols;i++){
-            for (let j=0;j<rows;j++){
-                const px = Math.round(rect.left + (i+0.5)*(rect.width/cols));
-                const py = Math.round(rect.top + (j+0.5)*(rect.height/rows));
-                document.elementsFromPoint(px, py).forEach(el => {
-                    if (!el || el === btn) return;
-                    if (seen.has(el)) return; seen.add(el);
-                    try {
-                        const cs = window.getComputedStyle(el);
-                        if (cs.pointerEvents !== 'none') {
-                            el.dataset._oldPointer = el.style.pointerEvents || '';
-                            el.style.pointerEvents = 'none';
-                            disabled.push(el);
-                        }
-                    } catch(e){}
-                });
-            }
-        }
-    }
-    // Expose to window so event handlers can call it synchronously before the click
-    window._apuClearDisabled = clearDisabled;
-    window._apuDisableOverlapping = disableOverlapping;
-    window.addEventListener('resize', disableOverlapping);
-    document.addEventListener('DOMContentLoaded', function(){ setTimeout(disableOverlapping, 50); });
-    // Run repeatedly for a short period on mobile to catch late-added elements
-    document.addEventListener('DOMContentLoaded', function(){
-        if (window.innerWidth > 768) return;
-        let runs = 0;
-        const tid = setInterval(function(){
-            try { disableOverlapping(); } catch(e){}
-            runs++;
-            if (runs > 25) clearInterval(tid);
-        }, 200);
-        setTimeout(function(){ try{ clearInterval(tid); }catch(e){} }, 6000);
-    });
-    // Attach immediate handlers to the floating submit button so pointer-events are cleared right before interaction
-    document.addEventListener('DOMContentLoaded', function(){
-        const btn = document.querySelector('.apu-submit-floating');
-        if (!btn) return;
-        btn.addEventListener('pointerdown', function(){ try { window._apuDisableOverlapping(); } catch(e){} });
-        btn.addEventListener('touchstart', function(){ try { window._apuDisableOverlapping(); } catch(e){} });
-        btn.addEventListener('pointerup', function(){ setTimeout(window._apuClearDisabled, 300); });
-        btn.addEventListener('touchend', function(){ setTimeout(window._apuClearDisabled, 300); });
-    });
+    // Bloquea teclas no permitidas en inputs type=number
+    document.addEventListener('keydown', function(e) {
+        if (e.target.tagName !== 'INPUT' || e.target.type !== 'number') return;
+        // Permitir: Backspace, Tab, Enter, Escape, Delete, flechas, Home, End
+        if ([8,9,13,27,46,35,36,37,38,39,40].includes(e.keyCode)) return;
+        // Permitir: Ctrl/Cmd + A/C/V/X
+        if ((e.ctrlKey || e.metaKey) && [65,67,86,88].includes(e.keyCode)) return;
+        // Bloquear cualquier tecla que no sea dígito ni punto
+        if (!/^[0-9.]$/.test(e.key)) { e.preventDefault(); }
+    }, true);
+
+    // Sanitiza el valor pegado o autocompletado (elimina todo excepto dígitos y un solo punto)
+    document.addEventListener('input', function(e) {
+        if (e.target.tagName !== 'INPUT' || e.target.type !== 'number') return;
+        const raw = e.target.value;
+        // Si el navegador filtra bien, el value ya es numérico; si no, limpiarlo
+        const cleaned = raw.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+        if (cleaned !== raw) e.target.value = cleaned;
+    }, true);
 })();
 
-    // Add a body class on mobile to hide interfering headers/buttons while floating submit is visible
-    (function(){
-        function updateBodyClass() {
-            if (window.innerWidth <= 768) document.body.classList.add('apu-floating-active');
-            else document.body.classList.remove('apu-floating-active');
-        }
-        window.addEventListener('resize', updateBodyClass);
-        document.addEventListener('DOMContentLoaded', function(){ updateBodyClass(); });
-    })();
+// ============================================================
+// Utility
+// ============================================================
+function escHtml(str) {
+    const d = document.createElement('div');
+    d.appendChild(document.createTextNode(str));
+    return d.innerHTML;
+}
+
+// Watch indirect/utility changes
+document.addEventListener('DOMContentLoaded', function() {
+    ['indirectCostPct','utilidadPct'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', calculateGrandTotals);
+    });
+});
 </script>
-
-    <style>
-    /* Mobile: hide card headers and inline add-row buttons that intercepted clicks in tests */
-    @media (max-width: 768px) {
-        body.apu-floating-active .card-header { display: none !important; }
-        body.apu-floating-active .btn.btn-light.float-end { display: none !important; }
-    }
-    </style>
-
-    <style>
-    /* Ensure floating submit is fixed and on top of everything */
-    .apu-submit-floating {
-        position: fixed !important;
-        bottom: 16px !important;
-        right: 16px !important;
-        z-index: 2147483647 !important;
-        pointer-events: auto !important;
-    }
-    </style>
-    </style>
 {% endblock %}
