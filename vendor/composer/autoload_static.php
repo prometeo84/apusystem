@@ -172,6 +172,7 @@ class ComposerStaticInitafc009a0100de63fee76e7c3bc2876ec
             'Symfony\\Component\\PasswordHasher\\' => 33,
             'Symfony\\Component\\OptionsResolver\\' => 34,
             'Symfony\\Component\\Mime\\' => 23,
+            'Symfony\\Component\\Mailer\\Bridge\\Brevo\\' => 38,
             'Symfony\\Component\\Mailer\\' => 25,
             'Symfony\\Component\\Lock\\' => 23,
             'Symfony\\Component\\HttpKernel\\' => 29,
@@ -461,6 +462,10 @@ class ComposerStaticInitafc009a0100de63fee76e7c3bc2876ec
         'Symfony\\Component\\Mime\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/mime',
+        ),
+        'Symfony\\Component\\Mailer\\Bridge\\Brevo\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/symfony/brevo-mailer',
         ),
         'Symfony\\Component\\Mailer\\' =>
         array (

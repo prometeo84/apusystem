@@ -1,3 +1,10 @@
+<IfModule mod_env.c>
+  SetEnv TMPDIR "/home/vol6_6/infinityfree.com/if0_41759246/htdocs/tmp"
+</IfModule>
+
+# Forzar directorio de sesiones PHP a un path escribible del proyecto
+# LiteSpeed procesa php_value directamente sin necesitar IfModule
+php_value session.save_path "/home/vol6_6/infinityfree.com/if0_41759246/htdocs/tmp"
 # ===========================================================================
 # SYMFONY REWRITE RULES
 # ===========================================================================

@@ -3,22 +3,25 @@
 namespace App\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CronController extends AbstractController
 {
     private ManagerRegistry $doctrine;
     private ?string $apiKey;
+    private KernelInterface $kernel;
 
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct(ManagerRegistry $doctrine, KernelInterface $kernel)
     {
         $this->doctrine = $doctrine;
+        $this->kernel = $kernel;
         $this->apiKey = $_ENV['CRON_JOB_API_KEY'] ?? getenv('CRON_JOB_API_KEY') ?: null;
         // If no env var present (e.g., webserver didn't load .env), try to read .env file in project root
         if (!$this->apiKey) {
@@ -115,9 +118,8 @@ class CronController extends AbstractController
         // run requested jobs via Console Application to reuse commands
         try {
             // Prefer running via ConsoleApplication when kernel service is available.
-            if ($this->container->has('kernel')) {
-                $kernel = $this->container->get('kernel');
-                $application = new ConsoleApplication($kernel);
+            if (true) {
+                $application = new Application($this->kernel);
                 $application->setAutoExit(false);
 
                 foreach ($jobsToRun as $job) {

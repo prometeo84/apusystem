@@ -22,6 +22,7 @@
         "phpoffice/phpspreadsheet": "^2.0",
         "pragmarx/google2fa": "^8.0",
         "pragmarx/google2fa-qrcode": "^3.0",
+        "symfony/brevo-mailer": "7.2.*",
         "symfony/cache": "7.2.*",
         "symfony/console": "7.2.*",
         "symfony/dotenv": "7.2.*",
