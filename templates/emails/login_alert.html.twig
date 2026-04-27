@@ -21,34 +21,34 @@
 <body>
 <div class="wrap">
   <div class="header">
-    <h1>🔐 Nuevo inicio de sesión</h1>
+    <h1>{{ 'email.login_alert.title'|trans }}</h1>
   </div>
   <div class="body">
-    <p class="greeting">Hola <strong>{{ user.getFullName() }}</strong>,</p>
-    <p style="color:#374151;margin-bottom:16px;">Se ha detectado un nuevo inicio de sesión en tu cuenta de <strong>APU System</strong>.</p>
+    <p class="greeting"><strong>{{ 'email.login_alert.greeting'|trans({'%name%': user.getFullName()}) }}</strong></p>
+    <p style="color:#374151;margin-bottom:16px;">{{ 'email.login_alert.body'|trans }}</p>
     <div class="info-grid">
       <div class="info-item" style="grid-column:1/-1">
-        <div class="label">Fecha y hora</div>
+        <div class="label">{{ 'email.login_alert.label_datetime'|trans }}</div>
         <div class="value">{{ dateTime|date('d/m/Y H:i:s') }} (UTC)</div>
       </div>
       <div class="info-item">
-        <div class="label">Dirección IP</div>
+        <div class="label">{{ 'email.login_alert.label_ip'|trans }}</div>
         <div class="value">{{ ip }}</div>
       </div>
       <div class="info-item">
-        <div class="label">Correo electrónico</div>
+        <div class="label">{{ 'email.login_alert.label_email'|trans }}</div>
         <div class="value">{{ user.getEmail() }}</div>
       </div>
       <div class="info-item" style="grid-column:1/-1">
-        <div class="label">Navegador / Dispositivo</div>
+        <div class="label">{{ 'email.login_alert.label_device'|trans }}</div>
         <div class="value">{{ userAgent }}</div>
       </div>
     </div>
     <div class="notice">
-      Si no fuiste tú, cambia tu contraseña inmediatamente y contacta al administrador del sistema.
+      {{ 'email.login_alert.notice'|trans }}
     </div>
   </div>
-  <div class="footer">APU System · Notificación de seguridad automática</div>
+  <div class="footer">{{ 'email.login_alert.footer'|trans }}</div>
 </div>
 </body>
 </html>

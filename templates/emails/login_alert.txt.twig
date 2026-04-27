@@ -1,14 +1,14 @@
-APU System - Nuevo inicio de sesión detectado
+{{ 'email.login_alert.txt_subject'|trans }}
 
-Hola {{ user.getFullName() }},
+{{ 'email.login_alert.greeting'|trans({'%name%': user.getFullName()}) }}
 
-Se ha detectado un nuevo inicio de sesión en tu cuenta de APU System.
+{{ 'email.login_alert.body'|trans }}
 
-Fecha y hora : {{ dateTime|date('d/m/Y H:i:s') }} (UTC)
-Dirección IP : {{ ip }}
-Email        : {{ user.getEmail() }}
-Dispositivo  : {{ userAgent }}
+{{ 'email.login_alert.txt_datetime'|trans({'%datetime%': dateTime|date('d/m/Y H:i:s')}) }}
+{{ 'email.login_alert.txt_ip'|trans({'%ip%': ip}) }}
+{{ 'email.login_alert.txt_email'|trans({'%email%': user.getEmail()}) }}
+{{ 'email.login_alert.txt_device'|trans({'%device%': userAgent}) }}
 
-Si no fuiste tú, cambia tu contraseña inmediatamente y contacta al administrador del sistema.
+{{ 'email.login_alert.txt_notice'|trans }}
 
-— APU System · Notificación de seguridad automática
+{{ 'email.login_alert.txt_footer'|trans }}

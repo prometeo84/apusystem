@@ -27,20 +27,20 @@
 <body>
 <div class="wrap">
   <div class="header">
-    <h1>⚠️ Alerta de límite de recursos</h1>
+    <h1>{{ 'email.limit_alert.title'|trans }}</h1>
   </div>
   <div class="body">
-    <p class="greeting">Hola <strong>{{ user.getFullName() }}</strong>,</p>
+    <p class="greeting"><strong>{{ 'email.limit_alert.greeting'|trans({'%name%': user.getFullName()}) }}</strong></p>
     <p style="color:#374151;margin-bottom:20px;">
-      La cuenta <strong>{{ tenant.getName() }}</strong> está alcanzando los límites de su plan.
+      {{ 'email.limit_alert.body'|trans({'%tenant%': '<strong>' ~ tenant.getName() ~ '</strong>'})|raw }}
     </p>
 
     {% for alert in alerts %}
       {% set isCritical = alert.percent >= 100 %}
       {% set resourceLabel = {
-        'projects': 'Proyectos',
-        'users':    'Usuarios',
-        'apus':     'APUs'
+        'projects': 'email.limit_alert.resource_projects'|trans,
+        'users':    'email.limit_alert.resource_users'|trans,
+        'apus':     'email.limit_alert.resource_apus'|trans
       }[alert.resource] ?? alert.resource %}
       <div class="alert-row{{ isCritical ? ' critical' : '' }}">
         <div>
@@ -55,10 +55,10 @@
     {% endfor %}
 
     <div class="notice">
-      Por favor contacta al administrador del sistema para ampliar los límites de tu plan si necesitas continuar creando recursos.
+      {{ 'email.limit_alert.notice'|trans }}
     </div>
   </div>
-  <div class="footer">APU System · Notificación automática de límites</div>
+  <div class="footer">{{ 'email.limit_alert.footer'|trans }}</div>
 </div>
 </body>
 </html>
