@@ -172,16 +172,18 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             return new RedirectResponse($this->router->generate('app_2fa_verify'));
         }
 
-        // Marcar 2FA como verificado (ya que no está habilitado)
-        $request->getSession()->set('2fa_verified', true);
-
-        // Registrar timestamp de autenticación completa
-        $request->getSession()->set('last_full_auth', (new \DateTimeImmutable())->getTimestamp());
-
-        // Si es superadmin y hay un email pendiente, redirigir a verificación de email
+        // Si es superadmin y existe un código de verificación por email pendiente,
+        // NO marcar la sesión como totalmente autenticada todavía. Se marcará
+        // `2fa_verified` / `last_full_auth` únicamente cuando ambas verificaciones
+        // (2FA y email) hayan sido completadas para evitar bypass navegando a /.
         if ($isSuper && $request->getSession()->get('superadmin_email_code_hash')) {
             return new RedirectResponse($this->router->generate('app_superadmin_verify_email'));
         }
+
+        // Marcar 2FA como verificado (ya que no está habilitado) y registrar
+        // timestamp de autenticación completa.
+        $request->getSession()->set('2fa_verified', true);
+        $request->getSession()->set('last_full_auth', (new \DateTimeImmutable())->getTimestamp());
 
         // Redirigir al dashboard
         return new RedirectResponse($this->router->generate('app_dashboard'));
