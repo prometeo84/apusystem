@@ -161,23 +161,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
                         ]);
 
                     $this->mailer->send($templated);
-                    // Log destination when debugging or explicitly enabled
-                    if (getenv('APP_DEBUG') === '1' || getenv('LOG_SUPERADMIN_EMAIL') === '1') {
-                        try {
-                            $this->securityLogger->log('superadmin_email_sent', 'INFO', $user, ['to' => $user->getEmail()]);
-                        } catch (\Throwable $_) {
-                            // ignore logging errors
-                        }
-                    }
                 } catch (\Throwable $e) {
-                    // Registrar el fallo de envío para diagnosticar por qué no llega el correo
-                    try {
-                        if (getenv('APP_DEBUG') === '1' || getenv('LOG_SUPERADMIN_EMAIL') === '1') {
-                            $this->securityLogger->log('superadmin_email_send_error', 'ERROR', $user, ['exception' => $e->getMessage(), 'to' => $user->getEmail()]);
-                        }
-                    } catch (\Throwable $_) {
-                        // ignore
-                    }
                     // No cortar el flujo si falla el correo; dejar la comprobación activa
                 }
             }

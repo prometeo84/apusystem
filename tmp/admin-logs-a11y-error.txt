@@ -1,3 +1,0 @@
-AssertionError [ERR_ASSERTION]: 1 accessibility violation was detected
-
-1 !== 0
