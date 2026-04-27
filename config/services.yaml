@@ -78,11 +78,6 @@ services:
     # Recovery Code Hasher (OWASP A02:2026)
     App\Service\RecoveryCodeHasher: ~
 
-    # Brevo Mailer Transport Factory (API HTTPS - funciona en InfinityFree donde SMTP está bloqueado)
-    Symfony\Component\Mailer\Bridge\Brevo\Transport\BrevoTransportFactory:
-        tags:
-            - { name: mailer.transport_factory }
-
     # PDO Session Handler: almacena sesiones en la base de datos MySQL
     # Reutiliza la conexión PDO nativa de Doctrine (evita abrir una segunda conexión)
     session.pdo_connection:
