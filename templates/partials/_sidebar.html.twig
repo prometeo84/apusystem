@@ -88,7 +88,7 @@
 
                 <a class="nav-link {% if app.request.get('_route') starts with 'app_item' %}active{% endif %}"
                    href="{{ path('app_item_index') }}">
-                    <i class="bi bi-tags"></i> {{ 'dashboard.rubros'|trans }}
+                    <i class="bi bi-tags"></i> {{ 'dashboard.work_items'|trans }}
                 </a>
 
                 {% if is_granted('ROLE_ADMIN') %}

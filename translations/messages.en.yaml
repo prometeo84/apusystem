@@ -238,13 +238,13 @@ apu:
   subtotal_labor: "Labor Subtotal"
   subtotal_materials: "Materials Subtotal"
   subtotal_transport: "Transport Subtotal"
-  subtotal_rubro: "Item Subtotal"
-  remove_rubro: "Remove item"
+  subtotal_item: "Item Subtotal"
+  remove_item: "Remove item"
   total_direct_costs: "Total Direct Costs"
   labor_new: "New Labor"
-  utilidad_pct: "Profit Margin (%)"
-  precio_calculo: "Calculation Price"
-  precio_ofertado: "Offered Price"
+  profit_pct: "Profit Margin (%)"
+  calculation_price: "Calculation Price"
+  offered_price: "Offered Price"
   save: "Save APU"
   title: "Unit Price Analysis"
   header: "APU — Unit Price Analysis"
@@ -252,9 +252,9 @@ apu:
   no_apus: "No APUs registered yet."
   create_first: "Create the first APU"
   add_section: "Add section"
-  add_rubro: "+ Add Item"
-  rubro_name_placeholder: "Item name"
-  rubro_no_catalog: "No catalog item"
+  add_item: "+ Add Item"
+  item_name_placeholder: "Item name"
+  item_no_catalog: "No catalog item"
   indirect_cost_pct: "Indirect Costs (%)"
   column_description: Description
   column_unit: Unit
@@ -296,7 +296,7 @@ dashboard:
   templates_label: Templates
   total_budget: "Total Budget"
   create_first_project: "Create First Project"
-  rubros: Items
+  work_items: Items
   materials: Materials
   labor: Labor
   equipment: Equipment
@@ -1089,8 +1089,8 @@ code:
   invalid: "The code can only contain letters, numbers, hyphens and underscores"
 user:
   limit_near: "You are approaching the user limit (%current%/%limit%)."
-rubro:
-  title: "Custom Items"
+work_item:
+  title: "Work Items"
   new: "New Item"
   edit_title: "Edit Item"
   save: "Save Item"
@@ -1098,49 +1098,16 @@ rubro:
   col_name: Name
   col_unit: Unit
   col_type: Type
-  no_rubros: "No items registered yet."
+  no_items: "No items registered yet."
   not_found: "Item not found."
+  create_error: "Error creating item."
   created_success: "Item created successfully."
   updated_success: "Item updated successfully."
   deleted_success: "Item deleted."
   confirm_delete: "Delete this item? This action cannot be undone."
-  tipo:
+  type:
     general: General
     personalizado: Custom
-plantilla:
-  title: Templates
-  new: "New Template"
-  edit_title: "Edit Template"
-  save: "Save Template"
-  duplicate: Duplicate
-  edit: Edit
-  col_name: Name
-  rubros: Items
-  add_rubro: "Add Item"
-  select_rubro: "Select Item"
-  col_cantidad: Quantity
-  col_precio_unit: "Unit Price"
-  col_total: Total
-  total_presupuesto: "Budget Total"
-  apu_pending: "No APU"
-  create_apu: "Create APU"
-  rubros_pendientes: "Items without APU assigned"
-  no_apus: "No APUs in this template yet."
-  add_rubro_hint: "Select an item to add to the template, then create its APU."
-  no_rubros: "No items in this template."
-  no_plantillas: "No templates in this project."
-  no_rubros_available: "No items available. Create items first."
-  rubro_already_added: "Item already in this template."
-  rubro_added: "Item added to template."
-  rubro_removed: "Item removed from template."
-  created_success: "Template created successfully."
-  updated_success: "Template updated successfully."
-  deleted_success: "Template deleted."
-  duplicated_success: "Template duplicated successfully."
-  delete: "Delete Template"
-  confirm_delete: "Delete this template and all its items? This action cannot be undone."
-  confirm_remove_rubro: "Remove this item from the template?"
-  apus: APUs
 template:
   title: Templates
   apus: APUs
@@ -1150,30 +1117,31 @@ template:
   duplicate: Duplicate
   edit: Edit
   col_name: Name
-  rubros: Items
-  add_rubro: "Add Item"
-  select_rubro: "Select Item"
-  col_cantidad: Quantity
-  col_precio_unit: "Unit Price"
+  work_items: Items
+  add_item: "Add Item"
+  select_item: "Select Item"
+  col_quantity: Quantity
+  col_unit_price: "Unit Price"
   col_total: Total
-  total_presupuesto: "Budget Total"
+  total_budget: "Budget Total"
   apu_pending: "No APU"
   create_apu: "Create APU"
   no_apus: "No APUs in this template yet."
-  rubros_pendientes: "Items without APU assigned"
-  add_rubro_hint: "Select an item to add to the template, then create its APU."
-  no_rubros: "No items in this template."
-  no_plantillas: "No templates in this project."
-  no_rubros_available: "No items available. Create items first."
-  rubro_already_added: "Item already in this template."
-  rubro_added: "Item added to template."
-  rubro_removed: "Item removed from template."
+  pending_items: "Items without APU assigned"
+  add_item_hint: "Select an item to add to the template, then create its APU."
+  no_items: "No items in this template."
+  no_templates: "No templates in this project."
+  no_items_available: "No items available. Create items first."
+  item_already_added: "Item already in this template."
+  item_added: "Item added to template."
+  item_removed: "Item removed from template."
   created_success: "Template created successfully."
   updated_success: "Template updated successfully."
   deleted_success: "Template deleted."
   duplicated_success: "Template duplicated successfully."
   confirm_delete: "Delete this template and all its items? This action cannot be undone."
-  confirm_remove_rubro: "Remove this item from the template?"
+  delete: "Delete Template"
+  confirm_remove_item: "Remove this item from the template?"
 catalog:
   confirm_delete: "Are you sure you want to delete this item? This action cannot be undone."
   created_success: "Item created successfully."

@@ -225,17 +225,18 @@ apu:
   col_dmt: "DMT (km)"
   col_rate_km: Tarifa/km
   col_subtotal: Subtotal
+  labor_new: "Nueva Mano de Obra"
   cost_summary: "Resumen de Costos"
   subtotal_equipment: "Subtotal Equipo"
   subtotal_labor: "Subtotal Mano de Obra"
   subtotal_materials: "Subtotal Materiales"
   subtotal_transport: "Subtotal Transporte"
-  subtotal_rubro: "Subtotal Rubro"
-  remove_rubro: "Eliminar rubro"
+  subtotal_item: "Subtotal Rubro"
+  remove_item: "Eliminar rubro"
   total_direct_costs: "Total Costos Directos"
-  utilidad_pct: "Utilidad (%)"
-  precio_calculo: "Precio de Cálculo"
-  precio_ofertado: "Precio Ofertado"
+  profit_pct: "Utilidad (%)"
+  calculation_price: "Precio de Cálculo"
+  offered_price: "Precio Ofertado"
   save: "Guardar APU"
   title: "Análisis de Precios Unitarios"
   header: "APU — Análisis de Precios Unitarios"
@@ -243,9 +244,9 @@ apu:
   no_apus: "No hay APUs registrados."
   create_first: "Crear el primer APU"
   add_section: "Agregar sección"
-  add_rubro: "+ Agregar Rubro"
-  rubro_name_placeholder: "Nombre del rubro"
-  rubro_no_catalog: "Sin rubro del catálogo"
+  add_item: "+ Agregar Rubro"
+  item_name_placeholder: "Nombre del rubro"
+  item_no_catalog: "Sin rubro del catálogo"
   indirect_cost_pct: "Costos Indirectos (%)"
   column_description: Descripción
   column_unit: Unidad
@@ -287,7 +288,7 @@ dashboard:
   templates_label: Plantillas
   total_budget: "Presupuesto Total"
   create_first_project: "Crear Primer Proyecto"
-  rubros: Rubros
+  work_items: Rubros
   materials: Materiales
   labor: "Mano de Obra"
   equipment: Equipos
@@ -1094,7 +1095,7 @@ code:
   invalid: "El código solo puede contener letras, números, guiones y guiones bajos"
 user:
   limit_near: "Te estás acercando al límite de usuarios (%current%/%limit%)."
-rubro:
+work_item:
   title: Rubros
   new: "Nuevo Rubro"
   edit_title: "Editar Rubro"
@@ -1103,49 +1104,16 @@ rubro:
   col_name: Nombre
   col_unit: Unidad
   col_type: Tipo
-  no_rubros: "No hay rubros registrados aún."
+  no_items: "No hay rubros registrados aún."
   not_found: "Rubro no encontrado."
+  create_error: "Error al crear el rubro."
   created_success: "Rubro creado exitosamente."
   updated_success: "Rubro actualizado exitosamente."
   deleted_success: "Rubro eliminado."
   confirm_delete: "¿Eliminar este rubro? Esta acción no se puede deshacer."
-  tipo:
+  type:
     general: General
     personalizado: Personalizado
-plantilla:
-  title: Plantillas
-  new: "Nueva Plantilla"
-  edit_title: "Editar Plantilla"
-  save: "Guardar Plantilla"
-  duplicate: Duplicar
-  edit: Editar
-  col_name: Nombre
-  rubros: Rubros
-  add_rubro: "Agregar Rubro"
-  select_rubro: "Seleccionar Rubro"
-  col_cantidad: Cantidad
-  col_precio_unit: "Precio Unit."
-  col_total: Total
-  total_presupuesto: "Total Presupuesto"
-  apu_pending: "Sin APU"
-  rubros_pendientes: "Rubros sin APU asignado"
-  create_apu: "Crear APU"
-  no_apus: "No hay APUs en esta plantilla aún."
-  add_rubro_hint: "Seleccione un rubro para agregar a la plantilla y luego cree su APU."
-  no_rubros: "No hay rubros en esta plantilla."
-  no_plantillas: "No hay plantillas en este proyecto."
-  no_rubros_available: "No hay rubros disponibles. Cree rubros primero."
-  rubro_already_added: "El rubro ya está en esta plantilla."
-  rubro_added: "Rubro agregado a la plantilla."
-  rubro_removed: "Rubro eliminado de la plantilla."
-  created_success: "Plantilla creada exitosamente."
-  updated_success: "Plantilla actualizada exitosamente."
-  deleted_success: "Plantilla eliminada."
-  duplicated_success: "Plantilla duplicada exitosamente."
-  delete: "Eliminar Plantilla"
-  confirm_delete: "¿Eliminar esta plantilla y todos sus rubros? Esta acción no se
-    puede deshacer."
-  confirm_remove_rubro: "¿Eliminar este rubro de la plantilla?"
 template:
   title: Plantillas
   apus: APUs
@@ -1155,28 +1123,32 @@ template:
   duplicate: Duplicar
   edit: Editar
   col_name: Nombre
-  rubros: Rubros
-  add_rubro: "Agregar Rubro"
-  select_rubro: "Seleccionar Rubro"
-  col_cantidad: Cantidad
-  col_precio_unit: "Precio Unit."
+  work_items: Rubros
+  add_item: "Agregar Rubro"
+  select_item: "Seleccionar Rubro"
+  col_quantity: Cantidad
+  col_unit_price: "Precio Unit."
   col_total: Total
-  total_presupuesto: "Total Presupuesto"
+  total_budget: "Total Presupuesto"
   apu_pending: "Sin APU"
   create_apu: "Crear APU"
-  no_rubros: "No hay rubros en esta plantilla."
-  no_plantillas: "No hay plantillas en este proyecto."
-  no_rubros_available: "No hay rubros disponibles. Cree rubros primero."
-  rubro_already_added: "El rubro ya está en esta plantilla."
-  rubro_added: "Rubro agregado a la plantilla."
-  rubro_removed: "Rubro eliminado de la plantilla."
+  no_apus: "No hay APUs en esta plantilla aún."
+  pending_items: "Rubros sin APU asignado"
+  add_item_hint: "Seleccione un rubro para agregar a la plantilla y luego cree su APU."
+  no_items: "No hay rubros en esta plantilla."
+  no_templates: "No hay plantillas en este proyecto."
+  no_items_available: "No hay rubros disponibles. Cree rubros primero."
+  item_already_added: "El rubro ya está en esta plantilla."
+  item_added: "Rubro agregado a la plantilla."
+  item_removed: "Rubro eliminado de la plantilla."
   created_success: "Plantilla creada exitosamente."
   updated_success: "Plantilla actualizada exitosamente."
   deleted_success: "Plantilla eliminada."
   duplicated_success: "Plantilla duplicada exitosamente."
   confirm_delete: "¿Eliminar esta plantilla y todos sus rubros? Esta acción no se
     puede deshacer."
-  confirm_remove_rubro: "¿Eliminar este rubro de la plantilla?"
+  delete: "Eliminar Plantilla"
+  confirm_remove_item: "¿Eliminar este rubro de la plantilla?"
 catalog:
   confirm_delete: "¿Está seguro de que desea eliminar este elemento? Esta acción
     no se puede deshacer."
