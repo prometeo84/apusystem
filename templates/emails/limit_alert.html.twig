@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <style>
+    body { margin:0; background:#f3f4f6; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
+    .wrap { max-width:600px; margin:24px auto; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.1); }
+    .header { background:{{ primary_color|e('html') }}; color:#fff; padding:18px 24px; }
+    .header h1 { margin:0; font-size:20px; }
+    .body { padding:24px; }
+    .greeting { color:#374151; margin-bottom:16px; }
+    .alert-row { display:flex; align-items:center; background:#fff7ed; border:1px solid #fed7aa; border-radius:6px; padding:14px 16px; margin-bottom:10px; gap:12px; }
+    .alert-row.critical { background:#fef2f2; border-color:#fca5a5; }
+    .progress-bar { height:8px; border-radius:4px; background:#e5e7eb; overflow:hidden; flex:1; }
+    .progress-fill { height:100%; border-radius:4px; background:#f59e0b; }
+    .progress-fill.critical { background:#dc2626; }
+    .pct { font-weight:700; font-size:14px; min-width:38px; text-align:right; }
+    .pct.critical { color:#dc2626; }
+    .pct.warning { color:#d97706; }
+    .resource-name { font-weight:600; font-size:13px; color:#374151; min-width:80px; }
+    .counts { font-size:12px; color:#6b7280; margin-top:2px; }
+    .notice { background:#fef3c7; border-left:4px solid #f59e0b; border-radius:4px; padding:12px 14px; font-size:13px; color:#92400e; margin-top:16px; }
+    .footer { background:#f9fafb; border-top:1px solid #e5e7eb; padding:14px 24px; font-size:12px; color:#9ca3af; text-align:center; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>⚠️ Alerta de límite de recursos</h1>
+  </div>
+  <div class="body">
+    <p class="greeting">Hola <strong>{{ user.getFullName() }}</strong>,</p>
+    <p style="color:#374151;margin-bottom:20px;">
+      La cuenta <strong>{{ tenant.getName() }}</strong> está alcanzando los límites de su plan.
+    </p>
+
+    {% for alert in alerts %}
+      {% set isCritical = alert.percent >= 100 %}
+      {% set resourceLabel = {
+        'projects': 'Proyectos',
+        'users':    'Usuarios',
+        'apus':     'APUs'
+      }[alert.resource] ?? alert.resource %}
+      <div class="alert-row{{ isCritical ? ' critical' : '' }}">
+        <div>
+          <div class="resource-name">{{ resourceLabel }}</div>
+          <div class="counts">{{ alert.current }} / {{ alert.max }}</div>
+        </div>
+        <div class="progress-bar">
+              <div class="progress-fill{{ isCritical ? ' critical' : '' }}" style="width:{{ alert.percent > 100 ? 100 : alert.percent }}%"></div>
+        </div>
+        <div class="pct {{ isCritical ? 'critical' : 'warning' }}">{{ alert.percent }}%</div>
+      </div>
+    {% endfor %}
+
+    <div class="notice">
+      Por favor contacta al administrador del sistema para ampliar los límites de tu plan si necesitas continuar creando recursos.
+    </div>
+  </div>
+  <div class="footer">APU System · Notificación automática de límites</div>
+</div>
+</body>
+</html>

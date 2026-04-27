@@ -1,0 +1,14 @@
+APU System - Alerta de límite de recursos
+
+Hola {{ user.getFullName() }},
+
+La cuenta "{{ tenant.getName() }}" está alcanzando los límites de su plan.
+
+{% for alert in alerts %}
+{% set resourceLabel = {'projects': 'Proyectos', 'users': 'Usuarios', 'apus': 'APUs'}[alert.resource] ?? alert.resource %}
+{{ resourceLabel }}: {{ alert.current }} / {{ alert.max }} ({{ alert.percent }}%)
+{% endfor %}
+
+Por favor contacta al administrador del sistema para ampliar los límites de tu plan.
+
+— APU System · Notificación automática de límites

@@ -4,6 +4,7 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Entity\LoginSession;
+use App\Service\LoginAlertService;
 use App\Service\SecurityLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -23,7 +24,8 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         private RouterInterface $router,
         private EntityManagerInterface $em,
         private SecurityLogger $securityLogger,
-        private MailerInterface $mailer
+        private MailerInterface $mailer,
+        private LoginAlertService $loginAlertService
     ) {}
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
@@ -118,6 +120,13 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         } catch (\Throwable $e) {
             // No bloquear el flujo si el logger falla
         }
+
+        // Enviar alerta de login por correo al usuario
+        $this->loginAlertService->sendLoginAlert($user, [
+            'ip'        => $ipAddress,
+            'userAgent' => $request->headers->get('User-Agent') ?? 'Unknown',
+            'dateTime'  => new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
+        ]);
 
         // Si es super admin, enviar código por correo y requerir verificación adicional
         $roles = $user->getRoles();

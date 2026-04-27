@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Service\LimitAlertService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,7 +15,8 @@ class DashboardController extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $em,
-        private TranslatorInterface $translator
+        private TranslatorInterface $translator,
+        private LimitAlertService $limitAlertService
     ) {}
 
     #[Route('/', name: 'app_dashboard')]
@@ -118,6 +120,14 @@ class DashboardController extends AbstractController
                 }
                 $canCreateApu = $apuCount < (int)$maxApus;
             }
+
+            // Enviar alerta de límites por correo si algún recurso supera el umbral del 80 %
+            $this->limitAlertService->checkAndAlert($user, $tenant, [
+                'projects' => $stats['total_proyectos'],
+                'users'    => $userCount,
+                'apus'     => $apuCount,
+                'maxApus'  => (int) ($maxApus ?? 0),
+            ]);
         }
 
         return $this->render('dashboard/index.html.twig', [

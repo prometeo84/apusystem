@@ -126,17 +126,16 @@ class PlantillaTest extends TestCase
     #[Test]
     public function plantillaRubroCalculaTotalCostoCorrectamente(): void
     {
-        $tenant  = $this->buildTenant();
-        $rubro   = $this->buildRubro($tenant);
-        $apu     = $this->buildAPUWithMaterialCost($tenant, 50.0); // costo unitario = 50
+        $tenant = $this->buildTenant();
+        $rubro  = $this->buildRubro($tenant);
+        $apu    = $this->buildAPUWithMaterialCost($tenant, 50.0);
 
         $pr = new TemplateItem();
         $pr->setItem($rubro);
         $pr->setApuItem($apu);
-        $pr->setQuantity('3.0'); // 3 unidades
 
-        // getTotalCosto = cantidad * totalCost = 3 * 50 = 150
-        $this->assertEqualsWithDelta(150.0, $pr->getTotalCost(), 0.001);
+        // getTotalCost = getUnitPrice (quantity removed from TemplateItem)
+        $this->assertEqualsWithDelta(50.0, $pr->getTotalCost(), 0.001);
     }
 
     #[Test]
@@ -147,17 +146,17 @@ class PlantillaTest extends TestCase
 
         $pr = new TemplateItem();
         $pr->setItem($rubro);
-        $pr->setQuantity('5.0');
         // Sin APU
 
         $this->assertSame(0.0, $pr->getTotalCost());
     }
 
     #[Test]
-    public function plantillaRubroCantidadDefaultEsUno(): void
+    public function plantillaRubroTotalCostoCeroSinApuNiItem(): void
     {
         $pr = new TemplateItem();
-        $this->assertSame('1.0000', $pr->getQuantity());
+        // Sin item ni APU asignados
+        $this->assertSame(0.0, $pr->getTotalCost());
     }
 
     #[Test]
@@ -177,7 +176,6 @@ class PlantillaTest extends TestCase
         $pr = new TemplateItem();
         $pr->setItem($rubro);
         $pr->setApuItem($apu);
-        $pr->setQuantity('2.0');
 
         $this->assertEqualsWithDelta(75.0, $pr->getUnitPrice(), 0.001);
     }
@@ -204,12 +202,11 @@ class PlantillaTest extends TestCase
             $pr = new TemplateItem();
             $pr->setItem($rubro);
             $pr->setApuItem($apu);
-            $pr->setQuantity('5.0'); // 5 unidades => 500 cada uno
 
             $total += $pr->getTotalCost();
         }
 
-        // total = 500 + 500 = 1000
-        $this->assertEqualsWithDelta(1000.0, $total, 0.001);
+        // total = 100 + 100 = 200 (quantity removed; getTotalCost = getUnitPrice)
+        $this->assertEqualsWithDelta(200.0, $total, 0.001);
     }
 }

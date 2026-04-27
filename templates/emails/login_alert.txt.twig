@@ -1,0 +1,14 @@
+APU System - Nuevo inicio de sesión detectado
+
+Hola {{ user.getFullName() }},
+
+Se ha detectado un nuevo inicio de sesión en tu cuenta de APU System.
+
+Fecha y hora : {{ dateTime|date('d/m/Y H:i:s') }} (UTC)
+Dirección IP : {{ ip }}
+Email        : {{ user.getEmail() }}
+Dispositivo  : {{ userAgent }}
+
+Si no fuiste tú, cambia tu contraseña inmediatamente y contacta al administrador del sistema.
+
+— APU System · Notificación de seguridad automática
